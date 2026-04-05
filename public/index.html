@@ -653,8 +653,11 @@ function saveKey(){
 function updateApiUI(){
   const dot = document.getElementById('api-dot');
   const lbl = document.getElementById('api-btn-label');
-  if (apiMode==='live' && apiKey){
+  // בגרסת השרת — תמיד Live אם יש token
+  if (authToken || (apiMode==='live' && apiKey)){
     dot.className='api-dot live'; lbl.textContent='Live ⚡';
+    apiMode = 'live';
+    if (!apiKey) apiKey = 'server';
   } else {
     dot.className='api-dot'; lbl.textContent='Demo';
   }
