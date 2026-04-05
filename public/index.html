@@ -1061,7 +1061,7 @@ function showCompoundCalculator(){
     '<div class="cstat inv"><div class="cstat-lbl">סה"כ הפקדות</div><div class="cstat-val" id="'+cid+'_inv">&#8362;140,000</div></div>'+
     '<div class="cstat tot"><div class="cstat-lbl">שווי עתידי</div><div class="cstat-val" id="'+cid+'_tot">&mdash;</div><div class="cstat-prf" id="'+cid+'_prf">רווח: &mdash;</div></div>'+
     '</div>'+
-    '<svg id="'+sid+'" viewBox="0 0 320 120" width="100%" style="display:block;overflow:visible"></svg>'+
+    '<svg id="'+sid+'" viewBox="0 0 320 185" width="100%" style="display:block;overflow:visible"></svg>'+
     '<div style="font-size:10px;color:#bbb;margin-top:6px;text-align:center">&#x26A0;&#xFE0F; הדמיה בלבד &mdash; תשואות עבר אינן ערובה לעתיד</div>'+
     '</div>';
   wrap.innerHTML='<img class="av" src="'+AVATAR+'">';
@@ -1102,7 +1102,7 @@ function updCalc(cid, sid){
   document.getElementById(cid+'_prf').textContent='\u05E8\u05D5\u05D5\u05D7: \u20AA'+fmt(profit);
 
   // גרף משופר — גבוה יותר, מיילסטונים
-  var W=320,H=160,pL=52,pR=16,pT=14,pB=24,iW=W-pL-pR,iH=H-pT-pB;
+  var W=320,H=185,pL=52,pR=16,pT=14,pB=24,iW=W-pL-pR,iH=H-pT-pB;
   var maxV=Math.max.apply(null,vals)*1.05;
   var tx=function(i){return pL+(i/y)*iW;};
   var tv=function(v){return pT+(1-v/maxV)*iH;};
@@ -1133,8 +1133,8 @@ function updCalc(cid, sid){
     }
   });
   var gid='gr'+sid.replace(/[^a-z0-9]/gi,'');
-  document.getElementById(sid).setAttribute('viewBox','0 0 320 160');
-  document.getElementById(sid).setAttribute('height','160');
+  document.getElementById(sid).setAttribute('viewBox','0 0 320 185');
+  document.getElementById(sid).removeAttribute('height');
   document.getElementById(sid).innerHTML=
     '<defs><linearGradient id="'+gid+'" x1="0" y1="0" x2="0" y2="1">'+
     '<stop offset="0%" stop-color="#1D9E75" stop-opacity=".3"/><stop offset="100%" stop-color="#1D9E75" stop-opacity=".02"/></linearGradient></defs>'+
@@ -1148,6 +1148,62 @@ function updCalc(cid, sid){
     '<text x="'+(pL+14)+'" y="'+(pT+5)+'" font-size="8" fill="#bbb">הפקדות בלבד</text>'+
     '<rect x="'+(pL+80)+'" y="'+(pT+2)+'" width="10" height="2" fill="#1D9E75"/>'+
     '<text x="'+(pL+94)+'" y="'+(pT+5)+'" font-size="8" fill="#1D9E75">עם ריבית דריבית</text>';
+}
+
+function showCompoundStoryCard(){
+  var msgs = document.getElementById('msgs');
+  var el = document.createElement('div');
+  el.style.cssText='display:flex;gap:10px;align-items:flex-start;animation:msgIn .3s ease;';
+  // SVG גרף השוואה פשוט: מיה (7%) מול דנה (2%) ל-30 שנה
+  var W=300,H=110,pL=44,pR=10,pT=10,pB=20,iW=W-pL-pR,iH=H-pT-pB;
+  var years=30,p=20000;
+  var vMia=[],vDana=[];
+  for(var i=0;i<=years;i++){vMia.push(Math.round(p*Math.pow(1.07,i)));vDana.push(Math.round(p*Math.pow(1.02,i)));}
+  var maxV=vMia[years]*1.05;
+  var tx=function(i){return pL+(i/years)*iW;};
+  var tv=function(v){return pT+(1-v/maxV)*iH;};
+  var miaLine=vMia.map(function(v,i){return tx(i)+','+tv(v);}).join(' ');
+  var danaLine=vDana.map(function(v,i){return tx(i)+','+tv(v);}).join(' ');
+  var miaFill='M'+tx(0)+','+tv(vMia[0])+vMia.map(function(v,i){return ' L'+tx(i)+','+tv(v);}).join('')+' L'+tx(years)+','+tv(0)+' L'+tx(0)+','+tv(0)+' Z';
+  var ygrid=[0,0.25,0.5,0.75,1].map(function(f){
+    var yp=tv(maxV*f);
+    var lbl=maxV*f>=1000000?'\u20AA'+(maxV*f/1000000).toFixed(1)+'M':'\u20AA'+Math.round(maxV*f/1000)+'K';
+    return '<line x1="'+pL+'" y1="'+yp+'" x2="'+(W-pR)+'" y2="'+yp+'" stroke="#f0f0ec" stroke-width="1"/>'+
+           '<text x="'+(pL-3)+'" y="'+(yp+3)+'" font-size="7.5" fill="#bbb" text-anchor="end">'+lbl+'</text>';
+  }).join('');
+  var xlabels=[0,10,20,30].map(function(i){return '<text x="'+tx(i)+'" y="'+(H-3)+'" font-size="7.5" fill="#bbb" text-anchor="middle">'+(i===0?'היום':i+'שנ')+'</text>';}).join('');
+  var html='<div style="background:white;border-radius:18px;border:1px solid rgba(0,0,0,.08);overflow:hidden;max-width:96%;box-shadow:0 4px 16px rgba(0,0,0,.09)">'+
+    '<div style="background:linear-gradient(135deg,#085041,#1D9E75);padding:12px 16px;color:white">'+
+    '<div style="font-size:13px;font-weight:800">📈 מיה מול דנה — 30 שנה, ₪20,000</div>'+
+    '<div style="font-size:10px;opacity:.75;margin-top:2px">תיק 7% לעומת פיקדון 2%</div></div>'+
+    '<div style="padding:12px 16px">'+
+    '<svg viewBox="0 0 '+W+' '+H+'" width="100%" style="display:block;overflow:visible">'+
+    '<defs><linearGradient id="storyGrad" x1="0" y1="0" x2="0" y2="1">'+
+    '<stop offset="0%" stop-color="#1D9E75" stop-opacity=".25"/><stop offset="100%" stop-color="#1D9E75" stop-opacity=".02"/></linearGradient></defs>'+
+    ygrid+
+    '<path d="'+miaFill+'" fill="url(#storyGrad)"/>'+
+    '<polyline points="'+danaLine+'" fill="none" stroke="#e0d8c8" stroke-width="2" stroke-dasharray="5,4"/>'+
+    '<polyline points="'+miaLine+'" fill="none" stroke="#1D9E75" stroke-width="3" stroke-linejoin="round"/>'+
+    '<circle cx="'+tx(years)+'" cy="'+tv(vMia[years])+'" r="4" fill="white" stroke="#085041" stroke-width="2"/>'+
+    '<text x="'+tx(years)+'" y="'+(tv(vMia[years])-8)+'" font-size="9" font-weight="bold" fill="#085041" text-anchor="middle">\u20AA152K</text>'+
+    '<circle cx="'+tx(years)+'" cy="'+tv(vDana[years])+'" r="3.5" fill="white" stroke="#c8b89a" stroke-width="2"/>'+
+    '<text x="'+tx(years)+'" y="'+(tv(vDana[years])+14)+'" font-size="9" font-weight="bold" fill="#c8b89a" text-anchor="middle">\u20AA36K</text>'+
+    xlabels+
+    '<text x="'+pL+'" y="'+(pT-2)+'" font-size="7.5" fill="#1D9E75">&#9632; מיה (7%)</text>'+
+    '<text x="'+(pL+60)+'" y="'+(pT-2)+'" font-size="7.5" fill="#c8b89a">&#9135;&#9135; דנה (2%)</text>'+
+    '</svg>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;text-align:center">'+
+    '<div style="background:#e1f5ee;border-radius:10px;padding:8px 10px">'+
+    '<div style="font-size:18px;font-weight:900;color:#085041">₪152,000</div>'+
+    '<div style="font-size:10px;color:#1D9E75;margin-top:2px">מיה — תיק השקעות 7%</div></div>'+
+    '<div style="background:#f7f6f3;border-radius:10px;padding:8px 10px">'+
+    '<div style="font-size:18px;font-weight:900;color:#999">₪36,000</div>'+
+    '<div style="font-size:10px;color:#bbb;margin-top:2px">דנה — פיקדון 2%</div></div></div>'+
+    '<div style="background:#fef3dc;border-radius:10px;padding:8px 12px;margin-top:8px;font-size:11px;color:#85430a;line-height:1.6">'+
+    '✨ <strong>פער של ₪116,000</strong> — אותו סכום, אותן 30 שנה. רק הכלי שונה.</div>'+
+    '</div></div>';
+  el.innerHTML='<img class="av" src="'+AVATAR+'">'+html;
+  msgs.appendChild(el); scroll();
 }
 
 function showHedgingVisual(){
@@ -1391,23 +1447,12 @@ function startLearnAssessment(){
         addMsg(levelReply, true);
         const isBeginnerLevel = levelReply.includes('מתחילה') || levelReply.includes('בסיסיים');
         delay(()=>{
-          addMsg('מה הכי חשוב לך ללמוד עכשיו?');
-          setTimeout(()=>addQRs([
-            'מוצרי השקעה — ETF, קרן כספית, אג"ח',
-            'איך הכסף גדל — ריבית דריבית ומחשבונים',
-            'גרפים ומדדים — ביצועים לאורך זמן',
-            'הכל — אני רוצה תמונה שלמה',
-          ], (topicReply)=>{
-            addMsg(topicReply, true);
-            delay(()=>{
-              if (isBeginnerLevel) {
-                addMsg('מעולה! 💚 נתחיל מהבסיס — כל נושא עם הסבר פשוט וויזואלי.\n\n💡 חשוב לדעת: אנחנו מתחילים עם מדדים (ETF) ולא עם מניות בודדות — כי מחקרים מראים שגם 90% ממנהלי ההשקעות המקצועיים לא מכים את המדדים לאורך זמן.\n\nלמי שתרצה — נגיע גם לבחירת מניות בהמשך. אבל הבסיס הכי חזק הוא להבין מדדים קודם 💚\n\nלחצי על כל נושא לקבל הסבר:');
-              } else {
-                addMsg('מצוין! 💚 בחרי נושא לעומק:\n\n💡 תזכורת: אנחנו מתמקדים במדדים (ETF) לפני מניות בודדות — כי הפיזור שלהם נותן יציבות, ודמי הניהול שלהם נמוכים פי 5-10 מקרנות אקטיביות. מניות בודדות — נגיע גם לשם 💚\n\nלחצי על כל נושא לקבל הסבר:');
-              }
-              setTimeout(showLearnMenu, 600);
-            }, 500);
-          }), 400);
+          if (isBeginnerLevel) {
+            addMsg('מעולה! 💚 נתחיל מהבסיס — כל נושא עם הסבר פשוט וויזואלי.\n\n💡 חשוב לדעת: אנחנו מתחילים עם מדדים (ETF) ולא עם מניות בודדות — כי מחקרים מראים שגם 90% ממנהלי ההשקעות המקצועיים לא מכים את המדדים לאורך זמן.\n\nלחצי על כל נושא לקבל הסבר:');
+          } else {
+            addMsg('מצוין! 💚 בחרי נושא לעומק:\n\n💡 תזכורת: אנחנו מתמקדים במדדים (ETF) לפני מניות בודדות — כי הפיזור שלהם נותן יציבות, ודמי הניהול שלהם נמוכים פי 5-10 מקרנות אקטיביות. מניות בודדות — נגיע גם לשם 💚\n\nלחצי על כל נושא:');
+          }
+          setTimeout(showLearnMenu, 600);
         }, 500);
       }), 400);
     }, 500), 500);
@@ -1705,7 +1750,8 @@ function handleIntro(reply){
     }
     setTimeout(()=>delay(()=>{
       // מקרה לדוגמא — ריבית דריבית
-      addMsg('רוצה להציג לך מקרה לדוגמא:\n\nשתי חברות — מיה ודנה. שתיהן בנות 30.\nמיה שמה ₪20,000 בתיק השקעות (תשואה ממוצעת 7% בשנה) ולא נגעה בזה.\nדנה שמה את אותו הסכום בפיקדון בנקאי (2% בשנה).\n\nבגיל 60:\n📈 מיה: ~₪152,000\n🏦 דנה: ~₪36,000\n\nאותו סכום. אותן 30 שנה. הבדל של ₪116,000.\nזו ריבית דריבית — הרווחים מרוויחים על עצמם, שנה אחר שנה.\n\n🔢 7% × 30 שנה = ₪20,000 הופכים ל-₪152,000\n🔢 2% × 30 שנה = ₪20,000 הופכים ל-₪36,000');
+      addMsg('רוצה להציג לך מקרה לדוגמא:\n\nשתי חברות — מיה ודנה. שתיהן בנות 30.\nמיה שמה ₪20,000 בתיק השקעות (תשואה ממוצעת 7% בשנה) ולא נגעה בזה.\nדנה שמה את אותו הסכום בפיקדון בנקאי (2% בשנה).\n\nבגיל 60:\n📈 מיה: ~₪152,000\n🏦 דנה: ~₪36,000\n\nאותו סכום. אותן 30 שנה. הבדל של ₪116,000 — זו ריבית דריבית.');
+      setTimeout(showCompoundStoryCard, 600);
       setTimeout(()=>delay(()=>{
         addMsg('רוצה לשחק עם המחשבון ולראות מה יקרה עם הסכום שלך?');
         setTimeout(()=>addQRs([
