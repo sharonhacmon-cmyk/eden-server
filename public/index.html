@@ -1810,7 +1810,7 @@ function handleAmount(reply){
 }
 
 async function handleCompareChoice(reply){
-  addMsg(reply, true);
+  if (!pendingLearnDone) addMsg(reply, true);
 
   if (reply.includes('4%') || reply.includes('פיקדון') && reply.includes('איך')) {
     delay(()=>{
