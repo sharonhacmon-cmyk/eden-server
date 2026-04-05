@@ -2720,7 +2720,7 @@ function toggleTTS(){
 }
 
 async function checkLogin() {
-  if (authToken) { startIntro(); return; }
+  if (authToken) { updateApiUI(); startIntro(); return; }
   // הצג מסך כניסה
   document.body.innerHTML = `
     <div style="min-height:100vh;background:linear-gradient(145deg,#085041,#0d6b57,#1D9E75);display:flex;align-items:center;justify-content:center;font-family:Heebo,sans-serif;direction:rtl">
