@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>עדן — ניהול משתמשות</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Heebo',sans-serif;background:#f5f5f0;color:#1a1a18;direction:rtl;min-height:100vh;}
+.header{background:linear-gradient(135deg,#085041,#1D9E75);padding:18px 32px;display:flex;align-items:center;justify-content:space-between;}
+.header h1{color:white;font-size:20px;font-weight:900;}
+.header span{color:rgba(255,255,255,.7);font-size:13px;}
+.container{max-width:860px;margin:32px auto;padding:0 20px;}
+
+/* כרטיס הוספה */
+.add-card{background:white;border-radius:16px;padding:28px;box-shadow:0 2px 12px rgba(0,0,0,.07);margin-bottom:28px;}
+.add-card h2{font-size:16px;font-weight:800;color:#085041;margin-bottom:20px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end;}
+.field label{font-size:12px;font-weight:700;color:#666;display:block;margin-bottom:6px;}
+.field input{width:100%;border:1.5px solid #e0e0dc;border-radius:10px;padding:10px 14px;font-family:'Heebo',sans-serif;font-size:14px;outline:none;transition:border-color .2s;}
+.field input:focus{border-color:#1D9E75;}
+.btn-add{background:linear-gradient(135deg,#085041,#1D9E75);color:white;border:none;border-radius:10px;padding:11px 24px;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.btn-add:hover{opacity:.9;}
+.msg{font-size:12px;margin-top:10px;min-height:18px;font-weight:600;}
+.msg.ok{color:#085041;} .msg.err{color:#c62828;}
+
+/* טבלה */
+.table-card{background:white;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.07);overflow:hidden;}
+.table-head{background:#085041;color:white;padding:14px 20px;display:grid;grid-template-columns:1.2fr 1fr 1.2fr 80px 80px;gap:12px;font-size:12px;font-weight:700;}
+.table-row{padding:14px 20px;display:grid;grid-template-columns:1.2fr 1fr 1.2fr 80px 80px;gap:12px;align-items:center;border-bottom:1px solid #f0f0ec;font-size:13px;}
+.table-row:last-child{border:none;}
+.table-row:hover{background:#fafaf8;}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.badge.active{background:#e8f5e9;color:#2e7d32;}
+.badge.expired{background:#fdecea;color:#c62828;}
+.btn-del{background:none;border:1px solid #ffcdd2;color:#c62828;border-radius:8px;padding:5px 12px;font-family:'Heebo',sans-serif;font-size:12px;cursor:pointer;}
+.btn-del:hover{background:#fdecea;}
+.empty{text-align:center;padding:40px;color:#bbb;font-size:14px;}
+
+/* מסך כניסה */
+#login-screen{min-height:100vh;background:linear-gradient(145deg,#085041,#1D9E75);display:flex;align-items:center;justify-content:center;}
+.login-box{background:white;border-radius:20px;padding:36px;max-width:340px;width:90%;text-align:center;}
+.login-box h1{font-size:20px;font-weight:900;color:#085041;margin-bottom:8px;}
+.login-box p{font-size:13px;color:#888;margin-bottom:24px;}
+.login-box input{width:100%;border:1.5px solid #e0e0dc;border-radius:10px;padding:12px;font-family:'Heebo',sans-serif;font-size:15px;text-align:center;outline:none;margin-bottom:12px;}
+.login-box input:focus{border-color:#1D9E75;}
+.login-box button{width:100%;background:linear-gradient(135deg,#085041,#1D9E75);color:white;border:none;border-radius:10px;padding:13px;font-family:'Heebo',sans-serif;font-size:15px;font-weight:800;cursor:pointer;}
+
+@media(max-width:600px){
+  .form-row{grid-template-columns:1fr;}
+  .table-head,.table-row{grid-template-columns:1fr 1fr;gap:8px;}
+  .table-head span:nth-child(3),.table-head span:nth-child(4),.table-row span:nth-child(3),.table-row span:nth-child(4){display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-box">
+    <h1>🔐 ניהול עדן</h1>
+    <p>הכניסי את סיסמת הניהול שלך</p>
+    <input type="password" id="admin-pass" placeholder="סיסמה..." onkeydown="if(event.key==='Enter')doAdminLogin()">
+    <button onclick="doAdminLogin()">כניסה ←</button>
+    <div class="msg err" id="login-err"></div>
+  </div>
+</div>
+
+<div id="main-screen" style="display:none">
+  <div class="header">
+    <h1>✦ עדן — ניהול משתמשות</h1>
+    <span id="user-count"></span>
+  </div>
+  <div class="container">
+
+    <div class="add-card">
+      <h2>➕ הוספת משתמשת חדשה</h2>
+      <div class="form-row">
+        <div class="field">
+          <label>שם</label>
+          <input id="new-name" placeholder="שרה לוי">
+        </div>
+        <div class="field">
+          <label>קוד גישה</label>
+          <input id="new-code" placeholder="EDEN-XXXX" oninput="this.value=this.value.toUpperCase()">
+        </div>
+        <div class="field">
+          <label>תפוגה</label>
+          <input id="new-expires" type="date">
+        </div>
+        <button class="btn-add" onclick="addUser()">הוסיפי ✓</button>
+      </div>
+      <div class="msg" id="add-msg"></div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-head">
+        <span>שם</span>
+        <span>קוד גישה</span>
+        <span>תפוגה</span>
+        <span>סטטוס</span>
+        <span>פעולה</span>
+      </div>
+      <div id="users-list"><div class="empty">טוענת...</div></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let adminPassword = '';
+
+function doAdminLogin(){
+  const pass = document.getElementById('admin-pass').value.trim();
+  if (!pass){ document.getElementById('login-err').textContent='הכניסי סיסמה'; return; }
+  adminPassword = pass;
+  loadUsers();
+}
+
+async function loadUsers(){
+  try {
+    const res = await fetch('/admin/users', { headers:{'x-admin-password': adminPassword} });
+    if (res.status === 401){ document.getElementById('login-err').textContent='סיסמה שגויה'; adminPassword=''; return; }
+    const users = await res.json();
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('main-screen').style.display='block';
+    renderUsers(users);
+  } catch(e){
+    document.getElementById('login-err').textContent='שגיאת חיבור';
+  }
+}
+
+function renderUsers(users){
+  document.getElementById('user-count').textContent = users.length + ' משתמשות';
+  const el = document.getElementById('users-list');
+  if (!users.length){ el.innerHTML='<div class="empty">אין משתמשות עדיין</div>'; return; }
+  const now = new Date();
+  el.innerHTML = users.map(u => {
+    const exp = new Date(u.expires);
+    const active = exp >= now && u.active;
+    const daysLeft = Math.ceil((exp - now) / 86400000);
+    return `<div class="table-row">
+      <span>${u.name}</span>
+      <span><strong>${u.code}</strong></span>
+      <span>${u.expires} ${active ? '('+daysLeft+' ימים)' : ''}</span>
+      <span><span class="badge ${active?'active':'expired'}">${active?'פעילה':'פגה'}</span></span>
+      <span><button class="btn-del" onclick="deleteUser('${u.code}')">מחקי</button></span>
+    </div>`;
+  }).join('');
+}
+
+async function addUser(){
+  const name = document.getElementById('new-name').value.trim();
+  const code = document.getElementById('new-code').value.trim();
+  const expires = document.getElementById('new-expires').value;
+  const msg = document.getElementById('add-msg');
+  if (!name||!code||!expires){ msg.className='msg err'; msg.textContent='יש למלא את כל השדות'; return; }
+  const res = await fetch('/admin/users', {
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-admin-password':adminPassword},
+    body: JSON.stringify({name, code, expires})
+  });
+  const d = await res.json();
+  if (!res.ok){ msg.className='msg err'; msg.textContent=d.error; return; }
+  msg.className='msg ok'; msg.textContent='✓ נוספה בהצלחה!';
+  document.getElementById('new-name').value='';
+  document.getElementById('new-code').value='';
+  document.getElementById('new-expires').value='';
+  loadUsers();
+}
+
+async function deleteUser(code){
+  if (!confirm('למחוק את הקוד '+code+'?')) return;
+  await fetch('/admin/users/'+code, { method:'DELETE', headers:{'x-admin-password':adminPassword} });
+  loadUsers();
+}
+
+// הגדר תאריך ברירת מחדל — 5 ימים קדימה
+const d = new Date(); d.setDate(d.getDate()+5);
+document.getElementById('new-expires').value = d.toISOString().split('T')[0];
+</script>
+</body>
+</html>
