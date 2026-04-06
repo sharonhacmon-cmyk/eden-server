@@ -1427,6 +1427,42 @@ function showBackButton(){
 }
 
 let learnAssessmentDone = false;
+let basicConceptsShown = false;
+
+function showBasicConcepts(onDone){
+  if (basicConceptsShown){ onDone(); return; }
+  basicConceptsShown = true;
+  const msgs = document.getElementById('msgs');
+  const el = document.createElement('div');
+  el.style.cssText='display:flex;gap:10px;align-items:flex-start;animation:msgIn .3s ease;';
+  const concepts = [
+    { icon:'📊', name:'שוק ההון', def:'מקום שבו קונים ומוכרים ניירות ערך — מניות, אג"ח, קרנות. כמו "שוק" רגיל, רק לכסף.' },
+    { icon:'🏢', name:'מניה', def:'חלק קטן מבעלות בחברה. קנית מניית אפל? את שותפה קטנה של אפל. אם החברה מרוויחה — המניה עולה.' },
+    { icon:'📋', name:'אג"ח', def:'הלוואה שנותנת לממשלה או חברה. בתמורה — הם משלמים לך ריבית קבועה. יציב יותר ממניה, רווח נמוך יותר.' },
+    { icon:'📈', name:'מדד', def:'סל של חברות שמייצג קבוצה. S&P 500 = 500 החברות הגדולות בארה"ב. כשהמדד עולה — ממוצע החברות עלה.' },
+    { icon:'🧺', name:'ETF / קרן סל', def:'קיצור של Exchange Traded Fund — קרן שעוקבת אחרי מדד ונסחרת בבורסה. קנית ETF של S&P 500 = קנית 500 חברות בפעולה אחת, בדמי ניהול נמוכים מאוד.' },
+    { icon:'💰', name:'קרן כספית', def:'השקעה סולידית ונזילה — כמו פיקדון חכם. מניבה ~4.5% שנתי, ניתן למשוך תוך יום. מתאימה לכסף שאולי תצטרכי בקרוב.' },
+  ];
+  const rows = concepts.map(c=>`
+    <div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #f0f0ec;align-items:flex-start">
+      <div style="font-size:22px;flex-shrink:0;width:32px;text-align:center">${c.icon}</div>
+      <div>
+        <div style="font-size:13px;font-weight:800;color:#085041;margin-bottom:3px">${c.name}</div>
+        <div style="font-size:12px;color:#555;line-height:1.6">${c.def}</div>
+      </div>
+    </div>`).join('');
+  const card = `<div style="background:white;border-radius:18px;border:1px solid rgba(0,0,0,.08);overflow:hidden;max-width:96%;box-shadow:0 4px 16px rgba(0,0,0,.09)">
+    <div style="background:linear-gradient(135deg,#085041,#1D9E75);padding:14px 18px;color:white">
+      <div style="font-size:14px;font-weight:800">📖 מושגי יסוד — לפני שמתחילות</div>
+      <div style="font-size:11px;opacity:.75;margin-top:2px">הכרות עם המילים שתפגשי בדרך</div>
+    </div>
+    <div style="padding:6px 16px 14px">${rows}</div>
+    <div style="padding:0 16px 14px;font-size:11px;color:#bbb">לחצי "המשיכי" אחרי שקראת — אפשר תמיד לחזור ולהתייחס לכל מושג 💚</div>
+  </div>`;
+  el.innerHTML='<img class="av" src="'+AVATAR+'">'+card;
+  msgs.appendChild(el); scroll();
+  setTimeout(()=>addQRs(['הבנתי, המשיכי ➜'], ()=>{ onDone(); }), 600);
+}
 
 function startLearnAssessment(){
   if (learnAssessmentDone) {
@@ -1448,11 +1484,13 @@ function startLearnAssessment(){
         const isBeginnerLevel = levelReply.includes('מתחילה') || levelReply.includes('בסיסיים');
         delay(()=>{
           if (isBeginnerLevel) {
-            addMsg('מעולה! 💚 נתחיל מהבסיס — כל נושא עם הסבר פשוט וויזואלי.\n\n💡 חשוב לדעת: אנחנו מתחילים עם מדדים (ETF) ולא עם מניות בודדות — כי מחקרים מראים שגם 90% ממנהלי ההשקעות המקצועיים לא מכים את המדדים לאורך זמן.\n\nלחצי על כל נושא לקבל הסבר:');
+            addMsg('מעולה! 💚 נתחיל מהבסיס.\n\nלפני שנצלול לנושאים — הנה כרטיס מושגים קצר שיעזור לך להבין את כל מה שנדבר עליו:');
           } else {
-            addMsg('מצוין! 💚 בחרי נושא לעומק:\n\n💡 תזכורת: אנחנו מתמקדים במדדים (ETF) לפני מניות בודדות — כי הפיזור שלהם נותן יציבות, ודמי הניהול שלהם נמוכים פי 5-10 מקרנות אקטיביות. מניות בודדות — נגיע גם לשם 💚\n\nלחצי על כל נושא:');
+            addMsg('מצוין! 💚 לפני שנתחיל — רגע קצר לוודא שכל המושגים מוכרים:');
           }
-          setTimeout(showLearnMenu, 600);
+          setTimeout(()=>showBasicConcepts(()=>{
+            delay(()=>{ addMsg('יופי! 💚 עכשיו בחרי נושא לעומק:'); setTimeout(showLearnMenu, 500); }, 400);
+          }), 600);
         }, 500);
       }), 400);
     }, 500), 500);
