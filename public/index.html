@@ -265,6 +265,48 @@ code{background:#f0f0ec;padding:1px 6px;border-radius:4px;font-size:11px;font-fa
 .btn-send:hover{background:var(--g2);transform:scale(1.07);}
 .btn-send:disabled{opacity:.4;cursor:not-allowed;transform:none;}
 
+/* ─── CUSTOMIZATION PANEL ─── */
+.customize-panel{
+  background:white;border-radius:12px;border:1px solid rgba(0,0,0,.08);
+  padding:16px;margin-top:10px;overflow:hidden;max-width:92%;
+  box-shadow:0 2px 10px rgba(0,0,0,.05);animation:msgIn .3s ease;
+}
+.customize-title{font-size:14px;font-weight:800;margin-bottom:12px;color:var(--g1);}
+.customize-group{margin-bottom:14px;}
+.customize-group label{font-size:12px;font-weight:600;color:#666;display:block;margin-bottom:6px;}
+.slider-row{display:flex;align-items:center;gap:8px;justify-content:space-between;}
+.slider{
+  flex:1;height:6px;border-radius:3px;background:var(--lighter);
+  -webkit-appearance:none;appearance:none;outline:none;cursor:pointer;
+  accent-color:var(--g3);
+}
+.slider::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;
+  width:16px;height:16px;border-radius:50%;background:var(--g3);cursor:pointer;
+  box-shadow:0 2px 6px rgba(8,80,65,.2);
+}
+.slider::-moz-range-thumb{
+  width:16px;height:16px;border-radius:50%;background:var(--g3);cursor:pointer;
+  border:none;box-shadow:0 2px 6px rgba(8,80,65,.2);
+}
+.slider-value{font-size:13px;font-weight:700;color:var(--g1);min-width:35px;text-align:left;}
+.risk-score-box{
+  background:linear-gradient(135deg,#085041,#1D9E75);color:white;padding:12px;border-radius:10px;margin-top:12px;
+  font-size:12px;line-height:1.7;text-align:center;
+}
+.risk-score-value{font-size:28px;font-weight:900;margin:6px 0;}
+.risk-score-label{font-size:11px;opacity:.8;}
+.alloc-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;}
+.alloc-item{background:var(--g6);border-radius:8px;padding:6px;text-align:center;font-size:11px;}
+.alloc-item strong{display:block;color:var(--g1);font-size:13px;font-weight:800;}
+.alloc-item small{color:#666;font-size:10px;}
+.customize-actions{display:flex;gap:8px;margin-top:12px;}
+.customize-actions button{flex:1;padding:8px 12px;border:1px solid var(--g3);background:white;color:var(--g1);
+  border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:Heebo,sans-serif;transition:all .2s;}
+.customize-actions button:hover{background:var(--g5);}
+.customize-actions button.primary{background:var(--g3);color:white;border-color:var(--g3);}
+.customize-actions button.primary:hover{background:var(--g1);}
+
 /* ─── API PANEL ─── */
 .api-overlay{
   position:fixed;inset:0;
@@ -919,6 +961,114 @@ function buildPortfolio(risk){
 }
 
 // ═══════════════════════════════════════════════
+// CUSTOMIZATION & RISK CALCULATION
+// ═══════════════════════════════════════════════
+function calculateRiskScore(allocs){
+  // חישוב סיכון בסיסי: 0-100
+  // מחמם סיכון גבוה = יותר מניות, פחות כסף/אג"ח
+  let score = 20; // baseline
+  let equityTotal = 0, bondTotal = 0, cashTotal = 0;
+  
+  allocs.forEach(a => {
+    if (a.secs.includes('etf') || a.secs.includes('il')) equityTotal += a.pct;
+    else if (a.secs === 'bonds') bondTotal += a.pct;
+    else if (a.secs === 'cash') cashTotal += a.pct;
+  });
+  
+  score += equityTotal * 0.7; // מניות = 70% מהסיכון
+  score += bondTotal * 0.2;   // אג"ח = 20%
+  score += cashTotal * 0.05;  // קרן כספית = 5%
+  
+  return Math.round(Math.min(100, score));
+}
+
+function makeCustomizablePortfolioCard(profile){
+  const allocsHtml = profile.allocs.map((a, i) => `
+    <div class="customize-group">
+      <label>${a.name}</label>
+      <div class="slider-row">
+        <input type="range" class="slider" id="alloc_${i}" min="0" max="100" value="${a.pct}" 
+               onchange="updatePortfolioPreview()" oninput="updatePortfolioPreview()">
+        <span class="slider-value" id="value_${i}">${a.pct}%</span>
+      </div>
+    </div>
+  `).join('');
+  
+  const riskScore = calculateRiskScore(profile.allocs);
+  const riskLabel = (r => r >= 70 ? 'גבוה 🚀' : r >= 50 ? 'בינוני ⚖️' : 'נמוך 🛡️')(riskScore);
+  const riskColor = (r => r >= 70 ? '#6d28d9' : r >= 50 ? '#1a6b8a' : '#085041')(riskScore);
+  
+  return `<div class="customize-panel" id="customize_panel">
+    <div class="customize-title">🎛️ כיוונו את התיק לפי בחירתכן</div>
+    <div style="font-size:12px;color:#666;margin-bottom:14px;line-height:1.6">
+      הזיזו את המחוונים כדי לשנות את הרכיבים. ראו בזמן אמת איך זה משפיע על סיכון התיק 💡
+    </div>
+    ${allocsHtml}
+    <div class="risk-score-box" id="risk_box" style="background:linear-gradient(135deg,${riskColor},${riskColor}dd)">
+      <div class="risk-score-label">רמת סיכון בהקצאה הנוכחית:</div>
+      <div class="risk-score-value" id="risk_value">${riskScore}</div>
+      <div class="risk-score-label">${riskLabel}</div>
+    </div>
+    <div class="customize-actions">
+      <button onclick="resetPortfolio()">⟲ חזרה לברירת מחדל</button>
+      <button class="primary" onclick="confirmCustomPortfolio()">✓ אישור התיק</button>
+    </div>
+  </div>`;
+}
+
+function updatePortfolioPreview(){
+  const sliders = document.querySelectorAll('.slider');
+  const allocs = [];
+  let total = 0;
+  
+  sliders.forEach((s, i) => {
+    const val = parseInt(s.value);
+    allocs.push({pct: val});
+    total += val;
+    document.getElementById('value_' + i).textContent = val + '%';
+  });
+  
+  // Normalize
+  if (total !== 100) {
+    const diff = 100 - total;
+    const lastVal = parseInt(sliders[sliders.length-1].value);
+    sliders[sliders.length-1].value = lastVal + diff;
+    document.getElementById('value_' + (sliders.length-1)).textContent = (lastVal + diff) + '%';
+    allocs[sliders.length-1].pct = lastVal + diff;
+  }
+  
+  const score = calculateRiskScore(allocs);
+  const riskLabel = (r => r >= 70 ? 'גבוה 🚀' : r >= 50 ? 'בינוני ⚖️' : 'נמוך 🛡️')(score);
+  const riskColor = (r => r >= 70 ? '#6d28d9' : r >= 50 ? '#1a6b8a' : '#085041')(score);
+  
+  document.getElementById('risk_value').textContent = score;
+  document.getElementById('risk_box').style.background = `linear-gradient(135deg,${riskColor},${riskColor}dd)`;
+  document.getElementById('risk_box').querySelector('.risk-score-label:last-child').textContent = riskLabel;
+  
+  // Save current state
+  window._customAllocations = Array.from(document.querySelectorAll('.slider')).map(s => parseInt(s.value));
+}
+
+function resetPortfolio(){
+  location.reload(); // פשוט נטען מחדש את הדף
+}
+
+function confirmCustomPortfolio(){
+  const sliders = Array.from(document.querySelectorAll('.slider'));
+  window._customAllocations = sliders.map(s => parseInt(s.value));
+  
+  // בעתיד שיפור: שמור לקיום
+  delay(()=>{
+    addMsg('✅ התיק שלך עודכן! 💚');
+    setTimeout(()=>addQRs([
+      'הסבירי על המרכיבים החדשים',
+      'תני לי ניירות ספציפיים 📋',
+      'רוצה לשנות עוד משהו',
+    ], handlePortfolioChoice), 400);
+  }, 800);
+}
+
+// ═══════════════════════════════════════════════
 // CARDS HTML
 // ═══════════════════════════════════════════════
 function compareCardHTML(amount){
@@ -1538,6 +1688,7 @@ function showLearnMenu(){
     'גידור מטבע 💱',
     'גרף השוואת מדדים 📊',
     'נושאים נוספים 📚',
+    'שלב 2 — למידה מתקדמת 🚀',
     'אעמיק בזה בהמשך ⏭️',
   ];
   if (kyc.profile) {
@@ -1557,6 +1708,8 @@ function showAdvancedMenu(){
     'מניה vs. קרן סל 🤔',
     'איך בוחרים בית השקעות? 🏦',
     'מה זה מדד? 📊',
+    'Rebalancing ואיזון תיק 🔄',
+    'ניתוח מדדים לעומק 📈',
     'חזרה לנושאי בסיס ↩️',
   ], handleLearnTopic);
 }
@@ -1645,6 +1798,17 @@ function handleLearnTopic(reply){
 
   if (reply.includes('נושאים נוספים')) {
     delay(()=>{ addMsg('הנה נושאים להעמקה 💚'); setTimeout(showAdvancedMenu, 400); }, 500);
+    return;
+  }
+
+  if (reply.includes('שלב 2') || reply.includes('מתקדמת 🚀')) {
+    delay(()=>{
+      addMsg('👋 ברוכה בשלב 2 — למידה מתקדמת בשוק הון! 🚀\n\nפה נדברים על דברים שמעלים תשקיע מנובה לשלב משני — ניתוח עמוק, אסטרטגיות ותכנון לטווח ארוך 💚');
+      setTimeout(()=>delay(()=>{
+        addMsg('בחרי נושא להעמקה:');
+        setTimeout(showAdvancedMenu, 400);
+      },600),600);
+    }, 500);
     return;
   }
 
@@ -1754,6 +1918,24 @@ function handleLearnTopic(reply){
       addMsg('מדד = סל חברות שמייצג קבוצה:\n\n📊 S&P 500 = 500 החברות הגדולות בארה"ב (אפל, גוגל, אמזון...)\n📊 MSCI World = ~1,500 חברות מ-23 מדינות מפותחות\n📊 נאסד"ק 100 = 100 חברות הטכנולוגיה הגדולות בארה"ב\n📊 ת"א 125 = 125 החברות הגדולות בישראל\n\n🔑 כשמדד "עולה" — ממוצע החברות שבו עולה.\nקרן סל עוקבת אחרי המדד בצורה אוטומטית — ולכן קניית קרן = קניית כל החברות שבו, בבת אחת 💚');
       setTimeout(()=>showRelatedTopics(['קרן סל / ETF 📈', 'גרף השוואת מדדים 📊', 'מניה vs. קרן סל 🤔']), 400);
     }, 700);
+    return;
+  }
+
+  if (reply.includes('Rebalancing') || reply.includes('אזון תיק') || reply.includes('לאזן')) {
+    delay(()=>{
+      addMsg('🔄 Rebalancing = איזון התיק מחדש\n\nמה קורה עם הזמן:\nהתחלת עם 50% מניות + 50% אג"ח.\nאחרי שנה, המניות עלו והן כבר 60% מהתיק.\nעכשיו הסיכון שלך גבוה יותר מהתכנון 📈\n\n✅ הפתרון:\nמוכרות קצת מהמניות וקונות עוד אג"ח כדי לחזור לפרופיל המקורי.\n\n📅 מתי לעשות:\n• אחת לשנה (naturally)\n• או כשהרכב סטה יותר מ-5% מהיעד\n• או כשמגיע כסף חדש (בון או חיסכון)\n\n🎯 הנקודה: זה לא שיחוק עצבים מדי — אפילו פעם בשנה זה בסדר 💚');
+      setTimeout(()=>showRelatedTopics(['הוראת קבע חודשית 📅', 'פסיכולוגיה של השקעות 🧠', 'קרן סל / ETF 📈']), 400);
+    }, 700);
+    return;
+  }
+
+  if (reply.includes('ניתוח') || reply.includes('ניתוח מדדים')) {
+    delay(()=>{
+      addMsg('📈 ניתוח מדדים לעומק — איך "קוראים" את המדדים בחכמה?\n\n🔍 מה להסתכל עליו:\n1. ביצועים לאורך 5-10 שנים (לא דיי קצר, לא יותר מדי ארוך)\n2. תנודתיות (Volatility) — כמה הוא "קופץ"\n3. Drawdown — הירידה המקסימלית בשנה גרועה\n4. דמי ניהול — אם מעל 0.5%, זה סימן קנייה של קרן פעילה\n\n💡 כלל הזהב:\n• לא להנסות לתזמן את השוק ("מתי לקנות?")\n• להסתכל על גרפים של 10+ שנים, לא של חודשים\n• לזכור שכל המדדים בהיסטוריה עלו בסיום התקופה\n\n🎯 בפרקטיקה: בחרי קרן סל על צי המדדים, כתוב את דמי הניהול, וכן — זה הכל 💚');
+      setTimeout(()=>showRelatedTopics(['גרף השוואת מדדים 📊', 'קרן סל / ETF 📈', 'מה זה מדד? 📊']), 400);
+    }, 700);
+    return;
+  }
     return;
   }
 
@@ -2372,6 +2554,9 @@ function rebuildWithRisk(risk){
     setTimeout(()=>{
       addCard(portfolioCardHTML(profile));
       setTimeout(()=>{
+        addCard(makeCustomizablePortfolioCard(profile));
+      }, 300);
+      setTimeout(()=>{
         addMsg('רוצי להמשיך?');
         setTimeout(()=>{
           addQRs([
@@ -2444,8 +2629,15 @@ function showAllSecurities(){
     msgs.appendChild(el); scroll();
   }, 800);
 
+  // הוסף פנל עדכון גמיש
+  if (kyc.profile) {
+    setTimeout(()=>{
+      addCard(makeCustomizablePortfolioCard(kyc.profile));
+    }, 1400);
+  }
+
   const allocs = kyc.profile?.allocs || [];
-  let d = 2000;
+  let d = 2600;
   allocs.forEach(a => {
     setTimeout(()=>{
       // כותרת לכל מרכיב לפני הטבלה
@@ -2717,7 +2909,7 @@ async function handleFinal(reply){
   } else if (reply.includes('ברור') || reply.includes('תודה')) {
     delay(()=>{
       addMsg('כל הכבוד שהגעת עד כאן! 🎉\n\nהבנת את הבסיס, הכרת את הפרופיל שלך, וראית דוגמאות למבנים נפוצים — זה בדיוק השלב הראשון.\n\n⚠️ תזכורת חשובה: כל מה שהצגתי הוא לצורכי למידה בלבד — לא המלצת השקעה אישית. לפני כל פעולה — כדאי להתייעץ עם יועץ השקעות מורשה.\n\nהדרך ממשיכה — שאלות, ספקות, שינויים בדרך — אני כאן 💚\n\nעדן | נתיב הכסף החכם שלך ✦');
-      setTimeout(()=>addQRs(['ללמוד עוד על נושא 📚','בואי נבנה תיק חדש מחדש 🔄'], handleFinalDone), 500);
+      setTimeout(()=>addQRs(['ללמוד עוד על נושא 📚','שלב 2 — למידה מתקדמת 🚀','בואי נבנה תיק חדש מחדש 🔄'], handleFinalDone), 500);
     }, 700);
 
   } else {
@@ -2736,6 +2928,14 @@ function handleFinalDone(reply){
       addMsg('בסדר גמור! מתחילות מחדש 💪');
       setTimeout(startKYC, 600);
     }, 600);
+  } else if (reply.includes('שלב 2') || reply.includes('מתקדמת')) {
+    delay(()=>{
+      addMsg('👋 ברוכה בשלב 2 — למידה מתקדמת בשוק הון! 🚀\n\nפה נדברים על דברים שמעלים תשקיע מנובה לשלב משני — ניתוח עמוק, אסטרטגיות ותכנון לטווח ארוך 💚');
+      setTimeout(()=>delay(()=>{
+        addMsg('בחרי נושא להעמקה:');
+        setTimeout(showAdvancedMenu, 400);
+      },600),600);
+    }, 500);
   } else {
     delay(()=>{
       addMsg('בחרי נושא שמעניין אותך 💚');
