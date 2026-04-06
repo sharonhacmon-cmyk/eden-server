@@ -673,7 +673,13 @@ function scroll(){
   if (nearBottom) m.scrollTop = m.scrollHeight;
 }
 
+let _lastUserText = ''; let _lastUserTime = 0;
 function addMsg(text, isUser=false){
+  if (isUser) {
+    const now = Date.now();
+    if (text === _lastUserText && now - _lastUserTime < 800) return;
+    _lastUserText = text; _lastUserTime = now;
+  }
   const msgs = document.getElementById('msgs');
   const wrap = document.createElement('div');
   wrap.className = 'msg ' + (isUser?'user':'eden');
