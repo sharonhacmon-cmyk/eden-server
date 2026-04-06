@@ -3124,24 +3124,13 @@ async function checkLogin() {
     }
     return;
   }
-  // הצג מסך כניסה
-  document.body.innerHTML = `
-    <div style="min-height:100vh;background:linear-gradient(145deg,#085041,#0d6b57,#1D9E75);display:flex;align-items:center;justify-content:center;font-family:Heebo,sans-serif;direction:rtl">
-      <div style="background:white;border-radius:28px;padding:44px 36px;max-width:380px;width:90%;box-shadow:0 32px 80px rgba(0,0,0,.25);text-align:center">
-        <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#085041,#1D9E75);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px;box-shadow:0 8px 24px rgba(8,80,65,.3)">✦</div>
-        <h1 style="font-size:26px;font-weight:900;color:#085041;margin-bottom:4px">עדן</h1>
-        <p style="font-size:13px;color:#888;margin-bottom:28px;line-height:1.6">נתיב הכסף החכם שלך<br>הכניסי את קוד הגישה שקיבלת</p>
-        <input id="code-inp" type="text" placeholder="EDEN-XXXX"
-          style="width:100%;border:1.5px solid #e0e0dc;border-radius:12px;padding:13px 16px;font-family:Heebo,sans-serif;font-size:16px;text-align:center;letter-spacing:2px;outline:none;margin-bottom:12px;text-transform:uppercase"
-          onkeydown="if(event.key==='Enter')doLogin()">
-        <button onclick="doLogin()"
-          style="width:100%;background:linear-gradient(135deg,#085041,#1D9E75);color:white;border:none;border-radius:12px;padding:14px;font-family:Heebo,sans-serif;font-size:16px;font-weight:800;cursor:pointer">
-          כניסה ←
-        </button>
-        <div id="login-err" style="color:#c62828;font-size:12px;font-weight:600;margin-top:10px;min-height:18px"></div>
-        <div style="margin-top:20px;font-size:11px;color:#bbb">לא קיבלת קוד? <a href="https://wa.me/972XXXXXXXXX" style="color:#085041">צרי קשר עם שרון</a></div>
-      </div>
-    </div>`;
+
+  const loginOverlay = document.getElementById('login-overlay');
+  const mainContent = document.getElementById('main-content');
+  if (loginOverlay && mainContent) {
+    loginOverlay.style.display = 'flex';
+    mainContent.style.display = 'none';
+  }
 }
 
 async function doLogin() {
