@@ -3146,7 +3146,8 @@ async function doLogin() {
     });
     const d = await res.json();
     if (!res.ok) {
-      document.getElementById('login-err').textContent = d.error || 'שגיאה';
+      document.getElementById('login-error').textContent = d.error || 'שגיאה';
+      document.getElementById('login-error').style.display = 'block';
       btn.textContent = 'כניסה ←'; btn.disabled = false;
       return;
     }
@@ -3154,7 +3155,8 @@ async function doLogin() {
     sessionStorage.setItem('eden_token', authToken);
     location.reload();
   } catch(e) {
-    document.getElementById('login-err').textContent = 'שגיאת חיבור — נסי שוב';
+    document.getElementById('login-error').textContent = 'שגיאת חיבור — נסי שוב';
+    document.getElementById('login-error').style.display = 'block';
     btn.textContent = 'כניסה ←'; btn.disabled = false;
   }
 }
