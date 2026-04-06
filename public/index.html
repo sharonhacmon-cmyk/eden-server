@@ -59,6 +59,12 @@ body{
 .api-btn:hover{background:rgba(255,255,255,.2);}
 .api-dot{width:6px;height:6px;border-radius:50%;background:#fbbf24;}
 .api-dot.live{background:#34d399;}
+/* ─── NAV MENU ─── */
+.nav-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:flex-start;justify-content:flex-end;padding:64px 16px 0;}
+.nav-box{background:white;border-radius:18px;padding:6px;min-width:230px;box-shadow:0 8px 32px rgba(0,0,0,.2);animation:msgIn .2s ease;}
+.nav-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;cursor:pointer;font-family:Heebo,sans-serif;font-size:14px;font-weight:700;color:#1a1a18;border:none;background:none;width:100%;text-align:right;transition:background .15s;}
+.nav-item:hover{background:#f0faf5;color:#085041;}
+.nav-sep{height:1px;background:#f0f0ec;margin:4px 8px;}
 
 /* ─── MESSAGES ─── */
 .msgs{
@@ -387,6 +393,19 @@ code{background:#f0f0ec;padding:1px 6px;border-radius:4px;font-size:11px;font-fa
     <span class="api-dot" id="api-dot"></span>
     <span id="api-btn-label">Demo</span>
   </button>
+  <button class="api-btn" onclick="openNavMenu()" style="margin-right:6px;font-size:16px;padding:5px 12px;" title="תפריט ניווט">☰</button>
+</div>
+
+<!-- NAV MENU -->
+<div id="nav-overlay" class="nav-overlay" onclick="if(event.target===this)closeNavMenu()">
+  <div class="nav-box">
+    <button class="nav-item" onclick="navJump('concepts')">📖 מושגי יסוד</button>
+    <button class="nav-item" onclick="navJump('learn')">📚 נושאי לימוד</button>
+    <button class="nav-item" onclick="navJump('calc')">🧮 מחשבון ריבית דריבית</button>
+    <button class="nav-item" onclick="navJump('portfolio')">🏦 התיק שלי</button>
+    <div class="nav-sep"></div>
+    <button class="nav-item" onclick="closeNavMenu()" style="color:#888;font-weight:600">✕ סגרי</button>
+  </div>
 </div>
 
 <!-- MESSAGES -->
@@ -1545,9 +1564,12 @@ function showAdvancedMenu(){
 function showRelatedTopics(suggestions){
   delay(()=>{
     addMsg('נהדר! 💚 מה הלאה?');
-    const opts = [...(suggestions||[]), 'כל הנושאים 📚', 'אעמיק בזה בהמשך ⏭️'];
+    const opts = [...(suggestions||[]), 'ספרי לי עוד 💡', 'כל הנושאים 📚', 'אעמיק בזה בהמשך ⏭️'];
     setTimeout(()=>addQRs(opts, (r)=>{
-      if (r.includes('כל הנושאים')) {
+      if (r.includes('ספרי לי עוד')) {
+        addMsg(r, true);
+        askMoreAbout(currentTopic);
+      } else if (r.includes('כל הנושאים')) {
         addMsg(r, true);
         delay(()=>showLearnMenu(), 300);
       } else {
@@ -1560,6 +1582,8 @@ function showRelatedTopics(suggestions){
 function handleLearnTopic(reply){
   addMsg(reply, true);
   lastFlowFn = showLearnMenu;
+  currentTopic = reply;
+  saveProgress();
 
   if (reply.includes('אעמיק בזה בהמשך') || reply.includes('בהמשך ⏭️')) {
     if (kyc.profile) {
@@ -2841,7 +2865,23 @@ function toggleTTS(){
 }
 
 async function checkLogin() {
-  if (authToken) { updateApiUI(); startIntro(); return; }
+  if (authToken) {
+    updateApiUI();
+    const saved = loadProgress();
+    if (saved) {
+      delay(()=>{
+        addMsg('ברוכה השבה לעדן! 💚\n\nראיתי שהתחלת ללמוד איתי — רוצה להמשיך מאיפה שעצרת?');
+        setTimeout(()=>addQRs(['כן, המשיכי ↩️', 'לא, נתחיל מחדש 🆕'], (r)=>{
+          addMsg(r, true);
+          if (r.includes('המשיכי')) { restoreProgress(saved); }
+          else { localStorage.removeItem('eden_progress'); delay(()=>startIntro(), 400); }
+        }), 500);
+      }, 600);
+    } else {
+      startIntro();
+    }
+    return;
+  }
   // הצג מסך כניסה
   document.body.innerHTML = `
     <div style="min-height:100vh;background:linear-gradient(145deg,#085041,#0d6b57,#1D9E75);display:flex;align-items:center;justify-content:center;font-family:Heebo,sans-serif;direction:rtl">
@@ -2886,6 +2926,137 @@ async function doLogin() {
     document.getElementById('login-err').textContent = 'שגיאת חיבור — נסי שוב';
     btn.textContent = 'כניסה ←'; btn.disabled = false;
   }
+}
+
+// ═══════════════════════════════════════════════
+// NAV MENU
+// ═══════════════════════════════════════════════
+let navSnapshot = null;
+
+function openNavMenu(){
+  navSnapshot = { stage, kycStep, kyc: JSON.parse(JSON.stringify(kyc)), lastFlowFn, learnAssessmentDone, basicConceptsShown };
+  document.getElementById('nav-overlay').style.display = 'flex';
+}
+function closeNavMenu(){
+  document.getElementById('nav-overlay').style.display = 'none';
+}
+
+function navJump(section){
+  closeNavMenu();
+  if (section === 'concepts'){
+    basicConceptsShown = false;
+    delay(()=>{
+      addMsg('הנה מושגי הבסיס 💚');
+      setTimeout(()=>showBasicConcepts(()=>{ addNavReturnBtn(); }), 400);
+    }, 400);
+  } else if (section === 'learn'){
+    delay(()=>{ addMsg('בחרי נושא 💚'); setTimeout(()=>{ showLearnMenu(); addNavReturnBtn(); }, 400); }, 400);
+  } else if (section === 'calc'){
+    delay(()=>{ addMsg('הנה המחשבון 💚'); setTimeout(()=>{ showCompoundCalculator(); addNavReturnBtn(); }, 600); }, 400);
+  } else if (section === 'portfolio'){
+    if (kyc.profile){
+      delay(()=>{
+        addMsg('הנה התיק שלך 💚');
+        setTimeout(()=>{ addCard(portfolioCardHTML(kyc.profile)); addNavReturnBtn(); }, 400);
+      }, 400);
+    } else {
+      delay(()=>{ addMsg('עוד לא בנינו תיק — בואי נתחיל 💚'); setTimeout(startKYC, 600); }, 400);
+    }
+  }
+}
+
+function addNavReturnBtn(){
+  if (!navSnapshot) return;
+  setTimeout(()=>{
+    const msgs = document.getElementById('msgs');
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'display:flex;justify-content:center;margin:8px 0;';
+    wrap.innerHTML = '<button onclick="navReturn(this.parentElement)" style="background:linear-gradient(135deg,#085041,#1D9E75);color:white;border:none;border-radius:20px;padding:8px 22px;font-family:Heebo,sans-serif;font-size:13px;font-weight:700;cursor:pointer">↩️ חזרי להיכן שעצרת</button>';
+    msgs.appendChild(wrap);
+    scroll();
+  }, 800);
+}
+
+function navReturn(btnWrap){
+  if (!navSnapshot) return;
+  if (btnWrap) btnWrap.remove();
+  const s = navSnapshot; navSnapshot = null;
+  stage = s.stage; kycStep = s.kycStep; kyc = s.kyc;
+  learnAssessmentDone = s.learnAssessmentDone; basicConceptsShown = s.basicConceptsShown;
+  lastFlowFn = s.lastFlowFn;
+  delay(()=>{
+    addMsg('חוזרת להיכן שעצרת 💚');
+    setTimeout(()=>{ if (lastFlowFn) lastFlowFn(); }, 400);
+  }, 400);
+}
+
+// ═══════════════════════════════════════════════
+// ספרי לי עוד — API ממוקד
+// ═══════════════════════════════════════════════
+let currentTopic = '';
+
+async function askMoreAbout(topic){
+  const focusedSys = `את עדן, מלווה פיננסית שנוצרה על ידי שרון מנתיב.
+ענה רק על הנושא: "${topic}".
+תני הרחבה קצרה ומועילה — 3-4 משפטים בעברית, גוף נקבה.
+אל תחרגי מהנושא. אל תציעי נושאים אחרים. אל תסיימי עם שאלות.`;
+  const t = showTyping();
+  try {
+    const res = await fetch('/api/chat', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+authToken},
+      body: JSON.stringify({ system: focusedSys, messages:[{role:'user', content:'הרחיבי על הנושא: '+topic}] })
+    });
+    t.remove();
+    if (res.ok){ const d = await res.json(); addMsg(d.content || 'נסי שוב 💚'); }
+    else { addMsg('שגיאה זמנית — נסי שוב 💚'); }
+  } catch(e){ t.remove(); addMsg('שגיאת חיבור 💚'); }
+}
+
+// ═══════════════════════════════════════════════
+// שמירת התקדמות (localStorage)
+// ═══════════════════════════════════════════════
+function saveProgress(){
+  try {
+    localStorage.setItem('eden_progress', JSON.stringify({
+      stage, kycStep, kyc, learnAssessmentDone, basicConceptsShown,
+      lastTopic: currentTopic, ts: Date.now()
+    }));
+  } catch(e){}
+}
+
+function loadProgress(){
+  try {
+    const raw = localStorage.getItem('eden_progress');
+    if (!raw) return null;
+    const d = JSON.parse(raw);
+    if (Date.now() - d.ts > 7*24*3600*1000){ localStorage.removeItem('eden_progress'); return null; }
+    return d;
+  } catch(e){ return null; }
+}
+
+function restoreProgress(p){
+  stage = p.stage || 'intro';
+  kycStep = p.kycStep || 0;
+  kyc = p.kyc || {};
+  learnAssessmentDone = p.learnAssessmentDone || false;
+  basicConceptsShown = p.basicConceptsShown || false;
+  currentTopic = p.lastTopic || '';
+  delay(()=>{
+    if (stage === 'portfolio' && kyc.profile){
+      addMsg('ברוכה השבה! 💚 הנה התיק שעבדנו עליו:');
+      setTimeout(()=>{
+        addCard(portfolioCardHTML(kyc.profile));
+        setTimeout(()=>addQRs(['המשיכי להסביר 💚','ללמוד עוד נושא 📚','בואי נשנה משהו בתיק'], handlePortfolioChoice), 500);
+      }, 500);
+    } else if (learnAssessmentDone){
+      addMsg('ברוכה השבה! 💚 ממשיכות מהלימודים:');
+      setTimeout(showLearnMenu, 500);
+    } else {
+      addMsg('ברוכה השבה! 💚 ממשיכות מהיכן שעצרנו:');
+      setTimeout(startIntro, 500);
+    }
+  }, 500);
 }
 
 window.onload = checkLogin;
