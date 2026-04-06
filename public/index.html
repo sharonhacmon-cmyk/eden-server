@@ -3108,6 +3108,10 @@ function toggleTTS(){
 
 async function checkLogin() {
   if (authToken) {
+    const loginOverlay = document.getElementById('login-overlay');
+    const mainContent = document.getElementById('main-content');
+    if (loginOverlay) loginOverlay.style.display = 'none';
+    if (mainContent) mainContent.style.display = 'flex';
     updateApiUI();
     const saved = loadProgress();
     if (saved) {
