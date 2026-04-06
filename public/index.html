@@ -1939,22 +1939,37 @@ async function handleCompareChoice(reply){
               <div style="font-size:10px;color:#378ADD;margin-top:2px">יום לפדיון</div>
             </div>
             <div style="background:#e6f1fb;padding:10px 6px;border-radius:10px">
-              <div style="font-size:22px;font-weight:900;color:#185FA5">0%</div>
-              <div style="font-size:10px;color:#378ADD;margin-top:2px">סיכון לקרן</div>
+              <div style="font-size:22px;font-weight:900;color:#185FA5">~0.1%</div>
+              <div style="font-size:10px;color:#378ADD;margin-top:2px">דמי ניהול שנתי</div>
             </div>
           </div>
+
           <div style="background:#f0faf5;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:12px">
-            💡 <strong>דוגמה:</strong> ₪50,000 בקרן כספית = ~₪2,250 בשנה. בלי לעשות כלום. הכסף עובד בשבילך.
+            💡 <strong>דוגמה:</strong> ₪50,000 בקרן כספית × 4.5% = ~₪2,250 בשנה — בלי לעשות כלום.<br>
+            דמי ניהול של ~0.1% = ₪50 בשנה בלבד. נשאר לך ₪2,200 נטו.
           </div>
-          <div style="font-size:12px;color:#444;margin-bottom:12px">
-            מתאימה ל: כסף שתצטרכי בשנה-שנתיים הקרובות, כרית ביטחון, או חלק "יציב" בתיק.
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;margin-bottom:12px">
+            <div style="background:#e8f5e9;padding:8px 10px;border-radius:8px">
+              <div style="font-weight:800;color:#2e7d32;margin-bottom:4px">✅ יתרונות</div>
+              <div style="color:#444">נזילה יומית — אפשר למשוך תוך יום<br>סיכון נמוך מאוד<br>תשואה גבוהה מפיקדון בנקאי<br>דמי ניהול זולים</div>
+            </div>
+            <div style="background:#fdecea;padding:8px 10px;border-radius:8px">
+              <div style="font-weight:800;color:#c62828;margin-bottom:4px">⚠️ חסרונות</div>
+              <div style="color:#444">תשואה נמוכה לטווח ארוך<br>לא מגנה מאינפלציה גבוהה<br>לא מתאימה לצמיחה<br>תשואה משתנה עם הריבית</div>
+            </div>
           </div>
+
+          <div style="background:#fff8e1;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:12px;color:#7c4a00">
+            🎯 <strong>מתי כדאי?</strong> כרית ביטחון, כסף שתצטרכי ב-1-2 שנים, או החלק "השקט" בתיק בזמן אי-ודאות.
+          </div>
+
           <div style="background:#e6f1fb;border-radius:10px;padding:10px 14px;font-size:12px;line-height:1.7">
             <div style="font-weight:800;color:#185FA5;margin-bottom:6px">💡 דוגמאות לקרנות כספיות בישראל:</div>
             <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">
               ${['מיטב','ילין לפידות','הראל','אי.בי.אי','פסגות'].map(n=>`<span style="background:white;border:1px solid #378ADD;color:#185FA5;padding:3px 10px;border-radius:14px;font-size:11px;font-weight:700">${n}</span>`).join('')}
             </div>
-            <div style="font-size:11px;color:#666;background:#fff8e1;border-radius:8px;padding:6px 10px">⚠️ אלו דוגמאות בלבד — השוואה מלאה עם נתוני תשואות זמינה בחלק ניתוח הניירות.</div>
+            <div style="font-size:11px;color:#666;background:#f5f5f5;border-radius:8px;padding:6px 10px">⚠️ אלו דוגמאות בלבד לצורך לימוד — לא המלצה לרכישה.</div>
           </div>
         </div>
       </div>`;
