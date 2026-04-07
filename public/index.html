@@ -994,40 +994,64 @@ function compareCardHTML(amount){
 }
 
 function portfolioCardHTML(profile){
-  const rows = profile.allocs.map(a=>`
+  const pid = 'pc_' + Date.now();
+  const origAllocs = JSON.parse(JSON.stringify(profile.allocs));
+  const origName = profile.name;
+
+  const getTitle = (allocs) => {
+    const stocks = allocs.filter(a=>a.name.includes('מנייתי')||a.name.includes('מניות')||a.name.includes('מניה')).reduce((s,a)=>s+a.pct,0);
+    const bonds  = allocs.filter(a=>a.name.includes('אג"ח')||a.name.includes('אגח')).reduce((s,a)=>s+a.pct,0);
+    if (stocks >= 80) return { name:'אגרסיבי', desc:'⚡ חשיפה גבוהה לשוק המניות — פוטנציאל צמיחה גדול לטווח ארוך, אבל בשנה רעה התיק יכול לרדת 30%+. מתאים למי שיכולה לסבול תנודתיות ולא תצטרך לכסף בקרוב.' };
+    if (stocks >= 60) return { name:'צמיחה', desc:'📈 רוב התיק במניות — שילוב של פוטנציאל צמיחה עם קצת עוגן יציב. מאוזן יחסית אבל עדיין תנודתי.' };
+    if (stocks >= 40) return { name:'מאוזן', desc:'⚖️ שילוב שווה יחסית — מניות לצמיחה, אג"ח לייצוב. ישן טוב יותר בלילות סוערים מבלי לוותר על פוטנציאל.' };
+    if (bonds  >= 50) return { name:'סולידי', desc:'🛡️ רוב התיק באג"ח — יציבות גבוהה, תנודתיות נמוכה. הצמיחה לאורך זמן מתונה יותר. מתאים לטווח קצר-בינוני.' };
+    return { name:'מגוון', desc:'📊 פיזור רחב — שילוב של מספר נכסים שמאזן בין סיכון לתשואה.' };
+  };
+
+  const renderRows = (allocs) => allocs.map((a,i)=>`
     <div style="margin-bottom:10px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
         <span style="font-size:13px;font-weight:700;color:#1a1a18">${a.name}</span>
         <span style="font-size:13px;font-weight:800;color:${a.color}">${a.pct}%</span>
       </div>
-      <div style="background:#f0f0ec;border-radius:4px;height:8px">
-        <div style="width:${a.pct}%;height:100%;background:${a.color};border-radius:4px"></div>
-      </div>
+      <input type="range" min="0" max="100" value="${a.pct}" oninput="pcUpdate('${pid}',${i},+this.value)"
+        style="width:100%;accent-color:${a.color};height:6px;cursor:pointer;margin-bottom:2px">
     </div>`).join('');
 
-  const stocksPct = profile.allocs.filter(a=>a.name.includes('מנייתי')||a.name.includes('מניות')||a.name.includes('מניה')).reduce((s,a)=>s+a.pct,0);
-  const bondsPct  = profile.allocs.filter(a=>a.name.includes('אג"ח')||a.name.includes('אגח')).reduce((s,a)=>s+a.pct,0);
+  const renderDesc = (allocs) => {
+    const t = getTitle(allocs);
+    return `<div style="background:#f0faf5;border-radius:10px;padding:9px 12px;font-size:12px;color:#085041;line-height:1.6">
+      <strong>תיק ${t.name}:</strong> ${t.desc}
+    </div>`;
+  };
 
-  const mixInfo = `<div style="margin-top:12px;border-top:1px solid #f0ede8;padding-top:12px;font-size:12px;color:#444;line-height:1.7">
-    <div style="font-weight:800;color:#085041;margin-bottom:6px">💡 מה קורה אם משנים את התמהיל?</div>
-    <div>• <strong>מגדילים מניות</strong> — פוטנציאל תשואה עולה, אבל גם התנודתיות. בשנה רעה התיק יכול לרדת יותר.</div>
-    <div>• <strong>מגדילים אג"ח</strong> — התיק יציב יותר, ישן טוב יותר בלילות סוערים — אבל הצמיחה לאורך זמן נמוכה יותר.</div>
-    <div>• <strong>מבטלים אג"ח לגמרי</strong> — חשיפה מלאה לשוק המניות. מתאים לטווח ארוך מאוד ולמי שיכולה לסבול ירידות של 30%+.</div>
-    <div style="margin-top:8px;background:#f0faf5;border-radius:8px;padding:7px 10px;color:#085041;font-weight:700">
-      ${stocksPct >= 80 ? '⚡ תיק זה אגרסיבי — פוטנציאל גדול, תנודתיות גבוהה' :
-        stocksPct >= 50 ? '⚖️ תיק זה מאוזן — שילוב טוב של צמיחה ויציבות' :
-        '🛡️ תיק זה סולידי — יציבות גבוהה, צמיחה מתונה'}
-    </div>
-  </div>`;
+  window['_pcd_'+pid] = JSON.parse(JSON.stringify(profile.allocs));
+  window.pcUpdate = function(pid, idx, val){
+    const allocs = window['_pcd_'+pid];
+    const others = allocs.filter((_,i)=>i!==idx);
+    const otherTotal = others.reduce((s,a)=>s+a.pct,0);
+    allocs[idx].pct = val;
+    const remaining = 100 - val;
+    if (otherTotal > 0){
+      others.forEach(a=>{ a.pct = Math.round(a.pct / otherTotal * remaining); });
+      const diff = 100 - allocs.reduce((s,a)=>s+a.pct,0);
+      if (diff !== 0) others[0].pct += diff;
+    }
+    const card = document.getElementById(pid);
+    const t = getTitle(allocs);
+    card.querySelector('.pc-title').textContent = 'מבנה ' + t.name;
+    card.querySelector('.pc-rows').innerHTML = renderRows(allocs);
+    card.querySelector('.pc-desc').innerHTML = renderDesc(allocs);
+  };
 
-  return `<div class="portfolio-card">
+  return `<div class="portfolio-card" id="${pid}">
     <div class="pc-header" style="background:${profile.color}">
-      <div class="pc-title">מבנה נפוץ לפרופיל ${profile.name}</div>
-      <div class="pc-sub">דוגמה ללמידה בלבד · לא המלצת השקעה אישית</div>
+      <div class="pc-title">מבנה ${getTitle(origAllocs).name}</div>
+      <div class="pc-sub">הזזי את הסליידרים — ראי איך שם התיק והסבר משתנים</div>
     </div>
     <div class="pc-body">
-      ${rows}
-      ${mixInfo}
+      <div class="pc-rows">${renderRows(origAllocs)}</div>
+      <div class="pc-desc">${renderDesc(origAllocs)}</div>
     </div>
     <div style="padding:10px 18px 14px;font-size:11px;color:#888;border-top:1px solid #f0ede8;line-height:1.6">
       ⚠️ <strong>עדן מבצעת תהליך חינוכי בלבד</strong> — ללא התאמה אישית וללא המלצת השקעה.<br>
@@ -1489,15 +1513,13 @@ function showBasicConcepts(onDone){
     { icon:'🧺', name:'ETF / קרן סל', def:'קיצור של Exchange Traded Fund — קרן שעוקבת אחרי מדד ונסחרת בבורסה. קנית ETF של S&P 500 = קנית 500 חברות בפעולה אחת, בדמי ניהול נמוכים מאוד.' },
     { icon:'💰', name:'קרן כספית', def:'השקעה סולידית ונזילה — כמו פיקדון חכם. מניבה ~4.5% שנתי, ניתן למשוך תוך יום. מתאימה לכסף שאולי תצטרכי בקרוב.' },
   ];
-  const rows = concepts.map((c,i)=>`
-    <div style="border-bottom:1px solid #f0f0ec;">
-      <button onclick="(function(el){var d=el.nextElementSibling;var open=d.style.display==='block';d.style.display=open?'none':'block';el.querySelector('.caret').textContent=open?'▸':'▾';})(this)"
-        style="display:flex;gap:10px;padding:10px 0;align-items:center;width:100%;background:none;border:none;cursor:pointer;text-align:right;font-family:Heebo,sans-serif;">
-        <div style="font-size:20px;flex-shrink:0;width:32px;text-align:center">${c.icon}</div>
-        <div style="font-size:13px;font-weight:800;color:#085041;flex:1">${c.name}</div>
-        <span class="caret" style="font-size:11px;color:#aaa;margin-left:4px">▸</span>
-      </button>
-      <div style="display:none;font-size:12px;color:#555;line-height:1.6;padding:0 10px 10px 42px">${c.def}</div>
+  const rows = concepts.map(c=>`
+    <div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #f0f0ec;align-items:flex-start">
+      <div style="font-size:20px;flex-shrink:0;width:32px;text-align:center">${c.icon}</div>
+      <div>
+        <div style="font-size:13px;font-weight:800;color:#085041;margin-bottom:3px">${c.name}</div>
+        <div style="font-size:12px;color:#555;line-height:1.6">${c.def}</div>
+      </div>
     </div>`).join('');
   const card = `<div style="background:white;border-radius:18px;border:1px solid rgba(0,0,0,.08);overflow:hidden;max-width:96%;box-shadow:0 4px 16px rgba(0,0,0,.09)">
     <div style="background:linear-gradient(135deg,#085041,#1D9E75);padding:14px 18px;color:white">
@@ -2271,7 +2293,7 @@ function handleShortHorizon(reply){
   if (reply.includes('קרן כספית')) {
     delay(()=>{
       addMsg('קרן כספית היא הכלי המושלם לטווח קצר:\n\n✅ נזילה — את יכולה למשוך את הכסף תוך יום עסקים\n✅ תשואה ~4.5% שנתי — הרבה יותר מפיקדון בנקאי\n✅ סיכון נמוך מאוד — משקיעה באג"ח ממשלתי קצר\n\nמחפשות אותה בפלטפורמת המסחר לפי מספר הנייר שבטבלה.');
-      setTimeout(()=>addQRs(['הבינתי, הכל ברור 💚'], handleFinal),400);
+      setTimeout(()=>addQRs(['הבינתי, הכל ברור 💚','ללמוד נושא נוסף 📚'], handleFinal),400);
     },800);
   } else if (reply.includes('אופק') || reply.includes('חזרה') || reply.includes('אשנה')) {
     // חזרה לשאלת horizon
@@ -2293,6 +2315,8 @@ function handlePortfolioChoice(reply){
     explainAllocs();
   } else if (reply.includes('ניירות') || reply.includes('אפשרויות') || reply.includes('הראי לי')) {
     showAllSecurities();
+  } else if (reply.includes('ללמוד') || reply.includes('נושא נוסף')) {
+    delay(()=>{ addMsg('בחרי נושא 💚'); setTimeout(showLearnMenu, 400); }, 500);
   } else if (reply.includes('לשנות')) {
     delay(()=>{
       addMsg('מה תרצי לשנות בתיק?');
@@ -2471,7 +2495,8 @@ function showAllSecurities(){
         'מוכנה להיכנס לחשבון המסחר שלי 💪',
         'איך פותחות תיק?',
         'איך עוקבות אחרי התיק?',
-        'אפשר להוסיף כסף בהמשך?',
+        'ללמוד נושא נוסף 📚',
+        'תודה, הכל ברור! 💚',
       ], handleFinal), 400);
     }, 700);
   }, d);
@@ -2479,6 +2504,12 @@ function showAllSecurities(){
 
 async function handleFinal(reply){
   addMsg(reply, true);
+
+  // ── למידה נוספת ──
+  if (reply.includes('ללמוד נושא נוסף') || reply.includes('ללמוד עוד')) {
+    delay(()=>{ addMsg('בחרי נושא 💚'); setTimeout(showLearnMenu, 400); }, 500);
+    return;
+  }
 
   // ── הצגת מבנה דוגמה (כפתור הפרופיל) ──
   if (reply.includes('הצגי מבנה') || reply.includes('לפי הפרופיל')) {
