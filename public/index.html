@@ -994,64 +994,40 @@ function compareCardHTML(amount){
 }
 
 function portfolioCardHTML(profile){
-  const pid = 'pc_' + Date.now();
-  const origAllocs = JSON.parse(JSON.stringify(profile.allocs));
-  const riskDesc = (allocs) => {
-    const stocks = allocs.filter(a=>a.name.includes('מנייתי')||a.name.includes('מניות')||a.name.includes('מניה')).reduce((s,a)=>s+a.pct,0);
-    const bonds  = allocs.filter(a=>a.name.includes('אג"ח')||a.name.includes('אגח')).reduce((s,a)=>s+a.pct,0);
-    if (stocks >= 80) return '⚡ חשיפה גבוהה — פוטנציאל גדול, תנודתיות גבוהה';
-    if (stocks >= 50) return '⚖️ חשיפה מאוזנת — שילוב צמיחה ויציבות';
-    if (bonds  >= 50) return '🛡️ חשיפה נמוכה — יציבות גבוהה, פוטנציאל נמוך יותר';
-    return '📊 חשיפה מגוונת — פיזור רחב';
-  };
-  const rows = (allocs) => allocs.map((a,i)=>`
-    <div style="margin-bottom:12px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+  const rows = profile.allocs.map(a=>`
+    <div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
         <span style="font-size:13px;font-weight:700;color:#1a1a18">${a.name}</span>
         <span style="font-size:13px;font-weight:800;color:${a.color}">${a.pct}%</span>
       </div>
-      <input type="range" min="0" max="100" value="${a.pct}" data-idx="${i}"
-        oninput="portfolioSlider('${pid}',${i},this.value)"
-        style="width:100%;accent-color:${a.color};height:6px;cursor:pointer">
+      <div style="background:#f0f0ec;border-radius:4px;height:8px">
+        <div style="width:${a.pct}%;height:100%;background:${a.color};border-radius:4px"></div>
+      </div>
     </div>`).join('');
-  window['_pc_'+pid] = { allocs: JSON.parse(JSON.stringify(profile.allocs)), orig: origAllocs };
-  window.portfolioReset = function(pid){
-    const state = window['_pc_'+pid];
-    state.allocs = JSON.parse(JSON.stringify(state.orig));
-    const card = document.getElementById(pid);
-    card.querySelector('.pc-rows').innerHTML = rows(state.allocs);
-    card.querySelector('.pc-risk').textContent = riskDesc(state.allocs);
-  };
-  window.portfolioSlider = function(pid, idx, val){
-    const state = window['_pc_'+pid];
-    const allocs = state.allocs;
-    val = parseInt(val);
-    const others = allocs.filter((_,i)=>i!==idx);
-    const remaining = 100 - val;
-    const otherTotal = others.reduce((s,a)=>s+a.pct,0);
-    allocs[idx].pct = val;
-    if (otherTotal > 0) {
-      others.forEach(a=>{ a.pct = Math.round(a.pct / otherTotal * remaining); });
-      // תיקון עיגול
-      const diff = 100 - allocs.reduce((s,a)=>s+a.pct,0);
-      if (diff !== 0) others[0].pct += diff;
-    }
-    const card = document.getElementById(pid);
-    card.querySelector('.pc-rows').innerHTML = rows(allocs);
-    card.querySelector('.pc-risk').textContent = riskDesc(allocs);
-  };
-  return `<div class="portfolio-card" id="${pid}">
+
+  const stocksPct = profile.allocs.filter(a=>a.name.includes('מנייתי')||a.name.includes('מניות')||a.name.includes('מניה')).reduce((s,a)=>s+a.pct,0);
+  const bondsPct  = profile.allocs.filter(a=>a.name.includes('אג"ח')||a.name.includes('אגח')).reduce((s,a)=>s+a.pct,0);
+
+  const mixInfo = `<div style="margin-top:12px;border-top:1px solid #f0ede8;padding-top:12px;font-size:12px;color:#444;line-height:1.7">
+    <div style="font-weight:800;color:#085041;margin-bottom:6px">💡 מה קורה אם משנים את התמהיל?</div>
+    <div>• <strong>מגדילים מניות</strong> — פוטנציאל תשואה עולה, אבל גם התנודתיות. בשנה רעה התיק יכול לרדת יותר.</div>
+    <div>• <strong>מגדילים אג"ח</strong> — התיק יציב יותר, ישן טוב יותר בלילות סוערים — אבל הצמיחה לאורך זמן נמוכה יותר.</div>
+    <div>• <strong>מבטלים אג"ח לגמרי</strong> — חשיפה מלאה לשוק המניות. מתאים לטווח ארוך מאוד ולמי שיכולה לסבול ירידות של 30%+.</div>
+    <div style="margin-top:8px;background:#f0faf5;border-radius:8px;padding:7px 10px;color:#085041;font-weight:700">
+      ${stocksPct >= 80 ? '⚡ תיק זה אגרסיבי — פוטנציאל גדול, תנודתיות גבוהה' :
+        stocksPct >= 50 ? '⚖️ תיק זה מאוזן — שילוב טוב של צמיחה ויציבות' :
+        '🛡️ תיק זה סולידי — יציבות גבוהה, צמיחה מתונה'}
+    </div>
+  </div>`;
+
+  return `<div class="portfolio-card">
     <div class="pc-header" style="background:${profile.color}">
       <div class="pc-title">מבנה נפוץ לפרופיל ${profile.name}</div>
-      <div class="pc-sub">שחקי עם האחוזים — ראי איך זה משפיע</div>
+      <div class="pc-sub">דוגמה ללמידה בלבד · לא המלצת השקעה אישית</div>
     </div>
     <div class="pc-body">
-      <div class="pc-rows">${rows(profile.allocs)}</div>
-      <div class="pc-risk" style="font-size:12px;font-weight:700;color:#085041;background:#f0faf5;border-radius:10px;padding:8px 12px;margin-top:4px">${riskDesc(profile.allocs)}</div>
-      <button onclick="portfolioReset('${pid}')"
-        style="margin-top:10px;background:none;border:1px solid #1D9E75;color:#085041;border-radius:20px;padding:6px 16px;font-family:Heebo,sans-serif;font-size:12px;font-weight:700;cursor:pointer">
-        ← חזרה לתיק המוצע המקורי
-      </button>
+      ${rows}
+      ${mixInfo}
     </div>
     <div style="padding:10px 18px 14px;font-size:11px;color:#888;border-top:1px solid #f0ede8;line-height:1.6">
       ⚠️ <strong>עדן מבצעת תהליך חינוכי בלבד</strong> — ללא התאמה אישית וללא המלצת השקעה.<br>
@@ -1543,29 +1519,24 @@ function startLearnAssessment(){
   }
   learnAssessmentDone = true;
   delay(()=>{
-    addMsg('לפני שנתחיל — רגע קצר להכיר אותך 💚');
-    setTimeout(()=>delay(()=>{
-      addMsg('מה רמת ההיכרות שלך עם שוק ההון?');
-      setTimeout(()=>addQRs([
-        'לגמרי מתחילה — מושגים בסיסיים לא ברורים לי',
-        'יודעת קצת — שמעתי על מדד S&P',
-        'מכירה את הבסיס — רוצה להעמיק',
-        'יש לי ניסיון — רוצה לארגן את הידע',
-      ], (levelReply)=>{
-        addMsg(levelReply, true);
-        const isBeginnerLevel = levelReply.includes('מתחילה') || levelReply.includes('בסיסיים');
-        delay(()=>{
-          if (isBeginnerLevel) {
-            addMsg('מעולה! 💚 נתחיל מהבסיס.\n\nלפני שנצלול לנושאים — הנה כרטיס מושגים קצר שיעזור לך להבין את כל מה שנדבר עליו:');
-          } else {
-            addMsg('מצוין! 💚 לפני שנתחיל — רגע קצר לוודא שכל המושגים מוכרים:');
-          }
-          setTimeout(()=>showBasicConcepts(()=>{
-            delay(()=>{ addMsg('עכשיו בחרי נושא לעומק:'); setTimeout(showLearnMenu, 500); }, 400);
-          }), 600);
-        }, 500);
-      }), 400);
-    }, 500), 500);
+    addMsg('לפני שנתחיל — הנה כרטיס מושגים קצר שיעזור לך להבין את כל מה שנדבר עליו 💚');
+    setTimeout(()=>showBasicConcepts(()=>{
+      delay(()=>{
+        addMsg('מה רמת ההיכרות שלך עם שוק ההון?');
+        setTimeout(()=>addQRs([
+          'לגמרי מתחילה — מושגים בסיסיים לא ברורים לי',
+          'יודעת קצת — שמעתי על מדד S&P',
+          'מכירה את הבסיס — רוצה להעמיק',
+          'יש לי ניסיון — רוצה לארגן את הידע',
+        ], (levelReply)=>{
+          addMsg(levelReply, true);
+          delay(()=>{
+            addMsg('מצוין! 💚 עכשיו בחרי נושא לעומק:');
+            setTimeout(showLearnMenu, 500);
+          }, 500);
+        }), 400);
+      }, 500);
+    }), 600);
   }, 400);
 }
 
@@ -2752,9 +2723,9 @@ async function handleFinal(reply){
 
   } else if (reply.includes('ברור') || reply.includes('תודה')) {
     delay(()=>{
-      addMsg('כל הכבוד שהגעת עד כאן! 🎉\n\nהבנת את הבסיס, הכרת את הפרופיל שלך, וראית דוגמאות למבנים נפוצים — זה בדיוק השלב הראשון.\n\n⚠️ תזכורת חשובה: כל מה שהצגתי הוא לצורכי למידה בלבד — לא המלצת השקעה אישית. לפני כל פעולה — כדאי להתייעץ עם יועץ השקעות מורשה.\n\nהדרך ממשיכה — שאלות, ספקות, שינויים בדרך — אני כאן 💚\n\nעדן | נתיב הכסף החכם שלך ✦');
+      addMsg('כל הכבוד שהגעת עד כאן! 🎉\n\nהבנת את הבסיס, הכרת את הפרופיל שלך, וראית דוגמאות למבנים נפוצים — זה בדיוק השלב הראשון.\n\n⚠️ תזכורת חשובה: כל מה שהצגתי הוא לצורכי למידה בלבד — לא המלצת השקעה אישית. לפני כל פעולה — כדאי להתייעץ עם יועץ השקעות מורשה.');
       setTimeout(()=>{
-        addMsg('🔜 השלב הבא — פתיחת תיק בפועל — נמצא בשלבי בנייה ויהיה זמין בקרוב. שרון תעדכן אותך כשיהיה מוכן 💚');
+        addMsg('🔜 השלב הבא — פתיחת תיק בפועל — מומלץ אחרי כרבעון שבו הכל מתיישב וברור.\n\nלמי שתרצה להמשיך ולהעמיק בשוק ההון ואפשרויות ההשקעה — עדן תהיה כאן בהמשך. הרחבת הפלטפורמה נמצאת כרגע בתהליך בנייה 💚\n\nשרון תעדכן אותך כשיהיה מוכן. עדן | נתיב הכסף החכם שלך ✦');
       }, 800);
     }, 700);
 
