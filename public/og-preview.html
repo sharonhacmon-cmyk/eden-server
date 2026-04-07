@@ -118,13 +118,11 @@
     width: 220px;
     height: 220px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #1D9E75, #085041);
-    border: 4px solid rgba(239,159,39,0.5);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 90px;
     box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+    overflow: hidden;
   }
 
   .logo {
@@ -183,10 +181,19 @@
   </div>
 
   <div class="right">
-    <div class="eden-circle">🌿</div>
-    <div>
-      <div class="logo">נתיב</div>
-      <div class="logo-sub">הכסף החכם שלך</div>
+    <div class="eden-circle">
+      <svg width="220" height="220" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="250" cy="250" r="250" fill="#085041"/>
+        <circle cx="250" cy="250" r="220" fill="none" stroke="#1D9E75" stroke-width="1.5" opacity="0.4"/>
+        <path d="M 120 340 Q 160 280 210 240 Q 260 200 310 170 Q 350 148 390 130" fill="none" stroke="#5DCAA5" stroke-width="8" stroke-linecap="round" opacity="0.9"/>
+        <circle cx="120" cy="340" r="9" fill="#9FE1CB" opacity="0.6"/>
+        <circle cx="210" cy="240" r="10" fill="#5DCAA5" opacity="0.8"/>
+        <circle cx="310" cy="170" r="11" fill="#1D9E75"/>
+        <circle cx="390" cy="130" r="16" fill="#EF9F27"/>
+        <circle cx="390" cy="130" r="9" fill="#FAC775"/>
+        <text x="250" y="400" font-family="'Trebuchet MS', cursive, sans-serif" font-size="78" font-weight="700" fill="#E1F5EE" text-anchor="middle" dominant-baseline="central" letter-spacing="6">נתיב</text>
+        <text x="250" y="452" font-family="'Trebuchet MS', Arial, sans-serif" font-size="22" font-weight="400" fill="#EF9F27" text-anchor="middle" dominant-baseline="central" letter-spacing="1">הכסף החכם שלך</text>
+      </svg>
     </div>
   </div>
 </div>
