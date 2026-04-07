@@ -5,25 +5,26 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    width: 600px;
-    height: 600px;
-    font-family: 'Heebo', Arial, sans-serif;
-    overflow: hidden;
+    margin: 0;
     background: #062e24;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
   }
   .card {
-    width: 600px;
-    height: 600px;
+    width: 90vmin;
+    height: 90vmin;
     background: linear-gradient(160deg, #062e24 0%, #085041 55%, #0d6b57 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 40px 50px;
+    padding: 5% 8%;
     position: relative;
     overflow: hidden;
     text-align: center;
-    gap: 20px;
+    gap: 3vmin;
   }
 
   /* עיגולי רקע */
@@ -64,7 +65,7 @@
   }
 
   h1 {
-    font-size: 48px;
+    font-size: 6vmin;
     font-weight: 900;
     color: white;
     line-height: 1.15;
@@ -74,7 +75,7 @@
   h1 span { color: #EF9F27; }
 
   .sub {
-    font-size: 17px;
+    font-size: 2.2vmin;
     color: rgba(255,255,255,0.65);
     font-weight: 300;
     line-height: 1.5;
