@@ -387,6 +387,20 @@ code{background:#f0f0ec;padding:1px 6px;border-radius:4px;font-size:11px;font-fa
     <span class="api-dot" id="api-dot"></span>
     <span id="api-btn-label">Demo</span>
   </button>
+  <button onclick="openNavMenu()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:white;border-radius:50%;width:34px;height:34px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0" title="תפריט">☰</button>
+</div>
+
+<!-- NAV MENU OVERLAY -->
+<div id="nav-overlay" onclick="if(event.target===this)closeNavMenu()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;align-items:flex-start;justify-content:flex-end;padding:64px 14px 0">
+  <div style="background:white;border-radius:18px;padding:6px;min-width:220px;box-shadow:0 8px 32px rgba(0,0,0,.2);animation:msgIn .2s ease">
+    <div style="padding:10px 14px 6px;font-size:11px;font-weight:800;color:#aaa;text-transform:uppercase;letter-spacing:.5px">ניווט מהיר</div>
+    <button onclick="navJump('concepts')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;cursor:pointer;font-family:Heebo,sans-serif;font-size:14px;font-weight:700;color:#1a1a18;border:none;background:none;width:100%;text-align:right" onmouseover="this.style.background='#f0faf5'" onmouseout="this.style.background='none'">📖 מושגי יסוד</button>
+    <button onclick="navJump('learn')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;cursor:pointer;font-family:Heebo,sans-serif;font-size:14px;font-weight:700;color:#1a1a18;border:none;background:none;width:100%;text-align:right" onmouseover="this.style.background='#f0faf5'" onmouseout="this.style.background='none'">📚 נושאי למידה</button>
+    <button onclick="navJump('calculator')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;cursor:pointer;font-family:Heebo,sans-serif;font-size:14px;font-weight:700;color:#1a1a18;border:none;background:none;width:100%;text-align:right" onmouseover="this.style.background='#f0faf5'" onmouseout="this.style.background='none'">🧮 מחשבון ריבית דריבית</button>
+    <button onclick="navJump('portfolio')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;cursor:pointer;font-family:Heebo,sans-serif;font-size:14px;font-weight:700;color:#1a1a18;border:none;background:none;width:100%;text-align:right" onmouseover="this.style.background='#f0faf5'" onmouseout="this.style.background='none'">🏦 בניית תיק</button>
+    <div style="height:1px;background:#f0f0ec;margin:4px 8px"></div>
+    <button onclick="navJump('restart')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;cursor:pointer;font-family:Heebo,sans-serif;font-size:13px;font-weight:600;color:#888;border:none;background:none;width:100%;text-align:right" onmouseover="this.style.background='#f0faf5'" onmouseout="this.style.background='none'">🔄 התחלה מחדש</button>
+  </div>
 </div>
 
 <!-- MESSAGES -->
@@ -980,18 +994,65 @@ function compareCardHTML(amount){
 }
 
 function portfolioCardHTML(profile){
-  const rows = profile.allocs.map(a=>`
-    <div class="alloc-row">
-      <div class="alloc-name">${a.name}</div>
-      <div class="alloc-bar-bg"><div class="alloc-bar" style="width:${a.pct}%;background:${a.color}"></div></div>
-      <div class="alloc-pct">${a.pct}%</div>
+  const pid = 'pc_' + Date.now();
+  const origAllocs = JSON.parse(JSON.stringify(profile.allocs));
+  const riskDesc = (allocs) => {
+    const stocks = allocs.filter(a=>a.name.includes('מנייתי')||a.name.includes('מניות')||a.name.includes('מניה')).reduce((s,a)=>s+a.pct,0);
+    const bonds  = allocs.filter(a=>a.name.includes('אג"ח')||a.name.includes('אגח')).reduce((s,a)=>s+a.pct,0);
+    if (stocks >= 80) return '⚡ חשיפה גבוהה — פוטנציאל גדול, תנודתיות גבוהה';
+    if (stocks >= 50) return '⚖️ חשיפה מאוזנת — שילוב צמיחה ויציבות';
+    if (bonds  >= 50) return '🛡️ חשיפה נמוכה — יציבות גבוהה, פוטנציאל נמוך יותר';
+    return '📊 חשיפה מגוונת — פיזור רחב';
+  };
+  const rows = (allocs) => allocs.map((a,i)=>`
+    <div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <span style="font-size:13px;font-weight:700;color:#1a1a18">${a.name}</span>
+        <span style="font-size:13px;font-weight:800;color:${a.color}">${a.pct}%</span>
+      </div>
+      <input type="range" min="0" max="100" value="${a.pct}" data-idx="${i}"
+        oninput="portfolioSlider('${pid}',${i},this.value)"
+        style="width:100%;accent-color:${a.color};height:6px;cursor:pointer">
     </div>`).join('');
-  return `<div class="portfolio-card">
+  window['_pc_'+pid] = { allocs: JSON.parse(JSON.stringify(profile.allocs)), orig: origAllocs };
+  window.portfolioReset = function(pid){
+    const state = window['_pc_'+pid];
+    state.allocs = JSON.parse(JSON.stringify(state.orig));
+    const card = document.getElementById(pid);
+    card.querySelector('.pc-rows').innerHTML = rows(state.allocs);
+    card.querySelector('.pc-risk').textContent = riskDesc(state.allocs);
+  };
+  window.portfolioSlider = function(pid, idx, val){
+    const state = window['_pc_'+pid];
+    const allocs = state.allocs;
+    val = parseInt(val);
+    const others = allocs.filter((_,i)=>i!==idx);
+    const remaining = 100 - val;
+    const otherTotal = others.reduce((s,a)=>s+a.pct,0);
+    allocs[idx].pct = val;
+    if (otherTotal > 0) {
+      others.forEach(a=>{ a.pct = Math.round(a.pct / otherTotal * remaining); });
+      // תיקון עיגול
+      const diff = 100 - allocs.reduce((s,a)=>s+a.pct,0);
+      if (diff !== 0) others[0].pct += diff;
+    }
+    const card = document.getElementById(pid);
+    card.querySelector('.pc-rows').innerHTML = rows(allocs);
+    card.querySelector('.pc-risk').textContent = riskDesc(allocs);
+  };
+  return `<div class="portfolio-card" id="${pid}">
     <div class="pc-header" style="background:${profile.color}">
       <div class="pc-title">מבנה נפוץ לפרופיל ${profile.name}</div>
-      <div class="pc-sub">דוגמה ללמידה בלבד · לא המלצת השקעה אישית</div>
+      <div class="pc-sub">שחקי עם האחוזים — ראי איך זה משפיע</div>
     </div>
-    <div class="pc-body">${rows}</div>
+    <div class="pc-body">
+      <div class="pc-rows">${rows(profile.allocs)}</div>
+      <div class="pc-risk" style="font-size:12px;font-weight:700;color:#085041;background:#f0faf5;border-radius:10px;padding:8px 12px;margin-top:4px">${riskDesc(profile.allocs)}</div>
+      <button onclick="portfolioReset('${pid}')"
+        style="margin-top:10px;background:none;border:1px solid #1D9E75;color:#085041;border-radius:20px;padding:6px 16px;font-family:Heebo,sans-serif;font-size:12px;font-weight:700;cursor:pointer">
+        ← חזרה לתיק המוצע המקורי
+      </button>
+    </div>
     <div style="padding:10px 18px 14px;font-size:11px;color:#888;border-top:1px solid #f0ede8;line-height:1.6">
       ⚠️ <strong>עדן מבצעת תהליך חינוכי בלבד</strong> — ללא התאמה אישית וללא המלצת השקעה.<br>
       כל החלטת השקעה מחייבת התייעצות עם יועץ השקעות מורשה.
@@ -1452,13 +1513,15 @@ function showBasicConcepts(onDone){
     { icon:'🧺', name:'ETF / קרן סל', def:'קיצור של Exchange Traded Fund — קרן שעוקבת אחרי מדד ונסחרת בבורסה. קנית ETF של S&P 500 = קנית 500 חברות בפעולה אחת, בדמי ניהול נמוכים מאוד.' },
     { icon:'💰', name:'קרן כספית', def:'השקעה סולידית ונזילה — כמו פיקדון חכם. מניבה ~4.5% שנתי, ניתן למשוך תוך יום. מתאימה לכסף שאולי תצטרכי בקרוב.' },
   ];
-  const rows = concepts.map(c=>`
-    <div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #f0f0ec;align-items:flex-start">
-      <div style="font-size:22px;flex-shrink:0;width:32px;text-align:center">${c.icon}</div>
-      <div>
-        <div style="font-size:13px;font-weight:800;color:#085041;margin-bottom:3px">${c.name}</div>
-        <div style="font-size:12px;color:#555;line-height:1.6">${c.def}</div>
-      </div>
+  const rows = concepts.map((c,i)=>`
+    <div style="border-bottom:1px solid #f0f0ec;">
+      <button onclick="(function(el){var d=el.nextElementSibling;var open=d.style.display==='block';d.style.display=open?'none':'block';el.querySelector('.caret').textContent=open?'▸':'▾';})(this)"
+        style="display:flex;gap:10px;padding:10px 0;align-items:center;width:100%;background:none;border:none;cursor:pointer;text-align:right;font-family:Heebo,sans-serif;">
+        <div style="font-size:20px;flex-shrink:0;width:32px;text-align:center">${c.icon}</div>
+        <div style="font-size:13px;font-weight:800;color:#085041;flex:1">${c.name}</div>
+        <span class="caret" style="font-size:11px;color:#aaa;margin-left:4px">▸</span>
+      </button>
+      <div style="display:none;font-size:12px;color:#555;line-height:1.6;padding:0 10px 10px 42px">${c.def}</div>
     </div>`).join('');
   const card = `<div style="background:white;border-radius:18px;border:1px solid rgba(0,0,0,.08);overflow:hidden;max-width:96%;box-shadow:0 4px 16px rgba(0,0,0,.09)">
     <div style="background:linear-gradient(135deg,#085041,#1D9E75);padding:14px 18px;color:white">
@@ -1470,7 +1533,7 @@ function showBasicConcepts(onDone){
   </div>`;
   el.innerHTML='<img class="av" src="'+AVATAR+'">'+card;
   msgs.appendChild(el); scroll();
-  setTimeout(()=>addQRs(['הבנתי, המשיכי ➜'], ()=>{ onDone(); }), 600);
+  setTimeout(()=>addQRs(['אפשר להמשיך ➜'], ()=>{ onDone(); }), 600);
 }
 
 function startLearnAssessment(){
@@ -1480,10 +1543,8 @@ function startLearnAssessment(){
   }
   learnAssessmentDone = true;
   delay(()=>{
-    addMsg('מה נלמד יחד? 💚\n\n📈 קרן סל / ETF — איך 500 חברות בפעולה אחת\n💰 קרן כספית — הכסף שעובד בזמן שממתין\n📋 אג"ח — הלוואה שמשלמת ריבית\n🧮 ריבית דריבית — הקסם שמכפיל כסף לאורך זמן\n💱 גידור מטבע — למה זה משנה כשמשקיעים בחו"ל\n📊 גרפי מדדים — ביצועים אמיתיים לאורך שנים\n\nובסוף — נלמד איך לבנות תיק שמתאים לך 🏦');
+    addMsg('לפני שנתחיל — רגע קצר להכיר אותך 💚');
     setTimeout(()=>delay(()=>{
-      addMsg('לפני שנתחיל — רגע קצר להכיר אותך 💚');
-      setTimeout(()=>delay(()=>{
       addMsg('מה רמת ההיכרות שלך עם שוק ההון?');
       setTimeout(()=>addQRs([
         'לגמרי מתחילה — מושגים בסיסיים לא ברורים לי',
@@ -1500,13 +1561,12 @@ function startLearnAssessment(){
             addMsg('מצוין! 💚 לפני שנתחיל — רגע קצר לוודא שכל המושגים מוכרים:');
           }
           setTimeout(()=>showBasicConcepts(()=>{
-            delay(()=>{ addMsg('יופי! 💚 עכשיו בחרי נושא לעומק:'); setTimeout(showLearnMenu, 500); }, 400);
+            delay(()=>{ addMsg('עכשיו בחרי נושא לעומק:'); setTimeout(showLearnMenu, 500); }, 400);
           }), 600);
         }, 500);
       }), 400);
     }, 500), 500);
-  }, 300), 300);
-}, 400);
+  }, 400);
 }
 
 function showLearnMenu(){
@@ -1613,7 +1673,7 @@ function handleLearnTopic(reply){
 
   if (reply.includes('נבנה') || reply.includes('הצגי מבנה') || reply.includes('לפי הפרופיל')) {
     delay(()=>{
-      addMsg('מעולה! 💚 אשאל אותך כמה שאלות קצרות כדי לזהות את פרופיל ההשקעה שלך.\n\nאחר כך אציג דוגמאות למבנים נפוצים לפרופיל כזה — לצורכי למידה בלבד, לא כהמלצה אישית:');
+      addMsg('מעולה! 💚 בואי נזהה את פרופיל ההשקעה שלך:');
       setTimeout(startKYC, 700);
     }, 500);
     return;
@@ -2061,7 +2121,7 @@ function startKYC(){
   stage = 'kyc'; kycStep = 0;
   document.querySelectorAll('.return-banner').forEach(b=>b.remove());
   delay(()=>{
-    addMsg('מעולה! 💚 אשאל אותך ' + KYC.length + ' שאלות קצרות כדי לזהות את פרופיל ההשקעה שלך — ואז אציג דוגמאות למבנים נפוצים לפרופיל כזה, לצורכי למידה בלבד.\n\nאין תשובה נכונה — כל תשובה עוזרת לי להבין אותך טוב יותר:');
+    addMsg('אין תשובה נכונה — כל תשובה עוזרת לי להבין אותך טוב יותר 💚');
     setTimeout(()=>askKYC(), 500);
   }, 700);
 }
@@ -2693,7 +2753,9 @@ async function handleFinal(reply){
   } else if (reply.includes('ברור') || reply.includes('תודה')) {
     delay(()=>{
       addMsg('כל הכבוד שהגעת עד כאן! 🎉\n\nהבנת את הבסיס, הכרת את הפרופיל שלך, וראית דוגמאות למבנים נפוצים — זה בדיוק השלב הראשון.\n\n⚠️ תזכורת חשובה: כל מה שהצגתי הוא לצורכי למידה בלבד — לא המלצת השקעה אישית. לפני כל פעולה — כדאי להתייעץ עם יועץ השקעות מורשה.\n\nהדרך ממשיכה — שאלות, ספקות, שינויים בדרך — אני כאן 💚\n\nעדן | נתיב הכסף החכם שלך ✦');
-      setTimeout(()=>addQRs(['ללמוד עוד על נושא 📚','בואי נבנה תיק חדש מחדש 🔄'], handleFinalDone), 500);
+      setTimeout(()=>{
+        addMsg('🔜 השלב הבא — פתיחת תיק בפועל — נמצא בשלבי בנייה ויהיה זמין בקרוב. שרון תעדכן אותך כשיהיה מוכן 💚');
+      }, 800);
     }, 700);
 
   } else {
@@ -2885,6 +2947,48 @@ async function doLogin() {
   } catch(e) {
     document.getElementById('login-err').textContent = 'שגיאת חיבור — נסי שוב';
     btn.textContent = 'כניסה ←'; btn.disabled = false;
+  }
+}
+
+function openNavMenu(){
+  document.getElementById('nav-overlay').style.display = 'flex';
+}
+function closeNavMenu(){
+  document.getElementById('nav-overlay').style.display = 'none';
+}
+function navJump(section){
+  closeNavMenu();
+  if (section === 'restart'){
+    kycStep=0; kyc={}; stage='intro'; learnAssessmentDone=false; basicConceptsShown=false; lastFlowFn=null;
+    document.getElementById('msgs').innerHTML = '';
+    delay(()=>startIntro(), 300);
+    return;
+  }
+  if (section === 'concepts'){
+    basicConceptsShown = false;
+    delay(()=>showBasicConcepts(()=>{
+      delay(()=>{ addMsg('עכשיו בחרי נושא לעומק:'); setTimeout(showLearnMenu, 400); }, 400);
+    }), 300);
+    return;
+  }
+  if (section === 'learn'){
+    delay(()=>{ addMsg('בחרי נושא 💚'); setTimeout(showLearnMenu, 400); }, 300);
+    return;
+  }
+  if (section === 'calculator'){
+    delay(()=>showCompoundCalculator(), 300);
+    return;
+  }
+  if (section === 'portfolio'){
+    if (kyc.profile){
+      delay(()=>{
+        addMsg('הנה התיק שלך 💚');
+        setTimeout(()=>addCard(portfolioCardHTML(kyc.profile)), 500);
+      }, 300);
+    } else {
+      delay(()=>{ addMsg('בואי נזהה את הפרופיל שלך תחילה 💚'); setTimeout(startKYC, 500); }, 300);
+    }
+    return;
   }
 }
 
