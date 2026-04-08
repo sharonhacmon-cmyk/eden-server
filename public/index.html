@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+המרשים <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -398,6 +398,7 @@ code{background:#f0f0ec;padding:1px 6px;border-radius:4px;font-size:11px;font-fa
     <button onclick="navJump('learn')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;cursor:pointer;font-family:Heebo,sans-serif;font-size:14px;font-weight:700;color:#1a1a18;border:none;background:none;width:100%;text-align:right" onmouseover="this.style.background='#f0faf5'" onmouseout="this.style.background='none'">📚 נושאי למידה</button>
     <button onclick="navJump('calculator')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;cursor:pointer;font-family:Heebo,sans-serif;font-size:14px;font-weight:700;color:#1a1a18;border:none;background:none;width:100%;text-align:right" onmouseover="this.style.background='#f0faf5'" onmouseout="this.style.background='none'">🧮 מחשבון ריבית דריבית</button>
     <button onclick="navJump('portfolio')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;cursor:pointer;font-family:Heebo,sans-serif;font-size:14px;font-weight:700;color:#1a1a18;border:none;background:none;width:100%;text-align:right" onmouseover="this.style.background='#f0faf5'" onmouseout="this.style.background='none'">🏦 בניית תיק</button>
+    <button onclick="navJump('lab')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;cursor:pointer;font-family:Heebo,sans-serif;font-size:14px;font-weight:700;color:#1a1a18;border:none;background:none;width:100%;text-align:right" onmouseover="this.style.background='#f0faf5'" onmouseout="this.style.background='none'">🔬 מעבדת חקירה</button>
     <div style="height:1px;background:#f0f0ec;margin:4px 8px"></div>
     <button onclick="navJump('restart')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;cursor:pointer;font-family:Heebo,sans-serif;font-size:13px;font-weight:600;color:#888;border:none;background:none;width:100%;text-align:right" onmouseover="this.style.background='#f0faf5'" onmouseout="this.style.background='none'">🔄 התחלה מחדש</button>
   </div>
@@ -2981,6 +2982,10 @@ function navJump(section){
     delay(()=>showCompoundCalculator(), 300);
     return;
   }
+  if (section === 'lab'){
+    delay(()=>showLabSection(), 300);
+    return;
+  }
   if (section === 'portfolio'){
     if (kyc.profile){
       delay(()=>{
@@ -2992,6 +2997,295 @@ function navJump(section){
     }
     return;
   }
+}
+
+// ═══════════════════════════════════════════════════════
+// 🔬 מעבדת חקירה
+// ═══════════════════════════════════════════════════════
+
+var SP500=[
+  {y:2000,r:-9},{y:2001,r:-12},{y:2002,r:-22},{y:2003,r:29},{y:2004,r:11},
+  {y:2005,r:5},{y:2006,r:16},{y:2007,r:6},{y:2008,r:-37},{y:2009,r:26},
+  {y:2010,r:15},{y:2011,r:2},{y:2012,r:16},{y:2013,r:32},{y:2014,r:14},
+  {y:2015,r:1},{y:2016,r:12},{y:2017,r:22},{y:2018,r:-4},{y:2019,r:31},
+  {y:2020,r:18},{y:2021,r:29},{y:2022,r:-18},{y:2023,r:26},{y:2024,r:23}
+];
+
+function _fmt(n){return '₪'+Math.round(n).toLocaleString('he-IL');}
+
+function _lb(icon,title,sub,fn,disabled){
+  return '<div '+(disabled?'':'onclick="'+fn+'"')+
+    ' style="background:#f7fdf9;border:1.5px solid #ddf0e6;border-radius:14px;padding:14px 10px;'+
+    'cursor:'+(disabled?'default':'pointer')+';opacity:'+(disabled?'0.5':'1')+';transition:background .15s"'+
+    (disabled?'':' onmouseover="this.style.background=\'#e5f5ec\'" onmouseout="this.style.background=\'#f7fdf9\'"')+'>'+
+    '<div style="font-size:28px;margin-bottom:6px">'+icon+'</div>'+
+    '<div style="font-size:13px;font-weight:800;color:#085041;line-height:1.3">'+title+'</div>'+
+    '<div style="font-size:11px;color:#888;margin-top:2px">'+sub+'</div>'+
+    '</div>';
+}
+
+function _rbox(label,val,color){
+  return '<div style="background:#f7fdf9;border-radius:10px;padding:10px;text-align:center">'+
+    '<div style="font-size:10px;color:#888;margin-bottom:3px">'+label+'</div>'+
+    '<div style="font-size:16px;font-weight:900;color:'+color+'">'+val+'</div>'+
+    '</div>';
+}
+
+function _svgLine(vals,w,h,color){
+  var mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals),rng=mx-mn||1;
+  var pts=vals.map(function(v,i){return [Math.round(i/(vals.length-1)*w),Math.round(h-((v-mn)/rng)*(h-14)-7)];});
+  var path=pts.map(function(p,i){return (i?'L':'M')+p[0]+' '+p[1];}).join(' ');
+  var area=path+' L'+pts[pts.length-1][0]+' '+h+' L0 '+h+' Z';
+  var gid='g'+color.replace(/[^a-z0-9]/gi,'');
+  return '<svg viewBox="0 0 '+w+' '+h+'" style="width:100%;height:'+h+'px">'+
+    '<defs><linearGradient id="'+gid+'" x1="0" y1="0" x2="0" y2="1">'+
+    '<stop offset="0%" stop-color="'+color+'" stop-opacity="0.2"/>'+
+    '<stop offset="100%" stop-color="'+color+'" stop-opacity="0"/></linearGradient></defs>'+
+    '<path d="'+area+'" fill="url(#'+gid+')"/>'+
+    '<path d="'+path+'" fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'+
+    '</svg>';
+}
+
+function _svgTwo(v1,v2,w,h,c1,c2){
+  function mkPts(vals){return vals.map(function(v,i){return [Math.round(i/(vals.length-1)*w),Math.round(h-v*(h-14)-7)];});}
+  function mkPath(pts,c){var d=pts.map(function(p,i){return (i?'L':'M')+p[0]+' '+p[1];}).join(' ');return '<path d="'+d+'" fill="none" stroke="'+c+'" stroke-width="2.5" stroke-linecap="round"/>';}
+  return '<svg viewBox="0 0 '+w+' '+h+'" style="width:100%;height:'+h+'px">'+mkPath(mkPts(v1),c1)+mkPath(mkPts(v2),c2)+'</svg>';
+}
+
+function showLabSection(){
+  addMsg('מעבדת חקירה 🔬 — חוקרות מספרים, מגלות דפוסים, מבינות לעומק');
+  delay(function(){
+    addCard('<div class="calc-card" style="max-width:100%">'+
+      '<div class="calc-header"><div class="calc-title">🔬 מעבדת חקירה</div>'+
+      '<div class="calc-sub">בחרי נושא — כל מה שרצית לדעת, בשפה שלך</div></div>'+
+      '<div class="calc-body"><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">'+
+      _lb('📈','מה היה קורה אם...','מדדים היסטוריים','showLabHistory()')+
+      _lb('💧','טיפה שהופכת לאגם','הפקדה קבועה לאורך זמן','showLabDCA()')+
+      _lb('🏦','פיקדון vs שוק ההון','השוואה חיה','showLabDeposit()')+
+      _lb('🔥','הגנב השקט','האינפלציה ואת','showLabInflation()')+
+      _lb('👧','זמן = כסף','למה מוקדם = הרבה יותר','showLabKids()')+
+      _lb('📋','תכנים מהמפגשים','בבנייה — יתעדכן','',true)+
+      '</div></div></div>');
+  },500);
+}
+
+// ── MODULE 1: היסטוריה ────────────────────────
+function showLabHistory(){
+  var id='hist_'+Date.now();
+  addCard('<div class="calc-card" style="max-width:100%">'+
+    '<div class="calc-header"><div class="calc-title">📈 מה היה קורה אם...</div>'+
+    '<div class="calc-sub">הייתי משקיעה במדד S&P 500 — מה הייתה התוצאה?</div></div>'+
+    '<div class="calc-body">'+
+    '<div class="calc-row"><span class="calc-lbl">שנת התחלה</span>'+
+    '<input type="range" class="calc-range" min="2000" max="2019" step="1" value="2010" oninput="updHist(\''+id+'\')" id="'+id+'_y">'+
+    '<span class="calc-val" id="'+id+'_yv">2010</span></div>'+
+    '<div class="calc-row"><span class="calc-lbl">סכום חד פעמי</span>'+
+    '<input type="range" class="calc-range" min="5000" max="200000" step="5000" value="50000" oninput="updHist(\''+id+'\')" id="'+id+'_a">'+
+    '<span class="calc-val" id="'+id+'_av">₪50,000</span></div>'+
+    '<div id="'+id+'_chart" style="margin:12px 0 4px"></div>'+
+    '<div id="'+id+'_res" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px"></div>'+
+    '<div style="font-size:10px;color:#bbb;margin-top:8px;padding-top:8px;border-top:1px solid #f0f0ec">* תשואות היסטוריות של S&P 500. העבר אינו מבטיח את העתיד. לצרכי לימוד בלבד.</div>'+
+    '</div></div>');
+  setTimeout(function(){updHist(id);},60);
+}
+function updHist(id){
+  var sy=+document.getElementById(id+'_y').value, amt=+document.getElementById(id+'_a').value;
+  document.getElementById(id+'_yv').textContent=sy;
+  document.getElementById(id+'_av').textContent=_fmt(amt);
+  var pf=amt,vals=[amt];
+  SP500.forEach(function(d){if(d.y>=sy&&d.y<=2024){pf=pf*(1+d.r/100);vals.push(pf);}});
+  var profit=pf-amt,mult=(pf/amt).toFixed(1);
+  var el=document.getElementById(id+'_chart');
+  if(el)el.innerHTML=_svgLine(vals,280,110,profit>=0?'#1D9E75':'#e05060');
+  var res=document.getElementById(id+'_res');
+  if(res)res.innerHTML=_rbox('הושקע',_fmt(amt),'#085041')+_rbox('שווי היום',_fmt(pf),profit>=0?'#1D9E75':'#e05060')+_rbox('רווח',_fmt(Math.abs(profit)),profit>=0?'#1D9E75':'#e05060')+_rbox('כפל הכסף','×'+mult,'#EF9F27');
+}
+
+// ── MODULE 2: DCA ─────────────────────────────
+function showLabDCA(){
+  var id='dca_'+Date.now();
+  addCard('<div class="calc-card" style="max-width:100%">'+
+    '<div class="calc-header"><div class="calc-title">💧 טיפה שהופכת לאגם</div>'+
+    '<div class="calc-sub">כמה כוח יש להפקדה קטנה ועקבית כל חודש</div></div>'+
+    '<div class="calc-body">'+
+    '<div class="calc-row"><span class="calc-lbl">הפקדה חודשית</span>'+
+    '<input type="range" class="calc-range" min="200" max="5000" step="100" value="500" oninput="updDCA(\''+id+'\')" id="'+id+'_m">'+
+    '<span class="calc-val" id="'+id+'_mv">₪500</span></div>'+
+    '<div class="calc-row"><span class="calc-lbl">מספר שנים</span>'+
+    '<input type="range" class="calc-range" min="5" max="35" step="1" value="20" oninput="updDCA(\''+id+'\')" id="'+id+'_y">'+
+    '<span class="calc-val" id="'+id+'_yv">20 שנים</span></div>'+
+    '<div class="calc-row"><span class="calc-lbl">תשואה שנתית %</span>'+
+    '<input type="range" class="calc-range" min="3" max="12" step="0.5" value="7" oninput="updDCA(\''+id+'\')" id="'+id+'_r">'+
+    '<span class="calc-val" id="'+id+'_rv">7%</span></div>'+
+    '<div id="'+id+'_chart" style="margin:12px 0 4px"></div>'+
+    '<div style="display:flex;gap:12px;margin-bottom:8px;font-size:10px"><span style="color:#1D9E75">● שווי תיק</span><span style="color:#EF9F27">● כסף שהפקדת</span></div>'+
+    '<div id="'+id+'_res" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"></div>'+
+    '</div></div>');
+  setTimeout(function(){updDCA(id);},60);
+}
+function updDCA(id){
+  var m=+document.getElementById(id+'_m').value,
+      y=+document.getElementById(id+'_y').value,
+      rPct=+document.getElementById(id+'_r').value,
+      r=rPct/100/12;
+  document.getElementById(id+'_mv').textContent=_fmt(m);
+  document.getElementById(id+'_yv').textContent=y+' שנים';
+  document.getElementById(id+'_rv').textContent=rPct+'%';
+  var n=y*12,pf=0,inv=0,pfVals=[],invVals=[];
+  for(var i=0;i<n;i++){pf=(pf+m)*(1+r);inv+=m;if(i%12===11){pfVals.push(pf);invVals.push(inv);}}
+  var mx=Math.max.apply(null,pfVals)||1;
+  var el=document.getElementById(id+'_chart');
+  if(el)el.innerHTML=_svgTwo(pfVals.map(function(v){return v/mx;}),invVals.map(function(v){return v/mx;}),280,110,'#1D9E75','#EF9F27');
+  var res=document.getElementById(id+'_res');
+  if(res)res.innerHTML=_rbox('הפקדת סה"כ',_fmt(inv),'#085041')+_rbox('שווי התיק',_fmt(pf),'#1D9E75')+_rbox('ריבית דריבית',_fmt(pf-inv),'#EF9F27');
+}
+
+// ── MODULE 3: פיקדון vs שוק ───────────────────
+function showLabDeposit(){
+  var id='dep_'+Date.now();
+  addCard('<div class="calc-card" style="max-width:100%">'+
+    '<div class="calc-header"><div class="calc-title">🏦 פיקדון בנקאי vs שוק ההון</div>'+
+    '<div class="calc-sub">מה קורה לאותו סכום בשני מקומות שונים</div></div>'+
+    '<div class="calc-body">'+
+    '<div class="calc-row"><span class="calc-lbl">סכום ראשוני</span>'+
+    '<input type="range" class="calc-range" min="10000" max="300000" step="5000" value="100000" oninput="updDep(\''+id+'\')" id="'+id+'_a">'+
+    '<span class="calc-val" id="'+id+'_av">₪100,000</span></div>'+
+    '<div class="calc-row"><span class="calc-lbl">מספר שנים</span>'+
+    '<input type="range" class="calc-range" min="5" max="30" step="1" value="15" oninput="updDep(\''+id+'\')" id="'+id+'_y">'+
+    '<span class="calc-val" id="'+id+'_yv">15 שנים</span></div>'+
+    '<div id="'+id+'_res" style="margin-top:14px"></div>'+
+    '<div style="font-size:10px;color:#bbb;margin-top:8px">* פיקדון: 4% שנתי. שוק ההון: 7% ממוצע היסטורי. לצרכי לימוד בלבד.</div>'+
+    '</div></div>');
+  setTimeout(function(){updDep(id);},60);
+}
+function updDep(id){
+  var a=+document.getElementById(id+'_a').value, y=+document.getElementById(id+'_y').value;
+  document.getElementById(id+'_av').textContent=_fmt(a);
+  document.getElementById(id+'_yv').textContent=y+' שנים';
+  var bank=a*Math.pow(1.04,y), market=a*Math.pow(1.07,y), diff=market-bank;
+  var bPct=Math.round(bank/market*100);
+  var res=document.getElementById(id+'_res');
+  if(!res)return;
+  res.innerHTML=
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">'+
+    '<div style="background:#e8f4f0;border-radius:12px;padding:16px;text-align:center">'+
+    '<div style="font-size:11px;color:#555;margin-bottom:6px">🏦 פיקדון בנקאי (4%)</div>'+
+    '<div style="font-size:24px;font-weight:900;color:#085041">'+_fmt(bank)+'</div>'+
+    '<div style="height:8px;background:#c0ddd5;border-radius:4px;margin-top:10px;overflow:hidden">'+
+    '<div style="height:100%;width:'+bPct+'%;background:#1D9E75;border-radius:4px"></div></div>'+
+    '<div style="font-size:11px;color:#888;margin-top:6px">+'+_fmt(bank-a)+' ריבית</div></div>'+
+    '<div style="background:#d4f0e4;border-radius:12px;padding:16px;text-align:center">'+
+    '<div style="font-size:11px;color:#555;margin-bottom:6px">📈 שוק ההון (7%)</div>'+
+    '<div style="font-size:24px;font-weight:900;color:#1D9E75">'+_fmt(market)+'</div>'+
+    '<div style="height:8px;background:#a0d8bc;border-radius:4px;margin-top:10px;overflow:hidden">'+
+    '<div style="height:100%;width:100%;background:#085041;border-radius:4px"></div></div>'+
+    '<div style="font-size:11px;color:#888;margin-top:6px">+'+_fmt(market-a)+' תשואה</div></div>'+
+    '</div>'+
+    '<div style="background:#fff8e6;border:2px solid #EF9F27;border-radius:12px;padding:14px;text-align:center">'+
+    '<div style="font-size:12px;color:#666">💡 ההפרש שנשאר בחוץ אם תבחרי בפיקדון:</div>'+
+    '<div style="font-size:28px;font-weight:900;color:#EF9F27;margin:6px 0">'+_fmt(diff)+'</div>'+
+    '<div style="font-size:11px;color:#888">כסף שהיה יכול להיות שלך — רק בגלל היכן שמרת</div></div>';
+}
+
+// ── MODULE 4: אינפלציה ──────────────────────────
+function showLabInflation(){
+  var id='inf_'+Date.now();
+  addCard('<div class="calc-card" style="max-width:100%">'+
+    '<div class="calc-header"><div class="calc-title">🔥 הגנב השקט — האינפלציה</div>'+
+    '<div class="calc-sub">הכסף בפח — כמה הוא שווה בעוד כמה שנים?</div></div>'+
+    '<div class="calc-body">'+
+    '<div class="calc-row"><span class="calc-lbl">סכום כיום</span>'+
+    '<input type="range" class="calc-range" min="1000" max="500000" step="1000" value="100000" oninput="updInf(\''+id+'\')" id="'+id+'_a">'+
+    '<span class="calc-val" id="'+id+'_av">₪100,000</span></div>'+
+    '<div class="calc-row"><span class="calc-lbl">אינפלציה שנתית %</span>'+
+    '<input type="range" class="calc-range" min="1" max="8" step="0.5" value="3.5" oninput="updInf(\''+id+'\')" id="'+id+'_r">'+
+    '<span class="calc-val" id="'+id+'_rv">3.5%</span></div>'+
+    '<div class="calc-row"><span class="calc-lbl">מספר שנים</span>'+
+    '<input type="range" class="calc-range" min="5" max="30" step="1" value="20" oninput="updInf(\''+id+'\')" id="'+id+'_y">'+
+    '<span class="calc-val" id="'+id+'_yv">20 שנים</span></div>'+
+    '<div id="'+id+'_chart" style="margin:12px 0 4px"></div>'+
+    '<div id="'+id+'_res" style="margin-top:8px"></div>'+
+    '</div></div>');
+  setTimeout(function(){updInf(id);},60);
+}
+function updInf(id){
+  var a=+document.getElementById(id+'_a').value,
+      r=+document.getElementById(id+'_r').value/100,
+      y=+document.getElementById(id+'_y').value;
+  document.getElementById(id+'_av').textContent=_fmt(a);
+  document.getElementById(id+'_rv').textContent=(document.getElementById(id+'_r').value)+'%';
+  document.getElementById(id+'_yv').textContent=y+' שנים';
+  var vals=[a];
+  for(var i=1;i<=y;i++)vals.push(a*Math.pow(1-r,i));
+  var future=vals[vals.length-1],lost=a-future,pct=Math.round(lost/a*100);
+  var el=document.getElementById(id+'_chart');
+  if(el)el.innerHTML=_svgLine(vals,280,110,'#e05060');
+  var res=document.getElementById(id+'_res');
+  if(res)res.innerHTML=
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">'+
+    _rbox('שווי קנייה היום',_fmt(a),'#085041')+
+    _rbox('כוח קנייה בעוד '+y+'שנ\'',_fmt(future),'#e05060')+
+    '</div>'+
+    '<div style="background:#fff2f2;border:1.5px solid #ffcccc;border-radius:12px;padding:14px;text-align:center">'+
+    '<div style="font-size:12px;color:#c00;font-weight:700;margin-bottom:6px">🔥 הגנב השקט גנב ממך:</div>'+
+    '<div style="font-size:30px;font-weight:900;color:#e00">'+_fmt(lost)+'</div>'+
+    '<div style="font-size:12px;color:#888;margin-top:6px">'+pct+'% מהכסף — בלי שנגעו בו, רק עבר זמן</div></div>';
+}
+
+// ── MODULE 5: ילדים ─────────────────────────────
+function showLabKids(){
+  var id='kids_'+Date.now();
+  addCard('<div class="calc-card" style="max-width:100%">'+
+    '<div class="calc-header"><div class="calc-title">👧 זמן = כסף — למה מוקדם = הרבה יותר</div>'+
+    '<div class="calc-sub">אותה הפקדה, גיל שונה — התוצאה מדהימה</div></div>'+
+    '<div class="calc-body">'+
+    '<div class="calc-row"><span class="calc-lbl">הפקדה חודשית</span>'+
+    '<input type="range" class="calc-range" min="100" max="2000" step="50" value="200" oninput="updKids(\''+id+'\')" id="'+id+'_m">'+
+    '<span class="calc-val" id="'+id+'_mv">₪200</span></div>'+
+    '<div class="calc-row"><span class="calc-lbl">גיל יעד</span>'+
+    '<input type="range" class="calc-range" min="55" max="75" step="1" value="67" oninput="updKids(\''+id+'\')" id="'+id+'_t">'+
+    '<span class="calc-val" id="'+id+'_tv">67</span></div>'+
+    '<div id="'+id+'_res" style="margin-top:14px"></div>'+
+    '<div style="font-size:10px;color:#bbb;margin-top:8px">* 7% תשואה שנתית ממוצעת. לצרכי לימוד בלבד.</div>'+
+    '</div></div>');
+  setTimeout(function(){updKids(id);},60);
+}
+function updKids(id){
+  var m=+document.getElementById(id+'_m').value, target=+document.getElementById(id+'_t').value;
+  document.getElementById(id+'_mv').textContent=_fmt(m);
+  document.getElementById(id+'_tv').textContent='גיל '+target;
+  var r=0.07/12;
+  function calc(startAge){
+    var n=(target-startAge)*12; if(n<=0)return{val:0,inv:0};
+    var pf=0,inv=0;
+    for(var i=0;i<n;i++){pf=(pf+m)*(1+r);inv+=m;}
+    return{val:pf,inv:inv};
+  }
+  var ages=[5,10,18,25,35];
+  var results=ages.map(function(a){return{age:a,d:calc(a)};});
+  var maxVal=Math.max.apply(null,results.map(function(x){return x.d.val;}));
+  var res=document.getElementById(id+'_res');
+  if(!res)return;
+  var rows=results.map(function(item){
+    if(item.d.val<=0)return '';
+    var pct=Math.round(item.d.val/maxVal*100);
+    var isEarly=item.age<=10;
+    return '<div style="margin-bottom:12px">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">'+
+      '<span style="font-size:12px;font-weight:700;color:#085041">מגיל '+item.age+'</span>'+
+      '<span style="font-size:13px;font-weight:900;color:'+(isEarly?'#EF9F27':'#1D9E75')+'">'+_fmt(item.d.val)+'</span>'+
+      '</div>'+
+      '<div style="height:10px;background:#edf5f0;border-radius:5px;overflow:hidden">'+
+      '<div style="height:100%;width:'+pct+'%;background:'+(isEarly?'#EF9F27':'#1D9E75')+';border-radius:5px"></div></div>'+
+      '<div style="font-size:10px;color:#aaa;margin-top:2px">הפקדת: '+_fmt(item.d.inv)+'</div>'+
+      '</div>';
+  }).join('');
+  var diff=results[0].d.val-results[results.length-1].d.val;
+  res.innerHTML=rows+
+    '<div style="background:#fff8e6;border:2px solid #EF9F27;border-radius:12px;padding:14px;text-align:center;margin-top:4px">'+
+    '<div style="font-size:12px;color:#666">ההפרש בין להתחיל בגיל 5 לגיל 35:</div>'+
+    '<div style="font-size:26px;font-weight:900;color:#EF9F27;margin:6px 0">'+_fmt(diff)+'</div>'+
+    '<div style="font-size:11px;color:#888">אותם '+_fmt(m)+' בחודש — רק בגלל הזמן</div></div>';
 }
 
 window.onload = checkLogin;
