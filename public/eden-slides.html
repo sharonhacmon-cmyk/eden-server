@@ -10,6 +10,14 @@
 html,body{height:100%;background:#062e24;display:flex;align-items:center;justify-content:center;}
 body{padding:16px;}
 .w{font-family:'Heebo',sans-serif;direction:rtl;background:#085041;border-radius:20px;overflow:hidden;position:relative;display:flex;flex-direction:column;min-height:500px;width:100%;max-width:600px;box-shadow:0 24px 80px rgba(0,0,0,.5);}
+/* Fullscreen mode */
+:fullscreen body,:fullscreen .w,:-webkit-full-screen body,:-webkit-full-screen .w,:-moz-full-screen body,:-moz-full-screen .w{border-radius:0;max-width:100%;height:100%;min-height:100vh;}
+:fullscreen body,:-webkit-full-screen body,:-moz-full-screen body{padding:0;background:#062e24;}
+:fullscreen .area,:-webkit-full-screen .area,:-moz-full-screen .area{padding:48px 60px 20px;font-size:110%;}
+:fullscreen .etitle,:-webkit-full-screen .etitle,:-moz-full-screen .etitle{font-size:42px;}
+:fullscreen .enav,:-webkit-full-screen .enav,:-moz-full-screen .enav{padding:16px 60px 24px;}
+.fs-btn{position:absolute;top:12px;left:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7);font-size:14px;padding:5px 10px;border-radius:8px;cursor:pointer;z-index:50;transition:background .15s;}
+.fs-btn:hover{background:rgba(255,255,255,.2);}
 .bc{position:absolute;border-radius:50%;pointer-events:none;}
 .bc1{width:480px;height:480px;top:-170px;right:-170px;background:rgba(29,158,117,.13);}
 .bc2{width:320px;height:320px;bottom:-110px;left:-110px;background:rgba(29,158,117,.1);}
@@ -132,7 +140,8 @@ body{padding:16px;}
   </defs>
 </svg>
 
-<div class="w">
+<div class="w" id="deck">
+  <button class="fs-btn" id="fsbtn" onclick="toggleFS()" title="מסך מלא (F)">⛶ מסך מלא</button>
   <div class="bc bc1"></div><div class="bc bc2"></div><div class="bc bc3"></div>
   <div class="bl bl1"></div><div class="bl bl2"></div><div class="bl bl3"></div>
 
@@ -431,10 +440,30 @@ function toggle(head){
   if(!wasOpen)item.classList.add('open');
 }
 
+// Fullscreen
+function toggleFS(){
+  const el=document.getElementById('deck');
+  if(!document.fullscreenElement&&!document.webkitFullscreenElement){
+    (el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen).call(el);
+  } else {
+    (document.exitFullscreen||document.webkitExitFullscreen||document.mozCancelFullScreen).call(document);
+  }
+}
+document.addEventListener('fullscreenchange',()=>{
+  const btn=document.getElementById('fsbtn');
+  btn.textContent=document.fullscreenElement?'✕ צא ממסך מלא':'⛶ מסך מלא';
+});
+document.addEventListener('webkitfullscreenchange',()=>{
+  const btn=document.getElementById('fsbtn');
+  btn.textContent=document.webkitFullscreenElement?'✕ צא ממסך מלא':'⛶ מסך מלא';
+});
+
 // Keyboard navigation
 document.addEventListener('keydown',e=>{
   if(e.key==='ArrowLeft'||e.key==='ArrowDown')go(1);
   else if(e.key==='ArrowRight'||e.key==='ArrowUp')go(-1);
+  else if(e.key==='f'||e.key==='F')toggleFS();
+  else if(e.key==='Escape'&&document.fullscreenElement)document.exitFullscreen();
 });
 
 // Touch/swipe support
