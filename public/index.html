@@ -404,6 +404,15 @@ code{background:#f0f0ec;padding:1px 6px;border-radius:4px;font-size:11px;font-fa
   </div>
 </div>
 
+<!-- LAB FULL-SCREEN MODAL -->
+<div id="lab-modal" style="display:none;position:fixed;inset:0;background:#fafdf9;z-index:400;overflow-y:auto;flex-direction:column">
+  <div style="background:linear-gradient(135deg,#085041,#1D9E75);padding:14px 18px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;box-shadow:0 2px 12px rgba(0,0,0,.2)">
+    <button onclick="closeLabModal()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:white;border-radius:20px;padding:7px 16px;font-family:Heebo,sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px">← חזרה לשיחה</button>
+    <span id="lab-modal-title" style="color:white;font-weight:800;font-size:15px;flex:1;text-align:right"></span>
+  </div>
+  <div id="lab-modal-body" style="padding:18px;max-width:640px;margin:0 auto;width:100%"></div>
+</div>
+
 <!-- MESSAGES -->
 <div class="msgs" id="msgs"></div>
 
@@ -2990,11 +2999,11 @@ function navJump(section){
           '<div class="calc-header"><div class="calc-title">🔬 מעבדת חקירה</div>'+
           '<div class="calc-sub">בחרי נושא — כל מה שרצית לדעת, בשפה שלך</div></div>'+
           '<div class="calc-body"><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">'+
-          _lb('📈','מה היה קורה אם...','מדדים היסטוריים','showLabHistory()')+
-          _lb('💧','טיפה שהופכת לאגם','הפקדה קבועה לאורך זמן','showLabDCA()')+
-          _lb('🏦','פיקדון vs שוק ההון','השוואה חיה','showLabDeposit()')+
-          _lb('🔥','הגנב השקט','האינפלציה ואת','showLabInflation()')+
-          _lb('👧','זמן = כסף','למה מוקדם = הרבה יותר','showLabKids()')+
+          _lb('📈','מה היה קורה אם...','מדדים היסטוריים','openLabHistory()')+
+          _lb('💧','טיפה שהופכת לאגם','הפקדה קבועה לאורך זמן','openLabDCA()')+
+          _lb('🏦','פיקדון vs שוק ההון','השוואה חיה','openLabDeposit()')+
+          _lb('🔥','הגנב השקט','האינפלציה ואת','openLabInflation()')+
+          _lb('👧','זמן = כסף','למה מוקדם = הרבה יותר','openLabKids()')+
           _lb('📋','תכנים מהמפגשים','בבנייה — יתעדכן','',true)+
           '</div></div></div>');
       },400);
@@ -3018,6 +3027,52 @@ function navJump(section){
 // 🔬 מעבדת חקירה
 // ═══════════════════════════════════════════════════════
 
+function openLabModal(title){
+  document.getElementById('lab-modal-title').textContent=title;
+  document.getElementById('lab-modal-body').innerHTML='';
+  document.getElementById('lab-modal').style.display='flex';
+  document.getElementById('lab-modal').scrollTop=0;
+}
+function closeLabModal(){
+  document.getElementById('lab-modal').style.display='none';
+}
+function labCard(html){
+  var div=document.createElement('div');
+  div.innerHTML=html;
+  document.getElementById('lab-modal-body').appendChild(div);
+}
+
+var INDICES={
+  sp500:{name:'S&P 500',color:'#1D9E75',data:[
+    {y:2000,r:-9},{y:2001,r:-12},{y:2002,r:-22},{y:2003,r:29},{y:2004,r:11},
+    {y:2005,r:5},{y:2006,r:16},{y:2007,r:6},{y:2008,r:-37},{y:2009,r:26},
+    {y:2010,r:15},{y:2011,r:2},{y:2012,r:16},{y:2013,r:32},{y:2014,r:14},
+    {y:2015,r:1},{y:2016,r:12},{y:2017,r:22},{y:2018,r:-4},{y:2019,r:31},
+    {y:2020,r:18},{y:2021,r:29},{y:2022,r:-18},{y:2023,r:26},{y:2024,r:23}
+  ]},
+  nasdaq:{name:'נאסד"ק',color:'#5b5ef4',data:[
+    {y:2000,r:-39},{y:2001,r:-21},{y:2002,r:-32},{y:2003,r:50},{y:2004,r:9},
+    {y:2005,r:2},{y:2006,r:10},{y:2007,r:10},{y:2008,r:-40},{y:2009,r:44},
+    {y:2010,r:17},{y:2011,r:-1},{y:2012,r:16},{y:2013,r:38},{y:2014,r:14},
+    {y:2015,r:7},{y:2016,r:8},{y:2017,r:28},{y:2018,r:-4},{y:2019,r:36},
+    {y:2020,r:44},{y:2021,r:22},{y:2022,r:-33},{y:2023,r:43},{y:2024,r:29}
+  ]},
+  msci:{name:'MSCI עולמי',color:'#EF9F27',data:[
+    {y:2000,r:-13},{y:2001,r:-17},{y:2002,r:-20},{y:2003,r:34},{y:2004,r:15},
+    {y:2005,r:10},{y:2006,r:21},{y:2007,r:9},{y:2008,r:-40},{y:2009,r:30},
+    {y:2010,r:12},{y:2011,r:-5},{y:2012,r:16},{y:2013,r:27},{y:2014,r:5},
+    {y:2015,r:-1},{y:2016,r:8},{y:2017,r:23},{y:2018,r:-8},{y:2019,r:28},
+    {y:2020,r:16},{y:2021,r:22},{y:2022,r:-18},{y:2023,r:24},{y:2024,r:19}
+  ]},
+  ta125:{name:'ת"א 125',color:'#e05060',data:[
+    {y:2000,r:-14},{y:2001,r:-24},{y:2002,r:-24},{y:2003,r:56},{y:2004,r:17},
+    {y:2005,r:29},{y:2006,r:15},{y:2007,r:24},{y:2008,r:-46},{y:2009,r:74},
+    {y:2010,r:14},{y:2011,r:-18},{y:2012,r:8},{y:2013,r:12},{y:2014,r:2},
+    {y:2015,r:1},{y:2016,r:0},{y:2017,r:8},{y:2018,r:-7},{y:2019,r:19},
+    {y:2020,r:11},{y:2021,r:28},{y:2022,r:-11},{y:2023,r:4},{y:2024,r:14}
+  ]}
+};
+
 var SP500=[
   {y:2000,r:-9},{y:2001,r:-12},{y:2002,r:-22},{y:2003,r:29},{y:2004,r:11},
   {y:2005,r:5},{y:2006,r:16},{y:2007,r:6},{y:2008,r:-37},{y:2009,r:26},
@@ -3029,7 +3084,8 @@ var SP500=[
 function _fmt(n){return '₪'+Math.round(n).toLocaleString('he-IL');}
 
 function _lb(icon,title,sub,fn,disabled){
-  return '<div '+(disabled?'':'onclick="'+fn+'"')+
+  var click=disabled?'':'onclick="'+fn+'"';
+  return '<div '+click+
     ' style="background:#f7fdf9;border:1.5px solid #ddf0e6;border-radius:14px;padding:14px 10px;'+
     'cursor:'+(disabled?'default':'pointer')+';opacity:'+(disabled?'0.5':'1')+';transition:background .15s"'+
     (disabled?'':' onmouseover="this.style.background=\'#e5f5ec\'" onmouseout="this.style.background=\'#f7fdf9\'"')+'>'+
@@ -3084,104 +3140,126 @@ function showLabSection(){
   },500);
 }
 
+// ── פונקציות פתיחת מסך מלא ──────────────────
+function openLabHistory(){ openLabModal('📈 מה היה קורה אם...'); showLabHistory(); }
+function openLabDCA(){ openLabModal('💧 טיפה שהופכת לאגם'); showLabDCA(); }
+function openLabDeposit(){ openLabModal('🏦 פיקדון vs שוק ההון'); showLabDeposit(); }
+function openLabInflation(){ openLabModal('🔥 הגנב השקט'); showLabInflation(); }
+function openLabKids(){ openLabModal('👧 זמן = כסף'); showLabKids(); }
+
 // ── MODULE 1: היסטוריה ────────────────────────
 function showLabHistory(){
   var id='hist_'+Date.now();
-  addCard('<div class="calc-card" style="max-width:100%">'+
+  var idxBtns=Object.keys(INDICES).map(function(k){
+    var idx=INDICES[k];
+    var active=k==='sp500';
+    return '<button onclick="setHistIdx(\''+id+'\',\''+k+'\')" id="'+id+'_i'+k+'" style="padding:6px 14px;border-radius:20px;border:2px solid '+(active?idx.color:'#ddd')+';background:'+(active?idx.color:'white')+';color:'+(active?'white':'#555')+';font-family:Heebo,sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s">'+idx.name+'</button>';
+  }).join('');
+  var periodBtns=['5','10','20','הכל'].map(function(p,i){
+    var yrs=[5,10,20,25][i];
+    var active=i===0;
+    return '<button onclick="setHistPeriod(\''+id+'\','+yrs+')" id="'+id+'_p'+yrs+'" style="padding:6px 14px;border-radius:20px;border:1.5px solid '+(active?'#085041':'#ccc')+';background:'+(active?'#085041':'white')+';color:'+(active?'white':'#555')+';font-family:Heebo,sans-serif;font-size:12px;font-weight:700;cursor:pointer">'+p+' שנים</button>';
+  }).join('');
+  labCard('<div class="calc-card" style="max-width:100%;margin-bottom:16px">'+
     '<div class="calc-header"><div class="calc-title">📈 מה היה קורה אם...</div>'+
-    '<div class="calc-sub">הייתי משקיעה במדד S&P 500 — מה הייתה התוצאה?</div></div>'+
+    '<div class="calc-sub">בחרי מדד ותקופה — ראי את ההיסטוריה</div></div>'+
     '<div class="calc-body">'+
-    '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">'+
-    '<button onclick="setHistPeriod(\''+id+'\',5)" id="'+id+'_p5" style="padding:6px 14px;border-radius:20px;border:1.5px solid #1D9E75;background:#1D9E75;color:white;font-family:Heebo,sans-serif;font-size:12px;font-weight:700;cursor:pointer">5 שנים</button>'+
-    '<button onclick="setHistPeriod(\''+id+'\',10)" id="'+id+'_p10" style="padding:6px 14px;border-radius:20px;border:1.5px solid #ccc;background:white;color:#555;font-family:Heebo,sans-serif;font-size:12px;font-weight:700;cursor:pointer">10 שנים</button>'+
-    '<button onclick="setHistPeriod(\''+id+'\',20)" id="'+id+'_p20" style="padding:6px 14px;border-radius:20px;border:1.5px solid #ccc;background:white;color:#555;font-family:Heebo,sans-serif;font-size:12px;font-weight:700;cursor:pointer">20 שנים</button>'+
-    '<button onclick="setHistPeriod(\''+id+'\',25)" id="'+id+'_p25" style="padding:6px 14px;border-radius:20px;border:1.5px solid #ccc;background:white;color:#555;font-family:Heebo,sans-serif;font-size:12px;font-weight:700;cursor:pointer">הכל</button>'+
-    '</div>'+
+    '<div style="margin-bottom:10px"><div style="font-size:11px;font-weight:700;color:#888;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">בחרי מדד</div>'+
+    '<div style="display:flex;gap:6px;flex-wrap:wrap">'+idxBtns+'</div></div>'+
+    '<div style="margin-bottom:12px"><div style="font-size:11px;font-weight:700;color:#888;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">תקופה</div>'+
+    '<div style="display:flex;gap:6px;flex-wrap:wrap">'+periodBtns+'</div></div>'+
     '<div class="calc-row"><span class="calc-lbl">סכום חד פעמי</span>'+
     '<input type="range" class="calc-range" min="5000" max="200000" step="5000" value="50000" oninput="updHist(\''+id+'\')" id="'+id+'_a">'+
     '<span class="calc-val" id="'+id+'_av">₪50,000</span></div>'+
     '<div id="'+id+'_chart" style="margin:12px 0 4px;overflow-x:auto"></div>'+
-    '<div id="'+id+'_res" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px"></div>'+
-    '<div style="font-size:10px;color:#bbb;margin-top:8px;padding-top:8px;border-top:1px solid #f0f0ec">* תשואות היסטוריות של S&P 500. העבר אינו מבטיח את העתיד. לצרכי לימוד בלבד.</div>'+
+    '<div id="'+id+'_res" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px"></div>'+
+    '<input type="hidden" id="'+id+'_idx" value="sp500">'+
+    '<input type="hidden" id="'+id+'_yrs" value="5">'+
+    '<div style="font-size:10px;color:#bbb;margin-top:10px;padding-top:8px;border-top:1px solid #f0f0ec">* נתונים היסטוריים משוערים לצרכי לימוד בלבד. העבר אינו מבטיח את העתיד.</div>'+
     '</div></div>');
-  setTimeout(function(){setHistPeriod(id,5);},60);
+  setTimeout(function(){updHist(id);},60);
+}
+
+function setHistIdx(id,key){
+  document.getElementById(id+'_idx').value=key;
+  Object.keys(INDICES).forEach(function(k){
+    var btn=document.getElementById(id+'_i'+k);
+    if(!btn)return;
+    var c=INDICES[k].color;
+    btn.style.background=k===key?c:'white';
+    btn.style.color=k===key?'white':'#555';
+    btn.style.borderColor=k===key?c:'#ddd';
+  });
+  updHist(id);
 }
 
 function setHistPeriod(id,yrs){
-  ['5','10','20','25'].forEach(function(p){
+  [5,10,20,25].forEach(function(p){
     var btn=document.getElementById(id+'_p'+p);
-    if(btn){btn.style.background=p==yrs?'#1D9E75':'white';btn.style.color=p==yrs?'white':'#555';btn.style.borderColor=p==yrs?'#1D9E75':'#ccc';}
+    if(btn){btn.style.background=p===yrs?'#085041':'white';btn.style.color=p===yrs?'white':'#555';btn.style.borderColor=p===yrs?'#085041':'#ccc';}
   });
-  var endY=2024, startY=endY-yrs;
-  var el=document.getElementById(id+'_p_val');
-  if(!el){
-    var inp=document.createElement('input');
-    inp.type='hidden';inp.id=id+'_p_val';inp.value=yrs;
-    var card=document.getElementById(id+'_chart');
-    if(card)card.parentNode.insertBefore(inp,card);
-  } else {el.value=yrs;}
-  updHist(id,startY,endY);
+  document.getElementById(id+'_yrs').value=yrs;
+  updHist(id);
 }
 
-function updHist(id,startY,endY){
+function updHist(id){
   var amt=+document.getElementById(id+'_a').value;
+  var yrs=+document.getElementById(id+'_yrs').value||5;
+  var idxKey=document.getElementById(id+'_idx').value||'sp500';
+  var idx=INDICES[idxKey];
+  var color=idx.color;
   document.getElementById(id+'_av').textContent=_fmt(amt);
-  if(!startY){var pv=document.getElementById(id+'_p_val');startY=pv?2024-parseInt(pv.value):2019;endY=2024;}
-
-  var data=SP500.filter(function(d){return d.y>startY&&d.y<=endY;});
-  var pf=amt,vals=[];
-  data.forEach(function(d){pf=pf*(1+d.r/100);vals.push({y:d.y,r:d.r,val:pf});});
-  var profit=pf-amt,mult=(pf/amt).toFixed(1);
+  var endY=2024, startY=endY-yrs;
+  var data=idx.data.filter(function(d){return d.y>startY&&d.y<=endY;});
+  if(!data.length)return;
+  var pf=amt;
+  data.forEach(function(d){pf=pf*(1+d.r/100);});
+  var profit=pf-amt, n=data.length;
+  var cagr=((Math.pow(pf/amt,1/n)-1)*100).toFixed(1);
+  var mult=(pf/amt).toFixed(1);
   var best=data.reduce(function(a,b){return b.r>a.r?b:a;},data[0]);
   var worst=data.reduce(function(a,b){return b.r<a.r?b:a;},data[0]);
 
-  // CAGR
-  var n=data.length||1;
-  var cagr=((Math.pow(pf/amt,1/n)-1)*100).toFixed(1);
-
-  // bar chart with CAGR line
   var el=document.getElementById(id+'_chart');
   if(el){
-    var w=Math.max(280,data.length*28), h=130, bw=20, gap=8;
+    var bw=22,gap=6,w=Math.max(280,data.length*(bw+gap)+20),h=140;
     var maxR=Math.max.apply(null,data.map(function(d){return Math.abs(d.r);}));
-    var zero=h*0.6;
+    var zero=Math.round(h*0.62);
     var bars=data.map(function(d,i){
-      var x=i*(bw+gap)+4;
+      var x=i*(bw+gap)+6;
       var isPos=d.r>=0;
-      var bh=Math.round(Math.abs(d.r)/maxR*(h*0.55));
+      var bh=Math.max(2,Math.round(Math.abs(d.r)/maxR*(h*0.55)));
       var y=isPos?zero-bh:zero;
-      var color=isPos?'#1D9E75':'#e05060';
-      return '<rect x="'+x+'" y="'+y+'" width="'+bw+'" height="'+bh+'" rx="3" fill="'+color+'" opacity="0.85"/>'+
-        '<text x="'+(x+bw/2)+'" y="'+(isPos?y-2:y+bh+9)+'" text-anchor="middle" font-size="7.5" fill="'+color+'" font-weight="700">'+(d.r>0?'+':'')+d.r+'%</text>'+
-        '<text x="'+(x+bw/2)+'" y="'+(h-2)+'" text-anchor="middle" font-size="7" fill="#999">'+(d.y+'').slice(2)+'</text>';
+      var c=isPos?color:'#e05060';
+      return '<rect x="'+x+'" y="'+y+'" width="'+bw+'" height="'+bh+'" rx="3" fill="'+c+'" opacity="0.85"/>'+
+        '<text x="'+(x+bw/2)+'" y="'+(isPos?y-2:y+bh+9)+'" text-anchor="middle" font-size="7" fill="'+c+'" font-weight="700">'+(d.r>0?'+':'')+d.r+'</text>'+
+        '<text x="'+(x+bw/2)+'" y="'+(h-3)+'" text-anchor="middle" font-size="7" fill="#aaa">'+(d.y+'').slice(2)+'</text>';
     }).join('');
-    // CAGR dashed line
-    var cagrY=zero-parseFloat(cagr)/maxR*(h*0.55);
-    var totalW=data.length*(bw+gap);
-    el.innerHTML='<svg viewBox="0 0 '+w+' '+h+'" style="width:100%;min-width:'+w+'px;height:'+h+'px">'+
-      '<line x1="0" y1="'+zero+'" x2="'+w+'" y2="'+zero+'" stroke="#ddd" stroke-width="1"/>'+
+    var cagrPct=parseFloat(cagr);
+    var cagrY=cagrPct>=0?zero-Math.round(cagrPct/maxR*(h*0.55)):zero+Math.round(Math.abs(cagrPct)/maxR*(h*0.55));
+    var lw=data.length*(bw+gap);
+    el.innerHTML='<div style="overflow-x:auto"><svg viewBox="0 0 '+w+' '+h+'" style="min-width:'+w+'px;width:100%;height:'+h+'px">'+
+      '<line x1="0" y1="'+zero+'" x2="'+w+'" y2="'+zero+'" stroke="#e0e0e0" stroke-width="1"/>'+
       bars+
-      '<line x1="0" y1="'+cagrY+'" x2="'+totalW+'" y2="'+cagrY+'" stroke="#EF9F27" stroke-width="1.5" stroke-dasharray="4,3"/>'+
-      '<text x="'+(totalW+2)+'" y="'+(cagrY+4)+'" font-size="8" fill="#EF9F27" font-weight="700">'+cagr+'% ממוצע</text>'+
-      '</svg>';
+      '<line x1="6" y1="'+cagrY+'" x2="'+(lw+6)+'" y2="'+cagrY+'" stroke="#EF9F27" stroke-width="2" stroke-dasharray="5,3"/>'+
+      '<text x="'+(lw+8)+'" y="'+(cagrY+4)+'" font-size="8" fill="#EF9F27" font-weight="800">'+cagr+'%</text>'+
+      '</svg></div>';
   }
 
   var res=document.getElementById(id+'_res');
   if(res)res.innerHTML=
     _rbox('הושקע',_fmt(amt),'#085041')+
-    _rbox('שווי היום',_fmt(pf),profit>=0?'#1D9E75':'#e05060')+
-    _rbox('CAGR',cagr+'%','#EF9F27')+
-    _rbox('כפל','×'+mult,'#085041')+
-    '<div style="grid-column:span 2;background:#e8f7ee;border-radius:10px;padding:8px 12px;font-size:11px;color:#085041">'+
-    '🏆 שנה הטובה: <strong>'+best.y+' (+'+best.r+'%)</strong></div>'+
-    '<div style="grid-column:span 2;background:#fff2f2;border-radius:10px;padding:8px 12px;font-size:11px;color:#c00">'+
-    '📉 שנה גרועה: <strong>'+worst.y+' ('+worst.r+'%)</strong></div>';
+    _rbox('שווי היום',_fmt(pf),profit>=0?color:'#e05060')+
+    _rbox('CAGR שנתי',cagr+'%','#EF9F27')+
+    _rbox('כפל הכסף','×'+mult,'#085041')+
+    '<div style="background:#e8f7ee;border-radius:10px;padding:8px 12px;font-size:12px;color:#085041">🏆 שנה הטובה: <strong>'+best.y+' ('+(best.r>0?'+':'')+best.r+'%)</strong></div>'+
+    '<div style="background:#fff2f2;border-radius:10px;padding:8px 12px;font-size:12px;color:#c00">📉 שנה גרועה: <strong>'+worst.y+' ('+worst.r+'%)</strong></div>';
 }
 
 // ── MODULE 2: DCA ─────────────────────────────
 function showLabDCA(){
   var id='dca_'+Date.now();
-  addCard('<div class="calc-card" style="max-width:100%">'+
+  labCard('<div class="calc-card" style="max-width:100%">'+
     '<div class="calc-header"><div class="calc-title">💧 טיפה שהופכת לאגם</div>'+
     '<div class="calc-sub">כמה כוח יש להפקדה קטנה ועקבית כל חודש</div></div>'+
     '<div class="calc-body">'+
@@ -3220,7 +3298,7 @@ function updDCA(id){
 // ── MODULE 3: פיקדון vs שוק ───────────────────
 function showLabDeposit(){
   var id='dep_'+Date.now();
-  addCard('<div class="calc-card" style="max-width:100%">'+
+  labCard('<div class="calc-card" style="max-width:100%">'+
     '<div class="calc-header"><div class="calc-title">🏦 פיקדון בנקאי vs שוק ההון</div>'+
     '<div class="calc-sub">מה קורה לאותו סכום בשני מקומות שונים</div></div>'+
     '<div class="calc-body">'+
@@ -3267,7 +3345,7 @@ function updDep(id){
 // ── MODULE 4: אינפלציה ──────────────────────────
 function showLabInflation(){
   var id='inf_'+Date.now();
-  addCard('<div class="calc-card" style="max-width:100%">'+
+  labCard('<div class="calc-card" style="max-width:100%">'+
     '<div class="calc-header"><div class="calc-title">🔥 הגנב השקט — האינפלציה</div>'+
     '<div class="calc-sub">הכסף בפח — כמה הוא שווה בעוד כמה שנים?</div></div>'+
     '<div class="calc-body">'+
@@ -3312,7 +3390,7 @@ function updInf(id){
 // ── MODULE 5: ילדים ─────────────────────────────
 function showLabKids(){
   var id='kids_'+Date.now();
-  addCard('<div class="calc-card" style="max-width:100%">'+
+  labCard('<div class="calc-card" style="max-width:100%">'+
     '<div class="calc-header"><div class="calc-title">👧 זמן = כסף — למה מוקדם = הרבה יותר</div>'+
     '<div class="calc-sub">אותה הפקדה, גיל שונה — התוצאה מדהימה</div></div>'+
     '<div class="calc-body">'+
@@ -3338,7 +3416,7 @@ function updKids(id){
     for(var i=0;i<n;i++){pf=(pf+m)*(1+r);inv+=m;}
     return{val:pf,inv:inv};
   }
-  var ages=[5,10,18,25,35];
+  var ages=[18,25,35,45,55];
   var results=ages.map(function(a){return{age:a,d:calc(a)};});
   var maxVal=Math.max.apply(null,results.map(function(x){return x.d.val;}));
   var res=document.getElementById(id+'_res');
@@ -3363,6 +3441,7 @@ function updKids(id){
     '<div style="font-size:12px;color:#666">ההפרש בין להתחיל בגיל 5 לגיל 35:</div>'+
     '<div style="font-size:26px;font-weight:900;color:#EF9F27;margin:6px 0">'+_fmt(diff)+'</div>'+
     '<div style="font-size:11px;color:#888">אותם '+_fmt(m)+' בחודש — רק בגלל הזמן</div></div>';
+  document.getElementById('lab-modal').scrollTop=0;
 }
 
 window.onload = checkLogin;
