@@ -2992,22 +2992,7 @@ function navJump(section){
     return;
   }
   if (section === 'lab'){
-    delay(function(){
-      addMsg('מעבדת חקירה 🔬 — חוקרות מספרים, מגלות דפוסים, מבינות לעומק');
-      setTimeout(function(){
-        addCard('<div class="calc-card" style="max-width:100%">'+
-          '<div class="calc-header"><div class="calc-title">🔬 מעבדת חקירה</div>'+
-          '<div class="calc-sub">בחרי נושא — כל מה שרצית לדעת, בשפה שלך</div></div>'+
-          '<div class="calc-body"><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">'+
-          _lb('📈','מה היה קורה אם...','מדדים היסטוריים','openLabHistory()')+
-          _lb('💧','טיפה שהופכת לאגם','הפקדה קבועה לאורך זמן','openLabDCA()')+
-          _lb('🏦','פיקדון vs שוק ההון','השוואה חיה','openLabDeposit()')+
-          _lb('🔥','הגנב השקט','האינפלציה ואת','openLabInflation()')+
-          _lb('👧','זמן = כסף','למה מוקדם = הרבה יותר','openLabKids()')+
-          _lb('📋','תכנים מהמפגשים','בבנייה — יתעדכן','',true)+
-          '</div></div></div>');
-      },400);
-    }, 300);
+    showLabMenu();
     return;
   }
   if (section === 'portfolio'){
@@ -3027,9 +3012,28 @@ function navJump(section){
 // 🔬 מעבדת חקירה
 // ═══════════════════════════════════════════════════════
 
+function showLabMenu(){
+  var m=document.getElementById('lab-modal');
+  document.getElementById('lab-modal-title').textContent='🔬 מעבדת חקירה';
+  var body=document.getElementById('lab-modal-body');
+  body.innerHTML=
+    '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:4px 0">'+
+    _lb('📈','מה היה קורה אם...','מדדים היסטוריים','openLabHistory()')+
+    _lb('💧','טיפה שהופכת לאגם','הפקדה קבועה לאורך זמן','openLabDCA()')+
+    _lb('🏦','פיקדון vs שוק ההון','השוואה חיה','openLabDeposit()')+
+    _lb('🔥','הגנב השקט','האינפלציה ואת','openLabInflation()')+
+    _lb('👧','זמן = כסף','למה מוקדם = הרבה יותר','openLabKids()')+
+    _lb('📋','תכנים מהמפגשים','בבנייה — יתעדכן','',true)+
+    '</div>';
+  m.style.display='flex';
+  m.scrollTop=0;
+}
+
 function openLabModal(title){
   document.getElementById('lab-modal-title').textContent=title;
-  document.getElementById('lab-modal-body').innerHTML='';
+  var body=document.getElementById('lab-modal-body');
+  // כפתור חזרה לתפריט
+  body.innerHTML='<button onclick="showLabMenu()" style="display:inline-flex;align-items:center;gap:6px;background:#f0faf5;border:1.5px solid #1D9E75;color:#085041;border-radius:20px;padding:6px 14px;font-family:Heebo,sans-serif;font-size:12px;font-weight:700;cursor:pointer;margin-bottom:14px">← כל הנושאים</button>';
   document.getElementById('lab-modal').style.display='flex';
   document.getElementById('lab-modal').scrollTop=0;
 }
@@ -3038,6 +3042,7 @@ function closeLabModal(){
 }
 function labCard(html){
   var div=document.createElement('div');
+  div.style.cssText='background:white;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1px solid #e8f0ec';
   div.innerHTML=html;
   document.getElementById('lab-modal-body').appendChild(div);
 }
@@ -3123,22 +3128,7 @@ function _svgTwo(v1,v2,w,h,c1,c2){
   return '<svg viewBox="0 0 '+w+' '+h+'" style="width:100%;height:'+h+'px">'+mkPath(mkPts(v1),c1)+mkPath(mkPts(v2),c2)+'</svg>';
 }
 
-function showLabSection(){
-  addMsg('מעבדת חקירה 🔬 — חוקרות מספרים, מגלות דפוסים, מבינות לעומק');
-  delay(function(){
-    addCard('<div class="calc-card" style="max-width:100%">'+
-      '<div class="calc-header"><div class="calc-title">🔬 מעבדת חקירה</div>'+
-      '<div class="calc-sub">בחרי נושא — כל מה שרצית לדעת, בשפה שלך</div></div>'+
-      '<div class="calc-body"><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">'+
-      _lb('📈','מה היה קורה אם...','מדדים היסטוריים','showLabHistory()')+
-      _lb('💧','טיפה שהופכת לאגם','הפקדה קבועה לאורך זמן','showLabDCA()')+
-      _lb('🏦','פיקדון vs שוק ההון','השוואה חיה','showLabDeposit()')+
-      _lb('🔥','הגנב השקט','האינפלציה ואת','showLabInflation()')+
-      _lb('👧','זמן = כסף','למה מוקדם = הרבה יותר','showLabKids()')+
-      _lb('📋','תכנים מהמפגשים','בבנייה — יתעדכן','',true)+
-      '</div></div></div>');
-  },500);
-}
+function showLabSection(){ showLabMenu(); }
 
 // ── פונקציות פתיחת מסך מלא ──────────────────
 function openLabHistory(){ openLabModal('📈 מה היה קורה אם...'); showLabHistory(); }
