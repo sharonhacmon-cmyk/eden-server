@@ -1,0 +1,423 @@
+
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&family=Frank+Ruhl+Libre:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+.w{font-family:'Heebo',sans-serif;direction:rtl;background:#085041;border-radius:16px;overflow:hidden;position:relative;display:flex;flex-direction:column;min-height:500px;}
+.bc{position:absolute;border-radius:50%;pointer-events:none;}
+.bc1{width:480px;height:480px;top:-170px;right:-170px;background:rgba(29,158,117,.13);}
+.bc2{width:320px;height:320px;bottom:-110px;left:-110px;background:rgba(29,158,117,.1);}
+.bc3{width:180px;height:180px;top:220px;left:-50px;background:rgba(239,159,39,.07);}
+.bl{position:absolute;background:rgba(255,255,255,.05);pointer-events:none;}
+.bl1{height:1px;width:100%;top:11%;}
+.bl2{height:1px;width:100%;bottom:11%;}
+.bl3{width:1px;height:100%;top:0;right:11%;}
+.area{flex:1;position:relative;padding:36px 40px 16px;}
+.slide{display:none;flex-direction:column;gap:16px;}
+.slide.active{display:flex;animation:fu .45s ease forwards;}
+@keyframes fu{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.etag{font-size:11px;font-weight:400;color:rgba(255,255,255,.4);letter-spacing:4px;text-transform:uppercase;}
+.etitle{font-family:'Frank Ruhl Libre',serif;font-size:34px;font-weight:900;color:white;line-height:1.2;}
+.etitle .g{color:#EF9F27;}
+.ebody{font-size:15px;font-weight:300;color:rgba(255,255,255,.7);line-height:1.75;}
+.ebody strong{color:white;font-weight:700;}
+.gline{width:44px;height:3px;background:#EF9F27;border-radius:2px;}
+
+/* Avatar עדן */
+.eden-avatar{position:relative;display:inline-flex;align-items:center;justify-content:center;}
+.eden-avatar svg{border-radius:50%;display:block;}
+.eden-avatar-sm{width:38px;height:38px;}
+.eden-avatar-lg{width:88px;height:88px;}
+.eden-avatar-xl{width:120px;height:120px;}
+
+.slist{display:flex;flex-direction:column;gap:9px;}
+.srow{display:flex;align-items:flex-start;gap:13px;background:rgba(255,255,255,.06);border-radius:12px;padding:13px 15px;border:1px solid rgba(255,255,255,.08);}
+.snum{width:34px;height:34px;border-radius:50%;background:#EF9F27;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#085041;flex-shrink:0;}
+.stitle{font-size:14px;font-weight:700;color:white;margin-bottom:2px;}
+.ssub{font-size:12px;font-weight:300;color:rgba(255,255,255,.55);}
+.sarr{font-size:14px;color:rgba(255,255,255,.2);text-align:center;}
+
+/* Chat - WhatsApp style */
+.chat-wrap{border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.45);display:flex;flex-direction:column;}
+.chat-header{background:#075E54;padding:10px 14px 10px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(0,0,0,.15);}
+.chat-header-avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid rgba(255,255,255,.2);}
+.chat-header-avatar-fallback{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#1D9E75,#085041);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Frank Ruhl Libre',serif;font-size:18px;font-weight:900;color:white;border:2px solid rgba(255,255,255,.2);}
+.chat-header-info{flex:1;}
+.chat-name{font-size:15px;font-weight:700;color:white;line-height:1.2;}
+.chat-status{font-size:12px;color:rgba(255,255,255,.65);}
+.chat-menu{display:flex;gap:16px;align-items:center;}
+.chat-menu span{font-size:18px;cursor:pointer;color:rgba(255,255,255,.8);}
+/* WhatsApp wallpaper */
+.chat-body{
+  padding:10px 12px;
+  display:flex;flex-direction:column;gap:4px;
+  background:#E5DDD5;
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c0b9b0' fill-opacity='0.18'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  min-height:180px;
+}
+.chat-date-divider{text-align:center;margin:6px 0;}
+.chat-date-divider span{background:rgba(225,245,254,.85);color:#546E7A;font-size:11px;font-weight:500;padding:3px 10px;border-radius:8px;}
+.bmsg{display:flex;align-items:flex-end;gap:6px;margin-bottom:2px;}
+.bmsg.eden{flex-direction:row;}
+.bmsg.user{flex-direction:row-reverse;}
+.bmsg-avatar{width:28px;height:28px;border-radius:50%;flex-shrink:0;margin-bottom:2px;object-fit:cover;}
+.bmsg-avatar-fallback{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#1D9E75,#085041);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Frank Ruhl Libre',serif;font-size:12px;font-weight:900;color:white;}
+.bubble{max-width:78%;padding:7px 11px 16px;border-radius:8px;font-size:13.5px;line-height:1.5;font-weight:400;position:relative;word-break:break-word;}
+.bubble.eden{background:#ffffff;color:#1a1a1a;border-radius:0 8px 8px 8px;box-shadow:0 1px 2px rgba(0,0,0,.15);}
+.bubble.user{background:#DCF8C6;color:#1a1a1a;border-radius:8px 0 8px 8px;box-shadow:0 1px 2px rgba(0,0,0,.15);}
+.bubble strong{font-weight:600;color:#075E54;}
+.bubble-time{position:absolute;bottom:4px;left:9px;font-size:10px;color:rgba(0,0,0,.4);}
+.bmsg.user .bubble-time{left:auto;right:9px;color:rgba(0,0,0,.4);}
+.bubble-tick{font-size:10px;color:#53bdeb;margin-right:2px;}
+/* input bar */
+.chat-input-bar{background:#F0F0F0;padding:8px 10px;display:flex;align-items:center;gap:8px;border-top:1px solid #ddd;}
+.chat-input-field{flex:1;background:white;border-radius:24px;padding:9px 16px;font-size:14px;color:#333;font-family:'Heebo',sans-serif;border:none;outline:none;direction:rtl;}
+.chat-input-field::placeholder{color:#aaa;}
+.chat-send-btn{width:40px;height:40px;border-radius:50%;background:#075E54;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;}
+.chat-emoji-btn{font-size:22px;cursor:pointer;}
+
+/* explore */
+.explore-wrap{display:flex;flex-direction:column;gap:8px;}
+.explore-item{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);border-radius:12px;overflow:hidden;}
+.explore-head{display:flex;align-items:center;justify-content:space-between;padding:12px 15px;cursor:pointer;transition:background .15s;}
+.explore-head:hover{background:rgba(255,255,255,.05);}
+.explore-head-text{font-size:13px;font-weight:700;color:white;}
+.explore-arrow{font-size:12px;color:#EF9F27;transition:transform .25s;}
+.explore-body{display:none;padding:10px 15px 13px;font-size:12px;font-weight:300;color:rgba(255,255,255,.65);line-height:1.6;border-top:1px solid rgba(255,255,255,.06);}
+.explore-item.open .explore-body{display:block;}
+.explore-item.open .explore-arrow{transform:rotate(180deg);}
+
+/* compare */
+.crow{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.ccol{border-radius:12px;padding:14px;}
+.ccol.bad{background:rgba(180,40,40,.14);border:1px solid rgba(240,80,80,.18);}
+.ccol.good{background:rgba(29,158,117,.14);border:1px solid rgba(29,158,117,.28);}
+.chead{font-size:10px;font-weight:700;letter-spacing:2px;margin-bottom:9px;}
+.chead.bad{color:#f09595;}
+.chead.good{color:#5DCAA5;}
+.ci{display:flex;align-items:flex-start;gap:7px;margin-bottom:8px;}
+.ci:last-child{margin-bottom:0;}
+.citext{font-size:12px;font-weight:300;line-height:1.4;}
+.citext.bad{color:rgba(240,149,149,.85);}
+.citext.good{color:rgba(93,202,165,.9);}
+
+.trow{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;}
+.tpill{padding:6px 15px;border-radius:20px;font-size:12px;font-weight:700;}
+.enav{display:flex;align-items:center;justify-content:space-between;padding:12px 40px 16px;border-top:1px solid rgba(255,255,255,.08);position:relative;z-index:10;}
+.edots{display:flex;gap:5px;align-items:center;}
+.edot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);cursor:pointer;transition:background .25s,width .25s;}
+.edot.active{background:#EF9F27;width:18px;border-radius:4px;}
+.nbtn{background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);font-family:'Heebo',sans-serif;font-size:12px;font-weight:600;padding:7px 16px;border-radius:20px;cursor:pointer;transition:background .15s;}
+.nbtn:hover{background:rgba(255,255,255,.08);}
+.nbtn:disabled{opacity:.25;cursor:default;}
+.scnt{font-size:11px;color:rgba(255,255,255,.3);letter-spacing:1px;}
+.pbar{position:absolute;bottom:0;left:0;height:3px;background:#EF9F27;transition:width .35s ease;}
+@keyframes td{0%,60%,100%{transform:translateY(0);opacity:.4;}30%{transform:translateY(-5px);opacity:1;}}
+@media(max-width:480px){.etitle{font-size:26px;}.crow{grid-template-columns:1fr;}.area{padding:28px 24px 12px;}.enav{padding:12px 24px 14px;}}
+</style>
+
+<!-- SVG avatar reusable def -->
+<svg width="0" height="0" style="position:absolute;">
+  <defs>
+    <radialGradient id="av-bg" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#1D9E75"/>
+      <stop offset="100%" stop-color="#085041"/>
+    </radialGradient>
+  </defs>
+</svg>
+
+<div class="w">
+  <div class="bc bc1"></div><div class="bc bc2"></div><div class="bc bc3"></div>
+  <div class="bl bl1"></div><div class="bl bl2"></div><div class="bl bl3"></div>
+
+  <div class="area">
+
+    <!-- 1: פתיחה עם אווטאר גדול -->
+    <div class="slide active" id="s1">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:16px 0;">
+        <!-- אווטאר XL -->
+        <div style="position:relative;display:inline-block;">
+          <img src="/eden.png" style="width:110px;height:110px;border-radius:50%;object-fit:cover;border:2.5px solid #EF9F27;display:block;">
+          <!-- sparkle -->
+          <div style="position:absolute;bottom:4px;left:4px;width:16px;height:16px;">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M8 0L9.5 6.5L16 8L9.5 9.5L8 16L6.5 9.5L0 8L6.5 6.5Z" fill="#EF9F27"/></svg>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'Frank Ruhl Libre',serif;font-size:38px;font-weight:900;color:white;">עדן</div>
+          <div class="gline" style="margin:6px auto;"></div>
+          <div style="font-size:12px;font-weight:300;color:rgba(255,255,255,.45);letter-spacing:3px;margin-top:6px;">נתיב · הכסף החכם שלך</div>
+        </div>
+        <div class="ebody" style="text-align:center;max-width:320px;font-size:14px;">המדריכה שמלמדת אותך לנהל את הכסף שלך —<br><strong>בשפה פשוטה, בלי לחץ, בלי שיפוט</strong></div>
+      </div>
+    </div>
+
+    <!-- 2: שרון — מי יצרה את עדן -->
+    <div class="slide" id="s2">
+      <div style="flex:1;display:flex;flex-direction:column;gap:14px;padding:4px 0;">
+        <div class="etag">הסיפור מאחורי עדן</div>
+        <div class="etitle" style="font-size:26px;">שרון יצרה את <span class="g">עדן</span></div>
+
+        <!-- Sharon quote block -->
+        <div style="background:rgba(239,159,39,.09);border-right:3px solid #EF9F27;border-radius:0 10px 10px 0;padding:13px 15px;margin:2px 0;">
+          <div style="font-size:13px;font-weight:300;color:rgba(255,255,255,.8);line-height:1.75;font-style:italic;">
+            "ראיתי שוב ושוב איך חוסר ידע פיננסי גורם לנשים להישאר פסיביות —
+            לא מתוך אדישות, אלא מתוך חשש. רציתי ליצור מקום בטוח ללמוד."
+          </div>
+          <div style="margin-top:8px;font-size:12px;font-weight:700;color:#EF9F27;letter-spacing:1px;">— שרון, מייסדת נתיב</div>
+        </div>
+
+        <div class="slist" style="gap:8px;">
+          <div class="srow">
+            <div class="snum" style="background:rgba(239,159,39,.15);color:#EF9F27;font-size:17px;flex-shrink:0;">💡</div>
+            <div><div class="stitle">הבעיה שראתה</div><div class="ssub">חוסר ידע גורם לאנשים להיות פסיביים בקבלת החלטות פיננסיות נכונות</div></div>
+          </div>
+          <div class="srow">
+            <div class="snum" style="background:rgba(29,158,117,.15);color:#5DCAA5;font-size:17px;flex-shrink:0;">🎯</div>
+            <div><div class="stitle">החזון</div><div class="ssub">להנגיש ידע פיננסי לנשים — באופן זמין, ברור, ולא מאיים</div></div>
+          </div>
+          <div class="srow">
+            <div class="snum" style="background:rgba(239,159,39,.15);color:#EF9F27;font-size:17px;flex-shrink:0;">🌱</div>
+            <div><div class="stitle">עדן של מחר</div><div class="ssub">עם הזמן תרחיב לנושאים פיננסיים נוספים — צעד אחר צעד</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3: מה עדן עושה -->
+    <div class="slide" id="s3">
+      <div class="etag">מה עדן עושה</div>
+      <div style="display:flex;align-items:center;gap:14px;">
+        <img src="/eden.png" style="width:52px;height:52px;border-radius:50%;object-fit:cover;border:1.5px solid #EF9F27;flex-shrink:0;">
+        <div class="etitle" style="font-size:28px;">מלמדת אותך<br>לנווט ב<span class="g">שוק ההון</span></div>
+      </div>
+      <div class="ebody">עדן לא מחליטה בשבילך — היא מציידת אותך<br>בידע כדי שתוכלי <strong>להחליט בעצמך</strong></div>
+      <div class="slist">
+        <div class="srow">
+          <div class="snum" style="background:rgba(239,159,39,.2);color:#EF9F27;font-size:16px;">📖</div>
+          <div><div class="stitle">לימוד עולם המושגים</div><div class="ssub">מניות, ETF, תשואה, סיכון — בשפה אנושית</div></div>
+        </div>
+        <div class="srow">
+          <div class="snum" style="background:rgba(29,158,117,.2);color:#5DCAA5;font-size:16px;">🧭</div>
+          <div><div class="stitle">צעדים ראשונים אקטיביים</div><div class="ssub">מהתיאוריה לפעולה — בקצב ובביטחון</div></div>
+        </div>
+        <div class="srow">
+          <div class="snum" style="background:rgba(239,159,39,.2);color:#EF9F27;font-size:16px;">🎯</div>
+          <div><div class="stitle">בניית תיק עצמאי</div><div class="ssub">את בונה את התיק שלך — עדן מלווה את הדרך</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3: מושגים אינטרקטיביים -->
+    <div class="slide" id="s4">
+      <div class="etag">שלב ראשון</div>
+      <div class="etitle" style="font-size:28px;">עולם ה<span class="g">מושגים</span> — בהעמקה</div>
+      <div class="ebody" style="font-size:13px;">לוחצים על מושג — עדן מסבירה לעומק</div>
+      <div class="explore-wrap">
+        <div class="explore-item">
+          <div class="explore-head" onclick="toggle(this)"><span class="explore-head-text">📈 מניות — מה זה בעצם?</span><span class="explore-arrow">▼</span></div>
+          <div class="explore-body">חלק בעלות בחברה. כשקונים מניה של אפל — הופכים לבעלים קטנים שלה. אם החברה מצליחה המניה עולה, אם לא — יורדת. לכן חשוב לפזר.</div>
+        </div>
+        <div class="explore-item">
+          <div class="explore-head" onclick="toggle(this)"><span class="explore-head-text">📊 קרנות סל (ETF) — למה זה חכם?</span><span class="explore-arrow">▼</span></div>
+          <div class="explore-body">במקום לקנות מניה אחת — קונים סל שמכיל עשרות חברות בבת אחת. דמי ניהול נמוכים, פיזור אוטומטי. הכלי שרוב המתחילים מתחילים איתו.</div>
+        </div>
+        <div class="explore-item">
+          <div class="explore-head" onclick="toggle(this)"><span class="explore-head-text">⚖️ פיזור סיכונים — למה זה קריטי?</span><span class="explore-arrow">▼</span></div>
+          <div class="explore-body">לא לשים את כל הביצים בסל אחד. אם השקעת רק בחברה אחת והיא קרסה — הפסדת הכל. פיזור על פני ענפים ומדינות מוריד סיכון משמעותית.</div>
+        </div>
+        <div class="explore-item">
+          <div class="explore-head" onclick="toggle(this)"><span class="explore-head-text">💰 תשואה מול סיכון — האיזון</span><span class="explore-arrow">▼</span></div>
+          <div class="explore-body">תשואה גבוהה יותר = סיכון גבוה יותר. עדן עוזרת להבין איפה האיזון הנכון לפי המטרות שלך — לא לפי מה שמישהו אחר עשה.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4: צ'אט עם אווטאר - WhatsApp style -->
+    <div class="slide" id="s5">
+      <div class="etag" style="margin-bottom:6px;">שלב שני</div>
+      <div class="etitle" style="font-size:24px;margin-bottom:8px;">שיחה <span class="g">אמיתית</span> עם עדן</div>
+      <div class="chat-wrap">
+        <!-- header -->
+        <div class="chat-header">
+          <img class="chat-header-avatar" id="eden-hdr-img" src="/eden.png">
+          <div class="chat-header-avatar-fallback" id="eden-hdr-fb" style="display:none !important;">ע</div>
+          <div class="chat-header-info">
+            <div class="chat-name">עדן | נתיב</div>
+            <div class="chat-status">מקוון עכשיו</div>
+          </div>
+          <div class="chat-menu">
+            <span>📹</span>
+            <span>📞</span>
+            <span>⋮</span>
+          </div>
+        </div>
+        <!-- body -->
+        <div class="chat-body">
+          <div class="chat-date-divider"><span>היום</span></div>
+
+          <!-- eden msg 1 -->
+          <div class="bmsg eden">
+            <img class="bmsg-avatar" id="eden-av1" src="/eden.png">
+            <div class="bmsg-avatar-fallback" id="eden-av1-fb" style="display:none;">ע</div>
+            <div class="bubble eden">
+              שלום! 👋 אני עדן<br>
+              אני לא יועצת — אני <strong>מדריכה</strong>.<br>
+              אסביר, אלמד, ואתן לך כלים. ההחלטות — שלך תמיד 💚
+              <span class="bubble-time">10:31</span>
+            </div>
+          </div>
+
+          <!-- user msg -->
+          <div class="bmsg user">
+            <div class="bubble user">
+              מה ההבדל בין ETF למניה רגילה?
+              <span class="bubble-time"><span class="bubble-tick">✓✓</span>10:32</span>
+            </div>
+          </div>
+
+          <!-- eden msg 2 -->
+          <div class="bmsg eden">
+            <img class="bmsg-avatar" id="eden-av2" src="/eden.png">
+            <div class="bmsg-avatar-fallback" id="eden-av2-fb" style="display:none;">ע</div>
+            <div class="bubble eden">
+              שאלה מעולה! 🎯<br>
+              📈 <strong>מניה</strong> = חלק בבעלות בחברה <em>אחת</em><br>
+              📊 <strong>ETF</strong> = סל של עשרות חברות במכה אחת<br><br>
+              רוצה שנצלול לאיך בוחרים ETF?
+              <span class="bubble-time">10:32</span>
+            </div>
+          </div>
+
+          <!-- typing indicator -->
+          <div class="bmsg eden" id="typing-indicator" style="opacity:0;transition:opacity .3s;">
+            <div style="background:white;padding:10px 14px;border-radius:0 8px 8px 8px;box-shadow:0 1px 2px rgba(0,0,0,.15);">
+              <div style="display:flex;gap:4px;align-items:center;">
+                <div class="typing-dot" style="width:7px;height:7px;border-radius:50%;background:#aaa;animation:td .9s ease infinite;"></div>
+                <div class="typing-dot" style="width:7px;height:7px;border-radius:50%;background:#aaa;animation:td .9s ease infinite .2s;"></div>
+                <div class="typing-dot" style="width:7px;height:7px;border-radius:50%;background:#aaa;animation:td .9s ease infinite .4s;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- input bar -->
+        <div class="chat-input-bar">
+          <span class="chat-emoji-btn">😊</span>
+          <input class="chat-input-field" type="text" placeholder="הקלד הודעה..." readonly>
+          <span class="chat-emoji-btn">📎</span>
+          <div class="chat-send-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5: צעדים אקטיביים -->
+    <div class="slide" id="s6">
+      <div class="etag">שלב שלישי</div>
+      <div class="etitle" style="font-size:28px;">מידע → <span class="g">פעולה</span></div>
+      <div class="ebody" style="font-size:13px;">עדן לא אומרת מה לקנות — מלמדת איך לחשוב</div>
+      <div class="slist">
+        <div class="srow">
+          <div class="snum">1</div>
+          <div><div class="stitle">מבינים את השוק</div><div class="ssub">מה קורה, למה זה קורה, ומה זה אומר עלייך</div></div>
+        </div>
+        <div class="sarr">↓</div>
+        <div class="srow">
+          <div class="snum">2</div>
+          <div><div class="stitle">שוקלים אפשרויות</div><div class="ssub">עדן מציגה שיקולים — <strong style="color:#EF9F27;">את מחליטה</strong></div></div>
+        </div>
+        <div class="sarr">↓</div>
+        <div class="srow">
+          <div class="snum">3</div>
+          <div><div class="stitle">צעד ראשון בתיק</div><div class="ssub">בליווי הסבר מלא — מה, איפה, ואיך מבצעים</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6: מדריכה לא יועצת -->
+    <div class="slide" id="s7">
+      <div class="etag">הפילוסופיה של עדן</div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <img src="/eden.png" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:1.5px solid #EF9F27;flex-shrink:0;">
+        <div class="etitle" style="font-size:26px;"><span class="g">מדריכה</span> — לא יועצת</div>
+      </div>
+      <div class="crow">
+        <div class="ccol bad">
+          <div class="chead bad">✗ לא ככה</div>
+          <div class="ci"><span style="font-size:11px;color:#f09595;flex-shrink:0;">✗</span><span class="citext bad">"קני ETF X — זה הכי טוב"</span></div>
+          <div class="ci"><span style="font-size:11px;color:#f09595;flex-shrink:0;">✗</span><span class="citext bad">"המניה הזו תעלה, כדאי עכשיו"</span></div>
+          <div class="ci"><span style="font-size:11px;color:#f09595;flex-shrink:0;">✗</span><span class="citext bad">תיק מוכן שאמור "להתאים לך"</span></div>
+        </div>
+        <div class="ccol good">
+          <div class="chead good">✦ ככה עדן עובדת</div>
+          <div class="ci"><span style="font-size:11px;color:#5DCAA5;flex-shrink:0;">✓</span><span class="citext good">"הנה מה שצריך לדעת לפני שמחליטים"</span></div>
+          <div class="ci"><span style="font-size:11px;color:#5DCAA5;flex-shrink:0;">✓</span><span class="citext good">"אלה השיקולים — ההחלטה שלך"</span></div>
+          <div class="ci"><span style="font-size:11px;color:#5DCAA5;flex-shrink:0;">✓</span><span class="citext good">העמקה בדיוק היכן שדרוש</span></div>
+        </div>
+      </div>
+      <div class="ebody" style="text-align:center;font-size:13px;">עדן נותנת לך <strong>ידע אמיתי</strong> — לא תלות</div>
+    </div>
+
+    <!-- 7: סיום -->
+    <div class="slide" id="s8">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:12px 0;">
+        <img src="/eden.png" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid #EF9F27;">
+        <div>
+          <div style="font-family:'Frank Ruhl Libre',serif;font-size:34px;font-weight:900;color:white;">נתיב ✦</div>
+          <div class="gline" style="margin:6px auto;"></div>
+          <div style="font-size:12px;color:rgba(255,255,255,.4);letter-spacing:3px;margin-top:4px;">הכסף החכם שלך</div>
+        </div>
+        <div class="ebody" style="font-size:14px;">מלמדים אותך לנהל את הכסף שלך —<br><strong>בדרך שלך, בקצב שלך</strong></div>
+        <div class="trow">
+          <span class="tpill" style="background:rgba(239,159,39,.18);color:#EF9F27;border:1px solid rgba(239,159,39,.3);">לימוד מושגים</span>
+          <span class="tpill" style="background:rgba(29,158,117,.18);color:#5DCAA5;border:1px solid rgba(29,158,117,.3);">צעדים ראשונים</span>
+          <span class="tpill" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.15);">תיק עצמאי</span>
+        </div>
+        <button style="margin-top:6px;background:#EF9F27;color:#085041;font-family:'Heebo',sans-serif;font-size:15px;font-weight:900;padding:11px 32px;border-radius:50px;border:none;cursor:pointer;letter-spacing:1px;">התחילי ללמוד עם עדן ←</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="pbar" id="pb"></div>
+  <div class="enav">
+    <button class="nbtn" id="pb2" onclick="go(-1)" disabled>→ הקודם</button>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:7px;">
+      <div class="edots" id="dots"></div>
+      <div class="scnt" id="cnt">01 / 08</div>
+    </div>
+    <button class="nbtn" id="nb" onclick="go(1)">הבא ←</button>
+  </div>
+</div>
+
+<script>
+const total=8;let cur=1;
+const dotsEl=document.getElementById('dots');
+for(let i=1;i<=total;i++){const d=document.createElement('div');d.className='edot'+(i===1?' active':'');d.onclick=()=>goTo(i);dotsEl.appendChild(d);}
+function goTo(n){
+  document.getElementById('s'+cur).classList.remove('active');
+  dotsEl.children[cur-1].classList.remove('active');
+  cur=n;
+  document.getElementById('s'+cur).classList.add('active');
+  dotsEl.children[cur-1].classList.add('active');
+  document.getElementById('cnt').textContent=String(cur).padStart(2,'0')+' / '+String(total).padStart(2,'0');
+  document.getElementById('pb2').disabled=cur===1;
+  document.getElementById('nb').disabled=cur===total;
+  document.getElementById('pb').style.width=Math.round((cur/total)*100)+'%';
+  if(cur===4)activateTyping();
+}
+function go(d){const n=cur+d;if(n>=1&&n<=total)goTo(n);}
+function activateTyping(){
+  const ti=document.getElementById('typing-indicator');
+  if(!ti)return;
+  ti.style.opacity='0';
+  setTimeout(()=>{ti.style.opacity='1';},600);
+  setTimeout(()=>{ti.style.opacity='0';},3000);
+}
+function toggle(head){
+  const item=head.parentElement;
+  const wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.explore-item').forEach(el=>el.classList.remove('open'));
+  if(!wasOpen)item.classList.add('open');
+}
+</script>
