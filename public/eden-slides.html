@@ -7,15 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&family=Frank+Ruhl+Libre:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;background:#062e24;display:flex;align-items:center;justify-content:center;}
-body{padding:16px;}
-.w{font-family:'Heebo',sans-serif;direction:rtl;background:#085041;border-radius:20px;overflow:hidden;position:relative;display:flex;flex-direction:column;min-height:500px;width:100%;max-width:600px;box-shadow:0 24px 80px rgba(0,0,0,.5);}
-/* Fullscreen mode */
-:fullscreen body,:fullscreen .w,:-webkit-full-screen body,:-webkit-full-screen .w,:-moz-full-screen body,:-moz-full-screen .w{border-radius:0;max-width:100%;height:100%;min-height:100vh;}
-:fullscreen body,:-webkit-full-screen body,:-moz-full-screen body{padding:0;background:#062e24;}
-:fullscreen .area,:-webkit-full-screen .area,:-moz-full-screen .area{padding:48px 60px 20px;font-size:110%;}
-:fullscreen .etitle,:-webkit-full-screen .etitle,:-moz-full-screen .etitle{font-size:42px;}
-:fullscreen .enav,:-webkit-full-screen .enav,:-moz-full-screen .enav{padding:16px 60px 24px;}
+html,body{height:100%;width:100%;background:#085041;overflow:hidden;}
+.w{font-family:'Heebo',sans-serif;direction:rtl;background:#085041;position:fixed;inset:0;display:flex;flex-direction:column;}
 .fs-btn{position:absolute;top:12px;left:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7);font-size:14px;padding:5px 10px;border-radius:8px;cursor:pointer;z-index:50;transition:background .15s;}
 .fs-btn:hover{background:rgba(255,255,255,.2);}
 .bc{position:absolute;border-radius:50%;pointer-events:none;}
@@ -26,14 +19,14 @@ body{padding:16px;}
 .bl1{height:1px;width:100%;top:11%;}
 .bl2{height:1px;width:100%;bottom:11%;}
 .bl3{width:1px;height:100%;top:0;right:11%;}
-.area{flex:1;position:relative;padding:36px 40px 16px;}
-.slide{display:none;flex-direction:column;gap:16px;}
+.area{flex:1;position:relative;padding:4vh 6vw 2vh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;}
+.slide{display:none;flex-direction:column;gap:2.5vh;height:100%;}
 .slide.active{display:flex;animation:fu .45s ease forwards;}
-@keyframes fu{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
-.etag{font-size:15px;font-weight:400;color:rgba(255,255,255,.4);letter-spacing:4px;text-transform:uppercase;}
-.etitle{font-family:'Frank Ruhl Libre',serif;font-size:52px;font-weight:900;color:white;line-height:1.2;}
+@keyframes fu{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.etag{font-size:clamp(12px,1.4vw,18px);font-weight:400;color:rgba(255,255,255,.4);letter-spacing:4px;text-transform:uppercase;}
+.etitle{font-family:'Frank Ruhl Libre',serif;font-size:clamp(32px,5vw,72px);font-weight:900;color:white;line-height:1.15;}
 .etitle .g{color:#EF9F27;}
-.ebody{font-size:22px;font-weight:300;color:rgba(255,255,255,.7);line-height:1.75;}
+.ebody{font-size:clamp(16px,2.2vw,32px);font-weight:300;color:rgba(255,255,255,.75);line-height:1.7;}
 .ebody strong{color:white;font-weight:700;}
 .gline{width:44px;height:3px;background:#EF9F27;border-radius:2px;}
 
@@ -46,10 +39,10 @@ body{padding:16px;}
 
 .slist{display:flex;flex-direction:column;gap:9px;}
 .srow{display:flex;align-items:flex-start;gap:13px;background:rgba(255,255,255,.06);border-radius:12px;padding:13px 15px;border:1px solid rgba(255,255,255,.08);}
-.snum{width:42px;height:42px;border-radius:50%;background:#EF9F27;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#085041;flex-shrink:0;}
-.stitle{font-size:20px;font-weight:700;color:white;margin-bottom:2px;}
-.ssub{font-size:16px;font-weight:300;color:rgba(255,255,255,.55);}
-.sarr{font-size:18px;color:rgba(255,255,255,.2);text-align:center;}
+.snum{width:clamp(36px,3.5vw,52px);height:clamp(36px,3.5vw,52px);border-radius:50%;background:#EF9F27;display:flex;align-items:center;justify-content:center;font-size:clamp(14px,1.6vw,22px);font-weight:900;color:#085041;flex-shrink:0;}
+.stitle{font-size:clamp(15px,1.9vw,26px);font-weight:700;color:white;margin-bottom:2px;}
+.ssub{font-size:clamp(12px,1.5vw,20px);font-weight:300;color:rgba(255,255,255,.55);}
+.sarr{font-size:clamp(14px,1.6vw,22px);color:rgba(255,255,255,.2);text-align:center;}
 
 /* Chat - WhatsApp style */
 .chat-wrap{border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.45);display:flex;flex-direction:column;}
@@ -117,17 +110,17 @@ body{padding:16px;}
 
 .trow{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;}
 .tpill{padding:6px 15px;border-radius:20px;font-size:12px;font-weight:700;}
-.enav{display:flex;align-items:center;justify-content:space-between;padding:12px 40px 16px;border-top:1px solid rgba(255,255,255,.08);position:relative;z-index:10;}
-.edots{display:flex;gap:5px;align-items:center;}
-.edot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);cursor:pointer;transition:background .25s,width .25s;}
-.edot.active{background:#EF9F27;width:18px;border-radius:4px;}
-.nbtn{background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);font-family:'Heebo',sans-serif;font-size:12px;font-weight:600;padding:7px 16px;border-radius:20px;cursor:pointer;transition:background .15s;}
+.enav{display:flex;align-items:center;justify-content:space-between;padding:1.2vh 5vw 1.8vh;border-top:1px solid rgba(255,255,255,.08);position:relative;z-index:10;flex-shrink:0;}
+.edots{display:flex;gap:6px;align-items:center;}
+.edot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.2);cursor:pointer;transition:background .25s,width .25s;}
+.edot.active{background:#EF9F27;width:22px;border-radius:4px;}
+.nbtn{background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);font-family:'Heebo',sans-serif;font-size:clamp(13px,1.3vw,18px);font-weight:600;padding:8px 20px;border-radius:20px;cursor:pointer;transition:background .15s;}
 .nbtn:hover{background:rgba(255,255,255,.08);}
 .nbtn:disabled{opacity:.25;cursor:default;}
-.scnt{font-size:11px;color:rgba(255,255,255,.3);letter-spacing:1px;}
+.scnt{font-size:clamp(11px,1vw,15px);color:rgba(255,255,255,.3);letter-spacing:1px;}
 .pbar{position:absolute;bottom:0;left:0;height:3px;background:#EF9F27;transition:width .35s ease;}
 @keyframes td{0%,60%,100%{transform:translateY(0);opacity:.4;}30%{transform:translateY(-5px);opacity:1;}}
-@media(max-width:480px){.etitle{font-size:26px;}.crow{grid-template-columns:1fr;}.area{padding:28px 24px 12px;}.enav{padding:12px 24px 14px;}}
+@media(max-width:600px){.crow{grid-template-columns:1fr;}}
 </style>
 
 <!-- SVG avatar reusable def -->
@@ -223,27 +216,26 @@ body{padding:16px;}
       </div>
     </div>
 
-    <!-- 3: מושגים אינטרקטיביים -->
+    <!-- 3: מושגים -->
     <div class="slide" id="s4">
       <div class="etag">שלב ראשון</div>
-      <div class="etitle" style="font-size:28px;">עולם ה<span class="g">מושגים</span> — בהעמקה</div>
-      <div class="ebody" style="font-size:13px;">לוחצים על מושג — עדן מסבירה לעומק</div>
-      <div class="explore-wrap">
-        <div class="explore-item">
-          <div class="explore-head" onclick="toggle(this)"><span class="explore-head-text">📈 מניות — מה זה בעצם?</span><span class="explore-arrow">▼</span></div>
-          <div class="explore-body">חלק בעלות בחברה. כשקונים מניה של אפל — הופכים לבעלים קטנים שלה. אם החברה מצליחה המניה עולה, אם לא — יורדת. לכן חשוב לפזר.</div>
+      <div class="etitle">מושגים שנלמד <span class="g">יחד</span></div>
+      <div class="slist">
+        <div class="srow">
+          <div class="snum">📈</div>
+          <div><div class="stitle">מניות</div><div class="ssub">חלק בעלות בחברה — כשהיא מצליחה, ההשקעה עולה</div></div>
         </div>
-        <div class="explore-item">
-          <div class="explore-head" onclick="toggle(this)"><span class="explore-head-text">📊 קרנות סל (ETF) — למה זה חכם?</span><span class="explore-arrow">▼</span></div>
-          <div class="explore-body">במקום לקנות מניה אחת — קונים סל שמכיל עשרות חברות בבת אחת. דמי ניהול נמוכים, פיזור אוטומטי. הכלי שרוב המתחילים מתחילים איתו.</div>
+        <div class="srow">
+          <div class="snum">📊</div>
+          <div><div class="stitle">קרנות סל (ETF)</div><div class="ssub">סל של עשרות חברות בבת אחת — פיזור אוטומטי, דמי ניהול נמוכים</div></div>
         </div>
-        <div class="explore-item">
-          <div class="explore-head" onclick="toggle(this)"><span class="explore-head-text">⚖️ פיזור סיכונים — למה זה קריטי?</span><span class="explore-arrow">▼</span></div>
-          <div class="explore-body">לא לשים את כל הביצים בסל אחד. אם השקעת רק בחברה אחת והיא קרסה — הפסדת הכל. פיזור על פני ענפים ומדינות מוריד סיכון משמעותית.</div>
+        <div class="srow">
+          <div class="snum">⚖️</div>
+          <div><div class="stitle">פיזור סיכונים</div><div class="ssub">לא לשים את כל הביצים בסל אחד — על פני ענפים ומדינות</div></div>
         </div>
-        <div class="explore-item">
-          <div class="explore-head" onclick="toggle(this)"><span class="explore-head-text">💰 תשואה מול סיכון — האיזון</span><span class="explore-arrow">▼</span></div>
-          <div class="explore-body">תשואה גבוהה יותר = סיכון גבוה יותר. עדן עוזרת להבין איפה האיזון הנכון לפי המטרות שלך — לא לפי מה שמישהו אחר עשה.</div>
+        <div class="srow">
+          <div class="snum">💰</div>
+          <div><div class="stitle">תשואה מול סיכון</div><div class="ssub">תשואה גבוהה = סיכון גבוה — עדן עוזרת למצוא את האיזון שלך</div></div>
         </div>
       </div>
     </div>
