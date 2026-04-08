@@ -2983,7 +2983,22 @@ function navJump(section){
     return;
   }
   if (section === 'lab'){
-    delay(()=>showLabSection(), 300);
+    delay(function(){
+      addMsg('מעבדת חקירה 🔬 — חוקרות מספרים, מגלות דפוסים, מבינות לעומק');
+      setTimeout(function(){
+        addCard('<div class="calc-card" style="max-width:100%">'+
+          '<div class="calc-header"><div class="calc-title">🔬 מעבדת חקירה</div>'+
+          '<div class="calc-sub">בחרי נושא — כל מה שרצית לדעת, בשפה שלך</div></div>'+
+          '<div class="calc-body"><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">'+
+          _lb('📈','מה היה קורה אם...','מדדים היסטוריים','showLabHistory()')+
+          _lb('💧','טיפה שהופכת לאגם','הפקדה קבועה לאורך זמן','showLabDCA()')+
+          _lb('🏦','פיקדון vs שוק ההון','השוואה חיה','showLabDeposit()')+
+          _lb('🔥','הגנב השקט','האינפלציה ואת','showLabInflation()')+
+          _lb('👧','זמן = כסף','למה מוקדם = הרבה יותר','showLabKids()')+
+          _lb('📋','תכנים מהמפגשים','בבנייה — יתעדכן','',true)+
+          '</div></div></div>');
+      },400);
+    }, 300);
     return;
   }
   if (section === 'portfolio'){
@@ -3076,29 +3091,91 @@ function showLabHistory(){
     '<div class="calc-header"><div class="calc-title">📈 מה היה קורה אם...</div>'+
     '<div class="calc-sub">הייתי משקיעה במדד S&P 500 — מה הייתה התוצאה?</div></div>'+
     '<div class="calc-body">'+
-    '<div class="calc-row"><span class="calc-lbl">שנת התחלה</span>'+
-    '<input type="range" class="calc-range" min="2000" max="2019" step="1" value="2010" oninput="updHist(\''+id+'\')" id="'+id+'_y">'+
-    '<span class="calc-val" id="'+id+'_yv">2010</span></div>'+
+    '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">'+
+    '<button onclick="setHistPeriod(\''+id+'\',5)" id="'+id+'_p5" style="padding:6px 14px;border-radius:20px;border:1.5px solid #1D9E75;background:#1D9E75;color:white;font-family:Heebo,sans-serif;font-size:12px;font-weight:700;cursor:pointer">5 שנים</button>'+
+    '<button onclick="setHistPeriod(\''+id+'\',10)" id="'+id+'_p10" style="padding:6px 14px;border-radius:20px;border:1.5px solid #ccc;background:white;color:#555;font-family:Heebo,sans-serif;font-size:12px;font-weight:700;cursor:pointer">10 שנים</button>'+
+    '<button onclick="setHistPeriod(\''+id+'\',20)" id="'+id+'_p20" style="padding:6px 14px;border-radius:20px;border:1.5px solid #ccc;background:white;color:#555;font-family:Heebo,sans-serif;font-size:12px;font-weight:700;cursor:pointer">20 שנים</button>'+
+    '<button onclick="setHistPeriod(\''+id+'\',25)" id="'+id+'_p25" style="padding:6px 14px;border-radius:20px;border:1.5px solid #ccc;background:white;color:#555;font-family:Heebo,sans-serif;font-size:12px;font-weight:700;cursor:pointer">הכל</button>'+
+    '</div>'+
     '<div class="calc-row"><span class="calc-lbl">סכום חד פעמי</span>'+
     '<input type="range" class="calc-range" min="5000" max="200000" step="5000" value="50000" oninput="updHist(\''+id+'\')" id="'+id+'_a">'+
     '<span class="calc-val" id="'+id+'_av">₪50,000</span></div>'+
-    '<div id="'+id+'_chart" style="margin:12px 0 4px"></div>'+
-    '<div id="'+id+'_res" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px"></div>'+
+    '<div id="'+id+'_chart" style="margin:12px 0 4px;overflow-x:auto"></div>'+
+    '<div id="'+id+'_res" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px"></div>'+
     '<div style="font-size:10px;color:#bbb;margin-top:8px;padding-top:8px;border-top:1px solid #f0f0ec">* תשואות היסטוריות של S&P 500. העבר אינו מבטיח את העתיד. לצרכי לימוד בלבד.</div>'+
     '</div></div>');
-  setTimeout(function(){updHist(id);},60);
+  setTimeout(function(){setHistPeriod(id,5);},60);
 }
-function updHist(id){
-  var sy=+document.getElementById(id+'_y').value, amt=+document.getElementById(id+'_a').value;
-  document.getElementById(id+'_yv').textContent=sy;
+
+function setHistPeriod(id,yrs){
+  ['5','10','20','25'].forEach(function(p){
+    var btn=document.getElementById(id+'_p'+p);
+    if(btn){btn.style.background=p==yrs?'#1D9E75':'white';btn.style.color=p==yrs?'white':'#555';btn.style.borderColor=p==yrs?'#1D9E75':'#ccc';}
+  });
+  var endY=2024, startY=endY-yrs;
+  var el=document.getElementById(id+'_p_val');
+  if(!el){
+    var inp=document.createElement('input');
+    inp.type='hidden';inp.id=id+'_p_val';inp.value=yrs;
+    var card=document.getElementById(id+'_chart');
+    if(card)card.parentNode.insertBefore(inp,card);
+  } else {el.value=yrs;}
+  updHist(id,startY,endY);
+}
+
+function updHist(id,startY,endY){
+  var amt=+document.getElementById(id+'_a').value;
   document.getElementById(id+'_av').textContent=_fmt(amt);
-  var pf=amt,vals=[amt];
-  SP500.forEach(function(d){if(d.y>=sy&&d.y<=2024){pf=pf*(1+d.r/100);vals.push(pf);}});
+  if(!startY){var pv=document.getElementById(id+'_p_val');startY=pv?2024-parseInt(pv.value):2019;endY=2024;}
+
+  var data=SP500.filter(function(d){return d.y>startY&&d.y<=endY;});
+  var pf=amt,vals=[];
+  data.forEach(function(d){pf=pf*(1+d.r/100);vals.push({y:d.y,r:d.r,val:pf});});
   var profit=pf-amt,mult=(pf/amt).toFixed(1);
+  var best=data.reduce(function(a,b){return b.r>a.r?b:a;},data[0]);
+  var worst=data.reduce(function(a,b){return b.r<a.r?b:a;},data[0]);
+
+  // CAGR
+  var n=data.length||1;
+  var cagr=((Math.pow(pf/amt,1/n)-1)*100).toFixed(1);
+
+  // bar chart with CAGR line
   var el=document.getElementById(id+'_chart');
-  if(el)el.innerHTML=_svgLine(vals,280,110,profit>=0?'#1D9E75':'#e05060');
+  if(el){
+    var w=Math.max(280,data.length*28), h=130, bw=20, gap=8;
+    var maxR=Math.max.apply(null,data.map(function(d){return Math.abs(d.r);}));
+    var zero=h*0.6;
+    var bars=data.map(function(d,i){
+      var x=i*(bw+gap)+4;
+      var isPos=d.r>=0;
+      var bh=Math.round(Math.abs(d.r)/maxR*(h*0.55));
+      var y=isPos?zero-bh:zero;
+      var color=isPos?'#1D9E75':'#e05060';
+      return '<rect x="'+x+'" y="'+y+'" width="'+bw+'" height="'+bh+'" rx="3" fill="'+color+'" opacity="0.85"/>'+
+        '<text x="'+(x+bw/2)+'" y="'+(isPos?y-2:y+bh+9)+'" text-anchor="middle" font-size="7.5" fill="'+color+'" font-weight="700">'+(d.r>0?'+':'')+d.r+'%</text>'+
+        '<text x="'+(x+bw/2)+'" y="'+(h-2)+'" text-anchor="middle" font-size="7" fill="#999">'+(d.y+'').slice(2)+'</text>';
+    }).join('');
+    // CAGR dashed line
+    var cagrY=zero-parseFloat(cagr)/maxR*(h*0.55);
+    var totalW=data.length*(bw+gap);
+    el.innerHTML='<svg viewBox="0 0 '+w+' '+h+'" style="width:100%;min-width:'+w+'px;height:'+h+'px">'+
+      '<line x1="0" y1="'+zero+'" x2="'+w+'" y2="'+zero+'" stroke="#ddd" stroke-width="1"/>'+
+      bars+
+      '<line x1="0" y1="'+cagrY+'" x2="'+totalW+'" y2="'+cagrY+'" stroke="#EF9F27" stroke-width="1.5" stroke-dasharray="4,3"/>'+
+      '<text x="'+(totalW+2)+'" y="'+(cagrY+4)+'" font-size="8" fill="#EF9F27" font-weight="700">'+cagr+'% ממוצע</text>'+
+      '</svg>';
+  }
+
   var res=document.getElementById(id+'_res');
-  if(res)res.innerHTML=_rbox('הושקע',_fmt(amt),'#085041')+_rbox('שווי היום',_fmt(pf),profit>=0?'#1D9E75':'#e05060')+_rbox('רווח',_fmt(Math.abs(profit)),profit>=0?'#1D9E75':'#e05060')+_rbox('כפל הכסף','×'+mult,'#EF9F27');
+  if(res)res.innerHTML=
+    _rbox('הושקע',_fmt(amt),'#085041')+
+    _rbox('שווי היום',_fmt(pf),profit>=0?'#1D9E75':'#e05060')+
+    _rbox('CAGR',cagr+'%','#EF9F27')+
+    _rbox('כפל','×'+mult,'#085041')+
+    '<div style="grid-column:span 2;background:#e8f7ee;border-radius:10px;padding:8px 12px;font-size:11px;color:#085041">'+
+    '🏆 שנה הטובה: <strong>'+best.y+' (+'+best.r+'%)</strong></div>'+
+    '<div style="grid-column:span 2;background:#fff2f2;border-radius:10px;padding:8px 12px;font-size:11px;color:#c00">'+
+    '📉 שנה גרועה: <strong>'+worst.y+' ('+worst.r+'%)</strong></div>';
 }
 
 // ── MODULE 2: DCA ─────────────────────────────
