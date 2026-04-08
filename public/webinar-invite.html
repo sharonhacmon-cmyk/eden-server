@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>הזמנה לוובינר — נתיב</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&family=Frank+Ruhl+Libre:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Heebo',sans-serif;direction:rtl;background:#062e24;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+
+.card{
+  width:100%;max-width:680px;
+  background:linear-gradient(160deg,#085041 0%,#063830 60%,#04261f 100%);
+  border-radius:28px;
+  overflow:hidden;
+  position:relative;
+  box-shadow:0 32px 100px rgba(0,0,0,.6);
+}
+
+/* decorative circles */
+.card::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:rgba(29,158,117,.09);top:-180px;right:-180px;pointer-events:none;}
+.card::after{content:'';position:absolute;width:300px;height:300px;border-radius:50%;background:rgba(239,159,39,.07);bottom:-100px;left:-100px;pointer-events:none;}
+
+/* gold top stripe */
+.top-stripe{height:5px;background:linear-gradient(90deg,#EF9F27,#f6c76a,#EF9F27);}
+
+.inner{padding:44px 44px 40px;position:relative;z-index:1;}
+
+/* logo + badge */
+.top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;}
+.brand{font-size:13px;font-weight:400;color:rgba(255,255,255,.4);letter-spacing:4px;text-transform:uppercase;}
+.badge{background:rgba(239,159,39,.15);border:1px solid rgba(239,159,39,.4);color:#EF9F27;font-size:12px;font-weight:700;padding:5px 14px;border-radius:20px;letter-spacing:1px;}
+
+/* headline */
+.headline{font-family:'Frank Ruhl Libre',serif;font-size:42px;font-weight:900;color:white;line-height:1.15;margin-bottom:12px;}
+.headline .g{color:#EF9F27;}
+.subhead{font-size:17px;font-weight:300;color:rgba(255,255,255,.65);line-height:1.6;margin-bottom:32px;}
+
+/* date box */
+.date-box{display:flex;gap:12px;margin-bottom:36px;flex-wrap:wrap;}
+.date-pill{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:11px 18px;}
+.date-pill .icon{font-size:20px;}
+.date-pill .label{font-size:12px;color:rgba(255,255,255,.4);font-weight:400;}
+.date-pill .val{font-size:16px;font-weight:700;color:white;}
+
+/* hosts */
+.hosts-row{display:flex;gap:20px;margin-bottom:36px;flex-wrap:wrap;}
+.host{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:14px 18px;flex:1;min-width:220px;}
+.host-img{width:62px;height:62px;border-radius:50%;object-fit:cover;border:2.5px solid #EF9F27;flex-shrink:0;}
+.host-name{font-size:17px;font-weight:700;color:white;}
+.host-role{font-size:12px;font-weight:300;color:rgba(255,255,255,.5);line-height:1.5;margin-top:2px;}
+.host-tag{display:inline-block;margin-top:6px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;}
+.tag-ai{background:rgba(29,158,117,.2);color:#5DCAA5;}
+.tag-founder{background:rgba(239,159,39,.15);color:#EF9F27;}
+
+/* bullets */
+.bullets{display:flex;flex-direction:column;gap:10px;margin-bottom:36px;}
+.bullet{display:flex;align-items:flex-start;gap:12px;}
+.bullet-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.bullet-text{font-size:15px;font-weight:300;color:rgba(255,255,255,.75);line-height:1.5;}
+.bullet-text strong{color:white;font-weight:700;}
+
+/* CTA */
+.cta-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.cta-btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#EF9F27,#d4861a);color:#062e24;font-family:'Heebo',sans-serif;font-size:17px;font-weight:900;padding:15px 32px;border-radius:50px;text-decoration:none;box-shadow:0 8px 30px rgba(239,159,39,.4);transition:transform .15s,box-shadow .15s;}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(239,159,39,.5);}
+.free-note{font-size:13px;color:rgba(255,255,255,.35);font-weight:300;}
+
+.divider{height:1px;background:rgba(255,255,255,.07);margin:28px 0;}
+
+/* bottom */
+.bottom{font-size:12px;color:rgba(255,255,255,.25);text-align:center;letter-spacing:1px;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="top-stripe"></div>
+  <div class="inner">
+
+    <div class="top-row">
+      <div class="brand">נתיב · הכסף החכם שלך</div>
+      <div class="badge">✦ וובינר חינמי</div>
+    </div>
+
+    <div class="headline">הכירי את <span class="g">עדן</span> —<br>ה‑AI שמלמד אותך<br>להשקיע בביטחון</div>
+    <div class="subhead">שעה שתשנה את הדרך שבה את מסתכלת על הכסף שלך.<br>בלי עגה מקצועית, בלי שיפוט, בבית שלך.</div>
+
+    <div class="date-box">
+      <div class="date-pill">
+        <div class="icon">📅</div>
+        <div>
+          <div class="label">תאריך</div>
+          <div class="val">יום שני, 28 באפריל 2026</div>
+        </div>
+      </div>
+      <div class="date-pill">
+        <div class="icon">🕖</div>
+        <div>
+          <div class="label">שעה</div>
+          <div class="val">19:30 – 20:30</div>
+        </div>
+      </div>
+      <div class="date-pill">
+        <div class="icon">💻</div>
+        <div>
+          <div class="label">פלטפורמה</div>
+          <div class="val">זום — מהבית</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hosts-row">
+      <div class="host">
+        <img class="host-img" src="/sharon.jpeg" alt="שרון">
+        <div>
+          <div class="host-name">שרון חכמון</div>
+          <div class="host-role">מייסדת נתיב<br>מעל 25 שנה בבתי השקעות</div>
+          <span class="host-tag tag-founder">מייסדת</span>
+        </div>
+      </div>
+      <div class="host">
+        <img class="host-img" src="/eden.png" alt="עדן">
+        <div>
+          <div class="host-name">עדן</div>
+          <div class="host-role">המכוונת הפיננסית<br>מלמדת בשפה פשוטה ואישית</div>
+          <span class="host-tag tag-ai">AI · נתיב</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bullets">
+      <div class="bullet">
+        <div class="bullet-icon">💡</div>
+        <div class="bullet-text"><strong>למה כדאי להתחיל עכשיו</strong> — כוח הריבית דריבית וזמן בשוק</div>
+      </div>
+      <div class="bullet">
+        <div class="bullet-icon">📊</div>
+        <div class="bullet-text"><strong>מה זה ETF ואיך זה עובד</strong> — בלי סיבוכים ובלי פחד</div>
+      </div>
+      <div class="bullet">
+        <div class="bullet-icon">🧭</div>
+        <div class="bullet-text"><strong>איך עדן מלווה אותך</strong> — שאלות, הסברים, תרגול בקצב שלך</div>
+      </div>
+      <div class="bullet">
+        <div class="bullet-icon">🎯</div>
+        <div class="bullet-text"><strong>הצעד הראשון</strong> — מה עושים אחרי הוובינר</div>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <a class="cta-btn" href="https://chat.whatsapp.com/L8FeEGVdytGGH9Hh8ni1ud?mode=gi_t" target="_blank">
+        💬 להצטרף לקבוצת הוובינר
+      </a>
+      <div class="free-note">חינמי לחלוטין · מקומות מוגבלים</div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="bottom">נתיב · הכסף החכם שלך · לימוד בלבד, לא ייעוץ השקעות</div>
+
+  </div>
+</div>
+</body>
+</html>
