@@ -1145,7 +1145,7 @@ function showCompoundCalculator(){
     '<div class="cstat inv"><div class="cstat-lbl">סה"כ הפקדות</div><div class="cstat-val" id="'+cid+'_inv">&#8362;140,000</div></div>'+
     '<div class="cstat tot"><div class="cstat-lbl">שווי עתידי</div><div class="cstat-val" id="'+cid+'_tot">&mdash;</div><div class="cstat-prf" id="'+cid+'_prf">רווח: &mdash;</div></div>'+
     '</div>'+
-    '<svg id="'+sid+'" viewBox="0 0 320 185" width="100%" style="display:block;overflow:visible"></svg>'+
+    '<div style="padding:4px 0 12px;overflow:visible"><svg id="'+sid+'" viewBox="0 0 320 200" width="100%" style="display:block;overflow:visible"></svg></div>'+
     '<div style="font-size:10px;color:#bbb;margin-top:6px;text-align:center">&#x26A0;&#xFE0F; הדמיה בלבד &mdash; תשואות עבר אינן ערובה לעתיד</div>'+
     '</div>';
   wrap.innerHTML='<img class="av" src="'+AVATAR+'">';
@@ -1186,7 +1186,7 @@ function updCalc(cid, sid){
   document.getElementById(cid+'_prf').textContent='\u05E8\u05D5\u05D5\u05D7: \u20AA'+fmt(profit);
 
   // גרף משופר — גבוה יותר, מיילסטונים
-  var W=320,H=185,pL=52,pR=16,pT=14,pB=24,iW=W-pL-pR,iH=H-pT-pB;
+  var W=320,H=200,pL=52,pR=16,pT=18,pB=28,iW=W-pL-pR,iH=H-pT-pB;
   var maxV=Math.max.apply(null,vals)*1.05;
   var tx=function(i){return pL+(i/y)*iW;};
   var tv=function(v){return pT+(1-v/maxV)*iH;};
@@ -1217,7 +1217,7 @@ function updCalc(cid, sid){
     }
   });
   var gid='gr'+sid.replace(/[^a-z0-9]/gi,'');
-  document.getElementById(sid).setAttribute('viewBox','0 0 320 185');
+  document.getElementById(sid).setAttribute('viewBox','0 0 320 200');
   document.getElementById(sid).removeAttribute('height');
   document.getElementById(sid).innerHTML=
     '<defs><linearGradient id="'+gid+'" x1="0" y1="0" x2="0" y2="1">'+
