@@ -3027,6 +3027,7 @@ function showLabMenu(){
     _lb('🏦','פיקדון vs שוק ההון','השוואה חיה','openLabDeposit()')+
     _lb('🔥','הגנב השקט','האינפלציה ואת','openLabInflation()')+
     _lb('👧','זמן = כסף','למה מוקדם = הרבה יותר','openLabKids()')+
+    _lb('🏛️','מיסוי — פיקדון vs ני"ע','נומינלי, ריאלי, כוח קנייה','openLabTax()')+
     _lb('📋','תכנים מהמפגשים','בבנייה — יתעדכן','',true)+
     '</div>';
   m.style.display='flex';
@@ -3140,6 +3141,7 @@ function openLabDCA(){ openLabModal('💧 טיפה שהופכת לאגם'); show
 function openLabDeposit(){ openLabModal('🏦 פיקדון vs שוק ההון'); showLabDeposit(); }
 function openLabInflation(){ openLabModal('🔥 הגנב השקט'); showLabInflation(); }
 function openLabKids(){ openLabModal('👧 זמן = כסף'); showLabKids(); }
+function openLabTax(){ openLabModal('🏛️ מיסוי — פיקדון vs ני"ע'); showLabTax(); }
 
 // ── MODULE 1: היסטוריה ────────────────────────
 function showLabHistory(){
@@ -3381,7 +3383,112 @@ function updInf(id){
     '<div style="font-size:12px;color:#888;margin-top:6px">'+pct+'% מהכסף — בלי שנגעו בו, רק עבר זמן</div></div>';
 }
 
-// ── MODULE 5: ילדים ─────────────────────────────
+// ── MODULE 5: מיסוי ─────────────────────────────
+function showLabTax(){
+  var id='tax_'+Date.now();
+  labCard('<div class="calc-card" style="max-width:100%">'+
+    '<div class="calc-header"><div class="calc-title">🏛️ מיסוי — פיקדון מול תיק ני"ע</div>'+
+    '<div class="calc-sub">נומינלי, ריאלי, ואינפלציה — איך זה משפיע על הכיס שלך</div></div>'+
+    '<div class="calc-body">'+
+
+    // הסבר נומינלי / ריאלי
+    '<div style="background:#f0f9f5;border-radius:12px;padding:14px;margin-bottom:14px;border:1px solid #c8e8d8">'+
+    '<div style="font-size:13px;font-weight:700;color:#085041;margin-bottom:8px">מה זה נומינלי וריאלי?</div>'+
+    '<div style="font-size:12px;color:#444;line-height:1.7">'+
+    '💰 <strong>נומינלי</strong> — הרווח בשקלים כפי שהוא על הנייר, לפני ניכוי האינפלציה.<br>'+
+    '📉 <strong>ריאלי</strong> — הרווח האמיתי בכוח קנייה, אחרי שמורידים את השחיקה של האינפלציה.<br><br>'+
+    '<span style="color:#085041;font-weight:700">דוגמה:</span> הרווחת 10% — אבל האינפלציה הייתה 3.5%. הרווח הריאלי שלך הוא רק ~6.3% בפועל.'+
+    '</div></div>'+
+
+    '<div class="calc-row"><span class="calc-lbl">סכום השקעה</span>'+
+    '<input type="range" class="calc-range" min="10000" max="500000" step="5000" value="100000" oninput="updTax(\''+id+'\')" id="'+id+'_a">'+
+    '<span class="calc-val" id="'+id+'_av">₪100,000</span></div>'+
+    '<div class="calc-row"><span class="calc-lbl">תשואה שנתית %</span>'+
+    '<input type="range" class="calc-range" min="2" max="12" step="0.5" value="7" oninput="updTax(\''+id+'\')" id="'+id+'_r">'+
+    '<span class="calc-val" id="'+id+'_rv">7%</span></div>'+
+    '<div class="calc-row"><span class="calc-lbl">אינפלציה שנתית %</span>'+
+    '<input type="range" class="calc-range" min="1" max="6" step="0.5" value="3.5" oninput="updTax(\''+id+'\')" id="'+id+'_i">'+
+    '<span class="calc-val" id="'+id+'_iv">3.5%</span></div>'+
+    '<div class="calc-row"><span class="calc-lbl">מספר שנים</span>'+
+    '<input type="range" class="calc-range" min="1" max="30" step="1" value="10" oninput="updTax(\''+id+'\')" id="'+id+'_y">'+
+    '<span class="calc-val" id="'+id+'_yv">10 שנים</span></div>'+
+    '<div id="'+id+'_res" style="margin-top:14px"></div>'+
+    '<div style="font-size:10px;color:#bbb;margin-top:8px;text-align:center">⚠️ לצרכי לימוד בלבד — לא ייעוץ מס</div>'+
+    '</div></div>');
+  setTimeout(function(){updTax(id);},60);
+}
+function updTax(id){
+  var a=+document.getElementById(id+'_a').value,
+      r=+document.getElementById(id+'_r').value/100,
+      inf=+document.getElementById(id+'_i').value/100,
+      y=+document.getElementById(id+'_y').value;
+  document.getElementById(id+'_av').textContent=_fmt(a);
+  document.getElementById(id+'_rv').textContent=document.getElementById(id+'_r').value+'%';
+  document.getElementById(id+'_iv').textContent=document.getElementById(id+'_i').value+'%';
+  document.getElementById(id+'_yv').textContent=y+' שנים';
+
+  // פיקדון: 15% מס על רווח נומינלי
+  var nominal=a*Math.pow(1+r,y);
+  var nomProfit=nominal-a;
+  var taxDep=nomProfit*0.15;
+  var afterTaxDep=nominal-taxDep;
+  // ריאלי לפיקדון
+  var realDep=afterTaxDep/Math.pow(1+inf,y);
+  var realGainDep=realDep-a;
+
+  // ני"ע: 25% מס על רווח ריאלי
+  var inflAdj=a*Math.pow(1+inf,y); // עלות מתואמת
+  var realProfit=nominal-inflAdj;  // רווח ריאלי
+  var taxSec=Math.max(0,realProfit*0.25);
+  var afterTaxSec=nominal-taxSec;
+  var realSec=afterTaxSec/Math.pow(1+inf,y);
+  var realGainSec=realSec-a;
+
+  var res=document.getElementById(id+'_res');
+  if(!res)return;
+
+  function row(label,val,color){
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #f0f0f0">'+
+      '<span style="font-size:12px;color:#666">'+label+'</span>'+
+      '<span style="font-size:13px;font-weight:700;color:'+color+'">'+val+'</span></div>';
+  }
+
+  res.innerHTML=
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">'+
+
+    // פיקדון
+    '<div style="background:#f8f8f8;border-radius:14px;padding:14px;border:1.5px solid #ddd">'+
+    '<div style="font-size:12px;font-weight:800;color:#444;margin-bottom:10px;text-align:center">🏦 פיקדון בנקאי<br><span style="font-weight:400;color:#888;font-size:10px">15% מס על רווח נומינלי</span></div>'+
+    row('שווי לפני מס',_fmt(Math.round(nominal)),'#333')+
+    row('מס (15% נומינלי)',_fmt(Math.round(taxDep)),'#e05060')+
+    row('שווי אחרי מס',_fmt(Math.round(afterTaxDep)),'#333')+
+    row('שווי ריאלי (כוח קנייה)',_fmt(Math.round(realDep)),'#e05060')+
+    '<div style="margin-top:10px;background:'+(realGainDep>=0?'#f0f9f5':'#fff2f2')+';border-radius:8px;padding:10px;text-align:center">'+
+    '<div style="font-size:10px;color:#888;margin-bottom:2px">רווח ריאלי נטו</div>'+
+    '<div style="font-size:22px;font-weight:900;color:'+(realGainDep>=0?'#085041':'#e05060')+'">'+_fmt(Math.round(realGainDep))+'</div>'+
+    '</div></div>'+
+
+    // ני"ע
+    '<div style="background:#f0f9f5;border-radius:14px;padding:14px;border:1.5px solid #1D9E75">'+
+    '<div style="font-size:12px;font-weight:800;color:#085041;margin-bottom:10px;text-align:center">📈 תיק ני"ע<br><span style="font-weight:400;color:#888;font-size:10px">25% מס על רווח ריאלי בלבד</span></div>'+
+    row('שווי לפני מס',_fmt(Math.round(nominal)),'#333')+
+    row('מס (25% ריאלי)',_fmt(Math.round(taxSec)),'#e05060')+
+    row('שווי אחרי מס',_fmt(Math.round(afterTaxSec)),'#333')+
+    row('שווי ריאלי (כוח קנייה)',_fmt(Math.round(realSec)),'#085041')+
+    '<div style="margin-top:10px;background:#e8f7f0;border-radius:8px;padding:10px;text-align:center">'+
+    '<div style="font-size:10px;color:#888;margin-bottom:2px">רווח ריאלי נטו</div>'+
+    '<div style="font-size:22px;font-weight:900;color:#085041">'+_fmt(Math.round(realGainSec))+'</div>'+
+    '</div></div></div>'+
+
+    // השוואה
+    '<div style="background:linear-gradient(135deg,#085041,#1D9E75);border-radius:14px;padding:14px;text-align:center;color:white">'+
+    '<div style="font-size:12px;opacity:.8;margin-bottom:4px">ני"ע עדיף על פיקדון בכוח קנייה ריאלי ב:</div>'+
+    '<div style="font-size:32px;font-weight:900">'+_fmt(Math.round(realGainSec-realGainDep))+'</div>'+
+    '<div style="font-size:11px;opacity:.65;margin-top:4px">כי מס ריאלי = פחות מס על רווח אמיתי</div>'+
+    '</div>';
+}
+
+// ── MODULE 6: ילדים ─────────────────────────────
 function showLabKids(){
   var id='kids_'+Date.now();
   labCard('<div class="calc-card" style="max-width:100%">'+
