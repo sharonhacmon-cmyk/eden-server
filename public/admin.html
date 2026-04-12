@@ -75,21 +75,43 @@ body{font-family:'Heebo',sans-serif;background:#f5f5f0;color:#1a1a18;direction:r
 
     <div class="add-card">
       <h2>➕ הוספת משתמשת חדשה</h2>
-      <div class="form-row">
-        <div class="field">
-          <label>שם</label>
-          <input id="new-name" placeholder="שרה לוי">
+
+      <!-- כפתור מהיר -->
+      <div style="margin-bottom:16px;padding:14px;background:#f0f9f5;border-radius:12px;border:1px solid #c8e8d8;">
+        <div style="font-size:12px;font-weight:700;color:#085041;margin-bottom:10px;">⚡ הוספה מהירה — חודש ניסיון</div>
+        <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;">
+          <div class="field" style="flex:1;min-width:140px;">
+            <label>שם המשתמשת</label>
+            <input id="quick-name" placeholder="שרה לוי">
+          </div>
+          <button class="btn-add" style="background:linear-gradient(135deg,#1D9E75,#085041);" onclick="quickAdd()">⚡ צרי וצרפי</button>
         </div>
-        <div class="field">
-          <label>קוד גישה</label>
-          <input id="new-code" placeholder="EDEN-XXXX" oninput="this.value=this.value.toUpperCase()">
+        <div class="msg" id="quick-msg" style="margin-top:8px;"></div>
+        <div id="quick-result" style="display:none;margin-top:12px;background:white;border-radius:10px;padding:12px;border:1.5px solid #1D9E75;">
+          <div style="font-size:11px;color:#666;margin-bottom:6px;">הודעה לשליחה:</div>
+          <div id="quick-text" style="font-size:13px;color:#333;line-height:1.6;white-space:pre-wrap;direction:rtl;"></div>
+          <button onclick="copyQuick()" style="margin-top:10px;background:#085041;color:white;border:none;border-radius:8px;padding:7px 18px;font-family:Heebo,sans-serif;font-size:13px;font-weight:700;cursor:pointer;width:100%;">📋 העתיקי לוואטסאפ</button>
         </div>
-        <div class="field">
-          <label>תפוגה</label>
-          <input id="new-expires" type="date">
-        </div>
-        <button class="btn-add" onclick="addUser()">הוסיפי ✓</button>
       </div>
+
+      <details style="cursor:pointer;">
+        <summary style="font-size:13px;font-weight:700;color:#666;margin-bottom:12px;">הוספה ידנית ▾</summary>
+        <div class="form-row" style="margin-top:12px;">
+          <div class="field">
+            <label>שם</label>
+            <input id="new-name" placeholder="שרה לוי">
+          </div>
+          <div class="field">
+            <label>קוד גישה</label>
+            <input id="new-code" placeholder="EDEN-XXXX" oninput="this.value=this.value.toUpperCase()">
+          </div>
+          <div class="field">
+            <label>תפוגה</label>
+            <input id="new-expires" type="date">
+          </div>
+          <button class="btn-add" onclick="addUser()">הוסיפי ✓</button>
+        </div>
+      </details>
       <div class="msg" id="add-msg"></div>
     </div>
 
@@ -175,9 +197,54 @@ async function deleteUser(code){
   loadUsers();
 }
 
-// הגדר תאריך ברירת מחדל — 5 ימים קדימה
-const d = new Date(); d.setDate(d.getDate()+5);
+// הגדר תאריך ברירת מחדל — חודש קדימה
+const d = new Date(); d.setMonth(d.getMonth()+1);
 document.getElementById('new-expires').value = d.toISOString().split('T')[0];
+
+// ─── הוספה מהירה ───
+function genCode(){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let r='';for(let i=0;i<5;i++)r+=chars[Math.floor(Math.random()*chars.length)];
+  return 'EDEN-'+r;
+}
+
+let lastQuickCode='', lastQuickName='';
+
+async function quickAdd(){
+  const name = document.getElementById('quick-name').value.trim();
+  const msg = document.getElementById('quick-msg');
+  if(!name){ msg.className='msg err'; msg.textContent='יש להכניס שם'; return; }
+
+  const code = genCode();
+  const exp = new Date(); exp.setMonth(exp.getMonth()+1);
+  const expires = exp.toISOString().split('T')[0];
+
+  const res = await fetch('/admin/users', {
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-admin-password':adminPassword},
+    body: JSON.stringify({name, code, expires})
+  });
+  const data = await res.json();
+  if(!res.ok){ msg.className='msg err'; msg.textContent=data.error; return; }
+
+  lastQuickCode=code; lastQuickName=name;
+  const expHe=exp.toLocaleDateString('he-IL',{day:'numeric',month:'long',year:'numeric'});
+  const text=`היי ${name} 🌿\n\nיצרתי לך גישה לעדן — חודש ניסיון חינמי!\n\n🔗 eden-server-73ms.onrender.com\n🔑 קוד גישה: ${code}\n\nהגישה בתוקף עד ${expHe}.\nאשמח לשמוע מה את חושבת 💚`;
+  document.getElementById('quick-text').textContent=text;
+  document.getElementById('quick-result').style.display='block';
+  msg.className='msg ok'; msg.textContent='✓ '+name+' נוספה! קוד: '+code;
+  document.getElementById('quick-name').value='';
+  loadUsers();
+}
+
+function copyQuick(){
+  const text=document.getElementById('quick-text').textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn=event.target;
+    btn.textContent='✓ הועתק!';
+    setTimeout(()=>btn.textContent='📋 העתיקי לוואטסאפ',2000);
+  });
+}
 </script>
 </body>
 </html>
