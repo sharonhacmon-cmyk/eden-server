@@ -1009,60 +1009,39 @@ function portfolioCardHTML(profile){
   const origAllocs = JSON.parse(JSON.stringify(profile.allocs));
   const origName = profile.name;
 
-  const getTitle = (allocs) => {
-    const stocks = allocs.filter(a=>a.name.includes('מנייתי')||a.name.includes('מניות')||a.name.includes('מניה')).reduce((s,a)=>s+a.pct,0);
-    const bonds  = allocs.filter(a=>a.name.includes('אג"ח')||a.name.includes('אגח')).reduce((s,a)=>s+a.pct,0);
-    if (stocks >= 80) return { name:'אגרסיבי', desc:'⚡ חשיפה גבוהה לשוק המניות — פוטנציאל צמיחה גדול לטווח ארוך, אבל בשנה רעה התיק יכול לרדת 30%+. מתאים למי שיכולה לסבול תנודתיות ולא תצטרך לכסף בקרוב.' };
-    if (stocks >= 60) return { name:'צמיחה', desc:'📈 רוב התיק במניות — שילוב של פוטנציאל צמיחה עם קצת עוגן יציב. מאוזן יחסית אבל עדיין תנודתי.' };
-    if (stocks >= 40) return { name:'מאוזן', desc:'⚖️ שילוב שווה יחסית — מניות לצמיחה, אג"ח לייצוב. ישן טוב יותר בלילות סוערים מבלי לוותר על פוטנציאל.' };
-    if (bonds  >= 50) return { name:'סולידי', desc:'🛡️ רוב התיק באג"ח — יציבות גבוהה, תנודתיות נמוכה. הצמיחה לאורך זמן מתונה יותר. מתאים לטווח קצר-בינוני.' };
-    return { name:'מגוון', desc:'📊 פיזור רחב — שילוב של מספר נכסים שמאזן בין סיכון לתשואה.' };
-  };
-
-  const renderRows = (allocs) => allocs.map((a,i)=>`
+  const renderRows = (allocs) => allocs.map(a=>`
     <div style="margin-bottom:10px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
         <span style="font-size:13px;font-weight:700;color:#1a1a18">${a.name}</span>
         <span style="font-size:13px;font-weight:800;color:${a.color}">${a.pct}%</span>
       </div>
-      <input type="range" min="0" max="100" value="${a.pct}" oninput="pcUpdate('${pid}',${i},+this.value)"
-        style="width:100%;accent-color:${a.color};height:6px;cursor:pointer;margin-bottom:2px">
+      <div style="width:100%;height:8px;background:#f0ede8;border-radius:4px;overflow:hidden">
+        <div style="width:${a.pct}%;height:100%;background:${a.color};border-radius:4px;transition:width .6s ease"></div>
+      </div>
     </div>`).join('');
 
-  const renderDesc = (allocs) => {
-    const t = getTitle(allocs);
-    return `<div style="background:#f0faf5;border-radius:10px;padding:9px 12px;font-size:12px;color:#085041;line-height:1.6">
-      <strong>תיק ${t.name}:</strong> ${t.desc}
-    </div>`;
-  };
-
-  window['_pcd_'+pid] = JSON.parse(JSON.stringify(profile.allocs));
-  window.pcUpdate = function(pid, idx, val){
-    const allocs = window['_pcd_'+pid];
-    const others = allocs.filter((_,i)=>i!==idx);
-    const otherTotal = others.reduce((s,a)=>s+a.pct,0);
-    allocs[idx].pct = val;
-    const remaining = 100 - val;
-    if (otherTotal > 0){
-      others.forEach(a=>{ a.pct = Math.round(a.pct / otherTotal * remaining); });
-      const diff = 100 - allocs.reduce((s,a)=>s+a.pct,0);
-      if (diff !== 0) others[0].pct += diff;
-    }
-    const card = document.getElementById(pid);
-    const t = getTitle(allocs);
-    card.querySelector('.pc-title').textContent = 'מבנה ' + t.name;
-    card.querySelector('.pc-rows').innerHTML = renderRows(allocs);
-    card.querySelector('.pc-desc').innerHTML = renderDesc(allocs);
+  const riskNote = () => {
+    const cash = origAllocs.filter(a=>a.secs==='cash').reduce((s,a)=>s+a.pct,0);
+    const stocks = origAllocs.filter(a=>a.secs&&a.secs.startsWith('etf')).reduce((s,a)=>s+a.pct,0);
+    if (stocks >= 60) return '📈 <strong>תמהיל עם דגש על מניות</strong> — פוטנציאל צמיחה גבוה לטווח ארוך. בשנה קשה התיק עשוי לרדת משמעותית — זה נורמלי ולכן חשוב טווח זמן ארוך.';
+    if (stocks >= 35) return '⚖️ <strong>תמהיל מאוזן</strong> — שילוב של מניות לצמיחה ואג"ח/קרן כספית לייצוב. מתאים לטווח בינוני-ארוך עם תנודתיות מתונה.';
+    if (cash >= 50) return '🛡️ <strong>תמהיל סולידי</strong> — רוב הכסף בנכסים יציבים (קרן כספית ואג"ח). תנודתיות נמוכה עם פוטנציאל צמיחה מתון לטווח הקצר-בינוני.';
+    return '📊 <strong>תמהיל מגוון</strong> — פיזור בין נכסים שונים לאיזון בין סיכון לתשואה.';
   };
 
   return `<div class="portfolio-card" id="${pid}">
     <div class="pc-header" style="background:${profile.color}">
-      <div class="pc-title">מבנה ${getTitle(origAllocs).name}</div>
-      <div class="pc-sub">הזזי את הסליידרים — ראי איך שם התיק והסבר משתנים</div>
+      <div class="pc-title">מבנה ${profile.name}</div>
+      <div class="pc-sub">הרכב התיק המוצע לפי פרופיל הסיכון שלך</div>
     </div>
     <div class="pc-body">
       <div class="pc-rows">${renderRows(origAllocs)}</div>
-      <div class="pc-desc">${renderDesc(origAllocs)}</div>
+      <div style="background:#f0faf5;border-radius:10px;padding:9px 12px;font-size:12px;color:#085041;line-height:1.6;margin-top:4px">
+        ${riskNote()}
+      </div>
+      <div style="margin-top:10px;background:#fffbf0;border-radius:10px;padding:9px 12px;font-size:11px;color:#7a5c00;line-height:1.6">
+        💡 <strong>רוצה לשנות את התמהיל?</strong> יותר מניות = פוטנציאל צמיחה גבוה יותר עם תנודתיות רבה יותר. יותר אג"ח/קרן כספית = יציבות רבה יותר עם צמיחה מתונה יותר. שוחח עם יועצת השקעות לפני שינוי.
+      </div>
     </div>
     <div style="padding:10px 18px 14px;font-size:11px;color:#888;border-top:1px solid #f0ede8;line-height:1.6">
       ⚠️ <strong>עדן מבצעת תהליך חינוכי בלבד</strong> — ללא התאמה אישית וללא המלצת השקעה.<br>
