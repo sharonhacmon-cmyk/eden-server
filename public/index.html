@@ -1897,9 +1897,43 @@ function showProductCard(reply, onDone){
 }
 let pendingLearnDone = null;
 
+// ═══════════════════════════════════════════════
+// RETURNING USER — localStorage
+// ═══════════════════════════════════════════════
+function saveUserState(){
+  try {
+    localStorage.setItem('eden_gender', userGender);
+    localStorage.setItem('eden_stage', stage);
+    localStorage.setItem('eden_kyc', JSON.stringify(kyc));
+  } catch(e){}
+}
+function loadUserState(){
+  try {
+    const g2 = localStorage.getItem('eden_gender');
+    const st = localStorage.getItem('eden_stage');
+    const kc = localStorage.getItem('eden_kyc');
+    if (g2) userGender = g2;
+    if (st) stage = st;
+    if (kc) kyc = JSON.parse(kc);
+  } catch(e){}
+}
+function clearUserState(){
+  localStorage.removeItem('eden_gender');
+  localStorage.removeItem('eden_stage');
+  localStorage.removeItem('eden_kyc');
+}
+function isReturningUser(){
+  return !!localStorage.getItem('eden_gender');
+}
+
 // FLOW
 // ═══════════════════════════════════════════════
 function startIntro(){
+  if (isReturningUser()){
+    loadUserState();
+    startReturning();
+    return;
+  }
   stage = 'intro';
   delay(()=>{
     addMsg('שלום! אני עדן 💚\n\nרגע לפני שמתחילים — כדי שאוכל לדבר אליך בצורה הנכונה:');
@@ -1909,9 +1943,100 @@ function startIntro(){
   }, 800);
 }
 
+function startReturning(){
+  const hasProfile = kyc && kyc.profile;
+  const hadKYC = kyc && kyc.age;
+  delay(()=>{
+    addMsg(g(
+      'ברוכה השבה! 💚 שמחה לראות אותך שוב.',
+      'ברוך השב! 💚 שמח לראות אותך שוב.'
+    ));
+    setTimeout(()=>delay(()=>{
+      let opts;
+      if (hasProfile){
+        addMsg(g(
+          'בנינו ביחד את התיק שלך. מה תרצי לעשות עכשיו?',
+          'בנינו ביחד את התיק שלך. מה תרצה לעשות עכשיו?'
+        ));
+        opts = [
+          g('הראי לי את התיק שלי 📊','הראה לי את התיק שלי 📊'),
+          'שאלה חופשית לעדן 💬',
+          '🔬 מעבדת חקירה',
+          'התחלה מחדש 🔄',
+        ];
+      } else if (hadKYC){
+        addMsg(g(
+          'התחלנו את השאלון אבל לא סיימנו. רוצה להמשיך?',
+          'התחלנו את השאלון אבל לא סיימנו. רוצה להמשיך?'
+        ));
+        opts = [
+          'כן, בואי נמשיך 💪',
+          'לא, אני רוצה להתחיל מחדש 🔄',
+        ];
+      } else {
+        addMsg(g(
+          'איפה את רוצה להמשיך?',
+          'איפה אתה רוצה להמשיך?'
+        ));
+        opts = [
+          'בואי נבנה את הפרופיל שלי 🏦',
+          g('סקירת מושגי יסוד 📖','סקירת מושגי יסוד 📖'),
+          'מחשבון ריבית דריבית 🧮',
+          'התחלה מחדש 🔄',
+        ];
+      }
+      setTimeout(()=>addQRs(opts, handleReturning), 300);
+    }, 500), 600);
+  }, 600);
+}
+
+function handleReturning(reply){
+  addMsg(reply, true);
+  if (reply.includes('התחלה מחדש') || reply.includes('מחדש')){
+    clearUserState();
+    kyc={}; kycStep=0; stage='intro'; userGender='female';
+    document.getElementById('msgs').innerHTML='';
+    delay(()=>startIntro(), 300);
+    return;
+  }
+  if (reply.includes('תיק') || reply.includes('פרופיל')){
+    if (kyc.profile){
+      delay(()=>{ addMsg(g('הנה התיק שלך 💚','הנה התיק שלך 💚')); setTimeout(()=>addCard(portfolioCardHTML(kyc.profile)),500); },400);
+    } else {
+      delay(()=>{ addMsg(g('בואי נבנה את הפרופיל שלך 💚','בוא נבנה את הפרופיל שלך 💚')); setTimeout(startKYC,500); },400);
+    }
+    return;
+  }
+  if (reply.includes('שאלה חופשית') || reply.includes('שאלה')){
+    stage='chat';
+    delay(()=>addMsg(g('שאלי אותי כל מה שרוצה 💚','שאל אותי כל מה שרוצה 💚')),400);
+    return;
+  }
+  if (reply.includes('מעבדת') || reply.includes('מעבדה')){
+    showLabMenu(); return;
+  }
+  if (reply.includes('נמשיך') || reply.includes('להמשיך')){
+    delay(()=>{ addMsg(g('מעולה! נמשיך מאיפה שעצרנו 💪','מעולה! נמשיך מאיפה שעצרנו 💪')); setTimeout(startKYC,500); },400);
+    return;
+  }
+  if (reply.includes('מחשבון')){
+    delay(()=>showCompoundCalculator(),400); return;
+  }
+  if (reply.includes('מושגי יסוד') || reply.includes('סקירה')){
+    basicConceptsShown=false;
+    delay(()=>showBasicConcepts(()=>{
+      delay(()=>{ addMsg('עכשיו בחרי נושא לעומק:'); setTimeout(showLearnMenu,400); },400);
+    }),400);
+    return;
+  }
+  // fallback
+  delay(()=>addMsg(g('שאלי אותי כל מה שרוצה 💚','שאל אותי כל מה שרוצה 💚')),400);
+}
+
 function handleGender(reply){
   addMsg(reply, true);
   userGender = reply.includes('גבר') ? 'male' : 'female';
+  saveUserState();
   continueIntro();
 }
 
@@ -2331,6 +2456,7 @@ function handleKYC(reply){
   }
   kyc[KYC[kycStep].key] = reply;
   kycStep++;
+  saveUserState();
   if (kycStep < KYC.length) {
     askKYC();
   } else {
@@ -2343,6 +2469,7 @@ function buildResult(){
   const risk = computeRisk();
   const profile = buildPortfolio(risk);
   kyc.risk = risk; kyc.profile = profile;
+  saveUserState();
   const riskLabel = {short:'טווח קצר',low:'סולידי',mid:'מאוזן',high:'צמיחה'}[risk];
 
   delay(()=>{
@@ -3089,7 +3216,8 @@ function markNavBoundary(){
 function navJump(section){
   closeNavMenu();
   if (section === 'restart'){
-    kycStep=0; kyc={}; stage='intro'; learnAssessmentDone=false; basicConceptsShown=false; lastFlowFn=null;
+    clearUserState();
+    kycStep=0; kyc={}; stage='intro'; userGender='female'; learnAssessmentDone=false; basicConceptsShown=false; lastFlowFn=null;
     document.getElementById('msgs').innerHTML = '';
     delay(()=>startIntro(), 300);
     return;
