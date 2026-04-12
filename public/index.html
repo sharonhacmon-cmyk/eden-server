@@ -3067,6 +3067,25 @@ function openNavMenu(){
 function closeNavMenu(){
   document.getElementById('nav-overlay').style.display = 'none';
 }
+// ── nav section replace logic ──
+function clearNavSection(){
+  const b = document.getElementById('nav-section-boundary');
+  if (!b) return;
+  // remove everything from boundary to end of msgs
+  const msgs = document.getElementById('msgs');
+  let el = b.nextSibling;
+  while(el){ const nx=el.nextSibling; msgs.removeChild(el); el=nx; }
+  b.remove();
+}
+function markNavBoundary(){
+  clearNavSection(); // clear previous nav content first
+  const msgs = document.getElementById('msgs');
+  const m = document.createElement('div');
+  m.id = 'nav-section-boundary';
+  m.style.display = 'none';
+  msgs.appendChild(m);
+}
+
 function navJump(section){
   closeNavMenu();
   if (section === 'restart'){
@@ -3076,6 +3095,7 @@ function navJump(section){
     return;
   }
   if (section === 'concepts'){
+    markNavBoundary();
     basicConceptsShown = false;
     delay(()=>showBasicConcepts(()=>{
       delay(()=>{ addMsg('עכשיו בחרי נושא לעומק:'); setTimeout(showLearnMenu, 400); }, 400);
@@ -3083,10 +3103,12 @@ function navJump(section){
     return;
   }
   if (section === 'learn'){
+    markNavBoundary();
     delay(()=>{ addMsg('בחרי נושא 💚'); setTimeout(showLearnMenu, 400); }, 300);
     return;
   }
   if (section === 'calculator'){
+    markNavBoundary();
     delay(()=>showCompoundCalculator(), 300);
     return;
   }
@@ -3095,6 +3117,7 @@ function navJump(section){
     return;
   }
   if (section === 'portfolio'){
+    markNavBoundary();
     if (kyc.profile){
       delay(()=>{
         addMsg('הנה התיק שלך 💚');
