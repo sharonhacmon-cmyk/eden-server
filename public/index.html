@@ -1260,7 +1260,7 @@ function updCalc(cid, sid){
   document.getElementById(cid+'_prf').textContent='\u05E8\u05D5\u05D5\u05D7: \u20AA'+fmt(profit);
 
   // גרף משופר — גבוה יותר, מיילסטונים
-  var W=320,H=200,pL=52,pR=16,pT=18,pB=28,iW=W-pL-pR,iH=H-pT-pB;
+  var W=320,H=200,pL=52,pR=16,pT=32,pB=28,iW=W-pL-pR,iH=H-pT-pB;
   var maxV=Math.max.apply(null,vals)*1.05;
   var tx=function(i){return pL+(i/y)*iW;};
   var tv=function(v){return pT+(1-v/maxV)*iH;};
@@ -1298,14 +1298,14 @@ function updCalc(cid, sid){
     '<stop offset="0%" stop-color="#1D9E75" stop-opacity=".3"/><stop offset="100%" stop-color="#1D9E75" stop-opacity=".02"/></linearGradient></defs>'+
     gridV+
     '<path d="'+fill+'" fill="url(#'+gid+')"/>'+
-    '<polyline points="'+iLine+'" fill="none" stroke="#e0d8c8" stroke-width="2" stroke-dasharray="5,4"/>'+
+    '<polyline points="'+iLine+'" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="5,3"/>'+
     '<polyline points="'+vLine+'" fill="none" stroke="#1D9E75" stroke-width="3" stroke-linejoin="round"/>'+
     milestones+
     gridX+
-    '<rect x="'+pL+'" y="'+(pT+2)+'" width="10" height="2" fill="#e0d8c8"/>'+
-    '<text x="'+(pL+14)+'" y="'+(pT+5)+'" font-size="8" fill="#bbb">הפקדות בלבד</text>'+
-    '<rect x="'+(pL+80)+'" y="'+(pT+2)+'" width="10" height="2" fill="#1D9E75"/>'+
-    '<text x="'+(pL+94)+'" y="'+(pT+5)+'" font-size="8" fill="#1D9E75">עם ריבית דריבית</text>';
+    '<rect x="'+pL+'" y="8" width="12" height="2" fill="#999" rx="1"/>'+
+    '<text x="'+(pL+16)+'" y="12" font-size="8.5" fill="#888">הפקדות בלבד</text>'+
+    '<rect x="'+(pL+90)+'" y="8" width="12" height="2" fill="#1D9E75" rx="1"/>'+
+    '<text x="'+(pL+106)+'" y="12" font-size="8.5" fill="#1D9E75">עם ריבית דריבית</text>';
 }
 
 function showCompoundStoryCard(){
