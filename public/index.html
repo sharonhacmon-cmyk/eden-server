@@ -467,6 +467,50 @@ let userGender = 'female'; // 'female' | 'male'
 // g(female_form, male_form) — returns the right Hebrew gender form
 function g(f, m){ return userGender === 'male' ? m : f; }
 
+// Automatically replace feminine verb forms with masculine when user is male
+function genderizeText(txt){
+  if (userGender !== 'male') return txt;
+  return txt
+    // imperatives
+    .replace(/בואי/g,'בוא')
+    .replace(/הזיזי/g,'הזז')
+    .replace(/הראי/g,'הראה')
+    .replace(/ראי/g,'ראה')
+    .replace(/תראי/g,'תראה')
+    .replace(/תדעי/g,'תדע')
+    .replace(/שתדעי/g,'שתדע')
+    .replace(/תרגישי/g,'תרגיש')
+    .replace(/תבחרי/g,'תבחר')
+    .replace(/תבדקי/g,'תבדוק')
+    .replace(/תשאלי/g,'תשאל')
+    .replace(/תגידי/g,'תגיד')
+    .replace(/תכניסי/g,'תכניס')
+    .replace(/כנסי/g,'כנס')
+    .replace(/הצגי/g,'הצג')
+    .replace(/שחקי/g,'שחק')
+    // pronouns / adjectives
+    .replace(/\bאת\b(?= מרגישה| יודעת| רוצה| צריכה| יכולה| חושבת| מבינה| זוכרת)/g,'אתה')
+    .replace(/את מרגישה/g,'אתה מרגיש')
+    .replace(/את יודעת/g,'אתה יודע')
+    .replace(/את רוצה/g,'אתה רוצה')
+    .replace(/את צריכה/g,'אתה צריך')
+    .replace(/את יכולה/g,'אתה יכול')
+    .replace(/שאת /g,'שאתה ')
+    .replace(/שמחה שאת/g,'שמח שאתה')
+    .replace(/בנוח עם/g,'בנוח עם')
+    // plural feminine → neutral/masculine
+    .replace(/מתחילות/g,'מתחילים')
+    .replace(/נשים רבות/g,'אנשים רבים')
+    .replace(/הן לא מסוגלות/g,'הם לא מסוגלים')
+    .replace(/להן /g,'להם ')
+    // past tense feminine
+    .replace(/מכרה/g,'מכר')
+    .replace(/פספסה/g,'פספס')
+    // suffix -י on verbs (careful — broad but helps)
+    .replace(/\bלמדי\b/g,'למד')
+    .replace(/\bנסי\b/g,'נסה');
+}
+
 // ═══════════════════════════════════════════════
 // SECURITIES DATA
 // ═══════════════════════════════════════════════
@@ -709,6 +753,7 @@ function scroll(){
 
 let _lastUserText = ''; let _lastUserTime = 0;
 function addMsg(text, isUser=false){
+  if (!isUser) text = genderizeText(text);
   if (isUser) {
     const now = Date.now();
     if (text === _lastUserText && now - _lastUserTime < 800) return;
