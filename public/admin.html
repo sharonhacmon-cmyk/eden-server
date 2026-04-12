@@ -78,7 +78,7 @@ body{font-family:'Heebo',sans-serif;background:#f5f5f0;color:#1a1a18;direction:r
 
       <!-- כפתור מהיר -->
       <div style="margin-bottom:16px;padding:14px;background:#f0f9f5;border-radius:12px;border:1px solid #c8e8d8;">
-        <div style="font-size:12px;font-weight:700;color:#085041;margin-bottom:10px;">⚡ הוספה מהירה — חודש ניסיון</div>
+        <div style="font-size:12px;font-weight:700;color:#085041;margin-bottom:10px;">⚡ הוספה מהירה — גישה חודשית</div>
         <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;">
           <div class="field" style="flex:1;min-width:140px;">
             <label>שם המשתמשת</label>
@@ -229,7 +229,7 @@ async function quickAdd(){
 
   lastQuickCode=code; lastQuickName=name;
   const expHe=exp.toLocaleDateString('he-IL',{day:'numeric',month:'long',year:'numeric'});
-  const text=`היי ${name} 🌿\n\nיצרתי לך גישה לעדן — חודש ניסיון חינמי!\n\n🔗 eden-server-73ms.onrender.com\n🔑 קוד גישה: ${code}\n\nהגישה בתוקף עד ${expHe}.\nאשמח לשמוע מה את חושבת 💚`;
+  const text=`היי ${name} 🌿\n\nיצרתי לך גישה לעדן — המכוונת הפיננסית של נתיב!\n\n🔗 eden-server-73ms.onrender.com\n🔑 קוד גישה: ${code}\n\nהגישה בתוקף עד ${expHe}.\nאשמח לשמוע מה את חושבת 💚`;
   document.getElementById('quick-text').textContent=text;
   document.getElementById('quick-result').style.display='block';
   msg.className='msg ok'; msg.textContent='✓ '+name+' נוספה! קוד: '+code;
