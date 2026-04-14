@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>קמפיין וובינר — עדן | נתיב</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Heebo',sans-serif;background:#f5f5f0;color:#1a1a18;direction:rtl;min-height:100vh;}
+.header{background:linear-gradient(135deg,#085041,#1D9E75);padding:22px 28px 18px;}
+.header h1{color:white;font-size:21px;font-weight:900;}
+.header p{color:rgba(255,255,255,.7);font-size:13px;margin-top:4px;}
+.tabs{display:flex;background:white;border-bottom:2px solid #f0f0ec;overflow-x:auto;position:sticky;top:0;z-index:10;}
+.tab{padding:13px 18px;font-size:13px;font-weight:700;color:#888;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0;margin-bottom:-2px;}
+.tab.active{color:#085041;border-bottom-color:#1D9E75;}
+.pane{display:none;max-width:720px;margin:0 auto;padding:24px 16px 60px;}
+.pane.active{display:block;}
+
+/* cards */
+.card{background:white;border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);margin-bottom:14px;}
+.card-head{background:#f0f9f5;padding:11px 16px;font-size:11px;font-weight:800;color:#085041;display:flex;justify-content:space-between;align-items:center;gap:8px;}
+.badge{background:#1D9E75;color:white;border-radius:20px;padding:2px 10px;font-size:10px;font-weight:700;white-space:nowrap;}
+.badge.gold{background:#EF9F27;}
+.badge.purple{background:#7c3aed;}
+.card-body{padding:15px 16px;font-size:13px;color:#333;line-height:1.75;white-space:pre-wrap;direction:rtl;}
+.copy-btn{width:100%;border:none;background:linear-gradient(135deg,#085041,#1D9E75);color:white;font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;padding:10px;cursor:pointer;}
+.copy-btn:hover{opacity:.9;}
+.copy-btn.done{background:#2e7d32;}
+
+/* strategy */
+.strat-block{background:white;border-radius:14px;padding:18px;margin-bottom:12px;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.strat-block h3{font-size:15px;font-weight:800;color:#085041;margin-bottom:8px;}
+.strat-block p{font-size:13px;color:#555;line-height:1.65;margin-bottom:8px;}
+.strat-block ul{padding-right:18px;}
+.strat-block li{font-size:13px;color:#444;line-height:1.7;margin-bottom:4px;}
+.highlight-box{background:#f0f9f5;border-radius:10px;padding:11px 14px;font-size:13px;color:#085041;font-weight:600;margin-top:10px;line-height:1.6;}
+
+/* day timeline */
+.day-row{display:flex;gap:14px;margin-bottom:18px;align-items:flex-start;}
+.day-badge{background:#085041;color:white;border-radius:12px;padding:6px 12px;font-size:12px;font-weight:800;min-width:72px;text-align:center;flex-shrink:0;margin-top:2px;}
+.day-badge.today{background:#EF9F27;}
+.day-content{flex:1;}
+.day-title{font-size:14px;font-weight:800;color:#1a1a18;margin-bottom:4px;}
+.day-sub{font-size:12px;color:#888;margin-bottom:10px;}
+
+/* ads */
+.ad-card{background:white;border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,.07);border-right:4px solid #7c3aed;}
+.ad-card h3{font-size:13px;font-weight:800;color:#7c3aed;margin-bottom:10px;}
+.ad-row{display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid #f5f5f0;}
+.ad-row:last-child{border:none;}
+.ad-row span:first-child{color:#666;}
+.ad-row span:last-child{font-weight:700;color:#1a1a18;}
+
+/* section title */
+.sec{font-size:11px;font-weight:900;color:#085041;text-transform:uppercase;letter-spacing:1px;margin:20px 0 10px;display:flex;align-items:center;gap:8px;}
+.sec::after{content:'';flex:1;height:1px;background:#e0e0dc;}
+
+.alert{background:#fffbf0;border:1px solid #EF9F27;border-radius:12px;padding:12px 15px;font-size:13px;color:#7a5c00;line-height:1.6;margin-bottom:16px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📣 קמפיין וובינר — עדן | נתיב</h1>
+  <p>28 באפריל 2026 · כל הכלים במקום אחד</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('strategy')">🎯 אסטרטגיה</div>
+  <div class="tab" onclick="showTab('content')">📅 לוח תוכן</div>
+  <div class="tab" onclick="showTab('posts')">✍️ פוסטים מוכנים</div>
+  <div class="tab" onclick="showTab('wa')">💬 וואטסאפ</div>
+  <div class="tab" onclick="showTab('ads')">💰 פרסום ממומן</div>
+</div>
+
+<!-- TAB 1: אסטרטגיה -->
+<div class="pane active" id="tab-strategy">
+
+  <div class="alert">
+    <strong>המסר המרכזי:</strong> במקום לקרוא מצגת בפסיביות — עדן מאפשרת לך לשאול, לתרגל וליישם את מה שלמדת — בזמן שלך, בקצב שלך. שרון תלמד; עדן תלווה אישית.
+  </div>
+
+  <div class="strat-block">
+    <h3>🔍 מה עובד — ומה לא</h3>
+    <ul>
+      <li>✅ <strong>וואטסאפ אישי</strong> — הביא 20 נשים. שיעור המרה גבוה. להמשיך ולהכפיל.</li>
+      <li>✅ <strong>קבוצות וואטסאפ</strong> — עובד. להוסיף בקשה מהנרשמות להעביר הלאה.</li>
+      <li>⚠️ <strong>דף פייסבוק</strong> — דפים חדשים מקבלים חשיפה נמוכה. פרסום ממומן נדרש OR קבוצה.</li>
+      <li>🚀 <strong>קבוצות פייסבוק קיימות</strong> — פרסום חינמי לאלפים. פוטנציאל גבוה.</li>
+    </ul>
+  </div>
+
+  <div class="strat-block">
+    <h3>🎯 3 ערוצים לפוקוס</h3>
+    <div class="day-row" style="margin-bottom:10px">
+      <div class="day-badge">1</div>
+      <div class="day-content">
+        <div class="day-title">שגרירות — 20 הנשים שנרשמו</div>
+        <p style="font-size:13px;color:#555;line-height:1.6">כל אחת מהן מכירה עשרות נשים. שלחי להן הודעה אישית: "תעבירי הלאה לחברה אחת שחשוב לה ללמוד". זה הערוץ הזול ביותר והאמין ביותר.</p>
+      </div>
+    </div>
+    <div class="day-row" style="margin-bottom:10px">
+      <div class="day-badge">2</div>
+      <div class="day-content">
+        <div class="day-title">קבוצות פייסבוק ישראליות</div>
+        <p style="font-size:13px;color:#555;line-height:1.6">יש קבוצות עם עשרות אלפי חברות — "נשים שמשקיעות בעצמן", "אמהות ועסקים", "כסף וחיים". להצטרף ולפרסם שם פוסט אישי (לא פרסומת).</p>
+      </div>
+    </div>
+    <div class="day-row">
+      <div class="day-badge">3</div>
+      <div class="day-content">
+        <div class="day-title">פייסבוק ממומן — ₪200-300</div>
+        <p style="font-size:13px;color:#555;line-height:1.6">קמפיין ממוקד: נשים, ישראל, גיל 28-65. תקציב קטן, חשיפה של 8,000-15,000 נשים. כדאי אם הדפים מוכנים.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="strat-block">
+    <h3>💬 המסר שעובד — ומה להימנע</h3>
+    <ul>
+      <li>✅ "עדן מלווה אותך — שואלת, מתרגלת, מיישמת — בזמן שלך"</li>
+      <li>✅ "במקום לקרוא מצגת לבד — יש לך מישהי לשאול"</li>
+      <li>✅ "שרון לימדה. עדן כאן כדי שתפנימי"</li>
+      <li>❌ "תלמדי להשקיע" — נשמע מאיים</li>
+      <li>❌ "AI שמלמד" — עדן לא מלמדת, היא מלווה</li>
+      <li>❌ "ניהול כספים" — מושג מרחיק. עדיף "החלטות כלכליות חכמות"</li>
+    </ul>
+    <div class="highlight-box">הכותרת המומלצת לוובינר: "הכירי את עדן — המלווה הפיננסית שתמיד זמינה בשבילך"</div>
+  </div>
+</div>
+
+<!-- TAB 2: לוח תוכן -->
+<div class="pane" id="tab-content">
+
+  <div class="alert">לוח פרסום 7 ימים לפני הוובינר. כל פוסט מוכן לשימוש בלשונית "פוסטים מוכנים".</div>
+
+  <div class="day-row">
+    <div class="day-badge today">19/4</div>
+    <div class="day-content">
+      <div class="day-title">יום 7 — העלאת מודעות</div>
+      <div class="day-sub">שאלה שפותחת שיחה · פייסבוק + אינסטגרם</div>
+      <p style="font-size:13px;color:#555;line-height:1.6">"כמה מכן יודעות מה קורה עם הכסף שלהן — בפועל?" פוסט שמייצר תגובות ובונה מודעות לנושא. בלי אזכור וובינר עדיין.</p>
+    </div>
+  </div>
+
+  <div class="day-row">
+    <div class="day-badge">21/4</div>
+    <div class="day-content">
+      <div class="day-title">יום 5 — הבעיה שעדן פותרת</div>
+      <div class="day-sub">סיפור אישי · פייסבוק</div>
+      <p style="font-size:13px;color:#555;line-height:1.6">"רציתי ללמוד על השקעות — ולא היה לי עם מי לשאול שאלות בשעה 22:00." מציג את הבעיה שעדן פותרת, בלי לפרסם ישירות.</p>
+    </div>
+  </div>
+
+  <div class="day-row">
+    <div class="day-badge">23/4</div>
+    <div class="day-content">
+      <div class="day-title">יום 3 — הכרזה על הוובינר</div>
+      <div class="day-sub">הזמנה רשמית · כל הפלטפורמות</div>
+      <p style="font-size:13px;color:#555;line-height:1.6">הכרזה ברורה עם כל הפרטים. לשתף גם בקבוצות וואטסאפ. לשלוח לשגרירות לבקש שיפיצו.</p>
+    </div>
+  </div>
+
+  <div class="day-row">
+    <div class="day-badge">26/4</div>
+    <div class="day-content">
+      <div class="day-title">יום 2 — טיזר "מה תקבלי"</div>
+      <div class="day-sub">ציפייה · פייסבוק + סטורי</div>
+      <p style="font-size:13px;color:#555;line-height:1.6">3 דברים שתצאי איתם מהוובינר. תיאור ספציפי ממוקד — לא כללי.</p>
+    </div>
+  </div>
+
+  <div class="day-row">
+    <div class="day-badge">27/4</div>
+    <div class="day-content">
+      <div class="day-title">יום 1 — תזכורת + דחיפות</div>
+      <div class="day-sub">מחר! · כל הפלטפורמות + וואטסאפ</div>
+      <p style="font-size:13px;color:#555;line-height:1.6">קצרה, חמה, ברורה. "מחר בערב. אם עוד לא נרשמת — זה הזמן."</p>
+    </div>
+  </div>
+
+  <div class="day-row">
+    <div class="day-badge">28/4</div>
+    <div class="day-content">
+      <div class="day-title">יום הוובינר — בוקר</div>
+      <div class="day-sub">היום! · סטטוס + סטורי</div>
+      <p style="font-size:13px;color:#555;line-height:1.6">"היום 19:30. מחכה לכן 💚" — קצר, נרגש, אישי.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: פוסטים מוכנים -->
+<div class="pane" id="tab-posts">
+
+  <div class="sec">יום 7 — העלאת מודעות</div>
+  <div class="card">
+    <div class="card-head"><span>פוסט פייסבוק / אינסטגרם — שאלה פותחת</span><span class="badge">19/4</span></div>
+    <div class="card-body" id="p1">שאלה שמעסיקה אותי:
+
+כמה מכן יודעות בדיוק מה קורה עם הכסף שלהן?
+
+לא בחשבון הבנק — אלא בפועל.
+האם הוא עובד בשבילכן, צומח, שומר על ערכו?
+או סתם יושב ומחכה?
+
+אני גיליתי שרוב הנשים שאני מכירה — כולל אני — לא באמת יודעות.
+לא בגלל שאנחנו לא חכמות.
+אלא כי אף אחד לא הסביר לנו בשפה פשוטה, בלי ג׳רגון ובלי שיפוט.
+
+מה אצלכן? 👇
+
+#כסף #נשיםמשקיעות #עצמאותפיננסית #ידע</div>
+    <button class="copy-btn" onclick="cp('p1',this)">📋 העתיקי</button>
+  </div>
+
+  <div class="sec">יום 5 — הבעיה שעדן פותרת</div>
+  <div class="card">
+    <div class="card-head"><span>פוסט פייסבוק — סיפור אישי</span><span class="badge">21/4</span></div>
+    <div class="card-body" id="p2">הייתי רוצה ללמוד על השקעות —
+אבל תמיד עצרתי.
+
+כי לא היה לי עם מי לשאול שאלות בשעה 22:00.
+כי פחדתי להיראות טיפשה מול יועץ.
+כי הרגשתי שצריך ידע קודם כדי להתחיל.
+
+וכך השנים עוברות, והכסף לא זז.
+
+לכן יצרתי את עדן —
+מלווה AI פיננסית שזמינה בדיוק בשעה 22:00.
+שלא שופטת. שמסבירה שוב ושוב.
+שמאפשרת לך לתרגל ולשאול — עד שזה באמת נכנס.
+
+בשבוע הבא אפרסם משהו שאני מאמינה בו מאוד.
+תישארי עם העמוד 💚
+
+#עדן #נתיב #ידעפיננסי #נשיםחזקות</div>
+    <button class="copy-btn" onclick="cp('p2',this)">📋 העתיקי</button>
+  </div>
+
+  <div class="sec">יום 3 — הכרזה</div>
+  <div class="card">
+    <div class="card-head"><span>פוסט הכרזה רשמי</span><span class="badge">23/4</span></div>
+    <div class="card-body" id="p3">מזמינה אתכן לוובינר שיצר לי חלחלה טובה 🌿
+
+"הכירי את עדן"
+המלווה הפיננסית שתמיד זמינה בשבילך
+
+📅 יום שלישי, 28 באפריל | 19:30
+
+במקום לקרוא מאמרים לבד —
+עדן מאפשרת לך לשאול, לתרגל וליישם את מה שלמדת.
+בזמן שלך. בקצב שלך. בלי שיפוט.
+
+הלימוד המרוכז נעשה איתי.
+עדן מלווה אותך בינתיים — 24/7.
+
+🔗 להצטרפות לקבוצת הוובינר (קישור בתגובות)
+
+מי מגיעה? 💚</div>
+    <button class="copy-btn" onclick="cp('p3',this)">📋 העתיקי</button>
+  </div>
+
+  <div class="sec">יום 2 — טיזר</div>
+  <div class="card">
+    <div class="card-head"><span>מה תצאי עם — 3 דברים ספציפיים</span><span class="badge">26/4</span></div>
+    <div class="card-body" id="p4">מחרתיים בוובינר —
+
+3 דברים שתצאי איתם:
+
+1️⃣ תבין מה ההבדל בין פיקדון, קרן כספית והשקעה — ולמה זה משנה לכיס שלך
+
+2️⃣ תדעי איך לשאול את עדן שאלות — ולקבל תשובות שמתאימות בדיוק לך
+
+3️⃣ תרגישי שזה אפשרי — גם אם עד היום "כסף היה לא בשביל את"
+
+לא צריך שום רקע מוקדם.
+רק שעה וסקרנות 💚
+
+עוד לא נרשמת? קישור בתגובות 👇</div>
+    <button class="copy-btn" onclick="cp('p4',this)">📋 העתיקי</button>
+  </div>
+
+  <div class="sec">יום 1 — תזכורת</div>
+  <div class="card">
+    <div class="card-head"><span>תזכורת אחרונה</span><span class="badge">27/4</span></div>
+    <div class="card-body" id="p5">מחר בערב — 19:30 🌿
+
+אם חשבת על זה ועוד לא נרשמת —
+זה הסימן שלך.
+
+הוובינר "הכירי את עדן" הוא שעה אחת שיכולה לשנות את האופן שבו את מסתכלת על הכסף שלך.
+
+לא כי תהפכי למומחית.
+אלא כי לראשונה — תהיה לך מישהי לשאול.
+
+🔗 קישור בתגובות
+💚 אני מחכה לך</div>
+    <button class="copy-btn" onclick="cp('p5',this)">📋 העתיקי</button>
+  </div>
+
+  <div class="sec">סטורי / ריל — תסריט קצר</div>
+  <div class="card">
+    <div class="card-head"><span>תסריט לסטורי / ריל — 20 שניות</span><span class="badge gold">סטורי</span></div>
+    <div class="card-body" id="p6">[ מצלמת פנים, רקע נקי, טון רגוע ]
+
+"פגשתם פעם מישהי שאפשר לשאול אותה כל שאלה על כסף — בלי שיפוט, בכל שעה?
+
+עדן היא בדיוק זה.
+AI שיצרתי כדי שכל אשה תוכל להפנים ולתרגל ידע פיננסי — בזמן שלה.
+
+ב-28 באפריל מציגה אותה לראשונה.
+קישור בביו."
+
+[ טקסט על המסך: 28.4 | 19:30 | חינמי ]</div>
+    <button class="copy-btn" onclick="cp('p6',this)">📋 העתיקי</button>
+  </div>
+</div>
+
+<!-- TAB 4: וואטסאפ -->
+<div class="pane" id="tab-wa">
+
+  <div class="sec">לשגרירות — 20 הנשים שנרשמו</div>
+  <div class="card">
+    <div class="card-head"><span>בקשה להפצה — אישית לכל אחת</span><span class="badge">🌟 הכי חשוב</span></div>
+    <div class="card-body" id="w1">היי [שם] 💚
+
+שמחה שאת מגיעה לוובינר!
+
+יש לי בקשה קטנה —
+יש בחייך אשה אחת שגם לה זה יכול לשנות משהו?
+חברה, אחות, עמיתה — מישהי שאומרת "פעם אלמד את זה"?
+
+תעבירי לה את הקישור הזה:
+https://chat.whatsapp.com/L8FeEGVdytGGH9Hh8ni1ud
+
+תודה מהלב 🌿</div>
+    <button class="copy-btn" onclick="cp('w1',this)">📋 העתיקי</button>
+  </div>
+
+  <div class="sec">לקבוצות וואטסאפ</div>
+  <div class="card">
+    <div class="card-head"><span>הודעה לקבוצה — גרסה קצרה</span><span class="badge">💬 קבוצות</span></div>
+    <div class="card-body" id="w2">היי לכולן 🌿
+
+מזמינה אתכן לוובינר חינמי שאני מאמינה בו —
+
+"הכירי את עדן" — מלווה AI פיננסית שנוצרה כדי שלכל אשה יהיה מישהי לשאול, בזמן שלה, בלי שיפוט.
+
+📅 יום שלישי, 28 באפריל | 19:30 | זום
+🎁 חינמי לחלוטין
+
+לא צריך שום ידע מוקדם. רק שעה וסקרנות.
+
+👇 להצטרפות:
+https://chat.whatsapp.com/L8FeEGVdytGGH9Hh8ni1ud</div>
+    <button class="copy-btn" onclick="cp('w2',this)">📋 העתיקי</button>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><span>הודעה אישית — לחברות קרובות</span><span class="badge">💬 אישית</span></div>
+    <div class="card-body" id="w3">היי [שם] 🌿
+
+חשבתי עליך —
+
+עשיתי שנה וחצי של פיתוח כדי שלנשים תהיה גישה לידע פיננסי בשפה פשוטה.
+יצרתי AI בשם עדן שמלווה אישית, עונה על שאלות, ומאפשרת לתרגל — בזמן החופשי שלך.
+
+ב-28 באפריל מציגה אותה לראשונה בוובינר חינמי.
+
+הייתי שמחה שתהיי שם 💚
+https://chat.whatsapp.com/L8FeEGVdytGGH9Hh8ni1ud</div>
+    <button class="copy-btn" onclick="cp('w3',this)">📋 העתיקי</button>
+  </div>
+
+  <div class="sec">תזכורת — לשלוח 26 באפריל</div>
+  <div class="card">
+    <div class="card-head"><span>תזכורת לקבוצות</span><span class="badge">🔔 26/4</span></div>
+    <div class="card-body" id="w4">🔔 מחרתיים — הוובינר!
+
+"הכירי את עדן"
+28 באפריל | 19:30 | זום
+
+עוד לא נרשמת? יש מקום 💚
+https://chat.whatsapp.com/L8FeEGVdytGGH9Hh8ni1ud</div>
+    <button class="copy-btn" onclick="cp('w4',this)">📋 העתיקי</button>
+  </div>
+</div>
+
+<!-- TAB 5: פרסום ממומן -->
+<div class="pane" id="tab-ads">
+
+  <div class="alert">
+    <strong>המלצה:</strong> להתחיל עם ₪150-200 לבדיקה. אם הקמפיין עובד (מחיר לנרשמת מתחת ל-₪15) — להגדיל.
+  </div>
+
+  <div class="strat-block">
+    <h3>🎯 הגדרת קהל מומלצת</h3>
+    <ul>
+      <li><strong>מיקום:</strong> ישראל בלבד</li>
+      <li><strong>גיל:</strong> 28–60</li>
+      <li><strong>מגדר:</strong> נשים</li>
+      <li><strong>תחומי עניין:</strong> כסף ופיננסים / השקעות / פיתוח אישי / יזמות נשים</li>
+      <li><strong>שפה:</strong> עברית</li>
+    </ul>
+    <div class="highlight-box">קהל צפוי: 180,000–400,000 נשים. תקציב ₪200 = ~10,000 חשיפות, ~150 קליקים, ~30-50 נרשמות.</div>
+  </div>
+
+  <div class="ad-card">
+    <h3>📋 מבנה הקמפיין</h3>
+    <div class="ad-row"><span>מטרת הקמפיין</span><span>Traffic / Lead Generation</span></div>
+    <div class="ad-row"><span>פורמט</span><span>פוסט תמונה + טקסט קצר</span></div>
+    <div class="ad-row"><span>תקציב יומי</span><span>₪30-40 ליום × 5 ימים</span></div>
+    <div class="ad-row"><span>תקציב כולל</span><span>₪150–200</span></div>
+    <div class="ad-row"><span>תאריך הפעלה</span><span>23 באפריל — עד 27 באפריל</span></div>
+    <div class="ad-row"><span>יעד</span><span>קבוצת הוובינר בוואטסאפ</span></div>
+  </div>
+
+  <div class="sec">טקסט למודעה ממומנת</div>
+  <div class="card">
+    <div class="card-head"><span>טקסט קצר למודעה</span><span class="badge purple">ממומן</span></div>
+    <div class="card-body" id="ad1">היה לך פעם שאלה על כסף — ולא היה עם מי לשאול? 💚
+
+עדן היא מלווה AI פיננסית שנוצרה בשביל זה.
+לא יועצת. לא קורס. מישהי לשאול — בזמן שלך.
+
+ב-28 באפריל מציגה אותה לראשונה.
+וובינר חינמי, זום, 19:30.
+
+👇 להצטרפות</div>
+    <button class="copy-btn" onclick="cp('ad1',this)">📋 העתיקי</button>
+  </div>
+
+  <div class="strat-block">
+    <h3>📌 טיפים להרצת הקמפיין</h3>
+    <ul>
+      <li>הכפתור במודעה: <strong>"הרשמי עכשיו"</strong> או <strong>"הצטרפי לקבוצה"</strong></li>
+      <li>הלינק: ישיר לקבוצת הוואטסאפ (לא לדף)</li>
+      <li>תמונה: תמונה שלך עם עדן — יותר אמינות מגרפיקה</li>
+      <li>לבדוק ביום השני: אם מחיר לקליק מעל ₪3 — לשנות את התמונה או הטקסט</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+function showTab(id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+function cp(id,btn){
+  const text = document.getElementById(id).textContent.trim();
+  navigator.clipboard.writeText(text).then(()=>{
+    const orig=btn.textContent;
+    btn.textContent='✓ הועתק!';
+    btn.classList.add('done');
+    setTimeout(()=>{btn.textContent=orig;btn.classList.remove('done');},2000);
+  });
+}
+</script>
+</body>
+</html>
