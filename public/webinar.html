@@ -418,6 +418,83 @@
     margin-bottom: 28px;
   }
 
+  /* ── PAIN SECTION ── */
+  .pain-section {
+    background: #fff;
+    padding: 72px 24px;
+  }
+  .pain-inner {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .pain-inner h2 {
+    font-size: clamp(24px, 3.5vw, 36px);
+    font-weight: 900;
+    color: var(--green-dark);
+    margin-bottom: 32px;
+    line-height: 1.3;
+  }
+  .pain-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+  .pain-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 17px;
+    color: #444;
+    line-height: 1.6;
+  }
+  .pain-list li span.check {
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .pain-answer {
+    background: var(--green-pale);
+    border-right: 4px solid var(--green-mid);
+    border-radius: 0 16px 16px 0;
+    padding: 20px 24px;
+    font-size: 17px;
+    color: var(--green-dark);
+    font-weight: 500;
+    line-height: 1.7;
+  }
+
+  /* ── REG FORM ── */
+  .reg-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 380px;
+    margin: 0 auto;
+  }
+  .reg-form input {
+    font-family: 'Heebo', sans-serif;
+    font-size: 16px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    border: none;
+    background: rgba(255,255,255,0.12);
+    color: white;
+    text-align: right;
+    outline: none;
+  }
+  .reg-form input::placeholder { color: rgba(255,255,255,0.5); }
+  .reg-form input:focus { background: rgba(255,255,255,0.18); }
+  .reg-success {
+    display: none;
+    text-align: center;
+    animation: fadeUp 0.5s ease both;
+  }
+  .reg-success .success-icon { font-size: 52px; margin-bottom: 12px; }
+  .reg-success h3 { font-size: 26px; font-weight: 900; color: white; margin-bottom: 8px; }
+  .reg-success p { color: rgba(255,255,255,0.7); font-size: 16px; margin-bottom: 24px; line-height: 1.6; }
+
   /* ── FOOTER ── */
   footer {
     background: #062e24;
@@ -474,10 +551,24 @@
       </div>
     </div>
 
-    <a href="https://chat.whatsapp.com/L8FeEGVdytGGH9Hh8ni1ud?mode=gi_t" target="_blank" class="btn-cta">
-      כן, אני מצטרפת! ✦
-    </a>
-    <div class="cta-note">הצטרפי לקבוצת הוואטסאפ · תקבלי את הלינק לוובינר</div>
+    <!-- טופס הרשמה -->
+    <div class="reg-form" id="reg-form">
+      <input type="text" id="reg-name" placeholder="שם פרטי" autocomplete="off">
+      <input type="tel" id="reg-phone" placeholder="מספר טלפון" autocomplete="off">
+      <button onclick="submitReg()" class="btn-cta" style="border:none;cursor:pointer;width:100%;margin:0">
+        כן, אני מצטרפת! ✦
+      </button>
+      <div class="cta-note">חינמי לחלוטין · תקבלי לינק לוובינר בוואטסאפ</div>
+    </div>
+    <!-- הודעת הצלחה -->
+    <div class="reg-success" id="reg-success">
+      <div class="success-icon">🎉</div>
+      <h3>נרשמת בהצלחה!</h3>
+      <p>הצטרפי לקבוצת הוואטסאפ<br>ותקבלי את הלינק לוובינר</p>
+      <a href="https://chat.whatsapp.com/L8FeEGVdytGGH9Hh8ni1ud?mode=gi_t" target="_blank" class="btn-cta">
+        הצטרפי לקבוצת הוואטסאפ ✦
+      </a>
+    </div>
   </div>
 
   <!-- Countdown -->
@@ -497,6 +588,24 @@
     <div class="count-box">
       <div class="count-num" id="cd-secs">--</div>
       <div class="count-label">שניות</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PAIN SECTION ── -->
+<section class="pain-section">
+  <div class="pain-inner">
+    <h2>אם את מרגישה אחת מהאלה — הוובינר הזה בשבילך:</h2>
+    <ul class="pain-list">
+      <li><span class="check">😔</span> ישבת מול בנקאי או יועץ ואמרת "כן כן" — בלי שהבנת כלום</li>
+      <li><span class="check">💸</span> הכסף נכנס ויוצא כל חודש, ולא ברור לאן הלך</li>
+      <li><span class="check">🌙</span> יש לילות שאת לא ישנה מדאגה — "האם יהיה מספיק?"</li>
+      <li><span class="check">🤷‍♀️</span> אמרת לעצמך "אני אסתדר" — כבר כמה שנים</li>
+    </ul>
+    <div class="pain-answer">
+      את לא צריכה להיות מומחית.
+      את צריכה ידע שמדבר אלייך — בשפה שלך, בקצב שלך.
+      זה בדיוק מה שנעשה בוובינר הזה.
     </div>
   </div>
 </section>
@@ -594,11 +703,11 @@
   <h2>מוכנה להתחיל?</h2>
   <p>מקום פנוי לוובינר — הצטרפי עכשיו, זה חינמי לחלוטין.</p>
   <div class="bottom-date">📅 יום שלישי, 28 באפריל · 19:30 – 20:30</div>
-  <a href="https://chat.whatsapp.com/L8FeEGVdytGGH9Hh8ni1ud?mode=gi_t" target="_blank" class="btn-cta">
+  <a href="#reg-form" onclick="document.getElementById('reg-name').focus()" class="btn-cta">
     כן, אני מצטרפת! ✦
   </a>
   <div class="cta-note" style="color:rgba(255,255,255,0.4);margin-top:12px;">
-    הצטרפי לקבוצת הוואטסאפ · תקבלי את הלינק לוובינר
+    השאירי שם וטלפון — ונשמח לראותך שם
   </div>
 </section>
 
@@ -608,6 +717,31 @@
 </footer>
 
 <script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyk3BWoEUv7NOKrKfum3273sy_rELG9Yg4RGKFBdUHKzTUJwwA0uvdDmBseyXKIm2vEmQ/exec';
+
+function submitReg() {
+  const name  = document.getElementById('reg-name').value.trim();
+  const phone = document.getElementById('reg-phone').value.trim();
+
+  if (!name || !phone) {
+    alert('אנא מלאי שם ומספר טלפון');
+    return;
+  }
+
+  // שמירה בגוגל שיטס
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, phone })
+  }).catch(() => {});
+
+  // הצגת הצלחה
+  document.getElementById('reg-form').style.display = 'none';
+  const success = document.getElementById('reg-success');
+  success.style.display = 'block';
+}
+
 // Countdown to April 28, 2026, 19:30 (Spain time = UTC+2 in April)
 const target = new Date('2026-04-28T19:30:00+02:00');
 
