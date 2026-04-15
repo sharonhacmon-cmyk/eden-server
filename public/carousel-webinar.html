@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>קרוסלה — 5 סיבות</title>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -257,15 +258,35 @@
     margin-top: 8px;
   }
   @media print { body { background: white; } .print-hint { display: none; } }
+
+  .download-btn {
+    background: #1D9E75;
+    color: white;
+    border: none;
+    font-family: 'Heebo', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 10px 24px;
+    border-radius: 30px;
+    cursor: pointer;
+    margin-top: 8px;
+    display: block;
+    width: 200px;
+    text-align: center;
+    transition: background 0.2s;
+  }
+  .download-btn:hover { background: #085041; }
+  .download-btn:disabled { background: #aaa; cursor: default; }
 </style>
 </head>
 <body>
 
-<div class="print-hint">📸 צלמי מסך כל שקף בנפרד — 540×540 פיקסל</div>
+<div class="print-hint">👇 לחצי על כפתור ההורדה מתחת לכל שקף</div>
 
 <!-- שקף 1 -->
 <div class="label">שקף 1 מתוך 6</div>
-<div class="slide s1">
+<button class="download-btn" onclick="downloadSlide('slide-1','שקף-1')">⬇️ הורידי שקף 1</button>
+<div class="slide s1" id="slide-1">
   <div class="num">קרוסלה · החליקי</div>
   <h1>5 סיבות שנשים<br>נמנעות מהשקעות<br><span>וכל אחת עולה כסף</span></h1>
   <p class="sub">💸 הגיע הזמן לדעת מה עוצר אותך</p>
@@ -274,7 +295,8 @@
 
 <!-- שקף 2 -->
 <div class="label">שקף 2 מתוך 6</div>
-<div class="slide s-mid">
+<button class="download-btn" onclick="downloadSlide('slide-2','שקף-2')">⬇️ הורידי שקף 2</button>
+<div class="slide s-mid" id="slide-2">
   <div class="slide-num">01 / 05</div>
   <div class="mistake-num">1</div>
   <h2>"אני אתחיל<br>כשאבין יותר"</h2>
@@ -285,7 +307,8 @@
 
 <!-- שקף 3 -->
 <div class="label">שקף 3 מתוך 6</div>
-<div class="slide s-mid">
+<button class="download-btn" onclick="downloadSlide('slide-3','שקף-3')">⬇️ הורידי שקף 3</button>
+<div class="slide s-mid" id="slide-3">
   <div class="slide-num">02 / 05</div>
   <div class="mistake-num">2</div>
   <h2>"זה מורכב<br>מדי בשבילי"</h2>
@@ -296,7 +319,8 @@
 
 <!-- שקף 4 -->
 <div class="label">שקף 4 מתוך 6</div>
-<div class="slide s-mid">
+<button class="download-btn" onclick="downloadSlide('slide-4','שקף-4')">⬇️ הורידי שקף 4</button>
+<div class="slide s-mid" id="slide-4">
   <div class="slide-num">03 / 05</div>
   <div class="mistake-num">3</div>
   <h2>"יש לי עוד זמן,<br>אני אסתדר"</h2>
@@ -307,7 +331,8 @@
 
 <!-- שקף 5 -->
 <div class="label">שקף 5 מתוך 6</div>
-<div class="slide s-mid">
+<button class="download-btn" onclick="downloadSlide('slide-5','שקף-5')">⬇️ הורידי שקף 5</button>
+<div class="slide s-mid" id="slide-5">
   <div class="slide-num">04 / 05</div>
   <div class="mistake-num">4</div>
   <h2>"אני סומכת<br>על מישהו אחר"</h2>
@@ -318,7 +343,8 @@
 
 <!-- שקף 5ב -->
 <div class="label">שקף 5ב מתוך 6</div>
-<div class="slide s-mid">
+<button class="download-btn" onclick="downloadSlide('slide-5b','שקף-5ב')">⬇️ הורידי שקף 5ב</button>
+<div class="slide s-mid" id="slide-5b">
   <div class="slide-num">05 / 05</div>
   <div class="mistake-num">5</div>
   <h2>"כולן מסביב<br>כבר משקיעות"</h2>
@@ -329,7 +355,8 @@
 
 <!-- שקף 6 -->
 <div class="label">שקף 6 מתוך 6 — CTA</div>
-<div class="slide s6">
+<button class="download-btn" onclick="downloadSlide('slide-6','שקף-6')">⬇️ הורידי שקף 6</button>
+<div class="slide s6" id="slide-6">
   <div class="brand-top">נתיב · עדן</div>
   <h2>הגיע הזמן<br>להפסיק <span>לחכות</span> 🌿</h2>
   <div class="date-box">
@@ -342,5 +369,28 @@
   <p class="free-note">eden-server-73ms.onrender.com/webinar.html</p>
 </div>
 
+<script>
+async function downloadSlide(id, name) {
+  const btn = event.target;
+  btn.disabled = true;
+  btn.textContent = '⏳ מכינה...';
+
+  const el = document.getElementById(id);
+  const canvas = await html2canvas(el, {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: null
+  });
+
+  const link = document.createElement('a');
+  link.download = name + '.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+
+  btn.disabled = false;
+  btn.textContent = '✅ הורד!';
+  setTimeout(() => { btn.textContent = '⬇️ הורידי ' + name; }, 2000);
+}
+</script>
 </body>
 </html>
