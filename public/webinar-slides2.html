@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>נתיב — הכסף החכם שלי | וובינר היכרות</title>
+<title>נתיב — הכסף החכם שלך | וובינר היכרות</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;900&display=swap');
 
@@ -13,7 +13,6 @@
     --dark: #081f18;
     --mid: #0d3326;
     --green: #1D9E75;
-    --green2: #16c489;
     --gold: #EF9F27;
     --gold2: #FAC775;
     --white: #FDFAF5;
@@ -29,6 +28,79 @@
     direction: rtl;
   }
 
+  /* ── HEADER ── */
+  .header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 54px;
+    background: rgba(8,31,24,0.95);
+    border-bottom: 1px solid rgba(239,159,39,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    z-index: 200;
+    backdrop-filter: blur(8px);
+  }
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .header-logo .logo-text {
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--white);
+    letter-spacing: 2px;
+  }
+  .header-logo .logo-sub {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--gold2);
+    letter-spacing: 1px;
+  }
+  .header-logo .gold-dot { color: var(--gold); }
+  .header-sharon {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .header-sharon img {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--green);
+  }
+  .header-sharon .hs-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--white);
+  }
+  .header-sharon .hs-title {
+    font-size: 11px;
+    color: var(--dim);
+  }
+
+  /* ── DOTS ── */
+  .dots {
+    position: fixed;
+    top: 64px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 100;
+  }
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(253,250,245,0.2);
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .dot.active { background: var(--gold); }
+
+  /* ── DECK ── */
   .deck {
     width: 100%;
     height: 100vh;
@@ -42,12 +114,13 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 48px 80px;
+    padding: 80px 72px 90px;
     text-align: center;
     background: linear-gradient(150deg, var(--dark) 0%, #0a2a1f 55%, var(--mid) 100%);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.5s ease;
+    overflow: hidden;
   }
   .slide.active {
     opacity: 1;
@@ -57,21 +130,24 @@
   /* ── NAV ── */
   .nav {
     position: fixed;
-    bottom: 32px;
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: 0; left: 0; right: 0;
+    height: 62px;
+    background: rgba(8,31,24,0.95);
+    border-top: 1px solid rgba(29,158,117,0.15);
     display: flex;
-    gap: 16px;
     align-items: center;
-    z-index: 100;
+    justify-content: center;
+    gap: 20px;
+    z-index: 200;
+    backdrop-filter: blur(8px);
   }
   .nav button {
-    background: rgba(29,158,117,0.18);
+    background: rgba(29,158,117,0.15);
     border: 1px solid var(--green);
     color: var(--white);
     font-family: 'Heebo', sans-serif;
     font-size: 15px;
-    padding: 10px 28px;
+    padding: 9px 28px;
     border-radius: 50px;
     cursor: pointer;
     transition: background 0.2s;
@@ -85,399 +161,446 @@
     text-align: center;
   }
 
-  /* ── DOTS ── */
-  .dots {
-    position: fixed;
-    top: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 8px;
-    z-index: 100;
-  }
-  .dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: rgba(253,250,245,0.25);
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-  .dot.active { background: var(--gold); }
-
-  /* ── LOGO ── */
-  .logo-corner {
-    position: fixed;
-    top: 18px;
-    right: 32px;
-    font-size: 22px;
-    font-weight: 900;
-    color: var(--white);
-    letter-spacing: 2px;
-    z-index: 100;
-  }
-  .logo-corner span { color: var(--gold); }
-
   /* ── TYPOGRAPHY ── */
   .tag {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
     letter-spacing: 3px;
     color: var(--green);
     text-transform: uppercase;
-    margin-bottom: 20px;
+    margin-bottom: 14px;
   }
-  h1 { font-size: clamp(42px,6vw,80px); font-weight: 900; line-height: 1.1; }
-  h2 { font-size: clamp(32px,4.5vw,58px); font-weight: 900; line-height: 1.2; }
-  h3 { font-size: clamp(22px,3vw,36px); font-weight: 700; }
-  .sub { font-size: clamp(16px,2vw,24px); color: var(--dim); font-weight: 300; line-height: 1.7; }
+  h1 { font-size: clamp(36px,5vw,72px); font-weight: 900; line-height: 1.1; }
+  h2 { font-size: clamp(26px,3.8vw,50px); font-weight: 900; line-height: 1.2; }
+  .sub { font-size: clamp(14px,1.6vw,20px); color: var(--dim); font-weight: 300; line-height: 1.7; }
   .gold { color: var(--gold); }
   .green { color: var(--green); }
-  .white { color: var(--white); }
 
   .divider {
-    width: 120px; height: 3px;
+    width: 100px; height: 3px;
     background: linear-gradient(to left, var(--gold), var(--gold2));
     border-radius: 2px;
-    margin: 22px auto;
+    margin: 14px auto;
+    flex-shrink: 0;
   }
 
-  /* ── SLIDE 1: שרון ── */
+  /* ── PHOTO CIRCLE ── */
+  .photo-circle {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--green);
+    flex-shrink: 0;
+  }
+  .photo-circle.gold-border { border-color: var(--gold); }
+  .photo-sm {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--green);
+    flex-shrink: 0;
+  }
+
+  /* ── SLIDE 1 ── */
+  .s1-hero {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    margin: 16px 0;
+    justify-content: center;
+  }
+  .s1-photo-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .s1-photo-block .ph-name { font-size: 15px; font-weight: 700; }
+  .s1-photo-block .ph-sub { font-size: 12px; color: var(--dim); }
+  .s1-vs { font-size: 22px; color: var(--gold); font-weight: 300; }
+
   .s1-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
     width: 100%;
-    max-width: 960px;
-    margin-top: 24px;
+    max-width: 860px;
     text-align: right;
   }
   .card {
     background: rgba(29,158,117,0.08);
     border: 1px solid rgba(29,158,117,0.2);
-    border-radius: 16px;
-    padding: 28px 24px;
+    border-radius: 14px;
+    padding: 20px 18px;
   }
-  .card .num {
-    font-size: 42px; font-weight: 900; color: var(--gold);
-    line-height: 1;
-  }
-  .card .label { font-size: 16px; color: var(--dim); margin-top: 6px; line-height: 1.5; }
+  .card .num { font-size: 36px; font-weight: 900; color: var(--gold); line-height: 1; }
+  .card .label { font-size: 13px; color: var(--dim); margin-top: 6px; line-height: 1.5; }
 
-  /* ── SLIDE 2: השקעה ── */
+  /* ── SLIDE 2 ── */
   .invest-compare {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
+    gap: 14px;
     width: 100%;
-    max-width: 1000px;
-    margin-top: 24px;
-    direction: rtl;
+    max-width: 960px;
+    margin-top: 16px;
   }
   .invest-col {
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 16px;
-    padding: 20px 14px;
+    border-radius: 14px;
+    padding: 18px 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     position: relative;
   }
-  .invest-col.highlight {
-    border-color: var(--gold);
-    background: rgba(239,159,39,0.07);
-  }
+  .invest-col.highlight { border-color: var(--gold); background: rgba(239,159,39,0.07); }
   .invest-col .badge {
-    position: absolute;
-    top: -12px;
-    background: var(--gold);
-    color: var(--dark);
-    font-size: 11px;
-    font-weight: 800;
-    padding: 3px 12px;
-    border-radius: 20px;
+    position: absolute; top: -11px;
+    background: var(--gold); color: var(--dark);
+    font-size: 10px; font-weight: 800;
+    padding: 2px 10px; border-radius: 20px;
   }
-  .invest-col .idx-name { font-size: 15px; font-weight: 700; color: var(--white); }
+  .invest-col .idx-name { font-size: 14px; font-weight: 700; }
   .invest-col .bar-wrap {
     width: 100%;
-    background: rgba(255,255,255,0.06);
-    border-radius: 8px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 6px;
     overflow: hidden;
-    height: 120px;
+    height: 110px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     position: relative;
   }
-  .invest-col .bar-invested {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    background: rgba(253,250,245,0.18);
-    border-radius: 0 0 8px 8px;
-  }
-  .invest-col .bar-profit {
-    border-radius: 8px 8px 0 0;
-  }
-  .invest-col .total { font-size: 22px; font-weight: 900; }
-  .invest-col .invested-lbl { font-size: 12px; color: var(--dim); }
-  .invest-col .profit-lbl { font-size: 13px; font-weight: 700; }
+  .invest-col .bar-invested { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(253,250,245,0.15); border-radius: 0 0 6px 6px; }
+  .invest-col .bar-profit { border-radius: 6px 6px 0 0; }
+  .invest-col .total { font-size: 20px; font-weight: 900; }
+  .invest-col .invested-lbl { font-size: 11px; color: var(--dim); }
+  .invest-col .profit-lbl { font-size: 12px; font-weight: 700; }
 
-  .invest-note {
-    font-size: 14px;
-    color: var(--dim);
-    margin-top: 16px;
-    text-align: center;
-  }
-
-  /* ── SLIDE 3: גרף 20 שנה ── */
+  /* ── SLIDE 3: REAL GRAPH ── */
   .chart-wrap {
     width: 100%;
-    max-width: 820px;
-    margin: 20px auto 0;
+    max-width: 860px;
+    margin: 12px auto 0;
     background: rgba(0,0,0,0.2);
     border-radius: 16px;
-    padding: 24px;
-    border: 1px solid rgba(255,255,255,0.08);
+    padding: 20px 20px 10px;
+    border: 1px solid rgba(255,255,255,0.07);
   }
   .legend-row {
     display: flex;
     justify-content: center;
-    gap: 28px;
-    margin-bottom: 16px;
+    gap: 24px;
+    margin-bottom: 12px;
     flex-wrap: wrap;
   }
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    color: var(--dim);
-  }
-  .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .legend-item { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--dim); }
+  .legend-dot { width: 11px; height: 11px; border-radius: 50%; }
+
   .returns-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    max-width: 820px;
-    margin-top: 20px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    max-width: 860px;
+    margin-top: 14px;
+    width: 100%;
   }
   .return-box {
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 12px;
-    padding: 18px;
+    border-radius: 10px;
+    padding: 14px;
     text-align: center;
   }
-  .return-box .r-name { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
-  .return-box .r-val { font-size: 28px; font-weight: 900; }
-  .return-box .r-note { font-size: 12px; color: var(--dim); margin-top: 4px; }
-  .real-note {
-    font-size: 14px;
-    color: var(--dim);
-    margin-top: 18px;
-    line-height: 1.7;
-    max-width: 700px;
-  }
+  .return-box .r-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .return-box .r-val { font-size: 24px; font-weight: 900; }
+  .return-box .r-note { font-size: 11px; color: var(--dim); margin-top: 3px; line-height: 1.4; }
 
-  /* ── SLIDE 4: עדן ── */
+  /* ── SLIDE 4 ── */
   .eden-flow {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
-    gap: 20px;
-    margin-top: 24px;
-    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 16px;
+    width: 100%;
+    max-width: 860px;
   }
   .eden-box {
-    background: rgba(29,158,117,0.1);
-    border: 1px solid rgba(29,158,117,0.3);
+    background: rgba(29,158,117,0.08);
+    border: 1px solid rgba(29,158,117,0.25);
     border-radius: 16px;
-    padding: 24px 20px;
-    width: 200px;
+    padding: 22px 18px;
+    flex: 1;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
   }
-  .eden-box .e-icon { font-size: 36px; margin-bottom: 10px; }
-  .eden-box .e-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
-  .eden-box .e-sub { font-size: 13px; color: var(--dim); line-height: 1.5; }
-  .arrow { font-size: 28px; color: var(--gold); }
+  .eden-box.gold-box { border-color: var(--gold); background: rgba(239,159,39,0.07); }
+  .eden-box .e-title { font-size: 17px; font-weight: 800; }
+  .eden-box .e-sub { font-size: 13px; color: var(--dim); line-height: 1.6; }
+  .arrow { font-size: 24px; color: var(--gold); display: flex; align-items: center; }
 
-  /* ── SLIDE 5: פורמט ── */
+  .s4-bullets {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 860px;
+    margin-top: 14px;
+    text-align: right;
+  }
+  .s4-bullet {
+    background: rgba(255,255,255,0.04);
+    border-right: 3px solid var(--green);
+    border-radius: 0 10px 10px 0;
+    padding: 12px 16px;
+    font-size: 14px;
+    color: var(--dim);
+    line-height: 1.5;
+  }
+  .s4-bullet strong { color: var(--white); }
+
+  /* ── SLIDE 5 ── */
   .format-list {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
     width: 100%;
-    max-width: 760px;
-    margin-top: 20px;
+    max-width: 780px;
+    margin-top: 14px;
     text-align: right;
   }
   .format-item {
     background: rgba(255,255,255,0.04);
     border-right: 3px solid var(--green);
     border-radius: 0 12px 12px 0;
-    padding: 16px 20px;
+    padding: 14px 18px;
     display: flex;
     align-items: flex-start;
-    gap: 14px;
+    gap: 12px;
   }
-  .format-item .fi-icon { font-size: 22px; min-width: 30px; }
-  .format-item .fi-text .fi-title { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
-  .format-item .fi-text .fi-sub { font-size: 14px; color: var(--dim); line-height: 1.5; }
+  .format-item .fi-icon { font-size: 20px; min-width: 28px; }
+  .format-item .fi-text .fi-title { font-size: 16px; font-weight: 700; margin-bottom: 3px; }
+  .format-item .fi-text .fi-sub { font-size: 13px; color: var(--dim); line-height: 1.5; }
 
   .roadmap {
     display: flex;
-    gap: 12px;
-    margin-top: 20px;
+    gap: 10px;
+    margin-top: 14px;
     flex-wrap: wrap;
     justify-content: center;
   }
   .road-pill {
-    background: rgba(29,158,117,0.12);
-    border: 1px solid rgba(29,158,117,0.25);
     border-radius: 50px;
-    padding: 8px 18px;
-    font-size: 14px;
+    padding: 7px 16px;
+    font-size: 13px;
     font-weight: 500;
+    border: 1px solid;
   }
   .road-pill.now { border-color: var(--green); color: var(--green); }
   .road-pill.soon { border-color: var(--gold); color: var(--gold2); }
 
-  /* ── SLIDE 6: מחיר ── */
+  .s5-eden-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 12px;
+    background: rgba(239,159,39,0.06);
+    border: 1px solid rgba(239,159,39,0.2);
+    border-radius: 14px;
+    padding: 14px 20px;
+    width: 100%;
+    max-width: 780px;
+  }
+  .s5-eden-row img {
+    width: 54px; height: 54px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--gold);
+    flex-shrink: 0;
+  }
+  .s5-eden-row .er-text { text-align: right; }
+  .s5-eden-row .er-text .et-title { font-size: 16px; font-weight: 800; color: var(--gold); }
+  .s5-eden-row .er-text .et-sub { font-size: 13px; color: var(--dim); line-height: 1.5; }
+
+  /* ── SLIDE 6 ── */
   .price-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    max-width: 880px;
+    gap: 18px;
+    max-width: 860px;
     width: 100%;
-    margin-top: 20px;
+    margin-top: 14px;
   }
   .price-card {
     background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 18px;
-    padding: 28px 24px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 22px 20px;
     text-align: right;
   }
-  .price-card.featured {
-    border-color: var(--gold);
-    background: rgba(239,159,39,0.06);
-  }
-  .price-card .pc-tag { font-size: 12px; font-weight: 700; letter-spacing: 2px; color: var(--green); margin-bottom: 12px; }
-  .price-card .pc-name { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
-  .price-card .pc-price { font-size: 44px; font-weight: 900; color: var(--gold); line-height: 1; }
-  .price-card .pc-period { font-size: 14px; color: var(--dim); }
-  .price-card ul { margin-top: 16px; list-style: none; display: flex; flex-direction: column; gap: 8px; }
-  .price-card ul li { font-size: 14px; color: var(--dim); display: flex; gap: 8px; align-items: flex-start; }
-  .price-card ul li::before { content: "✦"; color: var(--green); font-size: 11px; margin-top: 3px; flex-shrink: 0; }
+  .price-card.featured { border-color: var(--gold); background: rgba(239,159,39,0.06); }
+  .price-card .pc-tag { font-size: 11px; font-weight: 700; letter-spacing: 2px; color: var(--green); margin-bottom: 10px; }
+  .price-card .pc-name { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+  .price-card .pc-price { font-size: 48px; font-weight: 900; color: var(--gold); line-height: 1; }
+  .price-card .pc-period { font-size: 13px; color: var(--dim); margin-top: 3px; }
+  .price-card ul { margin-top: 14px; list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .price-card ul li { font-size: 13px; color: var(--dim); display: flex; gap: 8px; align-items: flex-start; line-height: 1.4; }
+  .price-card ul li::before { content: "✦"; color: var(--green); font-size: 10px; margin-top: 3px; flex-shrink: 0; }
 
   .broker-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    max-width: 880px;
+    gap: 14px;
+    max-width: 860px;
     width: 100%;
-    margin-top: 16px;
+    margin-top: 12px;
   }
   .broker-box {
     background: rgba(29,158,117,0.07);
-    border: 1px solid rgba(29,158,117,0.2);
-    border-radius: 14px;
-    padding: 18px 20px;
+    border: 1px solid rgba(29,158,117,0.18);
+    border-radius: 12px;
+    padding: 16px 18px;
     text-align: right;
   }
-  .broker-box .b-name { font-size: 17px; font-weight: 800; margin-bottom: 8px; }
-  .broker-box .b-detail { font-size: 13px; color: var(--dim); line-height: 1.6; }
-  .broker-box .b-min { font-size: 15px; font-weight: 700; color: var(--gold); margin-top: 6px; }
+  .broker-box .b-name { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
+  .broker-box .b-detail { font-size: 12px; color: var(--dim); line-height: 1.5; }
+  .broker-box .b-min { font-size: 14px; font-weight: 700; color: var(--gold); margin-top: 6px; }
 
-  /* ── SLIDE 7: CTA ── */
+  /* ── SLIDE 7 ── */
   .cta-steps {
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    max-width: 680px;
+    gap: 12px;
+    max-width: 700px;
     width: 100%;
-    margin-top: 20px;
+    margin-top: 14px;
     text-align: right;
   }
   .cta-step {
     display: flex;
     align-items: flex-start;
-    gap: 16px;
+    gap: 14px;
     background: rgba(255,255,255,0.04);
-    border-radius: 14px;
-    padding: 16px 20px;
+    border-radius: 12px;
+    padding: 14px 18px;
   }
   .cta-step .step-num {
-    width: 36px; height: 36px;
+    width: 32px; height: 32px;
     border-radius: 50%;
     background: var(--green);
     color: var(--dark);
     font-weight: 900;
-    font-size: 16px;
+    font-size: 15px;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
-  .cta-step .step-text .st-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .cta-step .step-text .st-title { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
   .cta-step .step-text .st-sub { font-size: 13px; color: var(--dim); line-height: 1.5; }
 
-  .cta-big {
-    margin-top: 28px;
-    font-size: 32px;
-    font-weight: 900;
-    color: var(--gold);
-    letter-spacing: 1px;
+  .cta-photos {
+    display: flex;
+    gap: 20px;
+    margin-top: 18px;
+    align-items: center;
+    justify-content: center;
   }
+  .cta-photo-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .cta-photo-item img {
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .cta-photo-item img.sharon-img { border: 3px solid var(--green); }
+  .cta-photo-item img.eden-img { border: 3px solid var(--gold); }
+  .cta-photo-item .cp-name { font-size: 13px; font-weight: 700; }
+  .cta-photo-item .cp-sub { font-size: 11px; color: var(--dim); }
 
-  /* ── SVG chart ── */
-  svg text { font-family: 'Heebo', Arial, sans-serif; direction: rtl; }
+  svg text { font-family: 'Heebo', Arial, sans-serif; }
 </style>
 </head>
 <body>
 
-<div class="logo-corner">נתיב <span>✦</span></div>
+<!-- ── HEADER ── -->
+<div class="header">
+  <div class="header-logo">
+    <div>
+      <div class="logo-text">נתיב <span class="gold-dot">✦</span></div>
+      <div class="logo-sub">הכסף החכם שלך</div>
+    </div>
+  </div>
+  <div class="header-sharon">
+    <div style="text-align:right">
+      <div class="hs-name">שרון חכמון</div>
+      <div class="hs-title">מומחית פיננסית · 25+ שנה</div>
+    </div>
+    <img src="sharon.jpeg" alt="שרון חכמון">
+  </div>
+</div>
 
 <div class="dots" id="dots"></div>
 
 <div class="deck" id="deck">
 
-  <!-- ───────────────────────── SLIDE 1: שרון ─────────────────────────── -->
+  <!-- ═══════════════════ SLIDE 1: שרון ═══════════════════ -->
   <div class="slide active" id="s1">
-    <div class="tag">קצת עליי</div>
-    <h2>שרון חקמון — <span class="gold">25 שנה</span> בעולם הפיננסי</h2>
+    <div class="tag">ברוכות הבאות</div>
+    <h2>שרון חכמון — <span class="gold">הנגשת ידע פיננסי</span><br>מקצועי, ברור ואמין</h2>
     <div class="divider"></div>
+
+    <div class="s1-hero">
+      <div class="s1-photo-block">
+        <img src="sharon.jpeg" class="photo-circle" alt="שרון חכמון">
+        <div class="ph-name">שרון חכמון</div>
+        <div class="ph-sub">מומחית פיננסית</div>
+      </div>
+      <div class="s1-vs" style="font-size:32px">+</div>
+      <div class="s1-photo-block">
+        <img src="eden.png" class="photo-circle gold-border" alt="עדן AI">
+        <div class="ph-name gold">עדן</div>
+        <div class="ph-sub">מלווה AI אישית</div>
+      </div>
+    </div>
+
     <div class="s1-grid">
       <div class="card">
         <div class="num">25+</div>
-        <div class="label">שנות ניסיון במוסדות פיננסיים —<br>בנקים, בתי השקעות, ביטוח</div>
+        <div class="label">שנות ניסיון בבנקים, בתי השקעות וחברות ביטוח</div>
       </div>
       <div class="card">
         <div class="num" style="color:var(--green)">1:1</div>
-        <div class="label">ליווי אישי עם נשים —<br>הנגשת ידע לקבלת החלטות מיטיבות</div>
+        <div class="label">ליווי אישי עם נשים — הנגשת ידע לקבלת החלטות מיטיבות</div>
       </div>
       <div class="card" style="border-color:rgba(239,159,39,0.3)">
-        <div class="num" style="color:var(--gold2)">עדן</div>
-        <div class="label">יצרתי כדי להגיע לכמה שיותר נשים — כי ידע פיננסי שייך לכולן</div>
-      </div>
-      <div class="card" style="border-color:rgba(239,159,39,0.3)">
-        <div class="num" style="color:var(--gold2); font-size:32px; padding-top:4px">♾</div>
-        <div class="label">החזון: קהילת נשים שמתחברת לעולם הפיננסי — כל אחת בקצב שלה</div>
+        <div class="num" style="color:var(--gold2); font-size:26px; padding-top:4px">החזון</div>
+        <div class="label">קהילת נשים גדולה — כל אחת מתחברת לעולם הפיננסי בקצב שלה</div>
       </div>
     </div>
-    <p class="sub" style="margin-top:28px; max-width:700px">
-      הידע שהיה שמור עד היום בחדרי ישיבות וייעוץ אחד-על-אחד —<br>
-      <strong style="color:var(--white)">עכשיו נגיש לכל אישה, בזמן שלה, במקום אחד.</strong>
+
+    <p class="sub" style="margin-top:16px; max-width:720px; font-size:15px">
+      ידע פיננסי מקצועי ואמין — <strong style="color:var(--white)">נגיש לכל אישה, בזמן שלה, במקום אחד.</strong>
     </p>
   </div>
 
-  <!-- ───────────────────────── SLIDE 2: השקעה ─────────────────────────── -->
+  <!-- ═══════════════════ SLIDE 2: השקעה ═══════════════════ -->
   <div class="slide" id="s2">
     <div class="tag">כוח הזמן בשוק ההון</div>
     <h2>מה היה קורה אם השקענו לפני <span class="gold">10 שנים</span>?</h2>
-    <p class="sub" style="margin-top:6px">25,000 ₪ פתיחה + 300 ₪ לחודש · 10 שנים · סה"כ הפקדות: <strong style="color:var(--white)">61,000 ₪</strong></p>
+    <p class="sub" style="margin-top:4px; font-size:14px">25,000 ₪ פתיחה + 300 ₪/חודש · 10 שנים · סה"כ הפקדות: <strong style="color:var(--white)">61,000 ₪</strong></p>
 
     <div class="invest-compare">
-      <!-- NASDAQ -->
       <div class="invest-col highlight">
         <div class="badge">הכי גבוה</div>
         <div class="idx-name">נאסד"ק 100</div>
@@ -489,8 +612,6 @@
         <div class="profit-lbl gold">+ 154,000 ₪ רווח</div>
         <div class="invested-lbl">תשואה ממוצעת ~17%/שנה</div>
       </div>
-
-      <!-- S&P 500 -->
       <div class="invest-col">
         <div class="idx-name">S&P 500</div>
         <div class="bar-wrap">
@@ -501,8 +622,6 @@
         <div class="profit-lbl green">+ 84,000 ₪ רווח</div>
         <div class="invested-lbl">תשואה ממוצעת ~12%/שנה</div>
       </div>
-
-      <!-- TA-35 -->
       <div class="invest-col">
         <div class="idx-name">מדד ת"א 35</div>
         <div class="bar-wrap">
@@ -513,110 +632,137 @@
         <div class="profit-lbl" style="color:#8dd4ff">+ 39,000 ₪ רווח</div>
         <div class="invested-lbl">תשואה ממוצעת ~7%/שנה</div>
       </div>
-
-      <!-- פקדון -->
       <div class="invest-col">
         <div class="idx-name">פקדון בנק 4%</div>
         <div class="bar-wrap">
           <div class="bar-invested" style="height:75%"></div>
-          <div class="bar-profit" style="height:25%; background:linear-gradient(to top,rgba(253,250,245,0.4),rgba(253,250,245,0.6))"></div>
+          <div class="bar-profit" style="height:25%; background:linear-gradient(to top,rgba(253,250,245,0.35),rgba(253,250,245,0.5))"></div>
         </div>
         <div class="total" style="color:var(--dim)">~81,000 ₪</div>
         <div class="profit-lbl" style="color:var(--dim)">+ 20,000 ₪ רווח</div>
-        <div class="invested-lbl">ריבית שנתית 4%</div>
+        <div class="invested-lbl">ריבית 4%/שנה</div>
       </div>
     </div>
 
-    <p class="invest-note">
-      ◾ אפור = סה"כ הפקדות (61,000 ₪) &nbsp;|&nbsp; צבע = רווח נוסף<br>
-      החישוב מבוסס על תשואות היסטוריות — אינו מהווה הבטחת תשואה עתידית
+    <p style="font-size:12px; color:var(--dim); margin-top:10px; text-align:center">
+      אפור = סה"כ הפקדות | צבע = רווח נוסף · החישוב מבוסס על תשואות היסטוריות, אינו מהווה הבטחת תשואה
     </p>
   </div>
 
-  <!-- ───────────────────────── SLIDE 3: גרף 20 שנה ─────────────────────────── -->
+  <!-- ═══════════════════ SLIDE 3: גרף 20 שנה ═══════════════════ -->
   <div class="slide" id="s3">
-    <div class="tag">תשואה לאורך זמן</div>
-    <h2>20 שנה של שוק ההון — <span class="gold">הירידות והעליות</span></h2>
+    <div class="tag">ביצועי המדדים — נתונים אמיתיים</div>
+    <h2>20 שנה בשוק ההון — <span class="gold">ירידות, עליות, ותמונה גדולה</span></h2>
 
     <div class="chart-wrap">
       <div class="legend-row">
-        <div class="legend-item"><div class="legend-dot" style="background:#EF9F27"></div> נאסד"ק</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#EF9F27"></div> נאסד"ק 100</div>
         <div class="legend-item"><div class="legend-dot" style="background:#1D9E75"></div> S&P 500</div>
         <div class="legend-item"><div class="legend-dot" style="background:#5bbffc"></div> ת"א 35</div>
-        <div class="legend-item"><div class="legend-dot" style="background:rgba(253,250,245,0.4); border:1px solid rgba(253,250,245,0.3)"></div> פקדון 4%</div>
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(253,250,245,0.4); border:1px solid rgba(253,250,245,0.3); border-radius:50%"></div> פקדון 4%</div>
       </div>
-      <!-- SVG Chart — simulated 20-year growth -->
-      <svg viewBox="0 0 780 220" width="100%" height="auto">
+
+      <!-- SVG — Real historical performance, normalized to 100 at Jan 2004 -->
+      <!-- Sources: approximate annual closing values -->
+      <svg viewBox="0 0 800 210" width="100%" height="auto">
         <!-- Grid lines -->
-        <line x1="0" y1="55" x2="780" y2="55" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <line x1="0" y1="110" x2="780" y2="110" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <line x1="0" y1="165" x2="780" y2="165" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+        <line x1="30" y1="10" x2="30" y2="185" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+        <line x1="30" y1="185" x2="795" y2="185" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+        <line x1="30" y1="60" x2="795" y2="60" stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="3,4"/>
+        <line x1="30" y1="110" x2="795" y2="110" stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="3,4"/>
+        <line x1="30" y1="160" x2="795" y2="160" stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="3,4"/>
 
-        <!-- Year labels -->
-        <text x="0" y="215" fill="rgba(253,250,245,0.4)" font-size="11">2004</text>
-        <text x="185" y="215" fill="rgba(253,250,245,0.4)" font-size="11">2009</text>
-        <text x="375" y="215" fill="rgba(253,250,245,0.4)" font-size="11">2014</text>
-        <text x="565" y="215" fill="rgba(253,250,245,0.4)" font-size="11">2019</text>
-        <text x="740" y="215" fill="rgba(253,250,245,0.4)" font-size="11">2024</text>
+        <!-- Y axis labels (normalized: 100=start) -->
+        <text x="2" y="14" fill="rgba(253,250,245,0.45)" font-size="9">×11</text>
+        <text x="2" y="63" fill="rgba(253,250,245,0.35)" font-size="9">×7</text>
+        <text x="2" y="113" fill="rgba(253,250,245,0.35)" font-size="9">×4</text>
+        <text x="2" y="163" fill="rgba(253,250,245,0.35)" font-size="9">×2</text>
+        <text x="2" y="188" fill="rgba(253,250,245,0.35)" font-size="9">×1</text>
 
-        <!-- Deposit 4% — smooth -->
-        <polyline points="0,190 195,168 390,148 585,130 780,114"
-          fill="none" stroke="rgba(253,250,245,0.35)" stroke-width="2" stroke-dasharray="5,4"/>
+        <!-- Year labels: 2004–2024 (21 points, step=37.25px from x=30) -->
+        <text x="25" y="200" fill="rgba(253,250,245,0.35)" font-size="9">2004</text>
+        <text x="135" y="200" fill="rgba(253,250,245,0.35)" font-size="9">2007</text>
+        <text x="248" y="200" fill="rgba(253,250,245,0.35)" font-size="9">2010</text>
+        <text x="360" y="200" fill="rgba(253,250,245,0.35)" font-size="9">2013</text>
+        <text x="473" y="200" fill="rgba(253,250,245,0.35)" font-size="9">2016</text>
+        <text x="585" y="200" fill="rgba(253,250,245,0.35)" font-size="9">2019</text>
+        <text x="698" y="200" fill="rgba(253,250,245,0.35)" font-size="9">2022</text>
+        <text x="768" y="200" fill="rgba(253,250,245,0.35)" font-size="9">2024</text>
 
-        <!-- TA-35 — moderate with dip -->
-        <polyline points="0,190 80,180 120,195 195,170 260,160 330,150 390,140 450,130 510,145 560,120 620,108 700,100 780,95"
+        <!-- Crisis markers -->
+        <line x1="104" y1="10" x2="104" y2="185" stroke="rgba(255,90,90,0.2)" stroke-width="1" stroke-dasharray="2,3"/>
+        <text x="66" y="22" fill="rgba(255,120,120,0.6)" font-size="8">משבר 2008</text>
+        <line x1="549" y1="10" x2="549" y2="185" stroke="rgba(255,90,90,0.2)" stroke-width="1" stroke-dasharray="2,3"/>
+        <text x="522" y="22" fill="rgba(255,120,120,0.6)" font-size="8">קורונה</text>
+        <line x1="660" y1="10" x2="660" y2="185" stroke="rgba(255,90,90,0.2)" stroke-width="1" stroke-dasharray="2,3"/>
+        <text x="636" y="22" fill="rgba(255,120,120,0.6)" font-size="8">2022</text>
+
+        <!--
+          Normalized to 100 at 2004. Scale: y = 185 - (val/1100 * 175)
+          x positions: 30 + i*37.25 for i=0..20
+
+          NASDAQ 100 actual approx normalized (2004=100):
+          2004:100 2005:102 2006:111 2007:122 2008:74 2009:110 2010:130
+          2011:126 2012:148 2013:212 2014:240 2015:255 2016:278 2017:380
+          2018:362 2019:506 2020:740 2021:980 2022:658 2023:920 2024:1100
+        -->
+        <!-- Deposit 4% (smooth) -->
+        <polyline
+          points="30,185 67,183 105,181 142,179 179,177 216,175 254,172 291,170 328,167 365,165 403,162 440,159 477,156 514,153 552,150 589,147 626,144 663,140 700,137 738,133 775,130"
+          fill="none" stroke="rgba(253,250,245,0.38)" stroke-width="1.8" stroke-dasharray="5,4"/>
+
+        <!-- TA-35 -->
+        <polyline
+          points="30,185 67,176 105,167 142,160 179,172 216,161 254,150 291,155 328,152 365,145 403,141 440,140 477,137 514,130 552,134 589,126 626,130 663,119 700,121 738,114 775,111"
           fill="none" stroke="#5bbffc" stroke-width="2"/>
 
-        <!-- S&P 500 — strong growth, 2008/2020 dips -->
-        <polyline points="0,190 80,182 120,200 195,165 270,148 330,130 390,115 440,108 500,118 550,88 620,70 700,55 780,40"
+        <!-- S&P 500 -->
+        <polyline
+          points="30,185 67,182 105,177 142,172 179,182 216,170 254,161 291,160 328,154 365,139 403,131 440,130 477,122 514,107 552,116 589,96 626,82 663,57 700,71 738,52 775,40"
           fill="none" stroke="#1D9E75" stroke-width="2.5"/>
 
-        <!-- NASDAQ — volatile but highest -->
-        <polyline points="0,190 70,175 120,205 195,160 260,135 320,112 390,90 420,80 480,100 530,78 590,55 670,32 740,18 780,10"
+        <!-- NASDAQ 100 -->
+        <polyline
+          points="30,185 67,183 105,178 142,170 179,182 216,167 254,158 291,159 328,151 365,128 403,118 440,114 477,107 514,82 552,88 589,58 626,18 663,34 700,78 738,23 775,10"
           fill="none" stroke="#EF9F27" stroke-width="3"/>
 
-        <!-- 2008 crisis marker -->
-        <line x1="117" y1="10" x2="117" y2="205" stroke="rgba(255,100,100,0.25)" stroke-width="1" stroke-dasharray="3,3"/>
-        <text x="92" y="20" fill="rgba(255,120,120,0.7)" font-size="10">2008</text>
-
-        <!-- 2020 covid marker -->
-        <line x1="497" y1="10" x2="497" y2="205" stroke="rgba(255,100,100,0.25)" stroke-width="1" stroke-dasharray="3,3"/>
-        <text x="472" y="20" fill="rgba(255,120,120,0.7)" font-size="10">2020</text>
-
-        <!-- Y labels -->
-        <text x="750" y="16" fill="#EF9F27" font-size="11" font-weight="700">×10</text>
-        <text x="750" y="46" fill="#1D9E75" font-size="11">×5</text>
-        <text x="750" y="96" fill="#5bbffc" font-size="11">×2.5</text>
-        <text x="750" y="116" fill="rgba(253,250,245,0.4)" font-size="11">×2</text>
+        <!-- End labels -->
+        <text x="778" y="13" fill="#EF9F27" font-size="10" font-weight="700">×11</text>
+        <text x="778" y="43" fill="#1D9E75" font-size="10">×5.5</text>
+        <text x="778" y="113" fill="#5bbffc" font-size="10">×2.5</text>
+        <text x="778" y="132" fill="rgba(253,250,245,0.4)" font-size="10">×2</text>
       </svg>
     </div>
 
     <div class="returns-grid">
       <div class="return-box">
         <div class="r-name gold">נאסד"ק 100</div>
-        <div class="r-val gold">~×10</div>
-        <div class="r-note">100,000 → ~1,000,000 ₪<br>תשואה ריאלית ~14%/שנה</div>
+        <div class="r-val gold">×11</div>
+        <div class="r-note">~17%/שנה נומינלי<br>~13.5% ריאלי</div>
       </div>
       <div class="return-box">
         <div class="r-name green">S&P 500</div>
-        <div class="r-val green">~×5</div>
-        <div class="r-note">100,000 → ~500,000 ₪<br>תשואה ריאלית ~9%/שנה</div>
+        <div class="r-val green">×5.5</div>
+        <div class="r-note">~11%/שנה נומינלי<br>~7.5% ריאלי</div>
+      </div>
+      <div class="return-box">
+        <div class="r-name" style="color:#8dd4ff">ת"א 35</div>
+        <div class="r-val" style="color:#8dd4ff">×2.5</div>
+        <div class="r-note">~5%/שנה נומינלי<br>~1.5% ריאלי</div>
       </div>
       <div class="return-box">
         <div class="r-name" style="color:var(--dim)">פקדון בנק</div>
-        <div class="r-val" style="color:var(--dim)">~×2</div>
-        <div class="r-note">100,000 → ~220,000 ₪<br>תשואה ריאלית ~0.5%/שנה</div>
+        <div class="r-val" style="color:var(--dim)">×2</div>
+        <div class="r-note">~4%/שנה נומינלי<br>~0.5% ריאלי</div>
       </div>
     </div>
 
-    <p class="real-note">
-      <strong style="color:var(--gold)">תשואה ריאלית</strong> = תשואה נומינלית פחות אינפלציה (~3.5%/שנה) —
-      הפקדון בבנק בקושי שומר על ערך הכסף שלך.
-      <br>הירידות בדרך? זמניות. <strong style="color:var(--white)">ההשקעה לטווח הארוך — מנצחת.</strong>
+    <p style="font-size:12px; color:var(--dim); margin-top:10px; text-align:center">
+      <strong style="color:var(--gold)">ריאלי</strong> = אחרי הפחתת אינפלציה (~3.5%/שנה) · כל הירידות? זמניות. <strong style="color:var(--white)">בטווח הארוך — השוק ניצח.</strong>
     </p>
   </div>
 
-  <!-- ───────────────────────── SLIDE 4: עדן ─────────────────────────── -->
+  <!-- ═══════════════════ SLIDE 4: עדן ═══════════════════ -->
   <div class="slide" id="s4">
     <div class="tag">הכירי את עדן</div>
     <h2>הלמידה עם שרון — <span class="gold">ההפנמה עם עדן</span></h2>
@@ -624,47 +770,54 @@
 
     <div class="eden-flow">
       <div class="eden-box">
-        <div class="e-icon">👩‍🏫</div>
+        <img src="sharon.jpeg" class="photo-sm" alt="שרון">
         <div class="e-title">שרון</div>
-        <div class="e-sub">מפגשי לימוד קבוצתיים<br>כל שבועיים<br>ידע מקצועי ומרוכז</div>
+        <div class="e-sub">
+          מפגשי לימוד קבוצתיים<br>
+          <strong style="color:var(--white)">פעמיים בחודש בזום</strong><br>
+          העמקת ידע בכל מפגש<br>
+          בתחום אחר<br>
+          <span style="color:var(--gold); font-size:12px">● מוקלט — עדיף להצטרף בזמן אמת</span>
+        </div>
       </div>
       <div class="arrow">←</div>
-      <div class="eden-box" style="border-color:var(--gold); background:rgba(239,159,39,0.08)">
-        <div class="e-icon">✨</div>
+      <div class="eden-box gold-box">
+        <img src="eden.png" class="photo-sm gold-border" alt="עדן AI">
         <div class="e-title gold">עדן</div>
-        <div class="e-sub">מלווה AI אישית<br>זמינה 24/7<br>תרגול, שאלות, העמקה</div>
+        <div class="e-sub">
+          מלווה AI אישית<br>
+          <strong style="color:var(--white)">זמינה 24/7</strong><br>
+          תרגול, שאלות, העמקה<br>
+          בשפה שלך, בלי שיפוט
+        </div>
       </div>
       <div class="arrow">←</div>
       <div class="eden-box">
-        <div class="e-icon">🌱</div>
+        <div style="font-size:36px">🌱</div>
         <div class="e-title">את</div>
-        <div class="e-sub">מפנימה את הידע<br>מיישמת על הכסף שלך<br>בקצב שלך</div>
-      </div>
-    </div>
-
-    <div class="format-list" style="margin-top:24px">
-      <div class="format-item">
-        <div class="fi-icon">💬</div>
-        <div class="fi-text">
-          <div class="fi-title">במקום לקרוא מצגות בפסיביות —</div>
-          <div class="fi-sub">עדן מאפשרת אינטראקציה אמיתית. שואלים, מתרגלים, מקבלים תשובות מותאמות אישית.</div>
-        </div>
-      </div>
-      <div class="format-item">
-        <div class="fi-icon">🔒</div>
-        <div class="fi-text">
-          <div class="fi-title">בלי שיפוט. בלי שאלות "טיפשות".</div>
-          <div class="fi-sub">מקום בטוח לשאול הכל — בשפה שלך, בזמן שמתאים לך.</div>
+        <div class="e-sub">
+          מפנימה את הידע<br>
+          מיישמת על הכסף שלך<br>
+          <strong style="color:var(--white)">בקצב שלך</strong>
         </div>
       </div>
     </div>
 
-    <p class="sub" style="margin-top:20px; font-size:16px">
-      [ <strong style="color:var(--green)">כאן — הפסקה קצרה להדגמה חיה של עדן</strong> ]
+    <div class="s4-bullets">
+      <div class="s4-bullet">
+        💬 <strong>במקום לקרוא מצגות בפסיביות</strong> — עדן מאפשרת אינטראקציה אמיתית. שואלות, מתרגלות, מקבלות תשובות מותאמות אישית.
+      </div>
+      <div class="s4-bullet">
+        🔒 <strong>בלי שאלות "טיפשות".</strong> בלי שיפוט. בלי לחץ. — מקום בטוח לשאול הכל, בכל שעה.
+      </div>
+    </div>
+
+    <p class="sub" style="margin-top:12px; font-size:14px">
+      [ <strong style="color:var(--green)">עצירה קצרה — הדגמה חיה של עדן</strong> ]
     </p>
   </div>
 
-  <!-- ───────────────────────── SLIDE 5: פורמט ─────────────────────────── -->
+  <!-- ═══════════════════ SLIDE 5: פורמט ═══════════════════ -->
   <div class="slide" id="s5">
     <div class="tag">הפורמט והמסלול</div>
     <h2>קהילה שגדלה <span class="gold">ביחד</span></h2>
@@ -674,23 +827,24 @@
       <div class="format-item">
         <div class="fi-icon">📅</div>
         <div class="fi-text">
-          <div class="fi-title">מפגש ידע כל שבועיים עם שרון</div>
-          <div class="fi-sub">לימוד מרוכז, שאלות ותשובות, דוגמאות מהשוק האמיתי</div>
+          <div class="fi-title">מפגש ידע פעמיים בחודש עם שרון</div>
+          <div class="fi-sub">בזום · העמקה בתחום אחר בכל מפגש · מוקלט, אך עדיף להשתתף בזמן אמת</div>
         </div>
       </div>
       <div class="format-item">
-        <div class="fi-icon">✨</div>
+        <div class="fi-icon">📲</div>
         <div class="fi-text">
-          <div class="fi-title">גישה אישית לעדן — 24/7</div>
-          <div class="fi-sub">תרגול, העמקה, יישום על הכסף שלך — בכל שאלה, בכל שעה</div>
+          <div class="fi-title">קהילה בווטסאפ — נתיב: הכסף החכם שלי</div>
+          <div class="fi-sub">תמיכה הדדית, עדכונים מהשוק, שאלות · קישור הצטרפות ישלח בקבוצה</div>
         </div>
       </div>
-      <div class="format-item">
-        <div class="fi-icon">👭</div>
-        <div class="fi-text">
-          <div class="fi-title">קהילה — נתיב: הכסף החכם שלי</div>
-          <div class="fi-sub">קבוצת ווטסאפ + פייסבוק לתמיכה הדדית, שאלות ועדכונים מהשוק</div>
-        </div>
+    </div>
+
+    <div class="s5-eden-row">
+      <img src="eden.png" alt="עדן AI">
+      <div class="er-text">
+        <div class="et-title">עדן — גישה אישית 24/7</div>
+        <div class="et-sub">כל ידע שנלמד ביחד נכנס לעדן ומחזק את הליווי האישי שלך. תרגול, שאלות, יישום — בכל שעה שנוח לך.</div>
       </div>
     </div>
 
@@ -700,12 +854,12 @@
       <div class="road-pill soon">◆ בהמשך: ניהול תקציב</div>
     </div>
 
-    <p class="sub" style="margin-top:18px; font-size:15px">
-      הקהילה גדלה ועדן מתעדכנת — <strong style="color:var(--white)">כל ידע חדש שנלמד ביחד נכנס לעדן ומחזק את הליווי האישי.</strong>
+    <p class="sub" style="margin-top:12px; font-size:13px">
+      <strong style="color:var(--white)">הקהילה גדלה — עדן מתעדכנת.</strong> כל תוכן חדש שנלמד ביחד נוסף לעדן ונגיש לכולן.
     </p>
   </div>
 
-  <!-- ───────────────────────── SLIDE 6: מחיר + הצטרפות ─────────────────────────── -->
+  <!-- ═══════════════════ SLIDE 6: מחיר ═══════════════════ -->
   <div class="slide" id="s6">
     <div class="tag">איך מצטרפות</div>
     <h2>השקעה קטנה. <span class="gold">תשואה גדולה.</span></h2>
@@ -717,87 +871,109 @@
         <div class="pc-price">50 ₪</div>
         <div class="pc-period">לחודש בלבד</div>
         <ul>
-          <li>מפגש ידע עם שרון כל שבועיים</li>
-          <li>גישה לעדן — מלווה AI אישית</li>
-          <li>קהילה תומכת בווטסאפ + פייסבוק</li>
+          <li>מפגש ידע פעמיים בחודש עם שרון</li>
+          <li>גישה אישית לעדן — מלווה AI 24/7</li>
+          <li>קהילת ווטסאפ תומכת</li>
           <li>כל תכנים חדשים שנוספים לעדן</li>
+          <li>המפגשים מוקלטים לצפייה בחזרה</li>
         </ul>
       </div>
       <div class="price-card">
         <div class="pc-tag">+ פתיחת תיק השקעות</div>
         <div class="pc-name">בית השקעות — חד פעמי</div>
-        <div class="pc-price" style="font-size:28px; padding-top:8px">בחרי את המסלול שלך</div>
-        <div class="pc-period" style="margin-top:6px">עמלות משמעותית זולות מהבנק</div>
+        <div style="font-size:15px; font-weight:700; color:var(--white); margin-top:6px">עמלות דומות בשני הבתים —<br>זולות משמעותית מהבנק</div>
         <ul style="margin-top:12px">
-          <li>IB (Interactive Brokers) — סף כניסה 15,000 ₪ + מתנה 300 ₪ מבית ההשקעות</li>
+          <li>IBI — סף כניסה 15,000 ₪ + מתנה 300 ₪</li>
           <li>מיטב — סף כניסה 5,000 ₪</li>
-          <li>עמלות דומות בשני הבתים</li>
+          <li>קישורי הצטרפות ישלחו בקבוצת הווטסאפ</li>
+          <li>שרון ועדן ילוו אתכן בפתיחת התיק</li>
         </ul>
       </div>
     </div>
 
     <div class="broker-row">
       <div class="broker-box">
-        <div class="b-name">🏦 Interactive Brokers (IB)</div>
-        <div class="b-detail">פלטפורמה בינלאומית מובילה<br>גישה לכל שוקי העולם</div>
-        <div class="b-min">סף כניסה: 15,000 ₪ · מתנה: 300 ₪</div>
+        <div class="b-name">🏦 IBI — בית השקעות</div>
+        <div class="b-detail">פלטפורמה ישראלית מובילה · גישה לשוקי העולם</div>
+        <div class="b-min">סף כניסה: 15,000 ₪ · מתנה: 300 ₪ מבית ההשקעות</div>
       </div>
       <div class="broker-box">
         <div class="b-name">🏦 מיטב</div>
-        <div class="b-detail">בית השקעות ישראלי מוביל<br>ממשק בעברית, תמיכה מקומית</div>
+        <div class="b-detail">בית השקעות ישראלי · ממשק בעברית, תמיכה מקומית</div>
         <div class="b-min">סף כניסה: 5,000 ₪</div>
       </div>
     </div>
 
-    <p class="sub" style="margin-top:14px; font-size:14px">
-      קישור להצטרפות לקהילה + קישורי פתיחת תיק ישלחו לקבוצת הווטסאפ מיד לאחר ההרשמה
+    <p style="font-size:12px; color:var(--dim); margin-top:10px; text-align:center">
+      קישורים מפורטים + הדרכה לפתיחת תיק ישלחו בקבוצת הווטסאפ לאחר ההצטרפות
     </p>
   </div>
 
-  <!-- ───────────────────────── SLIDE 7: CTA ─────────────────────────── -->
+  <!-- ═══════════════════ SLIDE 7: CTA ═══════════════════ -->
   <div class="slide" id="s7">
     <div class="tag">מוכנות להתחיל?</div>
-    <h1>ידע פיננסי <span class="gold">שייך לכל אישה</span></h1>
+    <h2 style="font-size:clamp(24px,3.5vw,46px)">ידע פיננסי <span class="gold">שייך לכל אישה</span></h2>
     <div class="divider"></div>
 
     <div class="cta-steps">
       <div class="cta-step">
         <div class="step-num">1</div>
         <div class="step-text">
-          <div class="st-title">שלחי תשלום של 50 ₪ לחודש</div>
-          <div class="st-sub">ביט / פייבוקס — [מספר טלפון של שרון]</div>
+          <div class="st-title">שלחי תשלום של 50 ₪/חודש</div>
+          <div class="st-sub">ביט או פייבוקס — הפרטים ישלחו אישית</div>
         </div>
       </div>
       <div class="cta-step">
         <div class="step-num">2</div>
         <div class="step-text">
-          <div class="st-title">הצטרפי לקהילה — "נתיב: הכסף החכם שלי"</div>
-          <div class="st-sub">קישור ישלח אחרי אישור התשלום</div>
+          <div class="st-title">קבלי קישור וסיסמא לעדן</div>
+          <div class="st-sub">ישלחו אישית לאחר אישור התשלום — ועדן זמינה לך מיד</div>
         </div>
       </div>
       <div class="cta-step">
         <div class="step-num">3</div>
         <div class="step-text">
-          <div class="st-title">פתחי תיק השקעות — IB או מיטב</div>
-          <div class="st-sub">קישורים + הוראות בקהילה, שרון ועדן ילוו אתכן בתהליך</div>
+          <div class="st-title">הצטרפי לקהילה — נתיב: הכסף החכם שלי</div>
+          <div class="st-sub">קישור ווטסאפ ישלח בקבוצה לכל המצטרפות</div>
         </div>
       </div>
       <div class="cta-step">
         <div class="step-num">4</div>
         <div class="step-text">
-          <div class="st-title">מתחילות ביחד — מפגש הפעלה ראשון בקרוב</div>
-          <div class="st-sub">ועדן זמינה לכן כבר עכשיו</div>
+          <div class="st-title">מפגש פעלה ראשון — 13 במאי 🎉</div>
+          <div class="st-sub">נתחיל ביחד · פתיחת תיק, הגדרות ראשוניות, שאלות ותשובות</div>
         </div>
       </div>
     </div>
 
-    <div class="cta-big">נתיב ✦ הכסף החכם שלי</div>
-    <p class="sub" style="margin-top:10px; font-size:16px">שרון · עדן · הקהילה שלכן</p>
+    <div class="cta-photos">
+      <div class="cta-photo-item">
+        <img src="sharon.jpeg" class="sharon-img" alt="שרון">
+        <div class="cp-name">שרון חכמון</div>
+        <div class="cp-sub">מומחית פיננסית</div>
+      </div>
+      <div style="font-size:28px; color:var(--gold)">+</div>
+      <div class="cta-photo-item">
+        <img src="eden.png" class="eden-img" alt="עדן">
+        <div class="cp-name gold">עדן</div>
+        <div class="cp-sub">מלווה AI אישית</div>
+      </div>
+      <div style="font-size:18px; color:var(--dim); padding: 0 8px">+</div>
+      <div class="cta-photo-item">
+        <div style="width:70px;height:70px;border-radius:50%;background:rgba(29,158,117,0.15);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;font-size:24px">👭</div>
+        <div class="cp-name green">הקהילה</div>
+        <div class="cp-sub">נתיב</div>
+      </div>
+    </div>
+
+    <p style="font-size:16px; font-weight:700; color:var(--gold); margin-top:12px; letter-spacing:1px">
+      נתיב ✦ הכסף החכם שלך
+    </p>
   </div>
 
 </div><!-- /deck -->
 
-<!-- NAV -->
+<!-- ── NAV ── -->
 <div class="nav">
   <button id="btn-prev" onclick="go(-1)" disabled>→ הקודם</button>
   <span class="counter" id="counter">1 / 7</span>
@@ -810,7 +986,6 @@
   const counter = document.getElementById('counter');
   let cur = 0;
 
-  // Build dots
   slides.forEach((_, i) => {
     const d = document.createElement('div');
     d.className = 'dot' + (i === 0 ? ' active' : '');
@@ -829,7 +1004,7 @@
     document.getElementById('btn-next').disabled = cur === slides.length - 1;
   }
 
-  function go(d) { goTo(cur + d); }
+  function go(d) { if (cur + d >= 0 && cur + d < slides.length) goTo(cur + d); }
 
   document.addEventListener('keydown', e => {
     if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') go(1);
