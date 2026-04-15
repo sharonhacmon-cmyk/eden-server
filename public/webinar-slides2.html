@@ -541,13 +541,14 @@
       <div class="logo-sub">הכסף החכם שלך</div>
     </div>
   </div>
-  <div class="header-sharon">
-    <div style="text-align:right">
-      <div class="hs-name">שרון חכמון</div>
-      <div class="hs-title">מומחית פיננסית · 25+ שנה</div>
-    </div>
-  </div>
+  <button onclick="toggleFS()" title="מסך מלא" style="background:rgba(29,158,117,0.15);border:1px solid var(--green);color:var(--white);font-size:18px;padding:6px 12px;border-radius:8px;cursor:pointer;" id="fs-btn">⛶</button>
 </div>
+<script>
+function toggleFS(){
+  if(!document.fullscreenElement){document.documentElement.requestFullscreen();document.getElementById('fs-btn').textContent='✕';}
+  else{document.exitFullscreen();document.getElementById('fs-btn').textContent='⛶';}
+}
+</script>
 
 <div class="dots" id="dots"></div>
 
@@ -717,8 +718,9 @@
         <polyline points="30,185 104,183 178,182 252,180 326,178 400,176 474,174 548,171 622,169 696,167 770,164"
           fill="none" stroke="rgba(253,250,245,0.38)" stroke-width="1.8" stroke-dasharray="5,4"/>
 
-        <!-- TA-35 -->
-        <polyline points="30,185 104,184 178,182 252,176 326,183 400,176 474,182 548,174 622,180 696,172 770,168"
+        <!-- TA-35: 2014=100,2015=107,2016=95,2017=111,2018=97,2019=118,2020=114,2021=130,2022=115,2023=135,2024=148 -->
+        <!-- y=185-((val-100)/400)*175 -->
+        <polyline points="30,185 104,182 178,188 252,181 326,186 400,179 474,180 548,172 622,179 696,170 770,165"
           fill="none" stroke="#5bbffc" stroke-width="2"/>
 
         <!-- S&P 500 -->
@@ -756,32 +758,32 @@
       <div class="return-box">
         <div class="r-name gold">נאסד"ק 100</div>
         <div class="r-val gold">×5</div>
-        <div class="r-note">~17%/שנה נומינלי<br>~13.5% ריאלי</div>
+        <div class="r-note">~17%/שנה נומינלי</div>
       </div>
       <div class="return-box">
         <div class="r-name green">S&P 500</div>
         <div class="r-val green">×3.1</div>
-        <div class="r-note">~12%/שנה נומינלי<br>~8.5% ריאלי</div>
+        <div class="r-note">~12%/שנה נומינלי</div>
       </div>
       <div class="return-box">
         <div class="r-name" style="color:#8dd4ff">ת"א 35</div>
-        <div class="r-val" style="color:#8dd4ff">×1.4</div>
-        <div class="r-note">~3.5%/שנה נומינלי<br>~0% ריאלי</div>
+        <div class="r-val" style="color:#8dd4ff">×1.5</div>
+        <div class="r-note">~4%/שנה נומינלי</div>
       </div>
       <div class="return-box">
         <div class="r-name" style="color:var(--dim)">פקדון בנק</div>
         <div class="r-val" style="color:var(--dim)">×1.5</div>
-        <div class="r-note">~4%/שנה נומינלי<br>~0.5% ריאלי</div>
+        <div class="r-note">~4%/שנה נומינלי</div>
       </div>
     </div>
 
     <p style="font-size:12px; color:var(--dim); margin-top:10px; text-align:center">
-      <strong style="color:var(--gold)">ריאלי</strong> = אחרי הפחתת אינפלציה (~3.5%/שנה) · כל הירידות? זמניות. <strong style="color:var(--white)">בטווח הארוך — השוק ניצח.</strong>
+      כל הירידות? זמניות. <strong style="color:var(--white)">בטווח הארוך — השוק ניצח.</strong>
     </p>
   </div>
 
   <!-- ═══════════════════ SLIDE 4: עדן ═══════════════════ -->
-  <div class="slide" id="s4">
+  <div class="slide" id="s4" style="justify-content:flex-start; padding-top:72px; overflow-y:auto;">
     <div class="tag">הכירי את עדן</div>
     <h2>הלמידה עם שרון — <span class="gold">ההפנמה עם עדן</span></h2>
     <div class="divider"></div>
@@ -882,8 +884,8 @@
     <div class="tag">איך מצטרפות</div>
     <h2>השקעה קטנה. <span class="gold">תשואה גדולה.</span></h2>
 
-    <div class="price-grid">
-      <div class="price-card featured">
+    <div style="max-width:600px; width:100%; margin-top:14px;">
+      <div class="price-card featured" style="text-align:right;">
         <div class="pc-tag">חברות בקהילה</div>
         <div class="pc-name">נתיב — הכסף החכם שלי</div>
         <div class="pc-price">50 ₪</div>
@@ -896,17 +898,6 @@
           <li>המפגשים מוקלטים ושמורים בקבוצה</li>
         </ul>
       </div>
-      <div class="price-card">
-        <div class="pc-tag">+ פתיחת תיק השקעות</div>
-        <div class="pc-name">בתי השקעות — חד פעמי</div>
-        <div style="font-size:15px; font-weight:700; color:var(--white); margin-top:6px">עמלות דומות בשני בתי ההשקעות —<br>זולות משמעותית מהבנק</div>
-        <ul style="margin-top:12px">
-          <li>IBI — סף כניסה 15,000 ₪ + מתנה 300 ₪</li>
-          <li>מיטב — סף כניסה 5,000 ₪</li>
-          <li>קישור הצטרפות ישלח בקבוצת הווטסאפ</li>
-          <li>שרון ועדן ילוו אתכן בפתיחת התיק</li>
-        </ul>
-      </div>
     </div>
 
     <p style="font-size:12px; color:var(--dim); margin-top:14px; text-align:center">
@@ -915,8 +906,8 @@
   </div>
 
   <!-- ═══════════════════ SLIDE 7: CTA ═══════════════════ -->
-  <div class="slide" id="s7">
-    <div class="tag" style="margin-top:8px">מוכנות להתחיל?</div>
+  <div class="slide" id="s7" style="justify-content:flex-start; padding-top:72px; overflow-y:auto;">
+    <div class="tag">מוכנות להתחיל?</div>
     <h2 style="font-size:clamp(22px,3.2vw,44px)">ידע פיננסי <span class="gold">חשוב לכל אישה</span></h2>
     <div class="divider"></div>
 
