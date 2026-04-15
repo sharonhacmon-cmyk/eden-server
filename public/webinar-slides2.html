@@ -623,13 +623,13 @@ function toggleFS(){
         <div class="invested-lbl">תשואה ממוצעת ~12%/שנה</div>
       </div>
       <div class="invest-col">
-        <div class="idx-name">מדד ת"א 35</div>
+        <div class="idx-name">מדד ת"א 125</div>
         <div class="bar-wrap">
-          <div class="bar-invested" style="height:61%"></div>
-          <div class="bar-profit" style="height:39%; background:linear-gradient(to top,#5bbffc,#8dd4ff)"></div>
+          <div class="bar-invested" style="height:55%"></div>
+          <div class="bar-profit" style="height:45%; background:linear-gradient(to top,#5bbffc,#8dd4ff)"></div>
         </div>
-        <div class="total" style="color:#8dd4ff">~100,000 ₪</div>
-        <div class="profit-lbl" style="color:#8dd4ff">+ 39,000 ₪ רווח</div>
+        <div class="total" style="color:#8dd4ff">~110,000 ₪</div>
+        <div class="profit-lbl" style="color:#8dd4ff">+ 49,000 ₪ רווח</div>
         <div class="invested-lbl">תשואה ממוצעת ~7%/שנה</div>
       </div>
       <div class="invest-col">
@@ -658,42 +658,36 @@ function toggleFS(){
       <div class="legend-row">
         <div class="legend-item"><div class="legend-dot" style="background:#EF9F27"></div> נאסד"ק 100</div>
         <div class="legend-item"><div class="legend-dot" style="background:#1D9E75"></div> S&P 500</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#5bbffc"></div> ת"א 35</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#5bbffc"></div> ת"א 125</div>
         <div class="legend-item"><div class="legend-dot" style="background:rgba(253,250,245,0.4); border:1px solid rgba(253,250,245,0.3); border-radius:50%"></div> פקדון 4%</div>
       </div>
 
       <!--
         SVG — 10 years: 2014–2024, normalized to 100 at end-2013
-        Scale: y = 185 - ((val-100)/400)*175   [100=baseline=185, 500=top=10]
+        Scale: y = 185 - ((val-100)/500)*175  [×1=185, ×2=150, ×3=115, ×4=80, ×5=45, ×5.5=28]
         x: 30 + i*74, i=0..10
 
-        Historical annual closing (approx, normalized):
+        Historical annual closing (approx, normalized 2014=100):
         Year:    2014  2015  2016  2017  2018  2019  2020  2021  2022  2023  2024
-        NASDAQ:  100   108   119   163   156   212   286   385   260   413   500
-        S&P500:  100   100   112   136   130   171   203   261   213   269   310
-        TA-35:   100   102   107   120   104   120   107   125   111   129   138
+        NASDAQ:  100   108   119   163   156   212   286   385   260   413   550
+        S&P500:  100   101   113   138   131   173   205   265   215   271   330
+        TA-125:  100   110   108   130   113   138   130   158   143   167   188
         Deposit: 100   104   108   112   117   121   126   131   136   141   148
-
-        y values (y = 185 - ((val-100)/400)*175):
-        NASDAQ:  185   182   177   157   160   136   104    60   115    48    10
-        S&P500:  185   185   180   169   172   154   140   115   136   111    93
-        TA-35:   185   184   182   176   183   176   182   174   180   172   168
-        Deposit: 185   183   182   180   178   176   174   171   169   167   164
       -->
       <svg viewBox="0 0 800 215" width="100%" height="auto">
         <!-- Axes -->
         <line x1="30" y1="10" x2="30" y2="187" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
         <line x1="30" y1="187" x2="795" y2="187" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-        <!-- Grid -->
-        <line x1="30" y1="54"  x2="795" y2="54"  stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="3,4"/>
-        <line x1="30" y1="98"  x2="795" y2="98"  stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="3,4"/>
-        <line x1="30" y1="142" x2="795" y2="142" stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="3,4"/>
+        <!-- Grid: ×2=150, ×3=115, ×4=80 -->
+        <line x1="30" y1="80"  x2="795" y2="80"  stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="3,4"/>
+        <line x1="30" y1="115" x2="795" y2="115" stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="3,4"/>
+        <line x1="30" y1="150" x2="795" y2="150" stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="3,4"/>
 
-        <!-- Y labels  (54→×4, 98→×3, 142→×2) -->
-        <text x="2" y="14"  fill="rgba(253,250,245,0.45)" font-size="9">×5</text>
-        <text x="2" y="57"  fill="rgba(253,250,245,0.35)" font-size="9">×4</text>
-        <text x="2" y="101" fill="rgba(253,250,245,0.35)" font-size="9">×3</text>
-        <text x="2" y="145" fill="rgba(253,250,245,0.35)" font-size="9">×2</text>
+        <!-- Y labels -->
+        <text x="2" y="14"  fill="rgba(253,250,245,0.45)" font-size="9">×5.5</text>
+        <text x="2" y="83"  fill="rgba(253,250,245,0.35)" font-size="9">×4</text>
+        <text x="2" y="118" fill="rgba(253,250,245,0.35)" font-size="9">×3</text>
+        <text x="2" y="153" fill="rgba(253,250,245,0.35)" font-size="9">×2</text>
         <text x="2" y="188" fill="rgba(253,250,245,0.35)" font-size="9">×1</text>
 
         <!-- X labels -->
@@ -709,48 +703,46 @@ function toggleFS(){
         <text x="687" y="205" fill="rgba(253,250,245,0.35)" font-size="9">2023</text>
         <text x="754" y="205" fill="rgba(253,250,245,0.35)" font-size="9">2024</text>
 
-        <!-- Crisis: COVID 2020 intra-year crash (then recovered by year-end) -->
+        <!-- Crisis lines -->
         <line x1="474" y1="10" x2="474" y2="187" stroke="rgba(255,80,80,0.22)" stroke-width="1" stroke-dasharray="2,3"/>
-        <!-- Crisis: 2022 correction -->
         <line x1="622" y1="10" x2="622" y2="187" stroke="rgba(255,80,80,0.22)" stroke-width="1" stroke-dasharray="2,3"/>
 
-        <!-- Deposit 4% -->
-        <polyline points="30,185 104,183 178,182 252,180 326,178 400,176 474,174 548,171 622,169 696,167 770,164"
+        <!-- Deposit 4%: y=185,184,182,181,179,178,176,175,173,171,169 -->
+        <polyline points="30,185 104,184 178,182 252,181 326,179 400,178 474,176 548,175 622,173 696,171 770,169"
           fill="none" stroke="rgba(253,250,245,0.38)" stroke-width="1.8" stroke-dasharray="5,4"/>
 
-        <!-- TA-35: 2014=100,2015=107,2016=95,2017=111,2018=97,2019=118,2020=114,2021=130,2022=115,2023=135,2024=148 -->
-        <!-- y=185-((val-100)/400)*175 -->
-        <polyline points="30,185 104,182 178,188 252,181 326,186 400,179 474,180 548,172 622,179 696,170 770,165"
+        <!-- TA-125: y=185,182,182,174,181,171,174,162,168,159,152 -->
+        <polyline points="30,185 104,182 178,182 252,174 326,181 400,171 474,174 548,162 622,168 696,159 770,152"
           fill="none" stroke="#5bbffc" stroke-width="2"/>
 
-        <!-- S&P 500 -->
-        <polyline points="30,185 104,185 178,180 252,169 326,172 400,154 474,140 548,115 622,136 696,111 770,93"
+        <!-- S&P 500: y=185,185,181,173,175,159,148,120,146,117,95 -->
+        <polyline points="30,185 104,185 178,181 252,173 326,175 400,159 474,148 548,120 622,146 696,117 770,95"
           fill="none" stroke="#1D9E75" stroke-width="2.5"/>
 
-        <!-- NASDAQ 100 -->
-        <polyline points="30,185 104,182 178,177 252,157 326,160 400,136 474,104 548,60 622,115 696,48 770,10"
+        <!-- NASDAQ 100: y=185,182,178,161,163,140,108,65,119,78,28 -->
+        <polyline points="30,185 104,182 178,178 252,161 326,163 400,140 474,108 548,65 622,119 696,78 770,28"
           fill="none" stroke="#EF9F27" stroke-width="3"/>
 
-        <!-- ── Loss annotations ── -->
-        <!-- 2018: NASDAQ -5%, S&P -5% — small dip label -->
-        <rect x="308" y="130" width="46" height="16" rx="3" fill="rgba(200,60,60,0.25)"/>
-        <text x="331" y="142" fill="rgba(255,150,150,0.9)" font-size="9" text-anchor="middle">נאסד"ק -5%</text>
+        <!-- ── Loss annotations — larger text ── -->
+        <!-- 2018: both indices down -->
+        <rect x="296" y="128" width="60" height="20" rx="3" fill="rgba(180,40,40,0.3)"/>
+        <text x="326" y="142" fill="rgba(255,160,160,0.95)" font-size="11" text-anchor="middle" font-weight="600">2018: -6%</text>
 
-        <!-- 2020: COVID — intra-year crash (end-of-year recovered) -->
-        <rect x="436" y="28" width="76" height="28" rx="4" fill="rgba(8,31,24,0.7)" stroke="rgba(255,80,80,0.35)" stroke-width="1"/>
-        <text x="474" y="40" fill="rgba(255,140,140,0.9)" font-size="8" text-anchor="middle" font-weight="700">קורונה — מרץ 2020</text>
-        <text x="474" y="51" fill="rgba(255,150,150,0.8)" font-size="8" text-anchor="middle">נאסד"ק -27% · S&P -34%</text>
+        <!-- 2020: COVID crash -->
+        <rect x="420" y="22" width="108" height="36" rx="4" fill="rgba(8,31,24,0.82)" stroke="rgba(255,80,80,0.4)" stroke-width="1.2"/>
+        <text x="474" y="36" fill="rgba(255,150,150,0.95)" font-size="11" text-anchor="middle" font-weight="700">קורונה מרץ 2020</text>
+        <text x="474" y="51" fill="rgba(255,170,170,0.85)" font-size="11" text-anchor="middle">נאסד"ק ‑27% · S&amp;P ‑34%</text>
 
-        <!-- 2022: NASDAQ -33%, S&P -19% — annual end -->
-        <rect x="584" y="28" width="76" height="28" rx="4" fill="rgba(8,31,24,0.7)" stroke="rgba(255,80,80,0.35)" stroke-width="1"/>
-        <text x="622" y="40" fill="rgba(255,140,140,0.9)" font-size="8" text-anchor="middle" font-weight="700">תיקון 2022</text>
-        <text x="622" y="51" fill="rgba(255,150,150,0.8)" font-size="8" text-anchor="middle">נאסד"ק -33% · S&P -19%</text>
+        <!-- 2022 correction -->
+        <rect x="566" y="22" width="112" height="36" rx="4" fill="rgba(8,31,24,0.82)" stroke="rgba(255,80,80,0.4)" stroke-width="1.2"/>
+        <text x="622" y="36" fill="rgba(255,150,150,0.95)" font-size="11" text-anchor="middle" font-weight="700">תיקון 2022</text>
+        <text x="622" y="51" fill="rgba(255,170,170,0.85)" font-size="11" text-anchor="middle">נאסד"ק ‑33% · S&amp;P ‑19%</text>
 
         <!-- End labels -->
-        <text x="773" y="13"  fill="#EF9F27" font-size="10" font-weight="700">×5</text>
-        <text x="773" y="96"  fill="#1D9E75" font-size="10">×3.1</text>
-        <text x="773" y="170" fill="#5bbffc"  font-size="10">×1.4</text>
-        <text x="773" y="166" fill="rgba(253,250,245,0.4)" font-size="10">×1.5</text>
+        <text x="773" y="31"  fill="#EF9F27" font-size="11" font-weight="700">×5.5</text>
+        <text x="773" y="98"  fill="#1D9E75" font-size="11">×3.3</text>
+        <text x="773" y="154" fill="#5bbffc"  font-size="11">×1.9</text>
+        <text x="773" y="171" fill="rgba(253,250,245,0.4)" font-size="10">×1.5</text>
       </svg>
     </div>
 
@@ -766,9 +758,9 @@ function toggleFS(){
         <div class="r-note">~12%/שנה נומינלי</div>
       </div>
       <div class="return-box">
-        <div class="r-name" style="color:#8dd4ff">ת"א 35</div>
-        <div class="r-val" style="color:#8dd4ff">×1.5</div>
-        <div class="r-note">~4%/שנה נומינלי</div>
+        <div class="r-name" style="color:#8dd4ff">ת"א 125</div>
+        <div class="r-val" style="color:#8dd4ff">×1.9</div>
+        <div class="r-note">~7%/שנה נומינלי</div>
       </div>
       <div class="return-box">
         <div class="r-name" style="color:var(--dim)">פקדון בנק</div>
@@ -884,7 +876,7 @@ function toggleFS(){
     <div class="tag">איך מצטרפות</div>
     <h2>השקעה קטנה. <span class="gold">תשואה גדולה.</span></h2>
 
-    <div style="max-width:600px; width:100%; margin-top:14px;">
+    <div class="price-grid" style="margin-top:14px;">
       <div class="price-card featured" style="text-align:right;">
         <div class="pc-tag">חברות בקהילה</div>
         <div class="pc-name">נתיב — הכסף החכם שלי</div>
@@ -898,11 +890,28 @@ function toggleFS(){
           <li>המפגשים מוקלטים ושמורים בקבוצה</li>
         </ul>
       </div>
+      <div class="price-card" style="text-align:right;">
+        <div class="pc-tag">+ פתיחת תיק השקעות</div>
+        <div class="pc-name" style="font-size:16px">בחרי את בית ההשקעות שמתאים לך</div>
+        <p style="font-size:13px; color:rgba(239,159,39,0.85); margin-top:8px; font-weight:600">✦ עמלות זולות משמעותית מהבנק</p>
+        <ul style="margin-top:10px;">
+          <li>
+            <div>
+              <strong style="color:var(--white)">IBI — בית השקעות</strong><br>
+              <span style="font-size:12px;">סף כניסה: 15,000 ₪ · מתנה: 300 ₪</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <strong style="color:var(--white)">מיטב — בית השקעות</strong><br>
+              <span style="font-size:12px;">סף כניסה: 5,000 ₪ · ממשק בעברית</span>
+            </div>
+          </li>
+          <li>קישורים + הדרכה ישלחו בקבוצת הווטסאפ</li>
+          <li>שרון ועדן ילוו אתכן בפתיחת התיק</li>
+        </ul>
+      </div>
     </div>
-
-    <p style="font-size:12px; color:var(--dim); margin-top:14px; text-align:center">
-      קישורים מפורטים + הדרכה לפתיחת תיק ישלחו בקבוצת הווטסאפ לאחר ההצטרפות
-    </p>
   </div>
 
   <!-- ═══════════════════ SLIDE 7: CTA ═══════════════════ -->
