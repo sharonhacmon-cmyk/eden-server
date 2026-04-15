@@ -554,11 +554,12 @@
     <!-- טופס הרשמה -->
     <div class="reg-form" id="reg-form">
       <input type="text" id="reg-name" placeholder="שם פרטי" autocomplete="off">
-      <input type="tel" id="reg-phone" placeholder="מספר טלפון" autocomplete="off">
-      <button onclick="submitReg()" class="btn-cta" style="border:none;cursor:pointer;width:100%;margin:0">
+      <input type="email" id="reg-email" placeholder="כתובת אימייל" autocomplete="off">
+      <input type="tel" id="reg-phone" placeholder="מספר נייד" autocomplete="off">
+      <button type="button" onclick="submitReg()" class="btn-cta" style="border:none;cursor:pointer;width:100%;margin:0">
         כן, אני מצטרפת! ✦
       </button>
-      <div class="cta-note">חינמי לחלוטין · תקבלי לינק לוובינר בוואטסאפ</div>
+      <div class="cta-note">חינמי לחלוטין · תקבלי לינק לוובינר</div>
     </div>
     <!-- הודעת הצלחה -->
     <div class="reg-success" id="reg-success">
@@ -595,17 +596,16 @@
 <!-- ── PAIN SECTION ── -->
 <section class="pain-section">
   <div class="pain-inner">
-    <h2>אם את מרגישה אחת מהאלה — הוובינר הזה בשבילך:</h2>
+    <h2>כל שנה שעוברת בלי לפעול — עולה לך כסף אמיתי</h2>
     <ul class="pain-list">
-      <li><span class="check">😔</span> ישבת מול בנקאי או יועץ ואמרת "כן כן" — בלי שהבנת כלום</li>
-      <li><span class="check">💸</span> הכסף נכנס ויוצא כל חודש, ולא ברור לאן הלך</li>
-      <li><span class="check">🌙</span> יש לילות שאת לא ישנה מדאגה — "האם יהיה מספיק?"</li>
-      <li><span class="check">🤷‍♀️</span> אמרת לעצמך "אני אסתדר" — כבר כמה שנים</li>
+      <li><span class="check">⏳</span> אמרת "אני אתחיל להשקיע כשאבין יותר" — וזה כבר שנים</li>
+      <li><span class="check">📉</span> בינתיים כולן מסביב כבר משקיעות, והכסף שלהן עובד — שלך עומד במקום</li>
+      <li><span class="check">🙈</span> כל פעם שעולה נושא של השקעות את מחליפה נושא — כי זה מרגיש מורכב מדי</li>
+      <li><span class="check">💸</span> הדחיינות הזו לא חינמית — ריבית דריבית עובדת לטובתך רק אם מתחילות</li>
     </ul>
     <div class="pain-answer">
-      את לא צריכה להיות מומחית.
-      את צריכה ידע שמדבר אלייך — בשפה שלך, בקצב שלך.
-      זה בדיוק מה שנעשה בוובינר הזה.
+      הבעיה היא לא שאת לא רוצה — הבעיה היא שאף אחד לא הסביר לך את זה בשפה שלך.
+      בוובינר הזה זה משתנה.
     </div>
   </div>
 </section>
@@ -721,10 +721,11 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyk3BWoEUv7NOKrKfum3
 
 function submitReg() {
   const name  = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
   const phone = document.getElementById('reg-phone').value.trim();
 
   if (!name || !phone) {
-    alert('אנא מלאי שם ומספר טלפון');
+    alert('אנא מלאי שם ומספר נייד');
     return;
   }
 
@@ -733,7 +734,7 @@ function submitReg() {
     method: 'POST',
     mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, phone })
+    body: JSON.stringify({ name, email, phone })
   }).catch(() => {});
 
   // הצגת הצלחה
