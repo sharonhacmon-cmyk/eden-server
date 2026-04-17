@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ריילס — פקדון ב-4%</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: #111;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .hint {
+    color: #5DCAA5;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .label {
+    color: #666;
+    font-size: 13px;
+    text-align: center;
+  }
+
+  .slide {
+    width: 405px;
+    height: 720px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 48px 36px;
+  }
+
+  .dark-bg {
+    background: linear-gradient(160deg, #062e24 0%, #085041 55%, #0d6b57 100%);
+  }
+  .dark-bg::before {
+    content: '';
+    position: absolute;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: #1D9E75;
+    opacity: 0.07;
+    top: -200px; left: -200px;
+  }
+  .dark-bg::after {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: #EF9F27;
+    opacity: 0.06;
+    bottom: -150px; right: -150px;
+  }
+
+  .cream-bg { background: #FDFAF5; }
+
+  .brand {
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.25);
+    z-index: 2;
+  }
+  .brand-dark { color: #ccc; }
+
+  /* שקף 1 — הוק */
+  .s1 .tag {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #5DCAA5;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 2;
+  }
+  .s1 h1 {
+    font-size: 44px;
+    font-weight: 900;
+    color: white;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 2;
+  }
+  .s1 h1 span { color: #EF9F27; }
+  .s1 .sub {
+    font-size: 19px;
+    color: rgba(255,255,255,0.6);
+    font-weight: 300;
+    line-height: 1.6;
+    position: relative;
+    z-index: 2;
+  }
+  .s1 .arrow {
+    font-size: 32px;
+    margin-top: 20px;
+    position: relative;
+    z-index: 2;
+    animation: bounce 1.5s ease infinite;
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+
+  /* שקף 2 — הפתעה */
+  .s2 .title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #085041;
+    margin-bottom: 28px;
+  }
+  .s2 .calc-box {
+    width: 100%;
+    background: white;
+    border-radius: 20px;
+    padding: 24px 28px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+  }
+  .s2 .calc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 17px;
+  }
+  .s2 .calc-row:last-child { border-bottom: none; }
+  .s2 .calc-label { color: #666; font-weight: 400; }
+  .s2 .calc-val { font-weight: 700; color: #085041; }
+  .s2 .calc-val.red { color: #e05c5c; }
+  .s2 .calc-val.gold { color: #EF9F27; font-size: 20px; }
+  .s2 .punchline {
+    font-size: 17px;
+    color: #555;
+    line-height: 1.6;
+  }
+  .s2 .punchline strong { color: #085041; font-weight: 700; }
+
+  /* שקף 3 — השוואה */
+  .s3 .tag {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #5DCAA5;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 2;
+  }
+  .s3 .compare {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 2;
+  }
+  .s3 .compare-box {
+    flex: 1;
+    border-radius: 16px;
+    padding: 20px 16px;
+    text-align: center;
+  }
+  .s3 .compare-box.left {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+  .s3 .compare-box.right {
+    background: rgba(239,159,39,0.15);
+    border: 1px solid rgba(239,159,39,0.4);
+  }
+  .s3 .compare-label {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+  }
+  .s3 .compare-box.left .compare-label { color: rgba(255,255,255,0.5); }
+  .s3 .compare-box.right .compare-label { color: #FAC775; }
+  .s3 .compare-num {
+    font-size: 36px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .s3 .compare-box.left .compare-num { color: rgba(255,255,255,0.6); }
+  .s3 .compare-box.right .compare-num { color: #EF9F27; }
+  .s3 .compare-sub {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .s3 .compare-box.left .compare-sub { color: rgba(255,255,255,0.4); }
+  .s3 .compare-box.right .compare-sub { color: rgba(239,159,39,0.7); }
+  .s3 p {
+    font-size: 17px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.6;
+    position: relative;
+    z-index: 2;
+    font-weight: 300;
+  }
+  .s3 p strong { color: white; font-weight: 700; }
+
+  /* שקף 4 — מפנה */
+  .s4 .big-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+  }
+  .s4 h2 {
+    font-size: 32px;
+    font-weight: 900;
+    color: #085041;
+    line-height: 1.3;
+    margin-bottom: 20px;
+  }
+  .s4 .divider {
+    width: 48px; height: 3px;
+    background: #EF9F27;
+    border-radius: 2px;
+    margin: 0 auto 20px;
+  }
+  .s4 p {
+    font-size: 19px;
+    color: #555;
+    line-height: 1.8;
+    font-weight: 300;
+  }
+  .s4 p strong { color: #085041; font-weight: 700; }
+
+  /* שקף 5 — CTA */
+  .s5 .tag {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #5DCAA5;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 2;
+  }
+  .s5 h2 {
+    font-size: 38px;
+    font-weight: 900;
+    color: white;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 2;
+  }
+  .s5 h2 span { color: #EF9F27; }
+  .s5 .date-box {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 16px;
+    padding: 16px 28px;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 2;
+  }
+  .s5 .date-box p {
+    font-size: 17px;
+    color: white;
+    font-weight: 600;
+    line-height: 1.7;
+  }
+  .s5 .date-box p span { color: #FAC775; }
+  .s5 .cta-pill {
+    background: #EF9F27;
+    color: #062e24;
+    font-size: 20px;
+    font-weight: 900;
+    padding: 16px 36px;
+    border-radius: 50px;
+    position: relative;
+    z-index: 2;
+    display: inline-block;
+  }
+  .s5 .bio-note {
+    font-size: 13px;
+    color: rgba(255,255,255,0.35);
+    margin-top: 14px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .download-btn {
+    background: #1D9E75;
+    color: white;
+    border: none;
+    font-family: 'Heebo', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 30px;
+    cursor: pointer;
+    width: 220px;
+    text-align: center;
+    transition: background 0.2s;
+  }
+  .download-btn:hover { background: #085041; }
+  .download-btn:disabled { background: #555; cursor: default; }
+</style>
+</head>
+<body>
+
+<div class="hint">📱 ריילס — פקדון ב-4% | 5 שקפים להורדה</div>
+
+<!-- שקף 1 -->
+<div class="label">שקף 1 — הוק</div>
+<div class="slide dark-bg s1" id="r1">
+  <div class="tag">רגע לפני שממשיכה לגלול</div>
+  <h1>סגרת פקדון<br>ב-<span>4%</span>?<br>כל הכבוד —<br>עשית משהו.</h1>
+  <p class="sub">אבל יש משהו שאולי<br>לא סיפרו לך...</p>
+  <div class="arrow">👇</div>
+  <div class="brand">NATIV · עדן</div>
+</div>
+<button class="download-btn" onclick="downloadSlide('r1','ריילס-1-הוק')">⬇️ הורידי שקף 1</button>
+
+<!-- שקף 2 -->
+<div class="label">שקף 2 — הפתעה</div>
+<div class="slide cream-bg s2" id="r2">
+  <div class="title">בוא נעשה חשבון פשוט 🧮</div>
+  <div class="calc-box">
+    <div class="calc-row">
+      <span class="calc-label">הפקדון שלך הרוויח</span>
+      <span class="calc-val">4%</span>
+    </div>
+    <div class="calc-row">
+      <span class="calc-label">המחירים עלו השנה</span>
+      <span class="calc-val red">3.5%</span>
+    </div>
+    <div class="calc-row">
+      <span class="calc-label">מה שנשאר לך בפועל</span>
+      <span class="calc-val gold">0.5% 😬</span>
+    </div>
+  </div>
+  <p class="punchline">על 10,000 ₪ —<br><strong>זה 50 ₪ לשנה.</strong><br>פחות מקפה בשבוע.</p>
+  <div class="brand brand-dark">NATIV · עדן</div>
+</div>
+<button class="download-btn" onclick="downloadSlide('r2','ריילס-2-חשבון')">⬇️ הורידי שקף 2</button>
+
+<!-- שקף 3 -->
+<div class="label">שקף 3 — השוואה</div>
+<div class="slide dark-bg s3" id="r3">
+  <div class="tag">אותו כסף — תוצאה שונה</div>
+  <div class="compare">
+    <div class="compare-box left">
+      <div class="compare-label">פקדון</div>
+      <div class="compare-num">+4%</div>
+      <div class="compare-sub">אחרי אינפלציה<br>נשאר ~0.5%</div>
+    </div>
+    <div class="compare-box right">
+      <div class="compare-label">מדד פשוט</div>
+      <div class="compare-num">~8%</div>
+      <div class="compare-sub">ממוצע היסטורי<br>לטווח ארוך</div>
+    </div>
+  </div>
+  <p><strong>אותו כסף.</strong> פחות פחד.<br>יותר תשואה — עם הידע הנכון.</p>
+  <div class="brand">NATIV · עדן</div>
+</div>
+<button class="download-btn" onclick="downloadSlide('r3','ריילס-3-השוואה')">⬇️ הורידי שקף 3</button>
+
+<!-- שקף 4 -->
+<div class="label">שקף 4 — מפנה</div>
+<div class="slide cream-bg s4" id="r4">
+  <div class="big-icon">💚</div>
+  <h2>זה לא בגלל<br>שעשית משהו רע</h2>
+  <div class="divider"></div>
+  <p>זה בגלל שאף אחד<br>לא הסביר לך<br><strong>מה האפשרויות האחרות.</strong><br><br>זה ניתן ללמידה —<br><strong>בשפה שלך, בקצב שלך.</strong></p>
+  <div class="brand brand-dark">NATIV · עדן</div>
+</div>
+<button class="download-btn" onclick="downloadSlide('r4','ריילס-4-מפנה')">⬇️ הורידי שקף 4</button>
+
+<!-- שקף 5 -->
+<div class="label">שקף 5 — CTA</div>
+<div class="slide dark-bg s5" id="r5">
+  <div class="tag">וובינר חינמי</div>
+  <h2>בוא נדבר על<br><span>מה שבאמת<br>עובד</span> 🌿</h2>
+  <div class="date-box">
+    <p>📅 <span>28 באפריל · 19:30</span></p>
+    <p>בלי מילות קסם · בשפה שלך</p>
+    <p>שעה אחת · חינמי לחלוטין</p>
+  </div>
+  <div class="cta-pill">הלינק בביו 👆</div>
+  <p class="bio-note">eden-server-73ms.onrender.com/webinar.html</p>
+  <div class="brand">NATIV · עדן</div>
+</div>
+<button class="download-btn" onclick="downloadSlide('r5','ריילס-5-CTA')">⬇️ הורידי שקף 5</button>
+
+<script>
+async function downloadSlide(id, name) {
+  const btn = event.currentTarget;
+  btn.disabled = true;
+  btn.textContent = '⏳ מכינה...';
+
+  const el = document.getElementById(id);
+  const canvas = await html2canvas(el, {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: null,
+    width: el.offsetWidth,
+    height: el.offsetHeight
+  });
+
+  const link = document.createElement('a');
+  link.download = name + '.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+
+  btn.textContent = '✅ הורד!';
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.textContent = '⬇️ הורידי ' + name;
+  }, 2000);
+}
+</script>
+</body>
+</html>
