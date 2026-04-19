@@ -221,6 +221,32 @@ body { font-family:'Heebo',sans-serif; background:var(--cream); color:var(--dark
   font-style:italic;
 }
 
+.screens-gallery {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(380px,1fr));
+  gap:24px;
+  margin-bottom:16px;
+}
+.screen-item {
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 4px 24px rgba(0,0,0,0.1);
+  border:1px solid rgba(0,0,0,0.06);
+  background:white;
+}
+.screen-label {
+  background:var(--green-dark);
+  color:white;
+  font-size:13px;
+  font-weight:600;
+  padding:10px 16px;
+}
+.screen-item img {
+  width:100%;
+  display:block;
+  object-fit:cover;
+}
+
 /* ── PROCESS SECTION ── */
 .process { background:white;padding:80px 24px; }
 .process-inner { max-width:860px;margin:0 auto; }
@@ -262,6 +288,7 @@ body { font-family:'Heebo',sans-serif; background:var(--cream); color:var(--dark
   font-size:80px;flex-shrink:0;
   border:4px solid rgba(239,159,39,0.4);
   box-shadow:0 12px 40px rgba(0,0,0,0.3);
+  overflow:hidden;
 }
 .sharon-text .section-tag { color:var(--green-light); }
 .sharon-text h2 { font-size:clamp(22px,3.5vw,34px);font-weight:900;color:white;margin-bottom:16px; }
@@ -444,7 +471,35 @@ footer strong { color:rgba(255,255,255,0.7); }
     <h2>שיחה אמיתית עם עדן</h2>
     <p class="demo-lead">עדן לא מלמדת — היא עוזרת לך להטמיע ולתרגל את מה שלמדת עם שרון. בלי שיפוט, בלי מילות קסם.</p>
 
-    <div class="chat-demo">
+    <div class="screens-gallery">
+      <div class="screen-item">
+        <div class="screen-label">התחלת התהליך — עדן מכירה אותך</div>
+        <img src="screenshots/התחלת תהליך.png" alt="התחלת תהליך">
+      </div>
+      <div class="screen-item">
+        <div class="screen-label">בחירת נושא להעמקה</div>
+        <img src="screenshots/נושא להעמקה.png" alt="נושא להעמקה">
+      </div>
+      <div class="screen-item">
+        <div class="screen-label">הסבר על קרן סל ETF</div>
+        <img src="screenshots/הסבר על מה זה ETF.png" alt="הסבר ETF">
+      </div>
+      <div class="screen-item">
+        <div class="screen-label">מחשבון ריבית דריבית אינטראקטיבי</div>
+        <img src="screenshots/מחשבון ריביתדריבית.png" alt="מחשבון ריבית דריבית">
+      </div>
+      <div class="screen-item">
+        <div class="screen-label">גרף — כמה הכסף שלך יכול לגדול</div>
+        <img src="screenshots/בדיקת הבנה בשוק ההון.png" alt="גרף צמיחה">
+      </div>
+      <div class="screen-item">
+        <div class="screen-label">בקשה ללמוד על נושא — תשובה מותאמת אישית</div>
+        <img src="screenshots/בקשה ללמוד על ETF.png" alt="לימוד ETF">
+      </div>
+    </div>
+    <p class="chat-note">* צילומי מסך אמיתיים מהתהליך עם עדן.</p>
+
+    <div class="chat-demo" style="display:none">
       <div class="chat-msg user">
         <div>
           <div class="chat-name">את</div>
@@ -516,7 +571,7 @@ footer strong { color:rgba(255,255,255,0.7); }
 <!-- SHARON -->
 <section class="sharon">
   <div class="sharon-inner">
-    <div class="sharon-avatar">🌿</div>
+    <div class="sharon-avatar"><img src="screenshots/sharon.jpeg" alt="שרון" style="width:100%;height:100%;object-fit:cover;border-radius:50%"></div>
     <div class="sharon-text">
       <div class="section-tag">מי מאחורי עדן</div>
       <h2>שרון — 25 שנה בעולם הפיננסים</h2>
