@@ -171,6 +171,7 @@ body { font-family:'Heebo',sans-serif; background:var(--cream); color:var(--dark
 }
 .unique-item:hover { background:rgba(255,255,255,0.08); }
 .unique-item .u-icon { font-size:28px;margin-bottom:14px;display:block; }
+.unique-item .u-photo { width:60px;height:60px;border-radius:50%;object-fit:cover;object-position:top center;margin-bottom:14px;display:block;border:2px solid rgba(255,255,255,0.2); }
 .unique-item h3 { font-size:17px;font-weight:700;color:white;margin-bottom:8px; }
 .unique-item p { font-size:14px;color:rgba(255,255,255,0.6);line-height:1.7; }
 
@@ -223,28 +224,41 @@ body { font-family:'Heebo',sans-serif; background:var(--cream); color:var(--dark
 
 .screens-gallery {
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(380px,1fr));
-  gap:24px;
+  grid-template-columns:repeat(auto-fit,minmax(480px,1fr));
+  gap:32px;
   margin-bottom:16px;
 }
+@media(max-width:540px){
+  .screens-gallery { grid-template-columns:1fr; }
+}
 .screen-item {
-  border-radius:16px;
+  border-radius:20px;
   overflow:hidden;
-  box-shadow:0 4px 24px rgba(0,0,0,0.1);
+  box-shadow:0 8px 40px rgba(0,0,0,0.13);
   border:1px solid rgba(0,0,0,0.06);
   background:white;
+  transition:transform 0.2s;
 }
+.screen-item:hover { transform:translateY(-4px); }
 .screen-label {
   background:var(--green-dark);
   color:white;
-  font-size:13px;
+  font-size:14px;
   font-weight:600;
-  padding:10px 16px;
+  padding:12px 18px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.screen-label::before {
+  content:'';
+  width:8px;height:8px;border-radius:50%;
+  background:var(--gold);flex-shrink:0;
 }
 .screen-item img {
   width:100%;
+  height:auto;
   display:block;
-  object-fit:cover;
 }
 
 /* ── PROCESS SECTION ── */
@@ -441,12 +455,12 @@ footer strong { color:rgba(255,255,255,0.7); }
     <p class="unique-lead">שרון בנתה שיטת לימוד שמשלבת מפגשים קבוצתיים עם מדריכה אישית שזמינה לך 24/7. לא קיים בשום מקום אחר.</p>
     <div class="unique-grid">
       <div class="unique-item">
-        <span class="u-icon">🌿</span>
+        <img src="screenshots/eden.png" alt="עדן" class="u-photo">
         <h3>עדן — 24/7 בשבילך</h3>
         <p>מדריכה פיננסית שמכירה את המתודולוגיה של שרון. שואלת, מסבירה, מתרגלת איתך — בלי שיפוט, בלי עמלות.</p>
       </div>
       <div class="unique-item">
-        <span class="u-icon">👩‍🏫</span>
+        <img src="screenshots/sharon.jpeg" alt="שרון" class="u-photo">
         <h3>שרון — 25 שנה ניסיון</h3>
         <p>לומדים יחד בקבוצה עם שרון. ידע אמיתי, שפה נגישה, קצב שמתאים לך.</p>
       </div>
@@ -571,7 +585,7 @@ footer strong { color:rgba(255,255,255,0.7); }
 <!-- SHARON -->
 <section class="sharon">
   <div class="sharon-inner">
-    <div class="sharon-avatar"><img src="screenshots/sharon.jpeg" alt="שרון" style="width:100%;height:100%;object-fit:cover;border-radius:50%"></div>
+    <div class="sharon-avatar"><img src="screenshots/sharon.jpeg" alt="שרון" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:50%"></div>
     <div class="sharon-text">
       <div class="section-tag">מי מאחורי עדן</div>
       <h2>שרון — 25 שנה בעולם הפיננסים</h2>
