@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>שקף כאב — שרון חכמון</title>
+<title>שקף כאב + פתרון — שרון חכמון</title>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
@@ -28,9 +28,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     text-align: center;
-    padding: 52px 40px;
+    padding: 44px 36px 24px;
     background: linear-gradient(160deg, #062e24 0%, #085041 55%, #0d6b57 100%);
   }
   .slide::before {
@@ -53,84 +53,133 @@
   }
 
   .top-tag {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     letter-spacing: 2px;
     color: #5DCAA5;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
     position: relative;
     z-index: 2;
   }
 
   h1 {
-    font-size: 34px;
+    font-size: 30px;
     font-weight: 900;
     color: white;
     line-height: 1.3;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
     position: relative;
     z-index: 2;
   }
   h1 span { color: #EF9F27; }
 
   .divider {
-    width: 48px; height: 3px;
+    width: 40px; height: 3px;
     background: #EF9F27;
     border-radius: 2px;
-    margin: 18px auto;
+    margin: 14px auto;
     position: relative;
     z-index: 2;
   }
 
   .pain-lines {
     list-style: none;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
     position: relative;
     z-index: 2;
     text-align: right;
     width: 100%;
   }
   .pain-lines li {
-    font-size: 15px;
+    font-size: 14px;
     color: rgba(255,255,255,0.75);
     font-weight: 300;
     line-height: 1.6;
-    padding: 7px 0;
+    padding: 6px 0;
     border-bottom: 1px solid rgba(255,255,255,0.07);
     display: flex;
     gap: 8px;
     align-items: flex-start;
   }
   .pain-lines li:last-child { border-bottom: none; }
-  .pain-lines li::before { content: '"'; color: #EF9F27; font-size: 18px; flex-shrink: 0; }
+  .pain-lines li::before { content: '"'; color: #EF9F27; font-size: 16px; flex-shrink: 0; line-height: 1.6; }
 
-  .sharon-line {
-    font-size: 13px;
-    color: rgba(255,255,255,0.5);
+  /* --- הפתרון --- */
+  .solution-box {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 18px;
+    padding: 16px 20px;
     position: relative;
     z-index: 2;
+    width: 100%;
     margin-bottom: 14px;
   }
-  .sharon-line strong { color: white; }
+  .solution-tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #5DCAA5;
+    margin-bottom: 12px;
+  }
+  .solution-people {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 12px;
+  }
+  .person {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .person img {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top center;
+  }
+  .person img.eden-img { object-position: center; }
+  .person-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+  }
+  .person-role {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 300;
+  }
+  .person-border-gold img { border: 2px solid rgba(239,159,39,0.7); }
+  .person-border-green img { border: 2px solid rgba(93,202,165,0.7); }
+
+  .solution-text {
+    font-size: 14px;
+    color: rgba(255,255,255,0.8);
+    font-weight: 400;
+    line-height: 1.6;
+  }
+  .solution-text strong { color: white; }
 
   .date-box {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 14px;
-    padding: 10px 22px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 8px 18px;
     position: relative;
     z-index: 2;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
-  .date-box p { font-size: 14px; color: white; font-weight: 600; line-height: 1.7; }
+  .date-box p { font-size: 13px; color: white; font-weight: 600; line-height: 1.7; }
   .date-box p span { color: #FAC775; }
 
   .cta-pill {
     background: #EF9F27;
     color: #062e24;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 900;
-    padding: 13px 30px;
+    padding: 12px 28px;
     border-radius: 50px;
     position: relative;
     z-index: 2;
@@ -139,13 +188,13 @@
 
   .brand {
     position: absolute;
-    bottom: 20px;
+    bottom: 16px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     letter-spacing: 2px;
-    color: rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.18);
     z-index: 2;
     white-space: nowrap;
   }
@@ -170,9 +219,9 @@
 </head>
 <body>
 
-<div class="hint">📱 שקף כאב | 2 גרסאות להורדה</div>
+<div class="hint">📱 שקף כאב + פתרון | 2 גרסאות להורדה</div>
 
-<!-- גרסה 1 — לסטורי (הלינק בביו) -->
+<!-- גרסה 1 — לסטורי -->
 <div class="label">גרסה 1 — לסטורי (הלינק בביו)</div>
 <div class="slide" id="s1">
   <div class="top-tag">את מכירה את זה?</div>
@@ -183,17 +232,33 @@
     <li>אני רוצה להשקיע — אבל לא יודעת מאיפה מתחילים</li>
     <li>אם רק הייתי מתחילה קודם...</li>
   </ul>
-  <div class="sharon-line"><strong>שרון חכמון</strong> · מעל 25 שנות ניסיון בעולם הפיננסי</div>
+
+  <div class="solution-box">
+    <div class="solution-tag">הפתרון שבניתי בשבילך</div>
+    <div class="solution-people">
+      <div class="person person-border-gold">
+        <img src="screenshots/sharon.jpeg" alt="שרון חכמון">
+        <div class="person-name">שרון חכמון</div>
+        <div class="person-role">מעל 25 שנות ניסיון</div>
+      </div>
+      <div class="person person-border-green">
+        <img src="screenshots/eden.png" alt="עדן" class="eden-img">
+        <div class="person-name">עדן</div>
+        <div class="person-role">מדריכת AI שלך</div>
+      </div>
+    </div>
+    <div class="solution-text"><strong>לומדת עם שרון. מתרגלת עם עדן.</strong><br>מנהלת את הכסף שלך — בעצמך.</div>
+  </div>
+
   <div class="date-box">
-    <p>📅 <span>28 באפריל · 19:30</span></p>
-    <p>✨ וובינר חינמי לחלוטין</p>
+    <p>📅 <span>28 באפריל · 19:30</span> &nbsp;·&nbsp; ✨ חינמי לחלוטין</p>
   </div>
   <div class="cta-pill">הלינק בביו 👆</div>
   <div class="brand">NATIV · שרון חכמון</div>
 </div>
 <button class="download-btn" onclick="downloadSlide('s1','שקף-כאב-סטורי')">⬇️ הורידי — לסטורי</button>
 
-<!-- גרסה 2 — לפוסט (בלי הלינק בביו) -->
+<!-- גרסה 2 — לפוסט -->
 <div class="label">גרסה 2 — לפוסט (הלינק בטקסט)</div>
 <div class="slide" id="s2">
   <div class="top-tag">את מכירה את זה?</div>
@@ -204,10 +269,26 @@
     <li>אני רוצה להשקיע — אבל לא יודעת מאיפה מתחילים</li>
     <li>אם רק הייתי מתחילה קודם...</li>
   </ul>
-  <div class="sharon-line"><strong>שרון חכמון</strong> · מעל 25 שנות ניסיון בעולם הפיננסי</div>
+
+  <div class="solution-box">
+    <div class="solution-tag">הפתרון שבניתי בשבילך</div>
+    <div class="solution-people">
+      <div class="person person-border-gold">
+        <img src="screenshots/sharon.jpeg" alt="שרון חכמון">
+        <div class="person-name">שרון חכמון</div>
+        <div class="person-role">מעל 25 שנות ניסיון</div>
+      </div>
+      <div class="person person-border-green">
+        <img src="screenshots/eden.png" alt="עדן" class="eden-img">
+        <div class="person-name">עדן</div>
+        <div class="person-role">מדריכת AI שלך</div>
+      </div>
+    </div>
+    <div class="solution-text"><strong>לומדת עם שרון. מתרגלת עם עדן.</strong><br>מנהלת את הכסף שלך — בעצמך.</div>
+  </div>
+
   <div class="date-box">
-    <p>📅 <span>28 באפריל · 19:30</span></p>
-    <p>✨ וובינר חינמי לחלוטין</p>
+    <p>📅 <span>28 באפריל · 19:30</span> &nbsp;·&nbsp; ✨ חינמי לחלוטין</p>
   </div>
   <div class="cta-pill">הגיע הזמן להתחיל 💚</div>
   <div class="brand">NATIV · שרון חכמון</div>
