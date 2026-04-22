@@ -733,7 +733,35 @@ async function callAI(userText) {
       })
     });
     if (res.status === 401) {
+      // נסה להתחבר מחדש אוטומטית (השרת אולי הופעל מחדש)
+      const savedPw = sessionStorage.getItem('eden_pw');
+      if (savedPw) {
+        try {
+          const loginRes = await fetch('/api/login', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ password: savedPw })
+          });
+          if (loginRes.ok) {
+            const loginData = await loginRes.json();
+            authToken = loginData.token;
+            sessionStorage.setItem('eden_token', authToken);
+            // נסה שוב את הבקשה המקורית
+            const retry = await fetch('/api/chat', {
+              method:'POST',
+              headers:{'Content-Type':'application/json','Authorization':'Bearer ' + authToken},
+              body: JSON.stringify({ system: getEdenSys() + '\n\nמידע על המשתמש/ת: ' + JSON.stringify(kyc), messages: hist.map(m=>({role:m.role,content:m.content})) })
+            });
+            if (retry.ok) {
+              const rd = await retry.json();
+              reply = rd.content || rd.error || 'נסי שוב 💚';
+              hist.push({role:'assistant', content:reply});
+              return reply;
+            }
+          }
+        } catch(e) {}
+      }
       sessionStorage.removeItem('eden_token');
+      sessionStorage.removeItem('eden_pw');
       authToken = '';
       location.reload();
       return '';
@@ -3190,6 +3218,7 @@ async function doLogin() {
     }
     authToken = d.token;
     sessionStorage.setItem('eden_token', authToken);
+    sessionStorage.setItem('eden_pw', code);
     location.reload();
   } catch(e) {
     document.getElementById('login-err').textContent = 'שגיאת חיבור — נסי שוב';
