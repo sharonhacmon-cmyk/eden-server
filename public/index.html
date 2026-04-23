@@ -3270,10 +3270,7 @@ function navJump(section){
   }
   if (section === 'concepts'){
     markNavBoundary();
-    basicConceptsShown = false;
-    delay(()=>showBasicConcepts(()=>{
-      delay(()=>{ addMsg('עכשיו בחרי נושא לעומק:'); setTimeout(showLearnMenu, 400); }, 400);
-    }), 300);
+    delay(()=>{ addMsg('בחרי נושא 💚'); setTimeout(showLearnMenu, 400); }, 300);
     return;
   }
   if (section === 'learn'){
@@ -3296,6 +3293,12 @@ function navJump(section){
       delay(()=>{
         addMsg('הנה התיק שלך 💚');
         setTimeout(()=>addCard(portfolioCardHTML(kyc.profile)), 500);
+        setTimeout(()=>{
+          lastFlowFn = ()=>{
+            addQRs(['הסבירי על כל מרכיב','תני לי ניירות ספציפיים 📋','רוצה לשנות משהו בתיק'], handlePortfolioChoice);
+          };
+          lastFlowFn();
+        }, 900);
       }, 300);
     } else {
       delay(()=>{ addMsg('בואי נזהה את הפרופיל שלך תחילה 💚'); setTimeout(startKYC, 500); }, 300);
