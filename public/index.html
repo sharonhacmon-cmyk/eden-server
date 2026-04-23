@@ -3137,6 +3137,14 @@ async function sendUser(text){
   // חזרה אוטומטית לסרגל התהליך
   if (lastFlowFn) {
     setTimeout(()=>{ lastFlowFn(); }, 800);
+  } else {
+    setTimeout(()=>{
+      addQRs(['בואי נמשיך לבנות את התיק 💚','רוצה להסביר עוד משהו?','פתחי את התפריט 📚'], (ch)=>{
+        if (ch.includes('תיק')) { stage='kyc'; startKYC(); }
+        else if (ch.includes('תפריט')) showLearnMenu();
+        else sendUser(ch);
+      });
+    }, 600);
   }
 }
 
@@ -3329,6 +3337,7 @@ function openLabModal(title){
 }
 function closeLabModal(){
   document.getElementById('lab-modal').style.display='none';
+  if (lastFlowFn) setTimeout(()=>lastFlowFn(), 400);
 }
 function labCard(html){
   var div=document.createElement('div');
