@@ -27,6 +27,17 @@ body { font-family:'Heebo',sans-serif; direction:rtl; }
 .bg-darker { background:linear-gradient(160deg,#041e18 0%,#062e24 100%); }
 .bg-cream { background:#FDFAF5; }
 
+/* כפתור מסך מלא */
+.fs-btn {
+  position:fixed; top:16px; left:16px; z-index:200;
+  background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
+  color:white; font-size:18px; width:40px; height:40px;
+  border-radius:10px; cursor:pointer; display:flex;
+  align-items:center; justify-content:center;
+  transition:background 0.2s;
+}
+.fs-btn:hover { background:rgba(255,255,255,0.22); }
+
 /* עיטורים */
 .slide::before {
   content:''; position:absolute;
@@ -105,7 +116,7 @@ h2 span { color:#EF9F27; }
 }
 .card-icon { font-size:28px; margin-bottom:10px; display:block; }
 .card h3 { font-size:16px; font-weight:800; color:white; margin-bottom:8px; }
-.card p { font-size:14px; color:rgba(255,255,255,0.65); line-height:1.7; font-weight:300; }
+.card p { font-size:clamp(14px,1.6vw,17px); color:rgba(255,255,255,0.75); line-height:1.8; font-weight:300; }
 .card .accent { color:#5DCAA5; font-weight:700; }
 .card .gold { color:#EF9F27; font-weight:700; }
 
@@ -116,12 +127,12 @@ h2 span { color:#EF9F27; }
 }
 .tbl th {
   background:rgba(255,255,255,0.1); color:#5DCAA5;
-  font-size:13px; font-weight:700; padding:12px 16px; text-align:right;
+  font-size:clamp(13px,1.5vw,16px); font-weight:700; padding:14px 18px; text-align:right;
 }
 .tbl td {
-  color:rgba(255,255,255,0.8); font-size:14px;
-  padding:12px 16px; border-bottom:1px solid rgba(255,255,255,0.06);
-  font-weight:300; line-height:1.5;
+  color:rgba(255,255,255,0.85); font-size:clamp(14px,1.5vw,16px);
+  padding:14px 18px; border-bottom:1px solid rgba(255,255,255,0.06);
+  font-weight:300; line-height:1.6;
 }
 .tbl tr:last-child td { border-bottom:none; }
 .tbl tr:hover td { background:rgba(255,255,255,0.04); }
@@ -132,9 +143,9 @@ h2 span { color:#EF9F27; }
   background:rgba(239,159,39,0.12);
   border-right:4px solid #EF9F27;
   border-radius:0 14px 14px 0;
-  padding:16px 20px; margin-top:16px;
-  font-size:16px; color:white; line-height:1.7;
-  max-width:700px;
+  padding:18px 22px; margin-top:16px;
+  font-size:clamp(15px,1.7vw,18px); color:rgba(255,255,255,0.9); line-height:1.8;
+  max-width:760px;
 }
 
 /* כרטיס עדן */
@@ -199,6 +210,8 @@ h2 span { color:#EF9F27; }
 </style>
 </head>
 <body>
+
+<button class="fs-btn" id="fsBtn" onclick="toggleFS()" title="מסך מלא">⛶</button>
 
 <!-- שקף 1: שער -->
 <div class="slide bg-dark active" id="s1">
@@ -347,14 +360,6 @@ h2 span { color:#EF9F27; }
       <tr>
         <th>בית השקעות</th>
         <th>סף כניסה</th>
-        <th>דמי ניהול</th>
-        <th>מתאים ל...</th>
-      </tr>
-    </thead>
-    <thead>
-      <tr>
-        <th>בית השקעות</th>
-        <th>סף כניסה</th>
         <th>הטבה</th>
       </tr>
     </thead>
@@ -458,10 +463,23 @@ function go(dir) {
   render();
 }
 
+function toggleFS() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen?.();
+  } else {
+    document.exitFullscreen?.();
+  }
+}
+
+document.addEventListener('fullscreenchange', ()=>{
+  document.getElementById('fsBtn').textContent = document.fullscreenElement ? '✕' : '⛶';
+});
+
 document.addEventListener('keydown', e=>{
   if (e.key==='ArrowLeft' || e.key==='ArrowDown') go(1);
   if (e.key==='ArrowRight' || e.key==='ArrowUp') go(-1);
-  if (e.key==='f' || e.key==='F') document.documentElement.requestFullscreen?.();
+  if (e.key==='f' || e.key==='F') toggleFS();
+  if (e.key==='Escape' && document.fullscreenElement) document.exitFullscreen?.();
 });
 
 render();
