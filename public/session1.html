@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>מפגש 1 — מבינות את השוק ובוחרות מוצר</title>
+<title>מפגש 1 — מושגי יסוד בשוק ההון</title>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -24,8 +24,6 @@ body { font-family:'Heebo',sans-serif; direction:rtl; }
 
 /* רקעים */
 .bg-dark { background:linear-gradient(160deg,#062e24 0%,#085041 60%,#0d6b57 100%); }
-.bg-darker { background:linear-gradient(160deg,#041e18 0%,#062e24 100%); }
-.bg-cream { background:#FDFAF5; }
 
 /* כפתור מסך מלא */
 .fs-btn {
@@ -96,7 +94,7 @@ h1 {
 h1 span { color:#EF9F27; }
 h2 {
   font-size:clamp(24px,3.5vw,42px); font-weight:900; color:white;
-  line-height:1.2; margin-bottom:20px;
+  line-height:1.2; margin-bottom:20px; text-align:center;
 }
 h2 span { color:#EF9F27; }
 .lead {
@@ -154,13 +152,13 @@ h2 span { color:#EF9F27; }
   border:1px solid rgba(93,202,165,0.25);
   border-radius:16px; padding:16px 20px;
   display:flex; align-items:center; gap:14px;
-  max-width:700px; margin-top:24px;
+  max-width:700px; margin-top:20px;
 }
 .eden-av {
   width:44px; height:44px; border-radius:50%;
   object-fit:cover; border:2px solid rgba(93,202,165,0.5); flex-shrink:0;
 }
-.eden-card p { font-size:14px; color:rgba(255,255,255,0.8); line-height:1.6; }
+.eden-card p { font-size:clamp(14px,1.5vw,16px); color:rgba(255,255,255,0.8); line-height:1.6; }
 .eden-card strong { color:#5DCAA5; }
 
 /* שקף כסא */
@@ -184,18 +182,6 @@ h2 span { color:#EF9F27; }
   border:2px solid rgba(239,159,39,0.5);
 }
 
-/* גרף עמודות פשוט */
-.bar-chart { display:flex; gap:12px; align-items:flex-end; height:140px; }
-.bar-wrap { display:flex; flex-direction:column; align-items:center; gap:6px; }
-.bar {
-  width:52px; border-radius:8px 8px 0 0;
-  background:linear-gradient(to top,#085041,#1D9E75);
-  position:relative; transition:height 0.5s ease;
-}
-.bar.gold { background:linear-gradient(to top,#c47a10,#EF9F27); }
-.bar-val { font-size:12px; font-weight:700; color:white; }
-.bar-lbl { font-size:11px; color:rgba(255,255,255,0.5); text-align:center; }
-
 /* רשימת נקודות */
 .bullet-list { list-style:none; max-width:700px; width:100%; }
 .bullet-list li {
@@ -217,8 +203,8 @@ h2 span { color:#EF9F27; }
 <div class="slide bg-dark active" id="s1">
   <div class="session-label">מפגש 1 / 3</div>
   <div class="tag">נתיב · שרון חכמון</div>
-  <h1>מבינות את השוק<br><span>ובוחרות מוצר</span></h1>
-  <p class="lead">שעה וחצי שתיתן לך את הבסיס — מה קיים, למה כדאי, ואיך מתחילים</p>
+  <h1>מושגי יסוד<br><span>בשוק ההון</span></h1>
+  <p class="lead">מה זה בעצם שוק ההון, איך הכסף עובד שם, ומה הכלים שתשתמשי בהם</p>
   <div class="cover-sub">
     <div class="cover-pill">📅 מפגש 1 מתוך 3</div>
     <div class="cover-pill">⏱ 19:30–21:00</div>
@@ -281,147 +267,132 @@ h2 span { color:#EF9F27; }
   </div>
 </div>
 
-<!-- שקף 4: מה האפשרויות שלך -->
+<!-- שקף 4: 3 הכלים המרכזיים -->
 <div class="slide bg-dark" id="s4">
   <div class="slide-num">04</div>
   <div class="session-label">מפגש 1</div>
-  <div class="tag">מפת האפשרויות</div>
-  <h2>מה <span>קיים?</span> 3 מסלולים עיקריים</h2>
-  <table class="tbl">
-    <thead>
-      <tr>
-        <th>מוצר</th>
-        <th>דמי ניהול</th>
-        <th>אירוע מס במכירה</th>
-        <th>השקעה</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong style="color:white">קופת גמל להשקעה (קופ"ג)</strong></td>
-        <td><span class="gold">0.5–1% לשנה</span></td>
-        <td>לא — אפשר להחליף מסלול בלי מס</td>
-        <td>פסיבית (מנהל קרן)</td>
-      </tr>
-      <tr>
-        <td><strong style="color:white">פוליסת חיסכון</strong></td>
-        <td><span class="gold">0.8–1.5% לשנה</span></td>
-        <td>לא — אפשר להחליף מסלול בלי מס</td>
-        <td>פסיבית (מנהל קרן)</td>
-      </tr>
-      <tr>
-        <td><strong class="best">תיק השקעות עצמאי</strong></td>
-        <td class="best">~0% (דמי ניהול קרן בלבד ~0.1%)</td>
-        <td class="best">כן — רק בעת מכירה בפועל</td>
-        <td class="best">עצמאית — את בוחרת</td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="highlight">
-    💡 דוגמה — דמי ניהול על ₪100,000 לאורך 20 שנה (תשואה 7%):<br>
-    קופ"ג 1%: <span style="color:#EF9F27">~₪75,000</span> דמי ניהול מצטברים · תיק עצמאי: <span style="color:#5DCAA5">~₪7,000</span> בלבד.<br>
-    <strong>הפרש: ₪68,000 — שנשארים בכיס שלך.</strong>
-  </div>
-</div>
-
-<!-- שקף 5: למה מדדים -->
-<div class="slide bg-dark" id="s5">
-  <div class="slide-num">05</div>
-  <div class="session-label">מפגש 1</div>
-  <div class="tag">עקרון מפתח</div>
-  <h2>למה <span>מדדים</span> ולא מניות בודדות?</h2>
-  <div class="cards cards-2" style="max-width:780px">
+  <div class="tag">הכלים שתשתמשי בהם</div>
+  <h2>3 הכלים <span>המרכזיים</span> בתיק</h2>
+  <div class="cards cards-3" style="max-width:900px">
     <div class="card">
-      <span class="card-icon">🎯</span>
-      <h3>מניה בודדת</h3>
-      <p>קנית מניית חברה אחת.<br>אם החברה נופלת — <span class="gold">כל הכסף שלך נפגע.</span><br><br>דוגמה: מי שקנתה נוקיה ב-2007, טסלה ב-2021...</p>
+      <span class="card-icon">💵</span>
+      <h3>קרן כספית</h3>
+      <p>כמו פיקדון — רק טוב יותר.<br><span class="accent">~4.5% שנתי</span>, נזילה יומית, סיכון נמוך מאוד.<br><br>מתאימה לכסף שאולי תצטרכי בקרוב.</p>
     </div>
     <div class="card">
       <span class="card-icon">🌍</span>
-      <h3>מדד (S&P 500 / MSCI World)</h3>
-      <p>קונה <span class="accent">500 חברות בבת אחת.</span><br>אם חברה אחת נופלת — 499 אחרות ממשיכות.<br><br><span class="accent">פיזור = הגנה טבעית.</span></p>
+      <h3>קרן סל (ETF)</h3>
+      <p>קונה מאות חברות בפעולה אחת.<br><span class="accent">S&P 500, MSCI World, ת"א 125</span><br><br>הכלי המרכזי לצמיחה לטווח ארוך.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🏛️</span>
+      <h3>אג"ח</h3>
+      <p>הלוואה לממשלה — היא משלמת ריבית קבועה.<br><span class="accent">~3–5% שנתי</span>, יציב יותר ממניות.<br><br>מאזן את התיק בתקופות סוערות.</p>
+    </div>
+  </div>
+  <div class="highlight">
+    💡 תיק מאוזן משלב את שלושתם — כל כלי עושה תפקיד שונה. עדן תעזור לך לבנות את השילוב שמתאים לך.
+  </div>
+</div>
+
+<!-- שקף 5: קרן סל ETF -->
+<div class="slide bg-dark" id="s5">
+  <div class="slide-num">05</div>
+  <div class="session-label">מפגש 1</div>
+  <div class="tag">הכלי העיקרי לצמיחה</div>
+  <h2>קרן סל ETF —<br><span>לקנות 500 חברות בפעולה אחת</span></h2>
+  <div class="cards cards-2" style="max-width:780px">
+    <div class="card">
+      <span class="card-icon">🎯</span>
+      <h3>מניה בודדת — הסיכון</h3>
+      <p>קנית מניית חברה אחת.<br>אם החברה נופלת — <span class="gold">כל הכסף נפגע.</span><br><br>דוגמה: נוקיה 2007, טסלה 2021...</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🌐</span>
+      <h3>קרן סל — הפתרון</h3>
+      <p>קונה <span class="accent">מאות חברות בבת אחת.</span><br>אחת נופלת — האחרות ממשיכות.<br><br>דמי ניהול: <span class="accent">~0.1–0.3% בלבד.</span></p>
     </div>
   </div>
   <ul class="bullet-list" style="margin-top:20px">
-    <li><strong>S&P 500</strong> — 500 החברות הגדולות בארה"ב. ביצועים היסטוריים חזקים לאורך עשורים.</li>
+    <li><strong>S&P 500</strong> — 500 החברות הגדולות בארה"ב (אפל, גוגל, מיקרוסופט...)</li>
     <li><strong>MSCI World</strong> — ~1,500 חברות מ-23 מדינות. פיזור עולמי אמיתי.</li>
     <li><strong>ת"א 125</strong> — 125 חברות גדולות בישראל. חשיפה לשקל.</li>
   </ul>
 </div>
 
-<!-- שקף 6: פתיחת תיק -->
+<!-- שקף 6: ריבית דריבית -->
 <div class="slide bg-dark" id="s6">
   <div class="slide-num">06</div>
   <div class="session-label">מפגש 1</div>
-  <div class="tag">בית השקעות — איך בוחרים?</div>
-  <h2>פותחות <span>תיק עצמאי</span> — אצל מי?</h2>
-  <table class="tbl">
-    <thead>
-      <tr>
-        <th>בית השקעות</th>
-        <th>סף כניסה</th>
-        <th>הטבה</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong style="color:white">אלטשולר שחם</strong></td>
-        <td>₪5,000</td>
-        <td class="best">מתנה ₪200</td>
-      </tr>
-      <tr>
-        <td><strong style="color:white">מיטב</strong></td>
-        <td>₪10,000</td>
-        <td class="best">הטבה ₪100</td>
-      </tr>
-      <tr>
-        <td><strong style="color:white">IBI</strong></td>
-        <td>₪15,000</td>
-        <td class="best">מתנה ₪300</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="tag">הכוח הגדול ביותר בהשקעות</div>
+  <h2>ריבית דריבית —<br><span>הרווחים מרוויחים על עצמם</span></h2>
+  <div class="cards cards-2" style="max-width:780px">
+    <div class="card">
+      <span class="card-icon">📅</span>
+      <h3>₪20,000 + ₪500 בחודש</h3>
+      <p>בתשואה היסטורית של 7% לשנה:<br><br>
+        שנה 10 → <span class="accent">~₪117,000</span><br>
+        שנה 20 → <span class="accent">~₪321,000</span><br>
+        שנה 30 → <span class="gold">~₪755,000</span>
+      </p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🔑</span>
+      <h3>הסוד: הזמן</h3>
+      <p>מה שמגדיל את הכסף הכי הרבה — זה לא סכום ההפקדה.<br><br><span class="accent">זה כמה מוקדם מתחילים.</span><br><br>כל שנה שמתעכבים — עולה ביוקר.</p>
+    </div>
+  </div>
   <div class="highlight">
-    ⏱ פתיחת תיק לוקחת ~10 דקות אונליין — פרטים אישיים + צילום ת"ז + חתימה דיגיטלית. לא צריך להגיע לסניף.
+    🧮 בעדן יש <strong>מחשבון ריבית דריבית אינטראקטיבי</strong> — תזיזי את המחוונים לפי הסכום האישי שלך ותראי את הקסם קורה.
   </div>
 </div>
 
-<!-- שקף 7: תרגול עם עדן -->
+<!-- שקף 7: פיזור ותיק מאוזן -->
 <div class="slide bg-dark" id="s7">
   <div class="slide-num">07</div>
+  <div class="session-label">מפגש 1</div>
+  <div class="tag">עקרון הברזל</div>
+  <h2>פיזור — <span>לא לשים הכל בסל אחד</span></h2>
+  <div class="cards cards-3" style="max-width:900px">
+    <div class="card">
+      <span class="card-icon">🟢</span>
+      <h3>קרן כספית</h3>
+      <p>נזילות ובטחון.<br>~4.5% שנתי, סיכון נמוך.<br><br><span class="accent">כרית הביטחון של התיק.</span></p>
+    </div>
+    <div class="card">
+      <span class="card-icon">📈</span>
+      <h3>קרן סל (מניות)</h3>
+      <p>צמיחה לטווח ארוך.<br>תנודתי בטווח קצר — עולה לאורך זמן.<br><br><span class="accent">מנוע הצמיחה של התיק.</span></p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🏛️</span>
+      <h3>אג"ח</h3>
+      <p>יציבות ואיזון.<br>כשמניות יורדות — אג"ח לרוב עולה.<br><br><span class="accent">כרית הריפוי של התיק.</span></p>
+    </div>
+  </div>
+  <div class="highlight">
+    💡 עדן תשאל אותך כמה שאלות על הגיל, המטרה, והרגשות שלך לגבי ירידות — ותבנה <strong>תיק מותאם אישית</strong> עם קרנות קונקרטיות ומספרי נייר לקנייה.
+  </div>
+</div>
+
+<!-- שקף 8: תרגול עם עדן -->
+<div class="slide bg-dark" id="s8">
+  <div class="slide-num">08</div>
   <div class="session-label">מפגש 1</div>
   <div class="tag">תרגול</div>
   <h2>עכשיו <span>מתרגלות</span> עם עדן</h2>
   <ul class="bullet-list">
-    <li>פותחות את עדן ועוברות על <strong>השוואת מוצרי חיסכון</strong> — קופ"ג / פוליסה / תיק עצמאי</li>
-    <li>שואלות את עדן: <strong>"מה ההבדל בין S&P 500 ל-MSCI World?"</strong></li>
+    <li>שואלות עדן: <strong>"מה זה קרן כספית?"</strong> — תקבלי הסבר עם דוגמה ומספר נייר</li>
+    <li>שואלות עדן: <strong>"מה ההבדל בין S&P 500 ל-MSCI World?"</strong></li>
     <li>מחשבון ריבית דריבית — <strong>מזיזות את המחוונים עם הסכום האישי שלכן</strong></li>
-    <li><strong>שאלות חופשיות לעדן</strong> — כל מה שלא ברור מהיום</li>
+    <li>בונות פרופיל — <strong>עדן שואלת 4 שאלות ובונה תיק מותאם אישית</strong></li>
   </ul>
   <div class="eden-card">
     <img class="eden-av" src="screenshots/eden.png" alt="עדן">
     <p><strong>עדן זמינה 24/7</strong> — אחרי המפגש תוכלו להמשיך לשאול, לתרגל ולהעמיק בנושאים שהכי רלוונטיים לכן.</p>
   </div>
-</div>
-
-<!-- שקף 8: סיכום -->
-<div class="slide bg-dark" id="s8">
-  <div class="slide-num">08</div>
-  <div class="session-label">מפגש 1</div>
-  <div class="tag">סיכום המפגש</div>
-  <h2>מה <span>לוקחות</span> הביתה?</h2>
-  <ul class="bullet-list">
-    <li>הכסף שיושב בלי לעבוד — <strong>מפסיד ערך ריאלי.</strong> זה עובדה, לא דעה.</li>
-    <li>רווח ריאלי = ריבית − אינפלציה. <strong>תמיד שואלים: ריאלי או נומינלי?</strong></li>
-    <li>תיק עצמאי = הכי גמיש, הכי זול, הכי שקוף. <strong>ואפשר להתחיל מ-₪5,000.</strong></li>
-    <li>מדדים > מניות בודדות — <strong>פיזור הוא הגנה.</strong></li>
-  </ul>
-  <div class="highlight" style="margin-top:24px">
-    📅 <strong>מפגש 2 — 20 במאי:</strong> בונות את התיק — ETF, בחירת קרנות, ופיזור נכון.
-  </div>
-  <div class="sharon-line" style="margin-top:20px">
-    <img class="sharon-av" src="screenshots/sharon.jpeg" alt="שרון">
-    <span style="font-size:14px;color:rgba(255,255,255,0.6)">שאלות? עדן זמינה — ואני כאן במפגש הבא 💚</span>
+  <div class="highlight" style="margin-top:16px">
+    📅 <strong>מפגש 2 — 20 במאי:</strong> בונות את התיק — בוחרות קרנות קונקרטיות ופיזור נכון.
   </div>
 </div>
 
@@ -437,7 +408,6 @@ h2 span { color:#EF9F27; }
 const total = 8;
 let cur = 1;
 
-// בניית נקודות
 const dotsEl = document.getElementById('dots');
 for (let i=1;i<=total;i++) {
   const d = document.createElement('div');
@@ -479,7 +449,6 @@ document.addEventListener('keydown', e=>{
   if (e.key==='ArrowLeft' || e.key==='ArrowDown') go(1);
   if (e.key==='ArrowRight' || e.key==='ArrowUp') go(-1);
   if (e.key==='f' || e.key==='F') toggleFS();
-  if (e.key==='Escape' && document.fullscreenElement) document.exitFullscreen?.();
 });
 
 render();
