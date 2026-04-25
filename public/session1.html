@@ -24,6 +24,21 @@ body { font-family:'Heebo',sans-serif; direction:rtl; }
 
 .bg-dark { background:linear-gradient(160deg,#062e24 0%,#085041 60%,#0d6b57 100%); }
 
+/* לוגו נתיב */
+.nativ-logo {
+  position:fixed; top:18px; right:20px; z-index:200;
+  display:flex; flex-direction:column; align-items:flex-end; line-height:1.2;
+  pointer-events:none;
+}
+.nativ-logo .logo-name {
+  font-size:15px; font-weight:900; color:white; letter-spacing:1px;
+}
+.nativ-logo .logo-name span { color:#5DCAA5; }
+.nativ-logo .logo-tag {
+  font-size:10px; font-weight:400; color:rgba(255,255,255,0.45);
+  letter-spacing:0.5px;
+}
+
 .fs-btn {
   position:fixed; top:16px; left:16px; z-index:200;
   background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
@@ -231,6 +246,10 @@ h2 span { color:#EF9F27; }
 </head>
 <body>
 
+<div class="nativ-logo">
+  <div class="logo-name"><span>נתיב</span> · שרון חכמון</div>
+  <div class="logo-tag">הכסף החכם שלך</div>
+</div>
 <button class="fs-btn" id="fsBtn" onclick="toggleFS()" title="מסך מלא">⛶</button>
 
 <!-- שקף 1: שער -->
@@ -310,7 +329,11 @@ h2 span { color:#EF9F27; }
       <div class="tax-row"><span class="lbl">בסיס למיסוי</span><span class="val">כל הרווח</span></div>
       <div class="tax-row"><span class="lbl">שיעור מס</span><span class="val warn">15%</span></div>
       <div class="tax-row"><span class="lbl">מס בפועל</span><span class="val red">₪600</span></div>
-      <div class="tax-row"><span class="lbl">נטו בכיס</span><span class="val red">₪3,400</span></div>
+      <div class="tax-row"><span class="lbl">נטו אחרי מס</span><span class="val">₪3,400</span></div>
+      <div class="tax-row" style="border-top:1px solid rgba(239,100,100,0.3);margin-top:4px;padding-top:8px">
+        <span class="lbl" style="font-weight:700;color:rgba(255,255,255,0.8)">רווח ריאלי נטו</span>
+        <span class="val red" style="font-size:1.15em">₪800</span>
+      </div>
     </div>
     <div class="tax-col col-green">
       <div class="tax-title">💵 קרן כספית — 4%</div>
@@ -318,12 +341,16 @@ h2 span { color:#EF9F27; }
       <div class="tax-row"><span class="lbl">בסיס למיסוי</span><span class="val">רווח ריאלי בלבד</span></div>
       <div class="tax-row"><span class="lbl">שיעור מס</span><span class="val warn">25%</span></div>
       <div class="tax-row"><span class="lbl">מס בפועל</span><span class="val green">₪350</span></div>
-      <div class="tax-row"><span class="lbl">נטו בכיס</span><span class="val green">₪3,650</span></div>
+      <div class="tax-row"><span class="lbl">נטו אחרי מס</span><span class="val">₪3,650</span></div>
+      <div class="tax-row" style="border-top:1px solid rgba(93,202,165,0.3);margin-top:4px;padding-top:8px">
+        <span class="lbl" style="font-weight:700;color:rgba(255,255,255,0.8)">רווח ריאלי נטו</span>
+        <span class="val green" style="font-size:1.15em">₪1,050</span>
+      </div>
     </div>
   </div>
   <div class="highlight-green">
-    ✅ <strong>אותה תשואה 4% על ₪100,000</strong> — אבל קרן כספית מניבה <strong>₪250 יותר נטו.</strong><br>
-    הסיבה: פיקדון משלם מס על כל הרווח (₪4,000). קרן כספית — רק על הרווח הריאלי מעל האינפלציה (~₪1,400). מס על פחות = פחות מס.
+    ✅ <strong>אותה תשואה 4% על ₪100,000</strong> — רווח ריאלי נטו: פיקדון <span style="color:#f87171">₪800</span> · קרן כספית <strong style="color:#5DCAA5">₪1,050</strong>.<br>
+    הסיבה: פיקדון משלם מס על כל הרווח (₪4,000). קרן כספית — רק על מה שמעל האינפלציה (₪1,400). פחות מס = יותר נשאר לך.
   </div>
 </div>
 
