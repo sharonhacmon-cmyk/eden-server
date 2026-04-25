@@ -22,10 +22,8 @@ body { font-family:'Heebo',sans-serif; direction:rtl; }
 }
 .slide.active { display:flex; }
 
-/* רקעים */
 .bg-dark { background:linear-gradient(160deg,#062e24 0%,#085041 60%,#0d6b57 100%); }
 
-/* כפתור מסך מלא */
 .fs-btn {
   position:fixed; top:16px; left:16px; z-index:200;
   background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
@@ -36,7 +34,6 @@ body { font-family:'Heebo',sans-serif; direction:rtl; }
 }
 .fs-btn:hover { background:rgba(255,255,255,0.22); }
 
-/* עיטורים */
 .slide::before {
   content:''; position:absolute;
   width:600px; height:600px; border-radius:50%;
@@ -50,7 +47,6 @@ body { font-family:'Heebo',sans-serif; direction:rtl; }
   bottom:-200px; right:-150px; pointer-events:none;
 }
 
-/* ניווט */
 .nav-bar {
   position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
   display:flex; align-items:center; gap:16px; z-index:100;
@@ -70,7 +66,6 @@ body { font-family:'Heebo',sans-serif; direction:rtl; }
 .dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.2); transition:all 0.2s; cursor:pointer; }
 .dot.active { background:#EF9F27; width:20px; border-radius:4px; }
 
-/* מספר שקף */
 .slide-num {
   position:absolute; top:24px; left:32px;
   font-size:11px; font-weight:700; letter-spacing:2px;
@@ -82,7 +77,6 @@ body { font-family:'Heebo',sans-serif; direction:rtl; }
   color:rgba(255,255,255,0.3);
 }
 
-/* טיפוגרפיה */
 .tag {
   font-size:12px; font-weight:700; letter-spacing:3px;
   color:#5DCAA5; margin-bottom:16px; text-align:center;
@@ -93,8 +87,8 @@ h1 {
 }
 h1 span { color:#EF9F27; }
 h2 {
-  font-size:clamp(24px,3.5vw,42px); font-weight:900; color:white;
-  line-height:1.2; margin-bottom:20px; text-align:center;
+  font-size:clamp(22px,3vw,38px); font-weight:900; color:white;
+  line-height:1.2; margin-bottom:18px; text-align:center;
 }
 h2 span { color:#EF9F27; }
 .lead {
@@ -103,65 +97,70 @@ h2 span { color:#EF9F27; }
   max-width:700px; margin-bottom:24px;
 }
 
-/* כרטיסיות */
-.cards { display:grid; gap:16px; width:100%; max-width:900px; }
+.cards { display:grid; gap:14px; width:100%; max-width:900px; }
 .cards-2 { grid-template-columns:1fr 1fr; }
 .cards-3 { grid-template-columns:1fr 1fr 1fr; }
 .card {
   background:rgba(255,255,255,0.06);
   border:1px solid rgba(255,255,255,0.12);
-  border-radius:18px; padding:22px 20px;
+  border-radius:18px; padding:20px 18px;
 }
-.card-icon { font-size:28px; margin-bottom:10px; display:block; }
-.card h3 { font-size:16px; font-weight:800; color:white; margin-bottom:8px; }
-.card p { font-size:clamp(14px,1.6vw,17px); color:rgba(255,255,255,0.75); line-height:1.8; font-weight:300; }
+.card-icon { font-size:26px; margin-bottom:8px; display:block; }
+.card h3 { font-size:15px; font-weight:800; color:white; margin-bottom:7px; }
+.card p { font-size:clamp(13px,1.5vw,16px); color:rgba(255,255,255,0.75); line-height:1.8; font-weight:300; }
 .card .accent { color:#5DCAA5; font-weight:700; }
 .card .gold { color:#EF9F27; font-weight:700; }
+.card.card-red { border-color:rgba(239,100,100,0.3); }
+.card.card-green { border-color:rgba(93,202,165,0.35); }
 
-/* טבלה */
 .tbl {
   width:100%; max-width:820px; border-collapse:collapse;
   background:rgba(255,255,255,0.04); border-radius:16px; overflow:hidden;
 }
 .tbl th {
   background:rgba(255,255,255,0.1); color:#5DCAA5;
-  font-size:clamp(13px,1.5vw,16px); font-weight:700; padding:14px 18px; text-align:right;
+  font-size:clamp(13px,1.5vw,15px); font-weight:700; padding:12px 16px; text-align:right;
 }
 .tbl td {
-  color:rgba(255,255,255,0.85); font-size:clamp(14px,1.5vw,16px);
-  padding:14px 18px; border-bottom:1px solid rgba(255,255,255,0.06);
+  color:rgba(255,255,255,0.85); font-size:clamp(13px,1.5vw,15px);
+  padding:12px 16px; border-bottom:1px solid rgba(255,255,255,0.06);
   font-weight:300; line-height:1.6;
 }
 .tbl tr:last-child td { border-bottom:none; }
-.tbl tr:hover td { background:rgba(255,255,255,0.04); }
-.tbl .best { color:#EF9F27; font-weight:700; }
+.tbl .best { color:#5DCAA5; font-weight:700; }
+.tbl .warn { color:#EF9F27; font-weight:700; }
 
-/* ציטוט / הדגשה */
 .highlight {
   background:rgba(239,159,39,0.12);
   border-right:4px solid #EF9F27;
   border-radius:0 14px 14px 0;
-  padding:18px 22px; margin-top:16px;
-  font-size:clamp(15px,1.7vw,18px); color:rgba(255,255,255,0.9); line-height:1.8;
-  max-width:760px;
+  padding:16px 20px; margin-top:14px;
+  font-size:clamp(14px,1.6vw,17px); color:rgba(255,255,255,0.9); line-height:1.8;
+  max-width:760px; width:100%;
+}
+.highlight-green {
+  background:rgba(93,202,165,0.1);
+  border-right:4px solid #5DCAA5;
+  border-radius:0 14px 14px 0;
+  padding:16px 20px; margin-top:14px;
+  font-size:clamp(14px,1.6vw,17px); color:rgba(255,255,255,0.9); line-height:1.8;
+  max-width:760px; width:100%;
 }
 
-/* כרטיס עדן */
 .eden-card {
   background:rgba(93,202,165,0.1);
   border:1px solid rgba(93,202,165,0.25);
-  border-radius:16px; padding:16px 20px;
+  border-radius:16px; padding:14px 18px;
   display:flex; align-items:center; gap:14px;
-  max-width:700px; margin-top:20px;
+  max-width:700px; margin-top:16px; width:100%;
 }
 .eden-av {
-  width:44px; height:44px; border-radius:50%;
+  width:40px; height:40px; border-radius:50%;
   object-fit:cover; border:2px solid rgba(93,202,165,0.5); flex-shrink:0;
 }
-.eden-card p { font-size:clamp(14px,1.5vw,16px); color:rgba(255,255,255,0.8); line-height:1.6; }
+.eden-card p { font-size:clamp(13px,1.4vw,15px); color:rgba(255,255,255,0.8); line-height:1.6; }
 .eden-card strong { color:#5DCAA5; }
 
-/* שקף כסא */
 .cover-sub {
   display:flex; gap:24px; align-items:center; justify-content:center;
   margin-top:12px; flex-wrap:wrap;
@@ -172,27 +171,62 @@ h2 span { color:#EF9F27; }
   border-radius:50px; padding:8px 20px;
   font-size:14px; color:rgba(255,255,255,0.7);
 }
-.sharon-line {
-  display:flex; align-items:center; gap:10px;
-  justify-content:center; margin-top:20px;
-}
-.sharon-av {
-  width:44px; height:44px; border-radius:50%;
-  object-fit:cover; object-position:top center;
-  border:2px solid rgba(239,159,39,0.5);
-}
 
-/* רשימת נקודות */
 .bullet-list { list-style:none; max-width:700px; width:100%; }
 .bullet-list li {
-  font-size:clamp(14px,1.8vw,18px); color:rgba(255,255,255,0.8);
-  font-weight:300; line-height:1.7; padding:10px 0;
+  font-size:clamp(14px,1.7vw,17px); color:rgba(255,255,255,0.8);
+  font-weight:300; line-height:1.7; padding:9px 0;
   border-bottom:1px solid rgba(255,255,255,0.07);
   display:flex; gap:12px; align-items:flex-start;
 }
 .bullet-list li:last-child { border-bottom:none; }
-.bullet-list li::before { content:'◆'; color:#EF9F27; font-size:10px; margin-top:6px; flex-shrink:0; }
+.bullet-list li::before { content:'◆'; color:#EF9F27; font-size:10px; margin-top:5px; flex-shrink:0; }
 .bullet-list li strong { color:white; font-weight:700; }
+
+/* שקף מיסוי — השוואה עמודות */
+.tax-compare {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:14px; width:100%; max-width:820px; margin-bottom:14px;
+}
+.tax-col {
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:16px; padding:18px 16px;
+}
+.tax-col.col-red { border-color:rgba(239,100,100,0.3); }
+.tax-col.col-green { border-color:rgba(93,202,165,0.35); }
+.tax-title {
+  font-size:14px; font-weight:800; color:white; margin-bottom:12px;
+  padding-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.1);
+}
+.tax-row {
+  display:flex; justify-content:space-between; align-items:baseline;
+  padding:5px 0; font-size:clamp(13px,1.4vw,15px);
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.tax-row:last-child { border-bottom:none; font-weight:700; }
+.tax-row .lbl { color:rgba(255,255,255,0.55); font-weight:300; }
+.tax-row .val { color:rgba(255,255,255,0.9); font-weight:600; }
+.tax-row .val.red { color:#f87171; }
+.tax-row .val.green { color:#5DCAA5; }
+.tax-row .val.gold { color:#EF9F27; }
+
+/* שקף טווח + סיכון */
+.horizon-row {
+  display:grid; grid-template-columns:1fr 1fr 1fr;
+  gap:12px; width:100%; max-width:900px; margin-bottom:14px;
+}
+.horizon-card {
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:16px; padding:16px 14px; text-align:center;
+}
+.horizon-label {
+  font-size:11px; font-weight:700; letter-spacing:1px;
+  margin-bottom:8px;
+}
+.horizon-title { font-size:15px; font-weight:800; color:white; margin-bottom:6px; }
+.horizon-text { font-size:clamp(12px,1.3vw,14px); color:rgba(255,255,255,0.65); line-height:1.6; }
 </style>
 </head>
 <body>
@@ -263,9 +297,69 @@ h2 span { color:#EF9F27; }
   </div>
 </div>
 
-<!-- שקף 4: 3 הכלים המרכזיים -->
+<!-- שקף 4: מיסוי — פיקדון vs קרן כספית -->
 <div class="slide bg-dark" id="s4">
   <div class="slide-num">04</div>
+  <div class="session-label">מפגש 1</div>
+  <div class="tag">מיסוי — ההבדל שלא מסבירים לך</div>
+  <h2>פיקדון vs קרן כספית —<br><span>אותה תשואה, מס שונה לגמרי</span></h2>
+  <div class="tax-compare">
+    <div class="tax-col col-red">
+      <div class="tax-title">🏦 פיקדון בנקאי — 4%</div>
+      <div class="tax-row"><span class="lbl">רווח נומינלי</span><span class="val gold">₪4,000</span></div>
+      <div class="tax-row"><span class="lbl">בסיס למיסוי</span><span class="val">כל הרווח</span></div>
+      <div class="tax-row"><span class="lbl">שיעור מס</span><span class="val warn">15%</span></div>
+      <div class="tax-row"><span class="lbl">מס בפועל</span><span class="val red">₪600</span></div>
+      <div class="tax-row"><span class="lbl">נטו בכיס</span><span class="val red">₪3,400</span></div>
+    </div>
+    <div class="tax-col col-green">
+      <div class="tax-title">💵 קרן כספית — 4%</div>
+      <div class="tax-row"><span class="lbl">רווח נומינלי</span><span class="val gold">₪4,000</span></div>
+      <div class="tax-row"><span class="lbl">בסיס למיסוי</span><span class="val">רווח ריאלי בלבד</span></div>
+      <div class="tax-row"><span class="lbl">שיעור מס</span><span class="val warn">25%</span></div>
+      <div class="tax-row"><span class="lbl">מס בפועל</span><span class="val green">₪350</span></div>
+      <div class="tax-row"><span class="lbl">נטו בכיס</span><span class="val green">₪3,650</span></div>
+    </div>
+  </div>
+  <div class="highlight-green">
+    ✅ <strong>אותה תשואה 4% על ₪100,000</strong> — אבל קרן כספית מניבה <strong>₪250 יותר נטו.</strong><br>
+    הסיבה: פיקדון משלם מס על כל הרווח (₪4,000). קרן כספית — רק על הרווח הריאלי מעל האינפלציה (~₪1,400). מס על פחות = פחות מס.
+  </div>
+</div>
+
+<!-- שקף 5: טווח ההשקעה ועמידות לסיכון -->
+<div class="slide bg-dark" id="s5">
+  <div class="slide-num">05</div>
+  <div class="session-label">מפגש 1</div>
+  <div class="tag">לפני שמשקיעים — 2 שאלות מרכזיות</div>
+  <h2>מתי תצטרכי את הכסף?<br><span>ואיך את מרגישה עם ירידות?</span></h2>
+  <div class="horizon-row">
+    <div class="horizon-card" style="border-color:rgba(93,202,165,0.35)">
+      <div class="horizon-label" style="color:#5DCAA5">טווח קצר · עד 3 שנים</div>
+      <div class="horizon-title">⏱ כסף שתצטרכי בקרוב</div>
+      <div class="horizon-text">שוק ההון <strong style="color:#f87171">לא מתאים.</strong><br>יכול לרדת 30% בשנה.<br>אם תזדקקי לכסף אז — תמכרי בהפסד.<br><br>✅ קרן כספית / פיקדון</div>
+    </div>
+    <div class="horizon-card" style="border-color:rgba(239,159,39,0.35)">
+      <div class="horizon-label" style="color:#EF9F27">טווח בינוני · 3–5 שנים</div>
+      <div class="horizon-title">📊 מעבר הדרגתי</div>
+      <div class="horizon-text">אפשר להתחיל — אבל בזהירות.<br>שילוב של קרן כספית + קרנות סל מתונות.<br><br>✅ תיק שמרני יחסית</div>
+    </div>
+    <div class="horizon-card" style="border-color:rgba(29,158,117,0.5)">
+      <div class="horizon-label" style="color:#5DCAA5">טווח ארוך · 5+ שנים</div>
+      <div class="horizon-title">🚀 שוק ההון מתאים</div>
+      <div class="horizon-text">הזמן עובד בשבילך.<br>ירידות הן הזדמנויות, לא אסונות.<br>היסטורית — תמיד חזרו לעלות.<br><br>✅ ETF / קרנות סל</div>
+    </div>
+  </div>
+  <div class="highlight">
+    🧠 <strong>עמידות לסיכון:</strong> איך את מרגישה כשהתיק שלך יורד 20% בחודש אחד?<br>
+    מוכרת בפאניקה = סיכון גבוה לא מתאים לך. נשארת רגועה = יכולה להרשות יותר חשיפה למניות.<br>
+    <strong>עדן תשאל אותך בדיוק את זה — ותתאים את התיק.</strong>
+  </div>
+</div>
+
+<!-- שקף 6: 3 הכלים המרכזיים -->
+<div class="slide bg-dark" id="s6">
+  <div class="slide-num">06</div>
   <div class="session-label">מפגש 1</div>
   <div class="tag">הכלים שתשתמשי בהם</div>
   <h2>3 הכלים <span>המרכזיים</span> בתיק</h2>
@@ -273,7 +367,7 @@ h2 span { color:#EF9F27; }
     <div class="card">
       <span class="card-icon">💵</span>
       <h3>קרן כספית</h3>
-      <p>כמו פיקדון — רק טוב יותר.<br><span class="accent">~4.5% שנתי</span>, נזילה יומית, סיכון נמוך מאוד.<br><br>מתאימה לכסף שאולי תצטרכי בקרוב.</p>
+      <p>כמו פיקדון — רק טוב יותר מבחינת מס.<br><span class="accent">~4.5% שנתי</span>, נזילה יומית, סיכון נמוך מאוד.<br><br>מתאימה לכסף שאולי תצטרכי בקרוב.</p>
     </div>
     <div class="card">
       <span class="card-icon">🌍</span>
@@ -291,9 +385,9 @@ h2 span { color:#EF9F27; }
   </div>
 </div>
 
-<!-- שקף 5: קרן סל ETF -->
-<div class="slide bg-dark" id="s5">
-  <div class="slide-num">05</div>
+<!-- שקף 7: קרן סל ETF -->
+<div class="slide bg-dark" id="s7">
+  <div class="slide-num">07</div>
   <div class="session-label">מפגש 1</div>
   <div class="tag">הכלי העיקרי לצמיחה</div>
   <h2>קרן סל ETF —<br><span>לקנות 500 חברות בפעולה אחת</span></h2>
@@ -309,16 +403,16 @@ h2 span { color:#EF9F27; }
       <p>קונה <span class="accent">מאות חברות בבת אחת.</span><br>אחת נופלת — האחרות ממשיכות.<br><br>דמי ניהול: <span class="accent">~0.1–0.3% בלבד.</span></p>
     </div>
   </div>
-  <ul class="bullet-list" style="margin-top:20px">
+  <ul class="bullet-list" style="margin-top:18px">
     <li><strong>S&P 500</strong> — 500 החברות הגדולות בארה"ב (אפל, גוגל, מיקרוסופט...)</li>
     <li><strong>MSCI World</strong> — ~1,500 חברות מ-23 מדינות. פיזור עולמי אמיתי.</li>
     <li><strong>ת"א 125</strong> — 125 חברות גדולות בישראל. חשיפה לשקל.</li>
   </ul>
 </div>
 
-<!-- שקף 6: ריבית דריבית -->
-<div class="slide bg-dark" id="s6">
-  <div class="slide-num">06</div>
+<!-- שקף 8: ריבית דריבית -->
+<div class="slide bg-dark" id="s8">
+  <div class="slide-num">08</div>
   <div class="session-label">מפגש 1</div>
   <div class="tag">הכוח הגדול ביותר בהשקעות</div>
   <h2>ריבית דריבית —<br><span>הרווחים מרוויחים על עצמם</span></h2>
@@ -343,9 +437,9 @@ h2 span { color:#EF9F27; }
   </div>
 </div>
 
-<!-- שקף 7: פיזור ותיק מאוזן -->
-<div class="slide bg-dark" id="s7">
-  <div class="slide-num">07</div>
+<!-- שקף 9: פיזור ותיק מאוזן -->
+<div class="slide bg-dark" id="s9">
+  <div class="slide-num">09</div>
   <div class="session-label">מפגש 1</div>
   <div class="tag">עקרון הברזל</div>
   <h2>פיזור — <span>לא לשים הכל בסל אחד</span></h2>
@@ -371,9 +465,9 @@ h2 span { color:#EF9F27; }
   </div>
 </div>
 
-<!-- שקף 8: תרגול עם עדן -->
-<div class="slide bg-dark" id="s8">
-  <div class="slide-num">08</div>
+<!-- שקף 10: תרגול עם עדן -->
+<div class="slide bg-dark" id="s10">
+  <div class="slide-num">10</div>
   <div class="session-label">מפגש 1</div>
   <div class="tag">תרגול</div>
   <h2>עכשיו <span>מתרגלות</span> עם עדן</h2>
@@ -387,7 +481,7 @@ h2 span { color:#EF9F27; }
     <img class="eden-av" src="screenshots/eden.png" alt="עדן">
     <p><strong>עדן זמינה 24/7</strong> — אחרי המפגש תוכלו להמשיך לשאול, לתרגל ולהעמיק בנושאים שהכי רלוונטיים לכן.</p>
   </div>
-  <div class="highlight" style="margin-top:16px">
+  <div class="highlight" style="margin-top:14px">
     📅 <strong>מפגש 2 — 20 במאי:</strong> בונות את התיק — בוחרות קרנות קונקרטיות ופיזור נכון.
   </div>
 </div>
@@ -396,12 +490,12 @@ h2 span { color:#EF9F27; }
 <div class="nav-bar">
   <button class="nav-btn" id="prev" onclick="go(-1)">→</button>
   <div class="dots" id="dots"></div>
-  <span class="slide-counter" id="counter">1 / 8</span>
+  <span class="slide-counter" id="counter">1 / 10</span>
   <button class="nav-btn" id="next" onclick="go(1)">←</button>
 </div>
 
 <script>
-const total = 8;
+const total = 10;
 let cur = 1;
 
 const dotsEl = document.getElementById('dots');
