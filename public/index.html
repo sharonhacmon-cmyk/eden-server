@@ -2655,6 +2655,8 @@ function handlePortfolioChoice(reply){
       setTimeout(()=>addQRs([
         'רמת הסיכון — יותר סולידי',
         'רמת הסיכון — יותר אגרסיבי',
+        'בלי אג"ח — רק מניות וקרן כספית',
+        'בלי קרן כספית — רק מניות ואג"ח',
         'הגיאוגרפיה (ישראל / גלובלי)',
         'אני רוצה להתחיל את השאלון מחדש',
       ], handleChangeRequest), 400);
@@ -2714,6 +2716,40 @@ function handleChangeRequest(reply){
   } else if (reply.includes('אגרסיבי')) {
     kyc.manualRisk = 'high';
     rebuildWithRisk('high');
+  } else if (reply.includes('בלי אג"ח')) {
+    // הסרת אג"ח מהתיק — מחלקים את אחוזיו בין המרכיבים הנשארים
+    delay(()=>{
+      const p = buildPortfolio(kyc.risk || computeRisk());
+      const filtered = p.allocs.filter(a => !a.secs.includes('bond'));
+      const total = filtered.reduce((s,a)=>s+a.pct,0);
+      filtered.forEach(a=>{ a.pct = Math.round(a.pct/total*100); });
+      const diff = 100 - filtered.reduce((s,a)=>s+a.pct,0);
+      if (filtered.length) filtered[filtered.length-1].pct += diff;
+      p.allocs = filtered;
+      kyc.profile = p;
+      addMsg('עדכנתי את התיק — ללא אג"ח:\n\n💡 שים לב: הסרת אג"ח מגדילה את התנודתיות בתקופות של ירידות. מתאים למי שיש אופק זמן ארוך ועמידות לסיכון גבוהה.');
+      setTimeout(()=>{
+        addCard(portfolioCardHTML(p));
+        setTimeout(()=>addQRs(['תני לי ניירות ספציפיים 📋','ללמוד עוד על נושא 📚','רוצה לשנות משהו בתיק'], handlePortfolioChoice), 500);
+      }, 500);
+    }, 700);
+  } else if (reply.includes('בלי קרן כספית')) {
+    // הסרת קרן כספית מהתיק
+    delay(()=>{
+      const p = buildPortfolio(kyc.risk || computeRisk());
+      const filtered = p.allocs.filter(a => a.secs !== 'cash');
+      const total = filtered.reduce((s,a)=>s+a.pct,0);
+      filtered.forEach(a=>{ a.pct = Math.round(a.pct/total*100); });
+      const diff = 100 - filtered.reduce((s,a)=>s+a.pct,0);
+      if (filtered.length) filtered[filtered.length-1].pct += diff;
+      p.allocs = filtered;
+      kyc.profile = p;
+      addMsg('עדכנתי את התיק — ללא קרן כספית:\n\n💡 קרן כספית משמשת כ"כרית ביטחון" נזילה. בלעדיה — התיק כולו מושקע ופחות נזיל בטווח הקצר.');
+      setTimeout(()=>{
+        addCard(portfolioCardHTML(p));
+        setTimeout(()=>addQRs(['תני לי ניירות ספציפיים 📋','ללמוד עוד על נושא 📚','רוצה לשנות משהו בתיק'], handlePortfolioChoice), 500);
+      }, 500);
+    }, 700);
   } else if (reply.includes('גיאוגרפיה') || reply.includes('ישראל') || reply.includes('גלובלי')) {
     delay(()=>{
       addMsg('איפה תרצי להשקיע?');
