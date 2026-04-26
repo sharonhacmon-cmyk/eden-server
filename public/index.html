@@ -2483,9 +2483,61 @@ function addBackBtn(){
   scroll();
 }
 
+function brokerCompareCardHTML(){
+  return `<div style="background:white;border-radius:16px;border:1px solid rgba(0,0,0,.08);overflow:hidden;max-width:96%;box-shadow:0 4px 16px rgba(0,0,0,.08);animation:msgIn .3s ease">
+    <div style="background:linear-gradient(135deg,#085041,#1D9E75);padding:12px 16px;color:white">
+      <div style="font-size:13px;font-weight:800">🏦 השוואת בתי השקעות</div>
+      <div style="font-size:10px;opacity:.7;margin-top:2px">⚠️ פרטי ההטבות משתנים מעת לעת — מומלץ לאמת מול בית ההשקעות</div>
+    </div>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:13px;min-width:360px">
+      <thead>
+        <tr style="background:#f3f1ed;font-size:11px;color:#888;font-weight:700">
+          <th style="padding:8px 12px;text-align:right">בית השקעות</th>
+          <th style="padding:8px 12px;text-align:center">סף כניסה</th>
+          <th style="padding:8px 12px;text-align:center">הטבת פתיחה</th>
+          <th style="padding:8px 12px;text-align:center">מתאים ל...</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid #f0f0ec">
+          <td style="padding:10px 12px;font-weight:700;color:#1a1a18">אלטשולר שחם</td>
+          <td style="padding:10px 12px;text-align:center;color:#085041;font-weight:700">₪5,000</td>
+          <td style="padding:10px 12px;text-align:center;color:#EF9F27;font-weight:700">מתנה ₪200</td>
+          <td style="padding:10px 12px;text-align:center;font-size:12px;color:#666">מתחילות, ממשק ידידותי</td>
+        </tr>
+        <tr style="border-bottom:1px solid #f0f0ec">
+          <td style="padding:10px 12px;font-weight:700;color:#1a1a18">מיטב</td>
+          <td style="padding:10px 12px;text-align:center;color:#085041;font-weight:700">₪10,000</td>
+          <td style="padding:10px 12px;text-align:center;color:#EF9F27;font-weight:700">הטבה ₪100</td>
+          <td style="padding:10px 12px;text-align:center;font-size:12px;color:#666">ממשק נוח, מגוון קרנות</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 12px;font-weight:700;color:#1a1a18">IBI</td>
+          <td style="padding:10px 12px;text-align:center;color:#085041;font-weight:700">₪15,000</td>
+          <td style="padding:10px 12px;text-align:center;color:#EF9F27;font-weight:700">מתנה ₪300</td>
+          <td style="padding:10px 12px;text-align:center;font-size:12px;color:#666">כלים מתקדמים</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <div style="padding:8px 12px 10px;font-size:11px;color:#999;text-align:center">
+      כל בתי ההשקעות מפוקחים ע"י רשות ניירות ערך · פתיחה אונליין ~10 דקות
+    </div>
+  </div>`;
+}
+
 function handleKYC(reply){
   saveSnapshot();
   addMsg(reply, true);
+  // בית השקעות — הצגת טבלת השוואה לפני המשך
+  if (KYC[kycStep].key === 'broker') {
+    const msgs = document.getElementById('msgs');
+    const el = document.createElement('div');
+    el.style.cssText='display:flex;gap:10px;align-items:flex-start;animation:msgIn .3s ease;';
+    el.innerHTML = '<img class="av" src="'+AVATAR+'">' + brokerCompareCardHTML();
+    msgs.appendChild(el); scroll();
+  }
   // גידור מטבע — הסבר מורחב עם ויזואל
   if (KYC[kycStep].key === 'currency' && (reply.includes('להבין') || reply.includes('הסברי') || reply.includes('גידור'))) {
     delay(()=>{
