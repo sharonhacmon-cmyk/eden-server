@@ -1332,11 +1332,14 @@ function updCalc(cid, sid){
     '<polyline points="'+iLine+'" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="5,3"/>'+
     '<polyline points="'+vLine+'" fill="none" stroke="#1D9E75" stroke-width="3" stroke-linejoin="round"/>'+
     milestones+
-    gridX+
-    '<rect x="'+pL+'" y="8" width="12" height="2" fill="#999" rx="1"/>'+
-    '<text x="'+(pL+16)+'" y="12" font-size="8.5" fill="#888">הפקדות בלבד</text>'+
-    '<rect x="'+(pL+90)+'" y="8" width="12" height="2" fill="#1D9E75" rx="1"/>'+
-    '<text x="'+(pL+106)+'" y="12" font-size="8.5" fill="#1D9E75">עם ריבית דריבית</text>';
+    gridX;
+  // legend as HTML (outside SVG to avoid RTL overlap issues)
+  var legendHTML =
+    '<div style="display:flex;gap:16px;justify-content:center;margin:4px 0 8px;font-size:11px;color:#888;direction:rtl">'+
+    '<span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:14px;height:2px;background:#1D9E75;border-radius:1px"></span>עם ריבית דריבית</span>'+
+    '<span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:14px;height:2px;background:#999;border-radius:1px;border-top:1px dashed #999"></span>הפקדות בלבד</span>'+
+    '</div>';
+  document.getElementById(sid).insertAdjacentHTML('afterend', legendHTML);
 }
 
 function showCompoundStoryCard(){
