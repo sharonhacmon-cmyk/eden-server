@@ -3233,7 +3233,7 @@ async function sendUser(text){
       addMsg('בואי נמשיך מאיפה שעצרנו 💚');
       setTimeout(askKYC, 600);
     }, 1000);
-  } else if (stage === 'portfolio') {
+  } else if (stage === 'portfolio' || stage === 'securities') {
     setTimeout(()=>{
       delay(()=>{
         addMsg('בואי נמשיך עם התיק שלך 💚');
@@ -3245,8 +3245,18 @@ async function sendUser(text){
         ], handlePortfolioChoice), 400);
       }, 500);
     }, 1000);
+  } else if (stage === 'compare' || stage === 'pre_compare') {
+    setTimeout(()=>{
+      delay(()=>{
+        addMsg('בואי נמשיך 💚');
+        setTimeout(startKYC, 500);
+      }, 500);
+    }, 1000);
   } else if (lastFlowFn) {
     setTimeout(()=>{ lastFlowFn(); }, 800);
+  } else {
+    // fallback — תמיד חוזרות לתפריט
+    setTimeout(()=>{ showLearnMenu(); }, 800);
   }
 }
 
