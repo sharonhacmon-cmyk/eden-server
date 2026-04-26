@@ -3197,6 +3197,18 @@ async function sendUser(text){
       addMsg('בואי נמשיך מאיפה שעצרנו 💚');
       setTimeout(askKYC, 600);
     }, 1000);
+  } else if (stage === 'portfolio') {
+    setTimeout(()=>{
+      delay(()=>{
+        addMsg('בואי נמשיך עם התיק שלך 💚');
+        setTimeout(()=>addQRs([
+          'הסבירי על כל מרכיב',
+          'תני לי ניירות ספציפיים 📋',
+          'ללמוד עוד על נושא 📚',
+          'רוצה לשנות משהו בתיק',
+        ], handlePortfolioChoice), 400);
+      }, 500);
+    }, 1000);
   } else if (lastFlowFn) {
     setTimeout(()=>{ lastFlowFn(); }, 800);
   }
