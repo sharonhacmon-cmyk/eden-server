@@ -408,7 +408,8 @@ code{background:#f0f0ec;padding:1px 6px;border-radius:4px;font-size:11px;font-fa
 <!-- LAB FULL-SCREEN MODAL -->
 <div id="lab-modal" style="display:none;position:fixed;inset:0;background:#fafdf9;z-index:400;overflow-y:auto;flex-direction:column">
   <div style="background:linear-gradient(135deg,#085041,#1D9E75);padding:14px 18px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;box-shadow:0 2px 12px rgba(0,0,0,.2)">
-    <button onclick="closeLabModal()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:white;border-radius:20px;padding:7px 16px;font-family:Heebo,sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px">← חזרה לשיחה</button>
+    <button onclick="closeLabModal()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:white;border-radius:20px;padding:7px 16px;font-family:Heebo,sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;flex-shrink:0">← חזרה לשיחה</button>
+    <button id="lab-back-menu-btn" onclick="showLabMenu()" style="display:none;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:white;border-radius:20px;padding:7px 16px;font-family:Heebo,sans-serif;font-size:13px;font-weight:700;cursor:pointer;align-items:center;gap:6px;flex-shrink:0">🔬 כל הנושאים</button>
     <span id="lab-modal-title" style="color:white;font-weight:800;font-size:15px;flex:1;text-align:right"></span>
   </div>
   <div id="lab-modal-body" style="padding:18px;max-width:640px;margin:0 auto;width:100%"></div>
@@ -3426,6 +3427,7 @@ function navJump(section){
 function showLabMenu(){
   var m=document.getElementById('lab-modal');
   document.getElementById('lab-modal-title').textContent='🔬 מעבדת חקירה';
+  document.getElementById('lab-back-menu-btn').style.display='none';
   var body=document.getElementById('lab-modal-body');
   body.innerHTML=
     '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:4px 0">'+
@@ -3445,8 +3447,8 @@ function showLabMenu(){
 function openLabModal(title){
   document.getElementById('lab-modal-title').textContent=title;
   var body=document.getElementById('lab-modal-body');
-  // כפתור חזרה לתפריט
-  body.innerHTML='<button onclick="showLabMenu()" style="display:inline-flex;align-items:center;gap:6px;background:#f0faf5;border:1.5px solid #1D9E75;color:#085041;border-radius:20px;padding:6px 14px;font-family:Heebo,sans-serif;font-size:12px;font-weight:700;cursor:pointer;margin-bottom:14px">← כל הנושאים</button>';
+  body.innerHTML='';
+  document.getElementById('lab-back-menu-btn').style.display='inline-flex';
   document.getElementById('lab-modal').style.display='flex';
   document.getElementById('lab-modal').scrollTop=0;
 }
