@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>טיזר מחר</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:'Heebo',sans-serif;
+  background:#062e24;
+  display:flex; align-items:center; justify-content:center;
+  min-height:100vh;
+}
+
+.card {
+  width:480px; height:480px;
+  background:linear-gradient(160deg,#062e24 0%,#085041 60%,#0d6b57 100%);
+  border-radius:28px;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-end;
+  box-shadow:0 24px 80px rgba(0,0,0,0.6);
+}
+
+/* וילונות */
+.curtain-left, .curtain-right {
+  position:absolute;
+  top:0; bottom:0;
+  width:52%;
+  background:linear-gradient(180deg,#041f18 0%,#062e24 40%,#085041 100%);
+  z-index:2;
+}
+.curtain-left {
+  right:0;
+  border-radius:0 0 0 80px;
+  box-shadow: inset -8px 0 24px rgba(0,0,0,0.3);
+}
+.curtain-right {
+  left:0;
+  border-radius:0 0 80px 0;
+  box-shadow: inset 8px 0 24px rgba(0,0,0,0.3);
+}
+/* קפלים בוילון */
+.curtain-left::before, .curtain-left::after,
+.curtain-right::before, .curtain-right::after {
+  content:'';
+  position:absolute; top:0; bottom:0; width:3px;
+  background:rgba(255,255,255,0.04);
+}
+.curtain-left::before { right:30%; }
+.curtain-left::after  { right:60%; }
+.curtain-right::before { left:30%; }
+.curtain-right::after  { left:60%; }
+
+/* קו זהב בראש הוילון */
+.curtain-rod {
+  position:absolute;
+  top:0; left:0; right:0; height:8px;
+  background:linear-gradient(90deg,#a07020,#EF9F27,#f5c04a,#EF9F27,#a07020);
+  z-index:5;
+}
+
+/* עדן — מסתכלת מבעד */
+.eden-wrap {
+  position:absolute;
+  bottom:0; left:50%; transform:translateX(-50%);
+  z-index:1;
+  width:180px;
+}
+.eden-wrap img {
+  width:100%;
+  display:block;
+  filter:brightness(0.9);
+  mask-image:linear-gradient(to top, #062e24 0%, transparent 15%, black 30%);
+  -webkit-mask-image:linear-gradient(to top, #062e24 0%, transparent 15%, black 30%);
+}
+
+/* פס אור באמצע בין הוילונות */
+.center-light {
+  position:absolute;
+  top:8px; bottom:0;
+  left:calc(50% - 30px); width:60px;
+  background:linear-gradient(180deg,rgba(93,202,165,0.18) 0%,rgba(93,202,165,0.04) 60%,transparent 100%);
+  z-index:1;
+}
+
+/* טקסט */
+.text-block {
+  position:relative; z-index:10;
+  text-align:center;
+  padding:0 24px 28px;
+  width:100%;
+}
+.eyes {
+  font-size:32px; margin-bottom:10px; display:block;
+}
+.main-text {
+  font-size:26px; font-weight:900; color:white;
+  line-height:1.35; margin-bottom:12px;
+}
+.main-text span { color:#5DCAA5; }
+.sub-text {
+  font-size:14px; font-weight:300;
+  color:rgba(255,255,255,0.65);
+  line-height:1.7; margin-bottom:14px;
+}
+.sub-text strong { color:rgba(255,255,255,0.9); font-weight:700; }
+.sign {
+  font-size:13px; color:rgba(255,255,255,0.5);
+  font-weight:400;
+}
+.sign strong { color:#5DCAA5; font-weight:700; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="curtain-rod"></div>
+  <div class="curtain-left"></div>
+  <div class="curtain-right"></div>
+  <div class="center-light"></div>
+  <div class="eden-wrap">
+    <img src="screenshots/eden.png" alt="עדן">
+  </div>
+  <div class="text-block">
+    <span class="eyes">👀</span>
+    <div class="main-text">מחר. <span>19:30.</span></div>
+    <div class="sub-text">
+      שוק ההון, ריבית דריבית,<br>
+      ומישהי שמחכה לפגוש אתכן.
+    </div>
+    <div class="sign">להתראות! 💚 &nbsp;·&nbsp; <strong>שרון</strong></div>
+  </div>
+</div>
+</body>
+</html>
