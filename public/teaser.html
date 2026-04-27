@@ -135,6 +135,7 @@ body {
 </head>
 <body>
 <div class="card">
+  <div class="confetti-wrap" id="conf"></div>
   <div class="rod"></div>
   <div class="curtain-l"></div>
   <div class="curtain-r"></div>
@@ -143,14 +144,39 @@ body {
     <img src="screenshots/eden.png" alt="עדן">
   </div>
   <div class="text-block">
-    <span class="eyes">👀</span>
-    <div class="main-text">מחר. <span>19:30.</span></div>
+    <span class="eyes">🎉</span>
+    <div class="main-text">היום <span>זה קורה.</span></div>
     <div class="sub-text">
       שוק ההון, ריבית דריבית,<br>
       ומישהי שמחכה לפגוש אתכן.
     </div>
-    <div class="sign">להתראות! 💚 &nbsp;·&nbsp; <strong>שרון</strong></div>
+    <div class="sign">מחכה לכן הערב! 💚 &nbsp;·&nbsp; <strong>שרון</strong></div>
   </div>
 </div>
+
+<script>
+const colors = ['#5DCAA5','#EF9F27','#ffffff','#1D9E75','#f5c252','#93e8cc','#f0a0a0'];
+const conf = document.getElementById('conf');
+for (let i = 0; i < 55; i++) {
+  const el = document.createElement('div');
+  const size = 6 + Math.random() * 8;
+  const left = Math.random() * 100;
+  const delay = Math.random() * 4;
+  const dur = 3 + Math.random() * 4;
+  const color = colors[Math.floor(Math.random() * colors.length)];
+  const br = [2,4,6,50][Math.floor(Math.random()*4)];
+  el.style.cssText = `position:absolute;top:-20px;left:${left}%;width:${size}px;height:${size}px;background:${color};border-radius:${br}px;opacity:0;animation:fall ${dur}s linear ${delay}s infinite`;
+  conf.appendChild(el);
+}
+</script>
+
+<style>
+.confetti-wrap { position:absolute; inset:0; z-index:6; pointer-events:none; }
+@keyframes fall {
+  0%   { transform:translateY(0) rotate(0deg);   opacity:1; }
+  85%  { opacity:1; }
+  100% { transform:translateY(600px) rotate(720deg); opacity:0; }
+}
+</style>
 </body>
 </html>
