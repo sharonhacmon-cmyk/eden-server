@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>היום זה קורה</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:'Heebo',sans-serif;
+  background:#111;
+  display:flex; align-items:center; justify-content:center;
+  min-height:100vh;
+}
+
+.card {
+  width:480px; height:560px;
+  background:linear-gradient(160deg,#062e24 0%,#085041 55%,#0d6b57 100%);
+  border-radius:28px;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-end;
+  box-shadow:0 24px 80px rgba(0,0,0,0.7);
+}
+
+/* קונפטי */
+.confetti-wrap {
+  position:absolute;
+  inset:0; z-index:5; pointer-events:none;
+}
+.c {
+  position:absolute;
+  top:-20px;
+  width:10px; height:10px;
+  border-radius:2px;
+  opacity:0;
+  animation: fall linear infinite;
+}
+@keyframes fall {
+  0%   { transform: translateY(0) rotate(0deg);   opacity:1; }
+  80%  { opacity:1; }
+  100% { transform: translateY(600px) rotate(720deg); opacity:0; }
+}
+
+/* עדן */
+.eden-wrap {
+  position:absolute;
+  bottom:0; left:50%; transform:translateX(-50%);
+  z-index:3; width:220px;
+}
+.eden-wrap img {
+  width:100%; display:block;
+  filter:brightness(1.05) drop-shadow(0 0 20px rgba(93,202,165,0.2));
+  mask-image:linear-gradient(to top, transparent 0%, rgba(0,0,0,0.2) 6%, black 20%);
+  -webkit-mask-image:linear-gradient(to top, transparent 0%, rgba(0,0,0,0.2) 6%, black 20%);
+}
+
+/* אור */
+.glow {
+  position:absolute; bottom:0; left:50%; transform:translateX(-50%);
+  width:300px; height:300px;
+  background:radial-gradient(ellipse at 50% 100%, rgba(93,202,165,0.15) 0%, transparent 70%);
+  z-index:1;
+}
+
+/* טקסט */
+.text-block {
+  position:relative; z-index:10;
+  text-align:center;
+  padding:0 28px 34px;
+  width:100%;
+  background:linear-gradient(to top, rgba(6,46,36,0.97) 70%, transparent);
+}
+.today {
+  font-size:46px; font-weight:900; color:white;
+  line-height:1.1; margin-bottom:8px;
+}
+.today span { color:#5DCAA5; }
+.time-pill {
+  display:inline-block;
+  background:rgba(93,202,165,0.15);
+  border:1px solid rgba(93,202,165,0.4);
+  border-radius:50px;
+  padding:7px 22px;
+  font-size:20px; font-weight:700; color:#5DCAA5;
+  margin-bottom:14px;
+}
+.sub {
+  font-size:16px; font-weight:300;
+  color:rgba(255,255,255,0.6);
+  line-height:1.6; margin-bottom:10px;
+}
+.sign {
+  font-size:14px; color:rgba(255,255,255,0.4);
+}
+.sign strong { color:#5DCAA5; font-weight:700; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="confetti-wrap" id="conf"></div>
+  <div class="glow"></div>
+  <div class="eden-wrap">
+    <img src="screenshots/eden.png" alt="עדן">
+  </div>
+  <div class="text-block">
+    <div class="today">היום<br><span>זה קורה.</span></div>
+    <div class="time-pill">📅 19:30</div>
+    <div class="sub">מפגש 1 · שוק ההון, ריבית דריבית<br>ועדן מחכה לפגוש אתכן 💚</div>
+    <div class="sign">מחכה לכן — <strong>שרון</strong> 🌿</div>
+  </div>
+</div>
+
+<script>
+const colors = ['#5DCAA5','#EF9F27','#ffffff','#1D9E75','#f5c252','#93e8cc','#f87171'];
+const shapes = [2, 4, 6, 10]; // border-radius px
+const conf = document.getElementById('conf');
+const N = 55;
+
+for (let i = 0; i < N; i++) {
+  const el = document.createElement('div');
+  el.className = 'c';
+  const color = colors[Math.floor(Math.random() * colors.length)];
+  const size = 6 + Math.random() * 8;
+  const left = Math.random() * 100;
+  const delay = Math.random() * 4;
+  const dur = 3 + Math.random() * 4;
+  const br = shapes[Math.floor(Math.random() * shapes.length)];
+  el.style.cssText = `
+    left:${left}%;
+    width:${size}px; height:${size}px;
+    background:${color};
+    border-radius:${br}px;
+    animation-duration:${dur}s;
+    animation-delay:${delay}s;
+  `;
+  conf.appendChild(el);
+}
+</script>
+</body>
+</html>
