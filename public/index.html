@@ -1334,13 +1334,15 @@ function updCalc(cid, sid){
     '<polyline points="'+vLine+'" fill="none" stroke="#1D9E75" stroke-width="3" stroke-linejoin="round"/>'+
     milestones+
     gridX;
-  // legend as HTML (outside SVG to avoid RTL overlap issues)
-  var legendHTML =
-    '<div style="display:flex;gap:16px;justify-content:center;margin:4px 0 8px;font-size:11px;color:#888;direction:rtl">'+
-    '<span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:14px;height:2px;background:#1D9E75;border-radius:1px"></span>עם ריבית דריבית</span>'+
-    '<span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:14px;height:2px;background:#999;border-radius:1px;border-top:1px dashed #999"></span>הפקדות בלבד</span>'+
-    '</div>';
-  document.getElementById(sid).insertAdjacentHTML('afterend', legendHTML);
+  // legend as HTML (outside SVG to avoid RTL overlap issues) — add only once
+  if (!document.getElementById(sid+'_legend')) {
+    var legendHTML =
+      '<div id="'+sid+'_legend" style="display:flex;gap:16px;justify-content:center;margin:4px 0 8px;font-size:11px;color:#888;direction:rtl">'+
+      '<span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:14px;height:2px;background:#1D9E75;border-radius:1px"></span>עם ריבית דריבית</span>'+
+      '<span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:14px;height:2px;background:#999;border-radius:1px;border-top:1px dashed #999"></span>הפקדות בלבד</span>'+
+      '</div>';
+    document.getElementById(sid).insertAdjacentHTML('afterend', legendHTML);
+  }
 }
 
 function showCompoundStoryCard(){
