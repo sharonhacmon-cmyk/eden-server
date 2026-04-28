@@ -2876,6 +2876,15 @@ function showAllSecurities(){
 async function handleFinal(reply){
   addMsg(reply, true);
 
+  // ── סיום / תודה ──
+  const lc = reply.toLowerCase();
+  if (reply.includes('תודה') || reply.includes('סיימתי') || reply.includes('הכל ברור') || lc.includes('bye') || lc.includes('להתראות')) {
+    delay(()=>{
+      addMsg('שמחה שהייתי כאן! 💚\n\nאני זמינה תמיד — כשתרצי להעמיק בנושא, לתרגל, או לשאול שאלה חדשה, את מוזמנת לחזור דרך התפריט 😊');
+    }, 600);
+    return;
+  }
+
   // ── למידה נוספת ──
   if (reply.includes('ללמוד נושא נוסף') || reply.includes('ללמוד עוד')) {
     delay(()=>{ addMsg('בחרי נושא 💚'); setTimeout(showLearnMenu, 400); }, 500);
@@ -3230,6 +3239,11 @@ async function sendUser(text){
   addMsg(reply);
   busy=false;
   document.getElementById('btn-send').disabled=false;
+  // זיהוי סיום — לא חוזרים לתהליך
+  const _lc = text.trim();
+  if (_lc.includes('תודה') || _lc.includes('סיימתי') || _lc.includes('להתראות') || _lc === 'bye') {
+    return;
+  }
   // חזרה אוטומטית לתהליך המובנה
   if (stage === 'kyc' && kycStep < KYC.length) {
     setTimeout(()=>{
