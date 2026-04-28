@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>עוד מעט נפגשות</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:'Heebo',sans-serif;
+  background:#111;
+  display:flex; align-items:center; justify-content:center;
+  min-height:100vh;
+}
+.card {
+  width:480px; height:560px;
+  background:linear-gradient(160deg,#062e24 0%,#085041 55%,#0d6b57 100%);
+  border-radius:28px;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:space-between;
+  box-shadow:0 24px 80px rgba(0,0,0,0.7);
+}
+
+/* רקע */
+.bg-circle1 {
+  position:absolute; width:360px; height:360px; border-radius:50%;
+  background:rgba(93,202,165,0.06); top:-120px; left:-100px; pointer-events:none;
+}
+.bg-circle2 {
+  position:absolute; width:240px; height:240px; border-radius:50%;
+  background:rgba(239,159,39,0.05); bottom:-40px; right:-60px; pointer-events:none;
+}
+
+/* טקסט עליון */
+.top-block {
+  position:relative; z-index:10;
+  text-align:center;
+  padding:34px 28px 0;
+  width:100%;
+}
+.tag {
+  font-size:12px; font-weight:700; letter-spacing:3px;
+  color:#5DCAA5; margin-bottom:16px;
+}
+.main-text {
+  font-size:42px; font-weight:900; color:white;
+  line-height:1.15; margin-bottom:16px;
+}
+.main-text span { color:#5DCAA5; }
+
+/* טיפ מחשב */
+.tip-box {
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:16px;
+  padding:14px 18px;
+  margin:0 4px;
+  text-align:right;
+}
+.tip-row {
+  display:flex; align-items:flex-start; gap:10px;
+  font-size:15px; color:rgba(255,255,255,0.8);
+  font-weight:300; line-height:1.6; margin-bottom:8px;
+}
+.tip-row:last-child { margin-bottom:0; }
+.tip-icon { font-size:18px; flex-shrink:0; margin-top:1px; }
+.tip-row strong { color:white; font-weight:700; }
+
+/* עדן */
+.eden-wrap {
+  position:relative; z-index:5;
+  width:190px; flex-shrink:0;
+}
+.eden-wrap img {
+  width:100%; display:block;
+  filter:brightness(1.05) drop-shadow(0 0 20px rgba(93,202,165,0.2));
+  mask-image:linear-gradient(to top, transparent 0%, rgba(0,0,0,0.1) 5%, black 18%);
+  -webkit-mask-image:linear-gradient(to top, transparent 0%, rgba(0,0,0,0.1) 5%, black 18%);
+}
+
+/* תחתית */
+.bottom-bar {
+  position:relative; z-index:10;
+  width:100%; text-align:center;
+  padding:0 28px 26px;
+  font-size:14px; color:rgba(255,255,255,0.4);
+}
+.bottom-bar strong { color:#5DCAA5; font-weight:700; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="bg-circle1"></div>
+  <div class="bg-circle2"></div>
+
+  <div class="top-block">
+    <div class="tag">נתיב · הכסף החכם שלך</div>
+    <div class="main-text">עוד מעט<br><span>נפגשות.</span></div>
+    <div class="tip-box">
+      <div class="tip-row">
+        <span class="tip-icon">💻</span>
+        <span><strong>מחשב = חוויה טובה יותר</strong> — התצוגה ברורה יותר ונוח יותר לעקוב</span>
+      </div>
+      <div class="tip-row">
+        <span class="tip-icon">⏰</span>
+        <span><strong>כניסה בזמן</strong> — נתחיל ב-19:30 בדיוק</span>
+      </div>
+      <div class="tip-row">
+        <span class="tip-icon">🎧</span>
+        <span>מומלץ <strong>אוזניות</strong> לאיכות שמע טובה</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="eden-wrap">
+    <img src="screenshots/eden.png" alt="עדן">
+  </div>
+
+  <div class="bottom-bar">מחכה לכן 💚 — <strong>שרון</strong></div>
+</div>
+</body>
+</html>
