@@ -643,7 +643,7 @@ function demoReply(text) {
 
   // ── פתיחת תיק ──
   if (lc.includes('אלטשולר') || lc.includes('לפתוח') || lc.includes('בית השקעות') || lc.includes('ibi') || lc.includes('מיטב') || lc.includes('איך מתחילות'))
-    return 'פתיחת תיק לוקחת ~10 דקות אונליין.\n\n🏦 IBI — סף כניסה ₪15,000, כלים מתקדמים, הטבה של 300 ₪\n🏦 מיטב — סף כניסה ₪5,000 (עד סוף אפריל), ממשק נוח, הטבה 100 ₪\n🏦 אלטשולר שחם — סף כניסה ₪5,000, ממשק ידידותי, מתנה 200 ₪\n\nתהליך: פרטים אישיים + צילום ת"ז + חתימה דיגיטלית.';
+    return 'פתיחת תיק לוקחת ~10 דקות אונליין.\n\n🏦 IBI — סף כניסה ₪15,000, כלים מתקדמים, הטבה של 300 ₪\n🏦 מיטב — סף כניסה ₪10,000, ממשק נוח, הטבה 100 ₪\n🏦 אלטשולר שחם — סף כניסה ₪5,000, ממשק ידידותי, מתנה 200 ₪\n\nתהליך: פרטים אישיים + צילום ת"ז + חתימה דיגיטלית.';
 
   // ── ריבית דריבית ──
   if (lc.includes('ריבית דריבית') || lc.includes('ריבית מרוכבת') || lc.includes('compound') || lc.includes('מחשבון') || lc.includes('כמה יגדל') || lc.includes('שחקי')) {
@@ -689,7 +689,7 @@ function demoReply(text) {
 
   // ── כמה להשקיע / סכום ──
   if (lc.includes('כמה להשקיע') || lc.includes('מה הסכום') || lc.includes('סף') || lc.includes('מינימום'))
-    return 'אין סכום "נכון" — מה שחשוב הוא להתחיל.\n\nמיטב ואלטשולר שחם מאפשרות להתחיל מ-₪5,000. IBI מ-₪15,000.\n\nהמלצה: תשקיעי רק כסף שלא תצטרכי ב-3+ שנים הקרובות.';
+    return 'אין סכום "נכון" — מה שחשוב הוא להתחיל.\n\nאלטשולר שחם מאפשרת להתחיל מ-₪5,000, מיטב מ-₪10,000, IBI מ-₪15,000.\n\nהמלצה: תשקיעי רק כסף שלא תצטרכי ב-3+ שנים הקרובות.';
 
   // ── השוואה לפיקדון / בנק ──
   if (lc.includes('פיקדון') || lc.includes('בנק') || lc.includes('עו"ש') || lc.includes('חסכון'))
@@ -923,7 +923,7 @@ const KYC = [
     showChart: true },
   { key:'broker',
     ask:'דרך איזה בית השקעות תרצי לפתוח תיק? (כולן אופציות טובות)',
-    opts:['IBI (סף ₪15,000)','מיטב (סף ₪5,000)','אלטשולר שחם (סף ₪5,000)','עוד לא בחרתי — עזרי לי'],
+    opts:['IBI (סף ₪15,000)','מיטב (סף ₪10,000)','אלטשולר שחם (סף ₪5,000)','עוד לא בחרתי — עזרי לי'],
     tip:'כל בתי ההשקעות האלה מפוקחים על ידי רשות ניירות ערך. ההבדל העיקרי: סף כניסה, עמלות, וממשק המשתמש.' },
 ];
 
@@ -2429,6 +2429,14 @@ function askKYC(){
   const step = KYC[kycStep];
   delay(()=>{
     addMsg(step.ask);
+    // טבלת בתי השקעות לפני שאלת הבחירה
+    if (step.key === 'broker') {
+      const msgs = document.getElementById('msgs');
+      const el = document.createElement('div');
+      el.style.cssText='display:flex;gap:10px;align-items:flex-start;';
+      el.innerHTML='<img class="av" src="'+AVATAR+'">'+brokerCompareCardHTML();
+      msgs.appendChild(el); scroll();
+    }
     // גרף מטבע אם רלוונטי
     if (step.showChart) {
       const msgs = document.getElementById('msgs');
@@ -2499,7 +2507,6 @@ function brokerCompareCardHTML(){
           <th style="padding:8px 12px;text-align:right">בית השקעות</th>
           <th style="padding:8px 12px;text-align:center">סף כניסה</th>
           <th style="padding:8px 12px;text-align:center">הטבת פתיחה</th>
-          <th style="padding:8px 12px;text-align:center">מתאים ל...</th>
         </tr>
       </thead>
       <tbody>
@@ -2507,19 +2514,16 @@ function brokerCompareCardHTML(){
           <td style="padding:10px 12px;font-weight:700;color:#1a1a18">אלטשולר שחם</td>
           <td style="padding:10px 12px;text-align:center;color:#085041;font-weight:700">₪5,000</td>
           <td style="padding:10px 12px;text-align:center;color:#EF9F27;font-weight:700">מתנה ₪200</td>
-          <td style="padding:10px 12px;text-align:center;font-size:12px;color:#666">מתחילות, ממשק ידידותי</td>
         </tr>
         <tr style="border-bottom:1px solid #f0f0ec">
           <td style="padding:10px 12px;font-weight:700;color:#1a1a18">מיטב</td>
           <td style="padding:10px 12px;text-align:center;color:#085041;font-weight:700">₪10,000</td>
           <td style="padding:10px 12px;text-align:center;color:#EF9F27;font-weight:700">הטבה ₪100</td>
-          <td style="padding:10px 12px;text-align:center;font-size:12px;color:#666">ממשק נוח, מגוון קרנות</td>
         </tr>
         <tr>
           <td style="padding:10px 12px;font-weight:700;color:#1a1a18">IBI</td>
           <td style="padding:10px 12px;text-align:center;color:#085041;font-weight:700">₪15,000</td>
           <td style="padding:10px 12px;text-align:center;color:#EF9F27;font-weight:700">מתנה ₪300</td>
-          <td style="padding:10px 12px;text-align:center;font-size:12px;color:#666">כלים מתקדמים</td>
         </tr>
       </tbody>
     </table>
@@ -2533,14 +2537,6 @@ function brokerCompareCardHTML(){
 function handleKYC(reply){
   saveSnapshot();
   addMsg(reply, true);
-  // בית השקעות — הצגת טבלת השוואה לפני המשך
-  if (KYC[kycStep].key === 'broker') {
-    const msgs = document.getElementById('msgs');
-    const el = document.createElement('div');
-    el.style.cssText='display:flex;gap:10px;align-items:flex-start;animation:msgIn .3s ease;';
-    el.innerHTML = '<img class="av" src="'+AVATAR+'">' + brokerCompareCardHTML();
-    msgs.appendChild(el); scroll();
-  }
   // גידור מטבע — הסבר מורחב עם ויזואל
   if (KYC[kycStep].key === 'currency' && (reply.includes('להבין') || reply.includes('הסברי') || reply.includes('גידור'))) {
     delay(()=>{
