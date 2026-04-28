@@ -2,148 +2,126 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=1920, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>רקע זום — נתיב</title>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
-html, body { width:1920px; height:1080px; overflow:hidden; }
-body {
-  font-family:'Heebo',sans-serif;
-  direction:rtl;
+html, body {
+  width:100vw; height:100vh; overflow:hidden;
+  font-family:'Heebo',sans-serif; direction:rtl;
   background:linear-gradient(135deg,#041a10 0%,#062e24 35%,#085041 65%,#0d6b57 100%);
+}
+
+.scene {
+  width:100%; height:100%;
+  display:flex; align-items:center;
+  justify-content:space-between;
+  padding:0 6vw;
   position:relative;
-  display:flex; align-items:center; justify-content:flex-end;
 }
 
-/* עיגולי רקע */
-.circle1 {
-  position:absolute; width:900px; height:900px; border-radius:50%;
+/* רקע */
+.bg-circle1 {
+  position:absolute; width:50vw; height:50vw; border-radius:50%;
   background:radial-gradient(circle, rgba(93,202,165,0.08) 0%, transparent 70%);
-  top:-200px; right:-200px; pointer-events:none;
+  top:-15vw; right:-10vw; pointer-events:none;
 }
-.circle2 {
-  position:absolute; width:700px; height:700px; border-radius:50%;
+.bg-circle2 {
+  position:absolute; width:35vw; height:35vw; border-radius:50%;
   background:radial-gradient(circle, rgba(239,159,39,0.06) 0%, transparent 70%);
-  bottom:-200px; left:200px; pointer-events:none;
+  bottom:-10vw; left:15vw; pointer-events:none;
 }
-.circle3 {
-  position:absolute; width:500px; height:500px; border-radius:50%;
-  background:radial-gradient(circle, rgba(29,158,117,0.07) 0%, transparent 70%);
-  top:100px; left:-100px; pointer-events:none;
-}
-
-/* קווי רשת עדינים */
 .grid {
   position:absolute; inset:0;
   background-image:
-    linear-gradient(rgba(93,202,165,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(93,202,165,0.03) 1px, transparent 1px);
-  background-size:80px 80px;
+    linear-gradient(rgba(93,202,165,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(93,202,165,0.025) 1px, transparent 1px);
+  background-size:5vw 5vw;
 }
 
-/* צד שמאל — מידע */
-.left-panel {
-  position:absolute; left:120px; top:50%; transform:translateY(-50%);
-  display:flex; flex-direction:column; gap:48px;
-}
-
-.brand {
-  display:flex; flex-direction:column; gap:6px;
+/* שמאל */
+.left {
+  position:relative; z-index:5;
+  display:flex; flex-direction:column; gap:3vh;
+  flex:1; padding-left:2vw;
 }
 .brand-name {
-  font-size:72px; font-weight:900; color:white; letter-spacing:2px; line-height:1;
+  font-size:clamp(40px,6vw,100px); font-weight:900; color:white; line-height:1;
 }
 .brand-name span { color:#5DCAA5; }
 .brand-tag {
-  font-size:22px; font-weight:300; color:rgba(255,255,255,0.5); letter-spacing:1px;
+  font-size:clamp(14px,1.8vw,28px); font-weight:300;
+  color:rgba(255,255,255,0.5); letter-spacing:1px; margin-top:-1vh;
 }
-
-.session-info {
-  display:flex; flex-direction:column; gap:16px;
-}
-.session-pill {
-  display:inline-flex; align-items:center; gap:12px;
+.pills { display:flex; flex-direction:column; gap:1.2vh; margin-top:1vh; }
+.pill {
+  display:inline-flex; align-items:center; gap:1vw;
   background:rgba(255,255,255,0.06);
   border:1px solid rgba(255,255,255,0.12);
-  border-radius:50px; padding:14px 28px;
+  border-radius:50px; padding:1vh 2vw;
   width:fit-content;
+  font-size:clamp(13px,1.5vw,24px); color:rgba(255,255,255,0.8);
 }
-.session-pill .icon { font-size:22px; }
-.session-pill .text { font-size:20px; color:rgba(255,255,255,0.8); font-weight:400; }
-.session-pill .text strong { color:white; font-weight:700; }
-
-.time-badge {
-  display:inline-flex; align-items:center; gap:12px;
+.pill strong { color:white; }
+.pill-gold {
   background:rgba(239,159,39,0.12);
-  border:1.5px solid rgba(239,159,39,0.4);
-  border-radius:50px; padding:14px 28px;
-  width:fit-content;
+  border-color:rgba(239,159,39,0.4);
+  color:#EF9F27; font-weight:900;
+  font-size:clamp(18px,2.5vw,40px); letter-spacing:2px;
 }
-.time-badge .time { font-size:32px; font-weight:900; color:#EF9F27; letter-spacing:2px; }
 
-/* צד ימין — עדן */
-.right-panel {
-  position:relative; z-index:5;
-  width:520px; height:100%;
-  display:flex; align-items:flex-end; justify-content:center;
-  margin-left:80px;
+.sharon {
+  margin-top:1vh;
+  font-size:clamp(12px,1.2vw,20px); color:rgba(255,255,255,0.35);
 }
-.eden-img {
-  height:85%; width:auto;
-  object-fit:contain; object-position:bottom;
-  filter:brightness(1.05) drop-shadow(0 0 60px rgba(93,202,165,0.2));
+.sharon strong { color:rgba(255,255,255,0.6); }
+
+/* קו */
+.divider {
+  width:1px; height:60%; flex-shrink:0;
+  background:linear-gradient(to bottom, transparent, rgba(93,202,165,0.3) 30%, rgba(93,202,165,0.3) 70%, transparent);
+  margin:0 3vw;
+}
+
+/* ימין — עדן */
+.right {
+  position:relative; z-index:5;
+  height:100%; width:30vw; flex-shrink:0;
+  display:flex; align-items:flex-end; justify-content:center;
+}
+.right img {
+  height:90%; width:auto; object-fit:contain; object-position:bottom;
+  filter:brightness(1.05) drop-shadow(0 0 3vw rgba(93,202,165,0.2));
   mask-image:linear-gradient(to top, transparent 0%, rgba(0,0,0,0.2) 4%, black 14%);
   -webkit-mask-image:linear-gradient(to top, transparent 0%, rgba(0,0,0,0.2) 4%, black 14%);
 }
-
-/* קו מאיר בין השניים */
-.divider-line {
-  position:absolute;
-  right:580px; top:10%; bottom:10%; width:1px;
-  background:linear-gradient(to bottom, transparent, rgba(93,202,165,0.3) 30%, rgba(93,202,165,0.3) 70%, transparent);
-}
-
-/* שם שרון */
-.sharon-name {
-  position:absolute; bottom:60px; left:120px;
-  font-size:18px; color:rgba(255,255,255,0.35); font-weight:300; letter-spacing:1px;
-}
-.sharon-name strong { color:rgba(255,255,255,0.6); font-weight:600; }
 </style>
 </head>
 <body>
-  <div class="circle1"></div>
-  <div class="circle2"></div>
-  <div class="circle3"></div>
+<div class="scene">
+  <div class="bg-circle1"></div>
+  <div class="bg-circle2"></div>
   <div class="grid"></div>
 
-  <div class="left-panel">
-    <div class="brand">
+  <div class="left">
+    <div>
       <div class="brand-name"><span>נתיב</span></div>
       <div class="brand-tag">הכסף החכם שלך</div>
     </div>
-    <div class="session-info">
-      <div class="session-pill">
-        <span class="icon">📅</span>
-        <span class="text"><strong>מפגש 1</strong> מתוך 3</span>
-      </div>
-      <div class="session-pill">
-        <span class="icon">💡</span>
-        <span class="text">מושגי יסוד בשוק ההון</span>
-      </div>
-      <div class="time-badge">
-        <span class="time">19:30</span>
-      </div>
+    <div class="pills">
+      <div class="pill">📅 <span><strong>מפגש 1</strong> מתוך 3</span></div>
+      <div class="pill">💡 <span>מושגי יסוד בשוק ההון</span></div>
+      <div class="pill pill-gold">⏰ 19:30</div>
     </div>
+    <div class="sharon">מנחה: <strong>שרון חכמון</strong></div>
   </div>
 
-  <div class="divider-line"></div>
+  <div class="divider"></div>
 
-  <div class="right-panel">
-    <img class="eden-img" src="screenshots/eden.png" alt="עדן">
+  <div class="right">
+    <img src="screenshots/eden.png" alt="עדן">
   </div>
-
-  <div class="sharon-name">מנחה: <strong>שרון חכמון</strong></div>
+</div>
 </body>
 </html>
