@@ -113,14 +113,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 80px 72px 90px;
+    justify-content: flex-start;
+    padding: 68px 60px 76px;
+    padding-top: max(68px, 10vh);
     text-align: center;
     background: linear-gradient(150deg, var(--dark) 0%, #0a2a1f 55%, var(--mid) 100%);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.5s ease;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
   .slide.active {
     opacity: 1;
@@ -695,15 +697,13 @@ function toggleFS(){
       <div class="resume-item">
         <div class="ri-icon">🎓</div>
         <div class="ri-text">
-          <div class="ri-title">תואר ראשון — הטכניון</div>
-          <div class="ri-sub">הבסיס האנליטי שמאחורי כל החלטה פיננסית</div>
+          <div class="ri-title">תואר ראשון בכלכלה — הטכניון</div>
         </div>
       </div>
       <div class="resume-item">
         <div class="ri-icon">📊</div>
         <div class="ri-text">
           <div class="ri-title">תואר שני — מנהל עסקים MBA</div>
-          <div class="ri-sub">הבנה עמוקה של מערכות פיננסיות, ניהול ואסטרטגיה</div>
         </div>
       </div>
       <div class="resume-item">
@@ -716,8 +716,8 @@ function toggleFS(){
       <div class="resume-item">
         <div class="ri-icon">🏦</div>
         <div class="ri-text">
-          <div class="ri-title">בנק לאומי — ניהול תחום הייעוץ הפנסיוני</div>
-          <div class="ri-sub">ניהול מאוחר של לקוחות פרמיום ותחומים נוספים בבנק</div>
+          <div class="ri-title">בנק לאומי</div>
+          <div class="ri-sub">מנהלת תחום ייעוץ פנסיוני · מנהלת לקוחות פרמיום · תפקידי ניהול נוספים</div>
         </div>
       </div>
       <div class="resume-item" style="border-color:var(--green)">
@@ -982,13 +982,13 @@ function toggleFS(){
 
       <div style="flex:1; display:flex; flex-direction:column; gap:14px;">
         <div class="s4-bullet">
-          🤔 <strong>הבעיה שראיתי:</strong> נשים מגיעות למפגש, מבינות בזמן אמת — ואז חוזרות הביתה ושוכחות. אין עם מי לשאול שאלות בשעה 22:00.
+          🤔 <strong>הבעיה שראיתי:</strong> נשים מגיעות למפגש, מבינות בזמן אמת — ואז חוזרות הביתה ושוכחות. אין עם מי לשאול בשעה 22:00.
         </div>
         <div class="s4-bullet">
-          💡 <strong>הפתרון — עדן:</strong> בניתי מלווה AI שמכיר את כל החומר שלמדנו יחד. היא זמינה בכל שעה, עונה בשפה שלך, ומאפשרת לתרגל בלי לחץ.
+          💡 <strong>הפתרון — עדן:</strong> בניתי מלווה AI שמכירה את כל החומר שלמדנו יחד. היא זמינה בכל שעה, עונה בשפה שלך, ומאפשרת לתרגל בלי לחץ.
         </div>
         <div class="s4-bullet">
-          🔒 <strong>מקום בטוח לשאול הכל:</strong> אין שאלות מטופשות. אין שיפוט. אפשר לשאול "מה זה מניה?" לעשירית הפעם — ועדן תענה בסבלנות.
+          🔒 <strong>מקום בטוח לשאול הכל:</strong> אין שאלות מטופשות. אין שיפוט. אפשר לשאול "מה זה מניה?" כמה פעמים שצריך — ועדן תענה בסבלנות.
         </div>
         <div class="s4-bullet">
           📈 <strong>גדלה עם הידע שלך:</strong> כל יחידה שלומדים — נכנסת לעדן. ככל שמתקדמות, עדן יודעת יותר ועוזרת יותר.
@@ -1166,29 +1166,29 @@ function toggleFS(){
       <div class="cta-step">
         <div class="step-num">1</div>
         <div class="step-text">
-          <div class="st-title">שלחי תשלום של 190 ₪ — מחיר מיוחד לקבוצה הראשונה</div>
-          <div class="st-sub">ביט או פייבוקס · מחיר רגיל 290 ₪ · תקף לקבוצה הראשונה בלבד</div>
+          <div class="st-title">נרשמות לקורס</div>
+          <div class="st-sub">פרטים נוספים על התמחור ישלחו בקרוב</div>
         </div>
       </div>
       <div class="cta-step">
         <div class="step-num">2</div>
         <div class="step-text">
-          <div class="st-title">קבלי קישור וסיסמא לעדן</div>
-          <div class="st-sub">ישלחו אישית לאחר אישור התשלום — ועדן זמינה לך מיד</div>
+          <div class="st-title">מקבלות גישה לעדן</div>
+          <div class="st-sub">קישור וסיסמא ישלחו אישית — ועדן זמינה לך מיד</div>
         </div>
       </div>
       <div class="cta-step">
         <div class="step-num">3</div>
         <div class="step-text">
-          <div class="st-title">הצטרפי לקהילה — נתיב: הכסף החכם שלי</div>
+          <div class="st-title">מצטרפות לקהילה — נתיב: הכסף החכם שלי</div>
           <div class="st-sub">קישור ווטסאפ ישלח לאחר ההרשמה</div>
         </div>
       </div>
       <div class="cta-step">
         <div class="step-num">4</div>
         <div class="step-text">
-          <div class="st-title">3 מפגשי לייב — 13/5 · 20/5 · 27/5 🎉</div>
-          <div class="st-sub">מבוא לשוק ההון · 19:30–21:00 · רצוי להשתתף בזמן אמת לשאלות ותשובות · תהיה גם הקלטה</div>
+          <div class="st-title">מפגשי לייב בזום עם שרון 🎉</div>
+          <div class="st-sub">ידע מעמיק, שפה נגישה · רצוי להשתתף בזמן אמת לשאלות ותשובות · תהיה גם הקלטה</div>
         </div>
       </div>
     </div>
