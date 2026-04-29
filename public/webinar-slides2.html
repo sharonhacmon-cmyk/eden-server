@@ -530,6 +530,15 @@
 
   svg text { font-family: 'Heebo', Arial, sans-serif; }
 
+  /* ── AUTO-SCALE INNER CONTENT ── */
+  .slide-inner {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform-origin: top center;
+  }
+
   /* ── STORY SLIDE ── */
   .story-split {
     display: grid;
@@ -679,15 +688,16 @@ function toggleFS(){
 
   <!-- ═══════════════════ SLIDE 1: שרון ═══════════════════ -->
   <div class="slide active" id="s1">
+  <div class="slide-inner">
     <div class="tag" style="font-size:16px; letter-spacing:2px">מי מדברת איתכן</div>
     <h2>שרון חכמון — <span class="gold">25+ שנות ניסיון פיננסי</span></h2>
     <div class="divider"></div>
 
-    <div style="display:flex; align-items:center; gap:32px; justify-content:center; margin-bottom:16px">
-      <img src="sharon.jpeg" class="photo-circle" alt="שרון חכמון" style="width:100px;height:100px">
+    <div style="display:flex; align-items:center; gap:24px; justify-content:center; margin-bottom:12px">
+      <img src="sharon.jpeg" class="photo-circle" alt="שרון חכמון" style="width:80px;height:80px">
       <div style="text-align:right">
-        <div style="font-size:22px;font-weight:900">שרון חכמון</div>
-        <div style="font-size:14px;color:var(--gold);margin-top:4px">מומחית פיננסית · הנגשת ידע פיננסי לנשים</div>
+        <div style="font-size:20px;font-weight:900">שרון חכמון</div>
+        <div style="font-size:13px;color:var(--gold);margin-top:4px">מומחית פיננסית · הנגשת ידע פיננסי לנשים</div>
       </div>
     </div>
 
@@ -726,6 +736,7 @@ function toggleFS(){
         </div>
       </div>
     </div>
+  </div><!-- /slide-inner -->
   </div>
 
   <!-- ═══════════════════ SLIDE: הסיפור האישי ═══════════════════ -->
@@ -971,44 +982,41 @@ function toggleFS(){
   </div>
 
   <!-- ═══════════════════ SLIDE 4: עדן — מי היא ═══════════════════ -->
-  <div class="slide" id="s4" style="justify-content:flex-start; padding-top:72px; overflow-y:auto;">
-    <div class="tag">הכירי את עדן</div>
-    <h2>יצרתי את <span class="gold">עדן</span> — כי ידעתי שמשהו חסר</h2>
+  <div class="slide" id="s4">
+  <div class="slide-inner">
+    <div style="display:flex; align-items:center; gap:20px; justify-content:center; margin-bottom:10px;">
+      <img src="eden.png" alt="עדן" style="width:72px; height:72px; border-radius:50%; object-fit:cover; border:3px solid var(--gold); flex-shrink:0;">
+      <div style="text-align:right;">
+        <div class="tag" style="margin-bottom:4px;">הכירי את עדן</div>
+        <h2 style="font-size:clamp(18px,2.6vw,36px);">יצרתי את <span class="gold">עדן</span> — כי ידעתי שמשהו חסר</h2>
+      </div>
+    </div>
     <div class="divider"></div>
 
-    <div style="display:flex; gap:20px; width:100%; max-width:900px; margin-top:8px; align-items:flex-start; text-align:right;">
-
-      <div style="flex:1; display:flex; flex-direction:column; gap:14px;">
-        <div class="s4-bullet">
-          🤔 <strong>הבעיה שראיתי:</strong> נשים מגיעות למפגש, מבינות בזמן אמת — ואז חוזרות הביתה ושוכחות. אין עם מי לשאול בשעה 22:00.
-        </div>
-        <div class="s4-bullet">
-          💡 <strong>הפתרון — עדן:</strong> בניתי מלווה AI שמכירה את כל החומר שלמדנו יחד. היא זמינה בכל שעה, עונה בשפה שלך, ומאפשרת לתרגל בלי לחץ.
-        </div>
-        <div class="s4-bullet">
-          🔒 <strong>מקום בטוח לשאול הכל:</strong> אין שאלות מטופשות. אין שיפוט. אפשר לשאול "מה זה מניה?" כמה פעמים שצריך — ועדן תענה בסבלנות.
-        </div>
-        <div class="s4-bullet">
-          📈 <strong>גדלה עם הידע שלך:</strong> כל יחידה שלומדים — נכנסת לעדן. ככל שמתקדמות, עדן יודעת יותר ועוזרת יותר.
-        </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:100%; max-width:900px; margin-top:10px; text-align:right;">
+      <div class="s4-bullet">
+        🤔 <strong>הבעיה שראיתי:</strong> נשים מבינות בזמן אמת — ואז חוזרות הביתה ושוכחות. אין עם מי לשאול בשעה 22:00.
       </div>
-
-      <div style="width:220px; flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:16px;">
-        <img src="eden.png" alt="עדן" style="width:130px; height:130px; border-radius:50%; object-fit:cover; border:3px solid var(--gold); box-shadow:0 0 32px rgba(239,159,39,0.2)">
-        <div style="background:rgba(239,159,39,0.08); border:1px solid rgba(239,159,39,0.25); border-radius:14px; padding:16px; text-align:center; width:100%;">
-          <div style="font-size:13px; font-weight:800; color:var(--gold); margin-bottom:10px;">עדן זמינה</div>
-          <div style="font-size:26px; font-weight:900; color:white;">24/7</div>
-          <div style="font-size:12px; color:var(--dim); margin-top:6px; line-height:1.5;">שאלות · תרגול<br>הסברים · יישום</div>
-        </div>
-        <div style="background:rgba(29,158,117,0.08); border:1px solid rgba(29,158,117,0.2); border-radius:14px; padding:14px; text-align:center; width:100%;">
-          <div style="font-size:13px; color:var(--dim); line-height:1.6;">שרון מלמדת<br>עדן מלווה<br><strong style="color:var(--white)">את מתקדמת</strong></div>
-        </div>
+      <div class="s4-bullet">
+        💡 <strong>הפתרון — עדן:</strong> מלווה AI שמכירה את כל החומר שלמדנו. זמינה בכל שעה, עונה בשפה שלך, בלי לחץ.
+      </div>
+      <div class="s4-bullet">
+        🔒 <strong>מקום בטוח לשאול הכל:</strong> אין שאלות מטופשות. אין שיפוט. אפשר לשאול "מה זה מניה?" כמה פעמים שצריך — ועדן תענה בסבלנות.
+      </div>
+      <div class="s4-bullet">
+        📈 <strong>גדלה עם הידע שלך:</strong> כל יחידה שלומדים נכנסת לעדן. ככל שמתקדמות — עדן יודעת יותר ועוזרת יותר.
       </div>
     </div>
 
-    <p class="sub" style="margin-top:16px; font-size:14px">
+    <div style="margin-top:14px; background:rgba(239,159,39,0.08); border:1px solid rgba(239,159,39,0.25); border-radius:14px; padding:12px 24px; display:flex; align-items:center; gap:20px; max-width:900px; width:100%;">
+      <div style="font-size:28px; font-weight:900; color:var(--gold); flex-shrink:0;">24/7</div>
+      <div style="font-size:13px; color:var(--dim); text-align:right; line-height:1.6;">שרון מלמדת · עדן מלווה · <strong style="color:var(--white)">את מתקדמת</strong> — שאלות, תרגול, הסברים בכל שעה שנוח לך</div>
+    </div>
+
+    <p class="sub" style="margin-top:12px; font-size:13px">
       [ <strong style="color:var(--green)">עצירה קצרה — הדגמה חיה של עדן</strong> ]
     </p>
+  </div><!-- /slide-inner -->
   </div>
 
   <!-- ═══════════════════ SLIDE 5: פורמט ═══════════════════ -->
@@ -1255,6 +1263,21 @@ function toggleFS(){
     if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') go(1);
     if (e.key === 'ArrowRight' || e.key === 'ArrowUp') go(-1);
   });
+
+  function scaleInners() {
+    document.querySelectorAll('.slide-inner').forEach(inner => {
+      inner.style.transform = '';
+      const slide = inner.closest('.slide');
+      const avail = slide.clientHeight - 20;
+      const used  = inner.scrollHeight;
+      if (used > avail) {
+        const ratio = avail / used;
+        inner.style.transform = 'scale(' + ratio + ')';
+      }
+    });
+  }
+  window.addEventListener('resize', scaleInners);
+  setTimeout(scaleInners, 200);
 </script>
 </body>
 </html>
