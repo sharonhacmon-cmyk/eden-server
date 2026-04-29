@@ -113,16 +113,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     padding: 68px 60px 76px;
-    padding-top: max(68px, 10vh);
     text-align: center;
     background: linear-gradient(150deg, var(--dark) 0%, #0a2a1f 55%, var(--mid) 100%);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.5s ease;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
   }
   .slide.active {
     opacity: 1;
@@ -172,17 +170,17 @@
     text-transform: uppercase;
     margin-bottom: 14px;
   }
-  h1 { font-size: clamp(36px,5vw,72px); font-weight: 900; line-height: 1.1; }
-  h2 { font-size: clamp(26px,3.8vw,50px); font-weight: 900; line-height: 1.2; }
-  .sub { font-size: clamp(14px,1.6vw,20px); color: var(--dim); font-weight: 300; line-height: 1.7; }
+  h1 { font-size: clamp(28px,4vw,60px); font-weight: 900; line-height: 1.1; }
+  h2 { font-size: clamp(20px,3vw,42px); font-weight: 900; line-height: 1.2; }
+  .sub { font-size: clamp(13px,1.4vw,18px); color: var(--dim); font-weight: 300; line-height: 1.6; }
   .gold { color: var(--gold); }
   .green { color: var(--green); }
 
   .divider {
-    width: 100px; height: 3px;
+    width: 80px; height: 3px;
     background: linear-gradient(to left, var(--gold), var(--gold2));
     border-radius: 2px;
-    margin: 14px auto;
+    margin: 8px auto;
     flex-shrink: 0;
   }
 
@@ -573,24 +571,24 @@
   .resume-grid {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
     max-width: 700px;
     width: 100%;
-    margin-top: 16px;
+    margin-top: 10px;
     text-align: right;
   }
   .resume-item {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
     background: rgba(255,255,255,0.04);
     border-right: 3px solid var(--gold);
     border-radius: 0 12px 12px 0;
-    padding: 14px 18px;
+    padding: 10px 14px;
   }
-  .resume-item .ri-icon { font-size: 22px; flex-shrink: 0; }
-  .resume-item .ri-text .ri-title { font-size: 15px; font-weight: 800; color: var(--white); }
-  .resume-item .ri-text .ri-sub { font-size: 13px; color: var(--dim); margin-top: 2px; }
+  .resume-item .ri-icon { font-size: 18px; flex-shrink: 0; }
+  .resume-item .ri-text .ri-title { font-size: 14px; font-weight: 800; color: var(--white); }
+  .resume-item .ri-text .ri-sub { font-size: 12px; color: var(--dim); margin-top: 1px; }
 
   /* ── FOMO SLIDE ── */
   .fomo-grid {
@@ -636,24 +634,24 @@
   .outcomes-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 14px;
+    gap: 10px;
     max-width: 860px;
     width: 100%;
-    margin-top: 18px;
+    margin-top: 12px;
     text-align: right;
   }
   .outcome-item {
     background: rgba(29,158,117,0.07);
     border: 1px solid rgba(29,158,117,0.2);
-    border-radius: 14px;
-    padding: 18px 16px;
+    border-radius: 12px;
+    padding: 12px 14px;
     display: flex;
-    gap: 12px;
+    gap: 10px;
     align-items: flex-start;
   }
-  .outcome-item .oi-icon { font-size: 24px; flex-shrink: 0; }
-  .outcome-item .oi-title { font-size: 15px; font-weight: 800; margin-bottom: 3px; }
-  .outcome-item .oi-sub { font-size: 12px; color: var(--dim); line-height: 1.5; }
+  .outcome-item .oi-icon { font-size: 20px; flex-shrink: 0; }
+  .outcome-item .oi-title { font-size: 13px; font-weight: 800; margin-bottom: 2px; }
+  .outcome-item .oi-sub { font-size: 11px; color: var(--dim); line-height: 1.4; }
 </style>
 </head>
 <body>
