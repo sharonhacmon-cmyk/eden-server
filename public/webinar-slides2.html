@@ -113,7 +113,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     padding: 68px 60px 76px;
     text-align: center;
     background: linear-gradient(150deg, var(--dark) 0%, #0a2a1f 55%, var(--mid) 100%);
@@ -533,10 +533,12 @@
   /* ── AUTO-SCALE INNER CONTENT ── */
   .slide-inner {
     width: 100%;
+    max-width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     transform-origin: top center;
+    flex-shrink: 0;
   }
 
   /* ── STORY SLIDE ── */
@@ -580,24 +582,24 @@
   .resume-grid {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    max-width: 700px;
+    gap: 6px;
+    max-width: 680px;
     width: 100%;
-    margin-top: 10px;
+    margin-top: 8px;
     text-align: right;
   }
   .resume-item {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     background: rgba(255,255,255,0.04);
     border-right: 3px solid var(--gold);
-    border-radius: 0 12px 12px 0;
-    padding: 10px 14px;
+    border-radius: 0 10px 10px 0;
+    padding: 8px 12px;
   }
-  .resume-item .ri-icon { font-size: 18px; flex-shrink: 0; }
-  .resume-item .ri-text .ri-title { font-size: 14px; font-weight: 800; color: var(--white); }
-  .resume-item .ri-text .ri-sub { font-size: 12px; color: var(--dim); margin-top: 1px; }
+  .resume-item .ri-icon { font-size: 16px; flex-shrink: 0; }
+  .resume-item .ri-text .ri-title { font-size: 13px; font-weight: 800; color: var(--white); }
+  .resume-item .ri-text .ri-sub { font-size: 11px; color: var(--dim); margin-top: 1px; }
 
   /* ── FOMO SLIDE ── */
   .fomo-grid {
@@ -949,6 +951,7 @@ function toggleFS(){
 
   <!-- ═══════════════════ SLIDE FOMO ═══════════════════ -->
   <div class="slide" id="s-fomo">
+  <div class="slide-inner">
     <div class="tag">הבחירה שלך</div>
     <h2>מה <span class="gold">תרוויחי</span> — ומה <span style="color:#ff8080">תפסידי</span></h2>
     <div class="divider"></div>
@@ -976,9 +979,10 @@ function toggleFS(){
       </div>
     </div>
 
-    <p class="sub" style="margin-top:18px; font-size:16px; font-weight:700">
+    <p class="sub" style="margin-top:12px; font-size:14px; font-weight:700">
       <strong style="color:var(--white)">הידע הוא לא ההוצאה — הוא ההשקעה הכי טובה שתעשי.</strong>
     </p>
+  </div><!-- /slide-inner -->
   </div>
 
   <!-- ═══════════════════ SLIDE 4: עדן — מי היא ═══════════════════ -->
@@ -1231,7 +1235,26 @@ function toggleFS(){
   <button id="btn-prev" onclick="go(-1)" disabled>→ הקודם</button>
   <span class="counter" id="counter">1 / 8</span>
   <button id="btn-next" onclick="go(1)">הבא ←</button>
+  <button onclick="exportPDF()" style="background:rgba(239,159,39,0.2);border:1px solid var(--gold);color:var(--gold);font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;padding:7px 16px;border-radius:50px;cursor:pointer;margin-right:8px;">🖨️ ייצא PDF</button>
 </div>
+
+<style>
+@media print {
+  body { background: white !important; overflow: visible !important; height: auto !important; }
+  .header, .nav, .dots { display: none !important; }
+  .deck { height: auto !important; position: static !important; }
+  .slide {
+    position: relative !important;
+    opacity: 1 !important;
+    pointer-events: all !important;
+    height: 100vh !important;
+    page-break-after: always !important;
+    break-after: page !important;
+    display: flex !important;
+  }
+  .slide-inner { transform: none !important; }
+}
+</style>
 
 <script>
   const slides = document.querySelectorAll('.slide');
@@ -1264,12 +1287,24 @@ function toggleFS(){
     if (e.key === 'ArrowRight' || e.key === 'ArrowUp') go(-1);
   });
 
+  // עוטפים את כל תוכן השקפים שאין להם slide-inner
+  slides.forEach(slide => {
+    if (!slide.querySelector('.slide-inner')) {
+      const inner = document.createElement('div');
+      inner.className = 'slide-inner';
+      while (slide.firstChild) inner.appendChild(slide.firstChild);
+      slide.appendChild(inner);
+    }
+  });
+
   function scaleInners() {
+    const navH = document.querySelector('.nav').offsetHeight;
+    const headerH = document.querySelector('.header').offsetHeight;
+    const avail = window.innerHeight - navH - headerH - 16;
     document.querySelectorAll('.slide-inner').forEach(inner => {
       inner.style.transform = '';
-      const slide = inner.closest('.slide');
-      const avail = slide.clientHeight - 20;
-      const used  = inner.scrollHeight;
+      inner.style.transformOrigin = 'top center';
+      const used = inner.scrollHeight;
       if (used > avail) {
         const ratio = avail / used;
         inner.style.transform = 'scale(' + ratio + ')';
@@ -1277,7 +1312,11 @@ function toggleFS(){
     });
   }
   window.addEventListener('resize', scaleInners);
-  setTimeout(scaleInners, 200);
+  setTimeout(scaleInners, 300);
+
+  function exportPDF() {
+    window.print();
+  }
 </script>
 </body>
 </html>
