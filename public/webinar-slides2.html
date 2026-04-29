@@ -529,6 +529,129 @@
   .cta-photo-item .cp-sub { font-size: 11px; color: var(--dim); }
 
   svg text { font-family: 'Heebo', Arial, sans-serif; }
+
+  /* ── STORY SLIDE ── */
+  .story-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    max-width: 860px;
+    width: 100%;
+    margin-top: 20px;
+  }
+  .story-box {
+    border-radius: 18px;
+    padding: 24px 22px;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .story-box-loss {
+    background: rgba(220,60,60,0.08);
+    border: 1px solid rgba(220,60,60,0.25);
+    border-right: 4px solid rgba(220,60,60,0.7);
+  }
+  .story-box-win {
+    background: rgba(29,158,117,0.08);
+    border: 1px solid rgba(29,158,117,0.25);
+    border-right: 4px solid var(--green);
+  }
+  .story-box .sb-label {
+    font-size: 11px; font-weight: 800; letter-spacing: 2px;
+  }
+  .story-box .sb-num {
+    font-size: 54px; font-weight: 900; line-height: 1;
+  }
+  .story-box .sb-text {
+    font-size: 14px; color: var(--dim); line-height: 1.6;
+  }
+
+  /* ── RESUME SLIDE ── */
+  .resume-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 700px;
+    width: 100%;
+    margin-top: 16px;
+    text-align: right;
+  }
+  .resume-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(255,255,255,0.04);
+    border-right: 3px solid var(--gold);
+    border-radius: 0 12px 12px 0;
+    padding: 14px 18px;
+  }
+  .resume-item .ri-icon { font-size: 22px; flex-shrink: 0; }
+  .resume-item .ri-text .ri-title { font-size: 15px; font-weight: 800; color: var(--white); }
+  .resume-item .ri-text .ri-sub { font-size: 13px; color: var(--dim); margin-top: 2px; }
+
+  /* ── FOMO SLIDE ── */
+  .fomo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 860px;
+    width: 100%;
+    margin-top: 18px;
+  }
+  .fomo-col {
+    border-radius: 18px;
+    padding: 22px 20px;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .fomo-col-yes {
+    background: rgba(29,158,117,0.08);
+    border: 1.5px solid rgba(29,158,117,0.3);
+  }
+  .fomo-col-no {
+    background: rgba(220,60,60,0.06);
+    border: 1.5px solid rgba(220,60,60,0.2);
+  }
+  .fomo-col .fc-title {
+    font-size: 17px; font-weight: 900; margin-bottom: 4px;
+  }
+  .fomo-col ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .fomo-col ul li {
+    font-size: 14px; color: var(--dim); line-height: 1.5;
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+  .fomo-col ul li .li-icon { flex-shrink: 0; margin-top: 1px; }
+
+  /* ── OUTCOMES SLIDE ── */
+  .outcomes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    max-width: 860px;
+    width: 100%;
+    margin-top: 18px;
+    text-align: right;
+  }
+  .outcome-item {
+    background: rgba(29,158,117,0.07);
+    border: 1px solid rgba(29,158,117,0.2);
+    border-radius: 14px;
+    padding: 18px 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .outcome-item .oi-icon { font-size: 24px; flex-shrink: 0; }
+  .outcome-item .oi-title { font-size: 15px; font-weight: 800; margin-bottom: 3px; }
+  .outcome-item .oi-sub { font-size: 12px; color: var(--dim); line-height: 1.5; }
 </style>
 </head>
 <body>
@@ -554,98 +677,136 @@ function toggleFS(){
 
 <div class="deck" id="deck">
 
+  <!-- ═══════════════════ SLIDE 0: פתיחה — הסיפור ═══════════════════ -->
+  <div class="slide active" id="s0">
+    <div class="tag">למה נתיב קיים</div>
+    <h2>הייתי <span class="gold">שם.</span></h2>
+    <div class="divider"></div>
+    <p class="sub" style="max-width:680px; font-size:clamp(15px,1.7vw,21px); line-height:1.8">
+      הייתי סטודנטית. השקעתי בשוק ההון — בלי שהבנתי כלום.<br>
+      תוך זמן קצר <strong style="color:#ff8080">הפסדתי 25% מהכסף שלי.</strong>
+    </p>
+
+    <div class="story-split" style="margin-top:24px">
+      <div class="story-box story-box-loss">
+        <div class="sb-label" style="color:rgba(220,100,100,0.9)">לפני הידע</div>
+        <div class="sb-num" style="color:#ff8080">−25%</div>
+        <div class="sb-text">ירידה חדה, בלי להבין מה קרה ולמה — ובלי לדעת מתי לעצור.</div>
+      </div>
+      <div class="story-box story-box-win">
+        <div class="sb-label" style="color:var(--green)">אחרי שחזרתי עם ידע</div>
+        <div class="sb-num" style="color:var(--green)">שנים<br><span style="font-size:28px">בשוק ✓</span></div>
+        <div class="sb-text">הפעם עם הבנה. היום אני בשוק ההון כבר שנים — ומרוויחה יפה מהכסף שלי.</div>
+      </div>
+    </div>
+
+    <p class="sub" style="margin-top:24px; font-size:15px; max-width:640px">
+      <strong style="color:var(--white)">נתיב נולד כדי שאת לא תצטרכי לעשות את הטעויות שאני עשיתי.</strong>
+    </p>
+  </div>
+
   <!-- ═══════════════════ SLIDE 1: שרון ═══════════════════ -->
-  <div class="slide active" id="s1">
-    <div class="tag" style="font-size:16px; letter-spacing:2px">ברוכות הבאות</div>
-    <h2>שרון חכמון — <span class="gold">הנגשת ידע פיננסי</span><br>מקצועי, ברור ואמין</h2>
+  <div class="slide" id="s1">
+    <div class="tag" style="font-size:16px; letter-spacing:2px">מי מדברת איתכן</div>
+    <h2>שרון חכמון — <span class="gold">25+ שנות ניסיון פיננסי</span></h2>
     <div class="divider"></div>
 
-    <div class="s1-hero">
-      <div class="s1-photo-block">
-        <img src="sharon.jpeg" class="photo-circle" alt="שרון חכמון">
-        <div class="ph-name">שרון חכמון</div>
-        <div class="ph-sub">מומחית פיננסית</div>
-      </div>
-      <div class="s1-vs" style="font-size:28px">+</div>
-      <div class="s1-photo-block">
-        <img src="eden.png" class="photo-circle gold-border" alt="עדן AI">
-        <div class="ph-name gold">עדן</div>
-        <div class="ph-sub">מלווה AI אישית</div>
+    <div style="display:flex; align-items:center; gap:32px; justify-content:center; margin-bottom:16px">
+      <img src="sharon.jpeg" class="photo-circle" alt="שרון חכמון" style="width:100px;height:100px">
+      <div style="text-align:right">
+        <div style="font-size:22px;font-weight:900">שרון חכמון</div>
+        <div style="font-size:14px;color:var(--gold);margin-top:4px">מומחית פיננסית · מנהלת תחום לשעבר · בנק לאומי</div>
       </div>
     </div>
 
-    <div class="s1-grid">
-      <div class="card">
-        <div class="num">25+</div>
-        <div class="label">שנות ניסיון — חברת ביטוח הראל ובנק לאומי</div>
+    <div class="resume-grid">
+      <div class="resume-item">
+        <div class="ri-icon">🎓</div>
+        <div class="ri-text">
+          <div class="ri-title">תואר ראשון — הטכניון</div>
+          <div class="ri-sub">הבסיס האנליטי שמאחורי כל החלטה פיננסית</div>
+        </div>
       </div>
-      <div class="card">
-        <div class="num" style="color:var(--green)">1:1</div>
-        <div class="label">ליווי אישי עם נשים — הנגשת ידע לקבלת החלטות מיטיבות</div>
+      <div class="resume-item">
+        <div class="ri-icon">📊</div>
+        <div class="ri-text">
+          <div class="ri-title">תואר שני — מנהל עסקים MBA</div>
+          <div class="ri-sub">הבנה עמוקה של שוקי ההון ומימון</div>
+        </div>
       </div>
-      <div class="card" style="border-color:rgba(239,159,39,0.3)">
-        <div class="num" style="color:var(--gold2); font-size:26px; padding-top:4px">החזון</div>
-        <div class="label">קהילת נשים גדולה — כל אחת מתחברת לעולם הפיננסי בקצב שלה</div>
+      <div class="resume-item">
+        <div class="ri-icon">🏦</div>
+        <div class="ri-text">
+          <div class="ri-title">מנהלת תחום — בנק לאומי</div>
+          <div class="ri-sub">שנים של עבודה מול לקוחות, תיקי השקעות, ומוצרים פיננסיים</div>
+        </div>
+      </div>
+      <div class="resume-item">
+        <div class="ri-icon">🛡️</div>
+        <div class="ri-text">
+          <div class="ri-title">ניסיון בחברת ביטוח — הראל</div>
+          <div class="ri-sub">ניהול סיכונים, פנסיה וחסכונות ארוכי טווח</div>
+        </div>
       </div>
     </div>
 
-    <p class="sub" style="margin-top:16px; max-width:720px; font-size:15px">
-      ידע פיננסי מקצועי ואמין — <strong style="color:var(--white)">נגיש לכל אישה, בזמן שלה, במקום אחד.</strong>
+    <p class="sub" style="margin-top:16px; max-width:700px; font-size:15px">
+      את הידע הזה — שנצבר על פני עשרות שנים — <strong style="color:var(--white)">אני מנגישה עכשיו לכל אישה.</strong>
     </p>
   </div>
 
   <!-- ═══════════════════ SLIDE 2: השקעה ═══════════════════ -->
   <div class="slide" id="s2">
     <div class="tag">כוח הזמן בשוק ההון</div>
-    <h2>מה היה קורה אם השקענו לפני <span class="gold">10 שנים</span>?</h2>
-    <p class="sub" style="margin-top:4px; font-size:14px">25,000 ₪ פתיחה + 300 ₪/חודש · 10 שנים · סה"כ הפקדות: <strong style="color:var(--white)">61,000 ₪</strong></p>
+    <h2>מה היה קורה אם התחלנו לפני <span class="gold">5 שנים</span>?</h2>
+    <p class="sub" style="margin-top:4px; font-size:14px">25,000 ₪ פתיחה + 300 ₪/חודש · 5 שנים · סה"כ הפקדות: <strong style="color:var(--white)">43,000 ₪</strong></p>
 
     <div class="invest-compare">
       <div class="invest-col highlight">
         <div class="badge">הכי גבוה</div>
         <div class="idx-name">נאסד"ק 100</div>
         <div class="bar-wrap">
-          <div class="bar-invested" style="height:28%"></div>
-          <div class="bar-profit" style="height:72%; background:linear-gradient(to top,#EF9F27,#FAC775)"></div>
+          <div class="bar-invested" style="height:40%"></div>
+          <div class="bar-profit" style="height:60%; background:linear-gradient(to top,#EF9F27,#FAC775)"></div>
         </div>
-        <div class="total gold">~215,000 ₪</div>
-        <div class="profit-lbl gold">+ 154,000 ₪ רווח</div>
-        <div class="invested-lbl">תשואה ממוצעת ~17%/שנה</div>
+        <div class="total gold">~105,000 ₪</div>
+        <div class="profit-lbl gold">+ 62,000 ₪ רווח</div>
+        <div class="invested-lbl">תשואה ממוצעת ~18%/שנה</div>
       </div>
       <div class="invest-col">
         <div class="idx-name">S&P 500</div>
         <div class="bar-wrap">
-          <div class="bar-invested" style="height:42%"></div>
-          <div class="bar-profit" style="height:58%; background:linear-gradient(to top,#1D9E75,#16c489)"></div>
+          <div class="bar-invested" style="height:52%"></div>
+          <div class="bar-profit" style="height:48%; background:linear-gradient(to top,#1D9E75,#16c489)"></div>
         </div>
-        <div class="total green">~145,000 ₪</div>
-        <div class="profit-lbl green">+ 84,000 ₪ רווח</div>
-        <div class="invested-lbl">תשואה ממוצעת ~12%/שנה</div>
+        <div class="total green">~82,000 ₪</div>
+        <div class="profit-lbl green">+ 39,000 ₪ רווח</div>
+        <div class="invested-lbl">תשואה ממוצעת ~13%/שנה</div>
       </div>
       <div class="invest-col">
         <div class="idx-name">מדד ת"א 125</div>
         <div class="bar-wrap">
-          <div class="bar-invested" style="height:55%"></div>
-          <div class="bar-profit" style="height:45%; background:linear-gradient(to top,#5bbffc,#8dd4ff)"></div>
+          <div class="bar-invested" style="height:62%"></div>
+          <div class="bar-profit" style="height:38%; background:linear-gradient(to top,#5bbffc,#8dd4ff)"></div>
         </div>
-        <div class="total" style="color:#8dd4ff">~110,000 ₪</div>
-        <div class="profit-lbl" style="color:#8dd4ff">+ 49,000 ₪ רווח</div>
-        <div class="invested-lbl">תשואה ממוצעת ~7%/שנה</div>
+        <div class="total" style="color:#8dd4ff">~69,000 ₪</div>
+        <div class="profit-lbl" style="color:#8dd4ff">+ 26,000 ₪ רווח</div>
+        <div class="invested-lbl">תשואה ממוצעת ~8%/שנה</div>
       </div>
       <div class="invest-col">
         <div class="idx-name">פקדון בנק 4%</div>
         <div class="bar-wrap">
-          <div class="bar-invested" style="height:75%"></div>
-          <div class="bar-profit" style="height:25%; background:linear-gradient(to top,rgba(253,250,245,0.35),rgba(253,250,245,0.5))"></div>
+          <div class="bar-invested" style="height:82%"></div>
+          <div class="bar-profit" style="height:18%; background:linear-gradient(to top,rgba(253,250,245,0.35),rgba(253,250,245,0.5))"></div>
         </div>
-        <div class="total" style="color:var(--dim)">~81,000 ₪</div>
-        <div class="profit-lbl" style="color:var(--dim)">+ 20,000 ₪ רווח</div>
+        <div class="total" style="color:var(--dim)">~52,000 ₪</div>
+        <div class="profit-lbl" style="color:var(--dim)">+ 9,000 ₪ רווח</div>
         <div class="invested-lbl">ריבית 4%/שנה</div>
       </div>
     </div>
 
     <p style="font-size:12px; color:var(--dim); margin-top:10px; text-align:center">
-      אפור = סה"כ הפקדות | צבע = רווח נוסף · תשואות היסטוריות 2014–2024 · נומינלי · S&P ונאסד"ק בדולר · אינן מהוות הבטחת תשואה עתידית
+      אפור = סה"כ הפקדות | צבע = רווח נוסף · תשואות היסטוריות 2019–2024 · נומינלי · S&P ונאסד"ק בדולר · אינן מהוות הבטחת תשואה עתידית
     </p>
   </div>
 
@@ -771,6 +932,40 @@ function toggleFS(){
 
     <p style="font-size:12px; color:var(--dim); margin-top:10px; text-align:center">
       כל הירידות? זמניות. <strong style="color:var(--white)">בטווח הארוך — השוק ניצח.</strong>
+    </p>
+  </div>
+
+  <!-- ═══════════════════ SLIDE FOMO ═══════════════════ -->
+  <div class="slide" id="s-fomo">
+    <div class="tag">הבחירה שלך</div>
+    <h2>מה <span class="gold">תרוויחי</span> — ומה <span style="color:#ff8080">תפסידי</span></h2>
+    <div class="divider"></div>
+
+    <div class="fomo-grid">
+      <div class="fomo-col fomo-col-yes">
+        <div class="fc-title" style="color:var(--green)">✅ אם תתחילי היום</div>
+        <ul>
+          <li><span class="li-icon">✈️</span> חופשה שמימנת מהרווחים — בלי לגעת בחיסכון הרגיל</li>
+          <li><span class="li-icon">🏠</span> שיפוץ, רכב, הון עצמי לדירה — הכסף עובד בשבילך</li>
+          <li><span class="li-icon">📚</span> לימודים לילדים — בלי ללחץ על התקציב החודשי</li>
+          <li><span class="li-icon">💼</span> גמישות בעבודה — לא חייבת כל משרה רק בגלל הכסף</li>
+          <li><span class="li-icon">😌</span> שקט נפשי — יודעת שהכסף שלך עובד גם כשאת ישנה</li>
+        </ul>
+      </div>
+      <div class="fomo-col fomo-col-no">
+        <div class="fc-title" style="color:#ff8080">❌ אם לא תעשי כלום</div>
+        <ul>
+          <li><span class="li-icon">📉</span> הכסף בבנק נשחק — אינפלציה אוכלת אותו בשקט</li>
+          <li><span class="li-icon">⏳</span> בעוד 5 שנים תהיי בדיוק באותו מקום — רק עם פחות זמן</li>
+          <li><span class="li-icon">😰</span> כל התייקרות מרגישה כמו מכה — בלי כרית ביטחון</li>
+          <li><span class="li-icon">🤷</span> ממשיכה לראות אחרים מרוויחים — ולא מבינה איך</li>
+          <li><span class="li-icon">💸</span> הכסף שיכול היה לצמוח — מחכה בעו"ש ולא עושה כלום</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="sub" style="margin-top:18px; font-size:16px; font-weight:700">
+      <strong style="color:var(--white)">הידע הוא לא ההוצאה — הוא ההשקעה הכי טובה שתעשי.</strong>
     </p>
   </div>
 
@@ -971,6 +1166,58 @@ function toggleFS(){
           <li>קישורים + הדרכה ישלחו בקבוצת הווטסאפ</li>
           <li>שרון ועדן ילוו אתכן בפתיחת התיק</li>
         </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SLIDE: עם מה יוצאים ═══════════════════ -->
+  <div class="slide" id="s-outcomes">
+    <div class="tag">מה תקבלי</div>
+    <h2>אחרי הקורס — <span class="gold">את יוצאת עם</span></h2>
+    <div class="divider"></div>
+
+    <div class="outcomes-grid">
+      <div class="outcome-item">
+        <div class="oi-icon">📈</div>
+        <div>
+          <div class="oi-title">תיק השקעות עצמאי פתוח</div>
+          <div class="oi-sub">הכסף שלך כבר עובד בשוק ההון — לא בעו"ש</div>
+        </div>
+      </div>
+      <div class="outcome-item">
+        <div class="oi-icon">🧠</div>
+        <div>
+          <div class="oi-title">ידע שאפשר להשתמש בו מחר</div>
+          <div class="oi-sub">מבינה מה זה ETF, מדד, פיזור — ולמה זה חשוב לך</div>
+        </div>
+      </div>
+      <div class="outcome-item">
+        <div class="oi-icon">🤖</div>
+        <div>
+          <div class="oi-title">עדן — מומחית בכיס 24/7</div>
+          <div class="oi-sub">שאלות בכל שעה, תרגול, הסברים בשפה שלך — בלי שיפוט</div>
+        </div>
+      </div>
+      <div class="outcome-item">
+        <div class="oi-icon">👭</div>
+        <div>
+          <div class="oi-title">קהילה תומכת — נתיב</div>
+          <div class="oi-sub">נשים שהולכות את הדרך הזאת יחד — שאלות, שיתוף, תמיכה</div>
+        </div>
+      </div>
+      <div class="outcome-item">
+        <div class="oi-icon">😌</div>
+        <div>
+          <div class="oi-title">שקט נפשי כלכלי</div>
+          <div class="oi-sub">לא עוד "אני לא מבינה בכסף" — את יודעת מה קורה עם הכסף שלך</div>
+        </div>
+      </div>
+      <div class="outcome-item">
+        <div class="oi-icon">🔄</div>
+        <div>
+          <div class="oi-title">ידע שגדל איתך</div>
+          <div class="oi-sub">כל יחידה שנוספת — נגישה לך. הידע מצטבר, עדן מתעדכנת</div>
+        </div>
       </div>
     </div>
   </div>
