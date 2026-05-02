@@ -114,7 +114,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding: 68px 60px 76px;
+    padding: 62px 60px 70px;
     text-align: center;
     background: linear-gradient(150deg, var(--dark) 0%, #0a2a1f 55%, var(--mid) 100%);
     opacity: 0;
@@ -645,24 +645,24 @@
   .outcomes-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 8px;
     max-width: 860px;
     width: 100%;
-    margin-top: 12px;
+    margin-top: 8px;
     text-align: right;
   }
   .outcome-item {
     background: rgba(29,158,117,0.07);
     border: 1px solid rgba(29,158,117,0.2);
-    border-radius: 12px;
-    padding: 12px 14px;
+    border-radius: 10px;
+    padding: 9px 12px;
     display: flex;
-    gap: 10px;
+    gap: 8px;
     align-items: flex-start;
   }
-  .outcome-item .oi-icon { font-size: 20px; flex-shrink: 0; }
-  .outcome-item .oi-title { font-size: 13px; font-weight: 800; margin-bottom: 2px; }
-  .outcome-item .oi-sub { font-size: 11px; color: var(--dim); line-height: 1.4; }
+  .outcome-item .oi-icon { font-size: 17px; flex-shrink: 0; }
+  .outcome-item .oi-title { font-size: 12px; font-weight: 800; margin-bottom: 1px; }
+  .outcome-item .oi-sub { font-size: 10px; color: var(--dim); line-height: 1.4; }
 </style>
 </head>
 <body>
@@ -1300,19 +1300,24 @@ function toggleFS(){
   function scaleInners() {
     const navH = document.querySelector('.nav').offsetHeight;
     const headerH = document.querySelector('.header').offsetHeight;
-    const avail = window.innerHeight - navH - headerH - 16;
+    const avail = window.innerHeight - navH - headerH - 8;
     document.querySelectorAll('.slide-inner').forEach(inner => {
-      inner.style.transform = '';
+      inner.style.transform = 'none';
       inner.style.transformOrigin = 'top center';
+      // force reflow
+      void inner.offsetHeight;
       const used = inner.scrollHeight;
       if (used > avail) {
-        const ratio = avail / used;
+        const ratio = (avail / used).toFixed(4);
         inner.style.transform = 'scale(' + ratio + ')';
       }
     });
   }
   window.addEventListener('resize', scaleInners);
-  setTimeout(scaleInners, 300);
+  // run after fonts & images load
+  window.addEventListener('load', scaleInners);
+  setTimeout(scaleInners, 100);
+  setTimeout(scaleInners, 600);
 
   function exportPDF() {
     window.print();
