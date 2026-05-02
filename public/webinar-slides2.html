@@ -664,6 +664,8 @@
   .outcome-item .oi-title { font-size: 12px; font-weight: 800; margin-bottom: 1px; }
   .outcome-item .oi-sub { font-size: 10px; color: var(--dim); line-height: 1.4; }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -1235,7 +1237,7 @@ function toggleFS(){
   <button id="btn-prev" onclick="go(-1)" disabled>→ הקודם</button>
   <span class="counter" id="counter">1 / 8</span>
   <button id="btn-next" onclick="go(1)">הבא ←</button>
-  <button onclick="exportPDF()" style="background:rgba(239,159,39,0.2);border:1px solid var(--gold);color:var(--gold);font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;padding:7px 16px;border-radius:50px;cursor:pointer;margin-right:8px;">🖨️ ייצא PDF</button>
+  <button onclick="exportPDF()" id="pdf-btn" style="background:rgba(239,159,39,0.2);border:1px solid var(--gold);color:var(--gold);font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;padding:7px 16px;border-radius:50px;cursor:pointer;margin-right:8px;">⬇️ הורד PDF</button>
 </div>
 
 <style>
@@ -1319,8 +1321,43 @@ function toggleFS(){
   setTimeout(scaleInners, 100);
   setTimeout(scaleInners, 600);
 
-  function exportPDF() {
-    window.print();
+  async function exportPDF() {
+    const btn = document.getElementById('pdf-btn');
+    btn.textContent = '⏳ מכין...';
+    btn.disabled = true;
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: 'landscape', unit: 'px', format: [1280, 720] });
+
+    const origCur = cur;
+    for (let i = 0; i < slides.length; i++) {
+      // show slide
+      slides.forEach(s => s.classList.remove('active'));
+      slides[i].classList.add('active');
+      await new Promise(r => setTimeout(r, 150));
+
+      const canvas = await html2canvas(slides[i], {
+        scale: 1.5,
+        useCORS: true,
+        backgroundColor: '#081f18',
+        width: 1280,
+        height: 720,
+        windowWidth: 1280,
+        windowHeight: 720
+      });
+
+      const imgData = canvas.toDataURL('image/jpeg', 0.92);
+      if (i > 0) pdf.addPage();
+      pdf.addImage(imgData, 'JPEG', 0, 0, 1280, 720);
+    }
+
+    // restore original slide
+    slides.forEach(s => s.classList.remove('active'));
+    slides[origCur].classList.add('active');
+
+    pdf.save('נתיב-הכסף-החכם-שלך.pdf');
+    btn.textContent = '⬇️ הורד PDF';
+    btn.disabled = false;
   }
 </script>
 </body>
