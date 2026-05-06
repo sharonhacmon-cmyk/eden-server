@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מפגש 3 — הכסף, הראש, וההמשך</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; overflow:hidden; background:#062e24; }
+body { font-family:'Heebo',sans-serif; direction:rtl; }
+
+.slide {
+  width:100vw; height:100vh;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:60px 80px;
+  position:relative;
+  overflow:hidden;
+}
+.slide.active { display:flex; }
+
+.bg-dark { background:linear-gradient(160deg,#062e24 0%,#085041 60%,#0d6b57 100%); }
+
+.nativ-logo {
+  position:fixed; bottom:28px; right:28px; z-index:200;
+  display:flex; flex-direction:column; align-items:flex-end; line-height:1.3;
+  pointer-events:none;
+}
+.nativ-logo .logo-name {
+  font-size:14px; font-weight:900; color:rgba(255,255,255,0.7); letter-spacing:1px;
+}
+.nativ-logo .logo-name span { color:#5DCAA5; }
+.nativ-logo .logo-tag {
+  font-size:10px; font-weight:400; color:rgba(255,255,255,0.35);
+  letter-spacing:0.5px;
+}
+
+.fs-btn {
+  position:fixed; top:16px; left:16px; z-index:200;
+  background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
+  color:white; font-size:18px; width:40px; height:40px;
+  border-radius:10px; cursor:pointer; display:flex;
+  align-items:center; justify-content:center;
+  transition:background 0.2s;
+}
+.fs-btn:hover { background:rgba(255,255,255,0.22); }
+
+.slide::before {
+  content:''; position:absolute;
+  width:600px; height:600px; border-radius:50%;
+  background:#1D9E75; opacity:0.05;
+  top:-250px; left:-200px; pointer-events:none;
+}
+.slide::after {
+  content:''; position:absolute;
+  width:500px; height:500px; border-radius:50%;
+  background:#EF9F27; opacity:0.04;
+  bottom:-200px; right:-150px; pointer-events:none;
+}
+
+.nav-bar {
+  position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
+  display:flex; align-items:center; gap:16px; z-index:100;
+  background:rgba(0,0,0,0.35); border-radius:50px; padding:10px 20px;
+  backdrop-filter:blur(8px);
+}
+.nav-btn {
+  background:rgba(255,255,255,0.12); border:none; color:white;
+  width:40px; height:40px; border-radius:50%; font-size:18px;
+  cursor:pointer; transition:background 0.2s;
+  display:flex; align-items:center; justify-content:center;
+}
+.nav-btn:hover { background:rgba(255,255,255,0.25); }
+.nav-btn:disabled { opacity:0.3; cursor:default; }
+.slide-counter { font-size:13px; color:rgba(255,255,255,0.6); min-width:50px; text-align:center; }
+.dots { display:flex; gap:6px; align-items:center; }
+.dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.2); transition:all 0.2s; cursor:pointer; }
+.dot.active { background:#EF9F27; width:20px; border-radius:4px; }
+
+.slide-num {
+  position:absolute; top:24px; left:32px;
+  font-size:11px; font-weight:700; letter-spacing:2px;
+  color:rgba(255,255,255,0.2);
+}
+.session-label {
+  position:absolute; top:24px; right:32px;
+  font-size:11px; font-weight:700; letter-spacing:1px;
+  color:rgba(255,255,255,0.3);
+}
+
+.tag {
+  font-size:12px; font-weight:700; letter-spacing:3px;
+  color:#5DCAA5; margin-bottom:16px; text-align:center;
+}
+h1 {
+  font-size:clamp(32px,5vw,60px); font-weight:900; color:white;
+  text-align:center; line-height:1.2; margin-bottom:16px;
+}
+h1 span { color:#EF9F27; }
+h2 {
+  font-size:clamp(22px,3vw,38px); font-weight:900; color:white;
+  line-height:1.2; margin-bottom:18px; text-align:center;
+}
+h2 span { color:#EF9F27; }
+.lead {
+  font-size:clamp(15px,2vw,20px); color:rgba(255,255,255,0.65);
+  font-weight:300; line-height:1.8; text-align:center;
+  max-width:700px; margin-bottom:24px;
+}
+
+.cards { display:grid; gap:14px; width:100%; max-width:900px; }
+.cards-2 { grid-template-columns:1fr 1fr; }
+.cards-3 { grid-template-columns:1fr 1fr 1fr; }
+.card {
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:18px; padding:20px 18px;
+}
+.card-icon { font-size:26px; margin-bottom:8px; display:block; }
+.card h3 { font-size:15px; font-weight:800; color:white; margin-bottom:7px; }
+.card p { font-size:clamp(13px,1.5vw,16px); color:rgba(255,255,255,0.75); line-height:1.8; font-weight:300; }
+.card .accent { color:#5DCAA5; font-weight:700; }
+.card .gold { color:#EF9F27; font-weight:700; }
+.card.card-red { border-color:rgba(239,100,100,0.3); }
+.card.card-green { border-color:rgba(93,202,165,0.35); }
+
+.tbl {
+  width:100%; max-width:820px; border-collapse:collapse;
+  background:rgba(255,255,255,0.04); border-radius:16px; overflow:hidden;
+}
+.tbl th {
+  background:rgba(255,255,255,0.1); color:#5DCAA5;
+  font-size:clamp(13px,1.5vw,15px); font-weight:700; padding:12px 16px; text-align:right;
+}
+.tbl td {
+  color:rgba(255,255,255,0.85); font-size:clamp(13px,1.5vw,15px);
+  padding:12px 16px; border-bottom:1px solid rgba(255,255,255,0.06);
+  font-weight:300; line-height:1.6;
+}
+.tbl tr:last-child td { border-bottom:none; }
+.tbl .best { color:#5DCAA5; font-weight:700; }
+.tbl .warn { color:#EF9F27; font-weight:700; }
+
+.highlight {
+  background:rgba(239,159,39,0.12);
+  border-right:4px solid #EF9F27;
+  border-radius:0 14px 14px 0;
+  padding:16px 20px; margin-top:14px;
+  font-size:clamp(14px,1.6vw,17px); color:rgba(255,255,255,0.9); line-height:1.8;
+  max-width:760px; width:100%;
+}
+.highlight-green {
+  background:rgba(93,202,165,0.1);
+  border-right:4px solid #5DCAA5;
+  border-radius:0 14px 14px 0;
+  padding:16px 20px; margin-top:14px;
+  font-size:clamp(14px,1.6vw,17px); color:rgba(255,255,255,0.9); line-height:1.8;
+  max-width:760px; width:100%;
+}
+
+.eden-card {
+  background:rgba(93,202,165,0.1);
+  border:1px solid rgba(93,202,165,0.25);
+  border-radius:16px; padding:14px 18px;
+  display:flex; align-items:center; gap:14px;
+  max-width:700px; margin-top:16px; width:100%;
+}
+.eden-av {
+  width:40px; height:40px; border-radius:50%;
+  object-fit:cover; border:2px solid rgba(93,202,165,0.5); flex-shrink:0;
+}
+.eden-card p { font-size:clamp(13px,1.4vw,15px); color:rgba(255,255,255,0.8); line-height:1.6; }
+.eden-card strong { color:#5DCAA5; }
+
+.cover-sub {
+  display:flex; gap:24px; align-items:center; justify-content:center;
+  margin-top:12px; flex-wrap:wrap;
+}
+.cover-pill {
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:50px; padding:8px 20px;
+  font-size:14px; color:rgba(255,255,255,0.7);
+}
+
+.bullet-list { list-style:none; max-width:700px; width:100%; }
+.bullet-list li {
+  font-size:clamp(14px,1.7vw,17px); color:rgba(255,255,255,0.8);
+  font-weight:300; line-height:1.7; padding:9px 0;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  display:flex; gap:12px; align-items:flex-start;
+}
+.bullet-list li:last-child { border-bottom:none; }
+.bullet-list li::before { content:'◆'; color:#EF9F27; font-size:10px; margin-top:5px; flex-shrink:0; }
+.bullet-list li strong { color:white; font-weight:700; }
+
+.bias-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:12px; width:100%; max-width:860px;
+}
+.bias-card {
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:16px; padding:16px 18px;
+}
+.bias-card .bias-name {
+  font-size:13px; font-weight:800; color:#EF9F27; margin-bottom:6px;
+}
+.bias-card p {
+  font-size:clamp(12px,1.4vw,14px); color:rgba(255,255,255,0.7);
+  line-height:1.7; font-weight:300;
+}
+.bias-card p strong { color:white; font-weight:700; }
+
+.world-grid {
+  display:grid; grid-template-columns:1fr 1fr 1fr;
+  gap:12px; width:100%; max-width:900px;
+}
+.world-card {
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:18px; padding:18px 16px; text-align:center;
+}
+.world-card .world-icon { font-size:32px; margin-bottom:10px; }
+.world-card h3 { font-size:14px; font-weight:800; color:white; margin-bottom:8px; }
+.world-card p { font-size:13px; color:rgba(255,255,255,0.6); line-height:1.7; font-weight:300; }
+.world-card .world-tag { font-size:11px; font-weight:700; color:#5DCAA5; margin-top:10px; }
+
+.outcome-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:10px; width:100%; max-width:820px;
+}
+.outcome-item {
+  display:flex; align-items:center; gap:12px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:14px; padding:14px 16px;
+}
+.outcome-icon { font-size:22px; flex-shrink:0; }
+.outcome-text { font-size:clamp(13px,1.4vw,15px); color:rgba(255,255,255,0.85); line-height:1.6; font-weight:300; }
+.outcome-text strong { color:white; font-weight:700; }
+</style>
+</head>
+<body>
+
+<div class="nativ-logo">
+  <div class="logo-name"><span>נתיב</span></div>
+  <div class="logo-tag">הכסף החכם שלך</div>
+</div>
+<button class="fs-btn" id="fsBtn" onclick="toggleFS()" title="מסך מלא">⛶</button>
+
+<!-- שקף 1: שער -->
+<div class="slide bg-dark active" id="s1">
+  <div class="session-label">מפגש 3 / 3</div>
+  <div class="tag">נתיב · שרון חכמון</div>
+  <h1>הכסף, הראש,<br><span>וההמשך</span></h1>
+  <p class="lead">מיסוי, פסיכולוגיה של השקעה, FOMO, ועולמות שמחכים לכן — המפגש האחרון שסוגר את התמונה</p>
+  <div class="cover-sub">
+    <div class="cover-pill">📅 מפגש 3 מתוך 3</div>
+    <div class="cover-pill">⏱ 19:30–21:00</div>
+  </div>
+</div>
+
+<!-- שקף 2: מיסוי — עקרונות -->
+<div class="slide bg-dark" id="s2">
+  <div class="slide-num">02</div>
+  <div class="session-label">מפגש 3</div>
+  <div class="tag">לא מספרים לך את זה בבנק</div>
+  <h2>מיסוי על השקעות —<br><span>מה חייבים לדעת</span></h2>
+  <table class="tbl" style="max-width:820px;margin-bottom:14px">
+    <thead>
+      <tr>
+        <th>סוג הכנסה</th>
+        <th>שיעור מס</th>
+        <th>על מה מוסים?</th>
+        <th>הערה</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>רווח הון ממניות / ETF</td>
+        <td class="warn">25%</td>
+        <td>רווח ריאלי (מנוכה אינפלציה)</td>
+        <td>רק בעת מכירה</td>
+      </tr>
+      <tr>
+        <td>ריבית (פיקדון, אג"ח)</td>
+        <td class="warn">15%</td>
+        <td>רווח נומינלי מלא</td>
+        <td>בניכוי אינפלציה ≤ קרן כספית</td>
+      </tr>
+      <tr>
+        <td>קרן כספית</td>
+        <td class="best">25% (על ריאלי)</td>
+        <td>רק על הרווח מעל אינפלציה</td>
+        <td>יתרון מס ברור</td>
+      </tr>
+      <tr style="background:rgba(255,255,255,0.05)">
+        <td style="font-weight:700;color:white">דיבידנד ממניה זרה</td>
+        <td style="color:#f87171;font-weight:700">25%–35%</td>
+        <td>כל הדיבידנד (בניכוי מס במקור)</td>
+        <td>ETF מצבר עדיף לרוב</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="highlight">
+    ⏳ <strong>עיקרון המפתח:</strong> מס משלמים רק בעת מכירה. כסף שלא מכרת — לא מוסים עליו. <strong>לכן כדאי לא למכור מהר.</strong><br>
+    <span style="font-size:0.85em;color:rgba(255,255,255,0.6)">📌 לא ייעוץ מס. מומלץ להתייעץ עם רואה חשבון לפי המצב האישי.</span>
+  </div>
+</div>
+
+<!-- שקף 3: מיסוי — קיזוז והטבות -->
+<div class="slide bg-dark" id="s3">
+  <div class="slide-num">03</div>
+  <div class="session-label">מפגש 3</div>
+  <div class="tag">עוד כלים לחסוך במס</div>
+  <h2>קיזוז הפסדים ו<span>תכנון מס</span></h2>
+  <div class="cards cards-2" style="max-width:820px">
+    <div class="card">
+      <span class="card-icon">⚖️</span>
+      <h3>קיזוז הפסדי הון</h3>
+      <p>מכרת קרן בהפסד? <span class="accent">ניתן לקזז את ההפסד מול רווח אחר.</span><br><br>
+      דוגמה: הפסד ₪3,000 + רווח ₪8,000 → מוסים רק על <span class="gold">₪5,000.</span><br>
+      חשוב לנהל עם בית ההשקעות.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">📈</span>
+      <h3>ETF מצבר vs מחלק</h3>
+      <p><strong>מצבר</strong> (Accumulating) — דיבידנדים נכנסים חזרה לקרן אוטומטית.<br>
+      <strong>מחלק</strong> (Distributing) — דיבידנד משולם ומוסים עליו מיד.<br><br>
+      <span class="accent">לצמיחה לטווח ארוך — מצבר עדיף.</span></p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🏦</span>
+      <h3>קרן פנסיה וגמל</h3>
+      <p>הפקדות לפנסיה / קרן השתלמות מזכות ב<span class="gold">ניכוי ממס הכנסה.</span><br><br>
+      קרן השתלמות — פטורה ממס רווח הון לאחר 6 שנים.<br>
+      <span class="accent">כלי מס-יעיל מאוד.</span></p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🗓️</span>
+      <h3>מועד המכירה חשוב</h3>
+      <p>אם מכרת ברווח — <strong>מוסים בשנה הקלנדרית.</strong><br><br>
+      לפעמים כדאי לדחות למכירה לינואר הבא כדי לדחות את תשלום המס שנה שלמה.<br>
+      <span class="accent">כסף שנשאר אצלך עובד בשבילך.</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- שקף 4: פסיכולוגיה של השקעה -->
+<div class="slide bg-dark" id="s4">
+  <div class="slide-num">04</div>
+  <div class="session-label">מפגש 3</div>
+  <div class="tag">הסיבה שרוב האנשים מפסידים</div>
+  <h2>פסיכולוגיה של השקעה —<br><span>המוח שלנו עובד נגדנו</span></h2>
+  <div class="bias-grid">
+    <div class="bias-card">
+      <div class="bias-name">😱 שנאת הפסד (Loss Aversion)</div>
+      <p>כאב של הפסד ₪1,000 חזק פי 2 משמחת רווח ₪1,000.<br><br><strong>מה זה גורם?</strong> מוכרות כשמפחדות — בדיוק בתחתית.</p>
+    </div>
+    <div class="bias-card">
+      <div class="bias-name">🐑 עדריות (Herd Mentality)</div>
+      <p>כולם קונים ביטקוין / מניית X / נדל"ן — "כנראה שאני גם צריכה".<br><br><strong>מה זה גורם?</strong> קנייה בשיא ומכירה בבהלה.</p>
+    </div>
+    <div class="bias-card">
+      <div class="bias-name">🔒 הטיית עיגון (Anchoring)</div>
+      <p>"קניתי ב-₪100, לא אמכור פחות מ-₪100 גם אם הכל השתנה."<br><br><strong>מה זה גורם?</strong> החלטות לפי מחיר הרכישה, לא לפי ערך אמיתי.</p>
+    </div>
+    <div class="bias-card">
+      <div class="bias-name">🌟 הטיית עדכניות (Recency Bias)</div>
+      <p>"השוק עלה 3 שנים — בטוח ימשיך." / "ירד חודש — הכל קורס."<br><br><strong>מה זה גורם?</strong> תגובת יתר לחדשות קצרות טווח.</p>
+    </div>
+  </div>
+  <div class="highlight-green" style="margin-top:12px">
+    🧠 <strong>האנטידוט:</strong> תוכנית קבועה + השקעה שוטפת (DCA) + אל תיגעי. <strong>הנסתר הוא לא לעשות כלום בירידות.</strong>
+  </div>
+</div>
+
+<!-- שקף 5: FOMO ופחד מירידות -->
+<div class="slide bg-dark" id="s5">
+  <div class="slide-num">05</div>
+  <div class="session-label">מפגש 3</div>
+  <div class="tag">שתי הרגשות שמרסקות תיקים</div>
+  <h2>FOMO ופחד מירידות —<br><span>איך לא לאבד את הראש</span></h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;width:100%;max-width:860px;margin-bottom:16px">
+    <div style="background:rgba(239,100,100,0.08);border:1px solid rgba(239,100,100,0.25);border-radius:18px;padding:22px">
+      <div style="font-size:14px;font-weight:800;color:#f87171;margin-bottom:12px">😰 FOMO — פחד לפספס</div>
+      <p style="font-size:14px;color:rgba(255,255,255,0.7);line-height:1.8;font-weight:300">
+        "חברה שלי עשתה x3 על ביטקוין"<br>
+        "כולם מדברים על מניית X"<br>
+        "הפסדתי את הרכבת"<br><br>
+        <strong style="color:white">התוצאה:</strong> קנייה בשיא, בהלה, ומכירה בהפסד.
+      </p>
+    </div>
+    <div style="background:rgba(239,100,100,0.08);border:1px solid rgba(239,100,100,0.25);border-radius:18px;padding:22px">
+      <div style="font-size:14px;font-weight:800;color:#f87171;margin-bottom:12px">📉 פחד מירידות</div>
+      <p style="font-size:14px;color:rgba(255,255,255,0.7);line-height:1.8;font-weight:300">
+        "התיק ירד 20% — אולי למכור?"<br>
+        "כתבו שהשוק יתרסק"<br>
+        "לא יכולה לראות את המינוס"<br><br>
+        <strong style="color:white">התוצאה:</strong> מכירה בתחתית, נפספסת ההתאוששות.
+      </p>
+    </div>
+  </div>
+  <div class="highlight-green">
+    📊 <strong>עובדה:</strong> S&P 500 ירד יותר מ-20% ב-2001, 2008, 2020 — ו<strong>חזר לשיאים חדשים בכל פעם.</strong><br>
+    המשקיעים שלא עשו כלום השיגו את מרבית הרווח. אלה שמכרו בבהלה — נשארו בחוץ בעלייה.
+  </div>
+</div>
+
+<!-- שקף 6: מה עושים בירידה -->
+<div class="slide bg-dark" id="s6">
+  <div class="slide-num">06</div>
+  <div class="session-label">מפגש 3</div>
+  <div class="tag">פרוטוקול לרגעי בהלה</div>
+  <h2>השוק ירד 25% —<br><span>מה עושות עכשיו?</span></h2>
+  <ul class="bullet-list" style="max-width:760px">
+    <li><strong>שלב 1 — נשמות.</strong> ירידות הן חלק ממחיר הכניסה לשוק ההון. הן תמיד היו, תמיד יהיו.</li>
+    <li><strong>שלב 2 — בודקות את הטווח שלנו.</strong> אם הכסף לטווח ארוך (7+ שנים) — הירידה לא רלוונטית היום.</li>
+    <li><strong>שלב 3 — לא פותחות את האפליקציה.</strong> פחות בודקות = פחות פאניקה = פחות טעויות.</li>
+    <li><strong>שלב 4 — אם יש כסף פנוי — שוקלות להוסיף.</strong> ירידה = מחיר זול. DCA בירידה = הזדמנות.</li>
+    <li><strong>שלב 5 — שואלות את עדן,</strong> לא את הכותרות. עדן נותנת הקשר, לא פאניקה.</li>
+  </ul>
+  <div class="highlight">
+    🧘 <strong>הכלל הכי חשוב:</strong> אל תמכרי בירידה אלא אם חייבת את הכסף עכשיו ממש.<br>
+    אם הגדרת נכון את הטווח שלך מלכתחילה — אין סיבה למכור.
+  </div>
+</div>
+
+<!-- שקף 7: עולמות שממתינים -->
+<div class="slide bg-dark" id="s7">
+  <div class="slide-num">07</div>
+  <div class="session-label">מפגש 3</div>
+  <div class="tag">הצצה לעתיד</div>
+  <h2>עולמות שממתינים לכן<br><span>ברגע שמבינות את הבסיס</span></h2>
+  <div class="world-grid">
+    <div class="world-card">
+      <div class="world-icon">🏖️</div>
+      <h3>פנסיה ופרישה</h3>
+      <p>איך לגרום לפנסיה לעבוד קשה יותר. מסלולים, פיצויים, ניוד. ההחלטות שעושות הפרש של מאות אלפים.</p>
+      <div class="world-tag">↗ נושא עמוק בפני עצמו</div>
+    </div>
+    <div class="world-card">
+      <div class="world-icon">💰</div>
+      <h3>ניהול תקציב</h3>
+      <p>מבנה שמאפשר להשקיע בקביעות. לפי "משכורת לעצמך", קרן חירום, יעדים מוגדרים.</p>
+      <div class="world-tag">↗ הבסיס שמאפשר הכל</div>
+    </div>
+    <div class="world-card">
+      <div class="world-icon">🏠</div>
+      <h3>נדל"ן מול שוק הון</h3>
+      <p>השוואה אמיתית — עלויות, תשואה, נזילות, מינוף. אין תשובה אחת נכונה.</p>
+      <div class="world-tag">↗ נשאלת הרבה</div>
+    </div>
+    <div class="world-card">
+      <div class="world-icon">🛡️</div>
+      <h3>ביטוח וגמל</h3>
+      <p>קרן השתלמות כהשקעה. ביטוח מנהלים vs פנסיה. מה כדאי ולמה.</p>
+      <div class="world-tag">↗ כסף חנוי שלא מנצלים</div>
+    </div>
+    <div class="world-card">
+      <div class="world-icon">📊</div>
+      <h3>ניתוח תיק מתקדם</h3>
+      <p>Sharp ratio, ריסק מול תשואה, אקסל ניהולי. לאחר שנה-שנתיים של השקעה.</p>
+      <div class="world-tag">↗ לשלב הבא</div>
+    </div>
+    <div class="world-card">
+      <div class="world-icon">🌐</div>
+      <h3>השקעות בינלאומיות</h3>
+      <p>מניות בודדות, שווקים מתעוררים, סחורות. רק אחרי שהבסיס יציב.</p>
+      <div class="world-tag">↗ כשרוצות יותר</div>
+    </div>
+  </div>
+</div>
+
+<!-- שקף 8: עם מה יוצאים -->
+<div class="slide bg-dark" id="s8">
+  <div class="slide-num">08</div>
+  <div class="session-label">מפגש 3</div>
+  <div class="tag">סיכום שלושת המפגשים</div>
+  <h2>עם מה <span>יוצאות</span> מהקורס</h2>
+  <div class="outcome-grid">
+    <div class="outcome-item">
+      <div class="outcome-icon">🧠</div>
+      <div class="outcome-text"><strong>שפה פיננסית</strong> — מדד, ETF, אג"ח, ריבית דריבית — לא זרים יותר</div>
+    </div>
+    <div class="outcome-item">
+      <div class="outcome-icon">🎯</div>
+      <div class="outcome-text"><strong>תיק מותאם אישית</strong> — לפי הטווח, הסיכון, והמטרה שלכן</div>
+    </div>
+    <div class="outcome-item">
+      <div class="outcome-icon">💸</div>
+      <div class="outcome-text"><strong>הבנת מיסוי</strong> — למה קרן כספית עדיפה, ואיך קיזוז עובד</div>
+    </div>
+    <div class="outcome-item">
+      <div class="outcome-icon">🧘</div>
+      <div class="outcome-text"><strong>ראש שקט בירידות</strong> — פרוטוקול שמונע טעויות יקרות</div>
+    </div>
+    <div class="outcome-item">
+      <div class="outcome-icon">🤖</div>
+      <div class="outcome-text"><strong>עדן לצידכן</strong> — אפשר לשאול מה זה מניה כמה פעמים שרוצות</div>
+    </div>
+    <div class="outcome-item">
+      <div class="outcome-icon">🌱</div>
+      <div class="outcome-text"><strong>נקודת פתיחה</strong> — לא צריך להמתין עוד. אפשר להתחיל היום</div>
+    </div>
+  </div>
+  <div class="highlight-green" style="margin-top:12px">
+    ✅ <strong>הצעד הבא:</strong> פתחי חשבון בבית השקעות · קני קרן סל אחת + קרן כספית · הפקידי כל חודש · שאלי את עדן בדרך.
+  </div>
+</div>
+
+<!-- שקף 9: תרגול עם עדן -->
+<div class="slide bg-dark" id="s9">
+  <div class="slide-num">09</div>
+  <div class="session-label">מפגש 3</div>
+  <div class="tag">תרגול אחרון</div>
+  <h2>עכשיו <span>מתרגלות</span> עם עדן</h2>
+  <ul class="bullet-list">
+    <li>שואלות עדן: <strong>"הסבירי לי איך עובד מיסוי על ETF"</strong> — בשפה פשוטה עם דוגמה</li>
+    <li>שואלות עדן: <strong>"מה לעשות כשהתיק שלי ירד 20%?"</strong> — תקבלו תשובה מרגיעה ומבוססת</li>
+    <li>סיכום אישי — <strong>עדן בונה עבורכן סיכום של הפרופיל והתיק המומלץ</strong></li>
+    <li>שאלות פתוחות — <strong>כל שאלה שלא הספקתן לשאול בשלושת המפגשים</strong></li>
+  </ul>
+  <div class="eden-card">
+    <img class="eden-av" src="screenshots/eden.png" alt="עדן">
+    <p><strong>עדן זמינה 24/7</strong> — לא נגמר עם המפגש האחרון. היא כאן לכל שאלה, תמיד, בלי שיפוטיות. זה מה שנתיב בנינו בשבילכן.</p>
+  </div>
+  <div class="highlight" style="margin-top:14px">
+    🌿 <strong>תודה שהייתן כאן.</strong> זה הצעד הכי חשוב — לבחור להבין. עכשיו תתחילו לעשות.
+  </div>
+</div>
+
+<!-- ניווט -->
+<div class="nav-bar">
+  <button class="nav-btn" id="prev" onclick="go(-1)">→</button>
+  <div class="dots" id="dots"></div>
+  <span class="slide-counter" id="counter">1 / 9</span>
+  <button class="nav-btn" id="next" onclick="go(1)">←</button>
+</div>
+
+<script>
+const total = 9;
+let cur = 1;
+
+const dotsEl = document.getElementById('dots');
+for (let i=1;i<=total;i++) {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i===1?' active':'');
+  d.onclick = ()=>{ cur=i; render(); };
+  dotsEl.appendChild(d);
+}
+
+function render() {
+  document.querySelectorAll('.slide').forEach((s,i)=>{
+    s.classList.toggle('active', i+1===cur);
+  });
+  document.querySelectorAll('.dot').forEach((d,i)=>{
+    d.classList.toggle('active', i+1===cur);
+  });
+  document.getElementById('counter').textContent = cur+' / '+total;
+  document.getElementById('prev').disabled = cur===1;
+  document.getElementById('next').disabled = cur===total;
+}
+
+function go(dir) {
+  cur = Math.max(1, Math.min(total, cur+dir));
+  render();
+}
+
+function toggleFS() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen?.();
+  } else {
+    document.exitFullscreen?.();
+  }
+}
+
+document.addEventListener('fullscreenchange', ()=>{
+  document.getElementById('fsBtn').textContent = document.fullscreenElement ? '✕' : '⛶';
+});
+
+document.addEventListener('keydown', e=>{
+  if (e.key==='ArrowLeft' || e.key==='ArrowDown') go(1);
+  if (e.key==='ArrowRight' || e.key==='ArrowUp') go(-1);
+  if (e.key==='f' || e.key==='F') toggleFS();
+});
+
+render();
+</script>
+</body>
+</html>

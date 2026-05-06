@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מפגש 2 — בונות את התיק</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; overflow:hidden; background:#062e24; }
+body { font-family:'Heebo',sans-serif; direction:rtl; }
+
+.slide {
+  width:100vw; height:100vh;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:60px 80px;
+  position:relative;
+  overflow:hidden;
+}
+.slide.active { display:flex; }
+
+.bg-dark { background:linear-gradient(160deg,#062e24 0%,#085041 60%,#0d6b57 100%); }
+
+.nativ-logo {
+  position:fixed; bottom:28px; right:28px; z-index:200;
+  display:flex; flex-direction:column; align-items:flex-end; line-height:1.3;
+  pointer-events:none;
+}
+.nativ-logo .logo-name {
+  font-size:14px; font-weight:900; color:rgba(255,255,255,0.7); letter-spacing:1px;
+}
+.nativ-logo .logo-name span { color:#5DCAA5; }
+.nativ-logo .logo-tag {
+  font-size:10px; font-weight:400; color:rgba(255,255,255,0.35);
+  letter-spacing:0.5px;
+}
+
+.fs-btn {
+  position:fixed; top:16px; left:16px; z-index:200;
+  background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
+  color:white; font-size:18px; width:40px; height:40px;
+  border-radius:10px; cursor:pointer; display:flex;
+  align-items:center; justify-content:center;
+  transition:background 0.2s;
+}
+.fs-btn:hover { background:rgba(255,255,255,0.22); }
+
+.slide::before {
+  content:''; position:absolute;
+  width:600px; height:600px; border-radius:50%;
+  background:#1D9E75; opacity:0.05;
+  top:-250px; left:-200px; pointer-events:none;
+}
+.slide::after {
+  content:''; position:absolute;
+  width:500px; height:500px; border-radius:50%;
+  background:#EF9F27; opacity:0.04;
+  bottom:-200px; right:-150px; pointer-events:none;
+}
+
+.nav-bar {
+  position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
+  display:flex; align-items:center; gap:16px; z-index:100;
+  background:rgba(0,0,0,0.35); border-radius:50px; padding:10px 20px;
+  backdrop-filter:blur(8px);
+}
+.nav-btn {
+  background:rgba(255,255,255,0.12); border:none; color:white;
+  width:40px; height:40px; border-radius:50%; font-size:18px;
+  cursor:pointer; transition:background 0.2s;
+  display:flex; align-items:center; justify-content:center;
+}
+.nav-btn:hover { background:rgba(255,255,255,0.25); }
+.nav-btn:disabled { opacity:0.3; cursor:default; }
+.slide-counter { font-size:13px; color:rgba(255,255,255,0.6); min-width:50px; text-align:center; }
+.dots { display:flex; gap:6px; align-items:center; }
+.dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.2); transition:all 0.2s; cursor:pointer; }
+.dot.active { background:#EF9F27; width:20px; border-radius:4px; }
+
+.slide-num {
+  position:absolute; top:24px; left:32px;
+  font-size:11px; font-weight:700; letter-spacing:2px;
+  color:rgba(255,255,255,0.2);
+}
+.session-label {
+  position:absolute; top:24px; right:32px;
+  font-size:11px; font-weight:700; letter-spacing:1px;
+  color:rgba(255,255,255,0.3);
+}
+
+.tag {
+  font-size:12px; font-weight:700; letter-spacing:3px;
+  color:#5DCAA5; margin-bottom:16px; text-align:center;
+}
+h1 {
+  font-size:clamp(32px,5vw,60px); font-weight:900; color:white;
+  text-align:center; line-height:1.2; margin-bottom:16px;
+}
+h1 span { color:#EF9F27; }
+h2 {
+  font-size:clamp(22px,3vw,38px); font-weight:900; color:white;
+  line-height:1.2; margin-bottom:18px; text-align:center;
+}
+h2 span { color:#EF9F27; }
+.lead {
+  font-size:clamp(15px,2vw,20px); color:rgba(255,255,255,0.65);
+  font-weight:300; line-height:1.8; text-align:center;
+  max-width:700px; margin-bottom:24px;
+}
+
+.cards { display:grid; gap:14px; width:100%; max-width:900px; }
+.cards-2 { grid-template-columns:1fr 1fr; }
+.cards-3 { grid-template-columns:1fr 1fr 1fr; }
+.card {
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:18px; padding:20px 18px;
+}
+.card-icon { font-size:26px; margin-bottom:8px; display:block; }
+.card h3 { font-size:15px; font-weight:800; color:white; margin-bottom:7px; }
+.card p { font-size:clamp(13px,1.5vw,16px); color:rgba(255,255,255,0.75); line-height:1.8; font-weight:300; }
+.card .accent { color:#5DCAA5; font-weight:700; }
+.card .gold { color:#EF9F27; font-weight:700; }
+.card.card-red { border-color:rgba(239,100,100,0.3); }
+.card.card-green { border-color:rgba(93,202,165,0.35); }
+
+.tbl {
+  width:100%; max-width:820px; border-collapse:collapse;
+  background:rgba(255,255,255,0.04); border-radius:16px; overflow:hidden;
+}
+.tbl th {
+  background:rgba(255,255,255,0.1); color:#5DCAA5;
+  font-size:clamp(13px,1.5vw,15px); font-weight:700; padding:12px 16px; text-align:right;
+}
+.tbl td {
+  color:rgba(255,255,255,0.85); font-size:clamp(13px,1.5vw,15px);
+  padding:12px 16px; border-bottom:1px solid rgba(255,255,255,0.06);
+  font-weight:300; line-height:1.6;
+}
+.tbl tr:last-child td { border-bottom:none; }
+.tbl .best { color:#5DCAA5; font-weight:700; }
+.tbl .warn { color:#EF9F27; font-weight:700; }
+
+.highlight {
+  background:rgba(239,159,39,0.12);
+  border-right:4px solid #EF9F27;
+  border-radius:0 14px 14px 0;
+  padding:16px 20px; margin-top:14px;
+  font-size:clamp(14px,1.6vw,17px); color:rgba(255,255,255,0.9); line-height:1.8;
+  max-width:760px; width:100%;
+}
+.highlight-green {
+  background:rgba(93,202,165,0.1);
+  border-right:4px solid #5DCAA5;
+  border-radius:0 14px 14px 0;
+  padding:16px 20px; margin-top:14px;
+  font-size:clamp(14px,1.6vw,17px); color:rgba(255,255,255,0.9); line-height:1.8;
+  max-width:760px; width:100%;
+}
+
+.eden-card {
+  background:rgba(93,202,165,0.1);
+  border:1px solid rgba(93,202,165,0.25);
+  border-radius:16px; padding:14px 18px;
+  display:flex; align-items:center; gap:14px;
+  max-width:700px; margin-top:16px; width:100%;
+}
+.eden-av {
+  width:40px; height:40px; border-radius:50%;
+  object-fit:cover; border:2px solid rgba(93,202,165,0.5); flex-shrink:0;
+}
+.eden-card p { font-size:clamp(13px,1.4vw,15px); color:rgba(255,255,255,0.8); line-height:1.6; }
+.eden-card strong { color:#5DCAA5; }
+
+.cover-sub {
+  display:flex; gap:24px; align-items:center; justify-content:center;
+  margin-top:12px; flex-wrap:wrap;
+}
+.cover-pill {
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:50px; padding:8px 20px;
+  font-size:14px; color:rgba(255,255,255,0.7);
+}
+
+.bullet-list { list-style:none; max-width:700px; width:100%; }
+.bullet-list li {
+  font-size:clamp(14px,1.7vw,17px); color:rgba(255,255,255,0.8);
+  font-weight:300; line-height:1.7; padding:9px 0;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  display:flex; gap:12px; align-items:flex-start;
+}
+.bullet-list li:last-child { border-bottom:none; }
+.bullet-list li::before { content:'◆'; color:#EF9F27; font-size:10px; margin-top:5px; flex-shrink:0; }
+.bullet-list li strong { color:white; font-weight:700; }
+
+.portfolio-grid {
+  display:grid; grid-template-columns:1fr 1fr 1fr;
+  gap:14px; width:100%; max-width:900px;
+}
+.portfolio-card {
+  border-radius:18px; padding:20px 16px; text-align:center;
+}
+.portfolio-card .pct {
+  font-size:38px; font-weight:900; line-height:1; margin-bottom:10px;
+}
+.portfolio-card h3 { font-size:14px; font-weight:800; color:white; margin-bottom:12px; }
+.portfolio-card .pct-row {
+  font-size:13px; color:rgba(255,255,255,0.65); line-height:1.9;
+  text-align:right; font-weight:300;
+}
+.portfolio-card .pct-row strong { color:white; font-weight:700; }
+</style>
+</head>
+<body>
+
+<div class="nativ-logo">
+  <div class="logo-name"><span>נתיב</span></div>
+  <div class="logo-tag">הכסף החכם שלך</div>
+</div>
+<button class="fs-btn" id="fsBtn" onclick="toggleFS()" title="מסך מלא">⛶</button>
+
+<!-- שקף 1: שער -->
+<div class="slide bg-dark active" id="s1">
+  <div class="session-label">מפגש 2 / 3</div>
+  <div class="tag">נתיב · שרון חכמון</div>
+  <h1>בונות את<br><span>התיק</span></h1>
+  <p class="lead">ETF, פיזור, גידור מטבע וריבית דריבית — בונות תיק השקעות אמיתי, צעד אחר צעד</p>
+  <div class="cover-sub">
+    <div class="cover-pill">📅 מפגש 2 מתוך 3</div>
+    <div class="cover-pill">⏱ 19:30–21:00</div>
+  </div>
+</div>
+
+<!-- שקף 2: סיכום מפגש 1 -->
+<div class="slide bg-dark" id="s2">
+  <div class="slide-num">02</div>
+  <div class="session-label">מפגש 2</div>
+  <div class="tag">קצת רענון — ממה התחלנו</div>
+  <h2>מה למדנו במפגש 1 —<br><span>המושגים שנשארים</span></h2>
+  <div class="cards cards-2" style="max-width:820px">
+    <div class="card" style="display:flex;gap:14px;align-items:flex-start;padding:16px">
+      <span style="font-size:24px;flex-shrink:0">🧺</span>
+      <div><h3 style="margin-bottom:4px">ETF / קרן סל</h3><p>קרן שעוקבת אחרי מדד ונסחרת בבורסה. מאות חברות בפעולה אחת, דמי ניהול נמוכים.</p></div>
+    </div>
+    <div class="card" style="display:flex;gap:14px;align-items:flex-start;padding:16px">
+      <span style="font-size:24px;flex-shrink:0">💵</span>
+      <div><h3 style="margin-bottom:4px">קרן כספית</h3><p>~4.5% שנתי, נזילה יומית, יתרון מס על פיקדון. לכסף שתצטרכי בטווח קצר.</p></div>
+    </div>
+    <div class="card" style="display:flex;gap:14px;align-items:flex-start;padding:16px">
+      <span style="font-size:24px;flex-shrink:0">⏳</span>
+      <div><h3 style="margin-bottom:4px">ריבית דריבית</h3><p>הרווחים מרוויחים על עצמם. ₪20,000 ב-7% לשנה → ₪755K אחרי 30 שנה. הזמן הוא הכוח.</p></div>
+    </div>
+    <div class="card" style="display:flex;gap:14px;align-items:flex-start;padding:16px">
+      <span style="font-size:24px;flex-shrink:0">🎯</span>
+      <div><h3 style="margin-bottom:4px">טווח + סיכון</h3><p>5+ שנים → שוק ההון מתאים. פחות מ-3 שנים → קרן כספית / פיקדון. הטווח קובע הכל.</p></div>
+    </div>
+  </div>
+  <div class="highlight" style="margin-top:12px">
+    💡 היום בונות תיק אמיתי — <strong>כמה אחוז לשים בכל מקום, איזו קרן לבחור, ואיך להתמודד עם מטבע.</strong>
+  </div>
+</div>
+
+<!-- שקף 3: קרן סל — איך בוחרים -->
+<div class="slide bg-dark" id="s3">
+  <div class="slide-num">03</div>
+  <div class="session-label">מפגש 2</div>
+  <div class="tag">הכלי המרכזי</div>
+  <h2>איך בוחרים <span>קרן סל?</span><br>4 שאלות שחייבים לשאול</h2>
+  <div class="cards cards-2" style="max-width:860px">
+    <div class="card">
+      <span class="card-icon">💸</span>
+      <h3>1. דמי ניהול — כמה גובים?</h3>
+      <p>קרן טובה: <span class="accent">0.03%–0.2%</span> לשנה.<br>קרן יקרה: מעל 1% — <span class="gold">בורחות!</span><br><br>הבדל של 0.5% = עשרות אלפים לאורך 20 שנה.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">📊</span>
+      <h3>2. מה המדד שהיא עוקבת?</h3>
+      <p>S&amp;P 500? MSCI World? ת"א 125?<br>ודאי שהמדד מתאים למטרה שלך — <span class="accent">פיזור עולמי vs ישראלי.</span></p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🏦</span>
+      <h3>3. איפה הקרן רשומה?</h3>
+      <p>קרן <strong>ישראלית</strong> — מס על ריאלי בלבד, ניהול פשוט יותר.<br>קרן <strong>אירית</strong> (UCITS) — פופולרית, לפעמים זולה יותר.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">💱</span>
+      <h3>4. גידור מטבע — כן או לא?</h3>
+      <p>קרן <span class="accent">מגודרת שקל</span> — מגנה מפני תנודות דולר/שקל.<br>קרן <span class="gold">לא מגודרת</span> — חשופה לשינויי מט"ח. לרוב מתאימה לטווח ארוך.</p>
+    </div>
+  </div>
+  <div class="highlight-green" style="margin-top:12px">
+    🔍 <strong>כיצד בודקים?</strong> אתר TASE (הבורסה), Morningstar, או פשוט לשאול את עדן: "השוויי לי קרנות S&amp;P 500 ישראליות".
+  </div>
+</div>
+
+<!-- שקף 4: גידור מטבע -->
+<div class="slide bg-dark" id="s4">
+  <div class="slide-num">04</div>
+  <div class="session-label">מפגש 2</div>
+  <div class="tag">מושג חשוב — לא מסבירים בבנק</div>
+  <h2>גידור מטבע —<br><span>להגן על הרווח שלך מהדולר</span></h2>
+  <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:16px;width:100%;max-width:860px;align-items:center;margin-bottom:16px">
+    <div style="background:rgba(239,100,100,0.1);border:1px solid rgba(239,100,100,0.3);border-radius:18px;padding:20px">
+      <div style="font-size:13px;font-weight:700;color:#f87171;margin-bottom:10px">📉 בלי גידור מטבע</div>
+      <p style="font-size:14px;color:rgba(255,255,255,0.7);line-height:1.8;font-weight:300">
+        קנית קרן S&amp;P 500 ב-$<br>השוק עלה <strong style="color:white">10%</strong> — מצוין!<br>אבל הדולר נחלש 8% מול השקל.<br>
+        <strong style="color:#f87171">הרווח שלך: ~2% בלבד.</strong>
+      </p>
+    </div>
+    <div style="text-align:center;font-size:22px;color:rgba(255,255,255,0.3)">VS</div>
+    <div style="background:rgba(93,202,165,0.1);border:1px solid rgba(93,202,165,0.3);border-radius:18px;padding:20px">
+      <div style="font-size:13px;font-weight:700;color:#5DCAA5;margin-bottom:10px">🛡️ עם גידור מטבע (שקל)</div>
+      <p style="font-size:14px;color:rgba(255,255,255,0.7);line-height:1.8;font-weight:300">
+        קנית קרן S&amp;P 500 מגודרת שקל.<br>השוק עלה <strong style="color:white">10%</strong>.<br>הגידור מנטרל את תנודת הדולר.<br>
+        <strong style="color:#5DCAA5">הרווח שלך: ~10% בשקלים.</strong>
+      </p>
+    </div>
+  </div>
+  <div class="highlight">
+    🧠 <strong>מתי כן לגדר?</strong> כשהטווח קצר יחסית (3–7 שנים) ואת לא רוצה להימר על שער החליפין.<br>
+    <strong>מתי לא לגדר?</strong> טווח ארוך מאוד — שינויי מטבע מתאזנים לאורך עשורים, וגידור עולה כסף.
+  </div>
+</div>
+
+<!-- שקף 5: פיזור -->
+<div class="slide bg-dark" id="s5">
+  <div class="slide-num">05</div>
+  <div class="session-label">מפגש 2</div>
+  <div class="tag">העיקרון הכי חשוב בהשקעות</div>
+  <h2>פיזור — <span>לא לשים הכל</span><br>בסל אחד</h2>
+  <div class="cards cards-3" style="max-width:900px;margin-bottom:14px">
+    <div class="card card-green">
+      <span class="card-icon">📈</span>
+      <h3>מניות (ETF)</h3>
+      <p>פוטנציאל הצמיחה הגדול ביותר.<br>תנודתיות גבוהה — יכול לרדת 30% ולעלות חזרה.<br><br><span class="accent">לטווח ארוך: עמוד השדרה של התיק.</span></p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🏛️</span>
+      <h3>אג"ח</h3>
+      <p>יציבות בתיק — כשמניות יורדות, אג"ח לרוב מחזיק.<br>תשואה נמוכה יותר, סיכון נמוך יותר.<br><br><span class="gold">המאזן בתקופות סוערות.</span></p>
+    </div>
+    <div class="card">
+      <span class="card-icon">💵</span>
+      <h3>קרן כספית</h3>
+      <p>הנזילות של התיק — כסף שניתן למשוך תוך יום.<br>~4.5%, סיכון כמעט אפס.<br><br><span class="accent">לכסף שאולי תצטרכי בקרוב.</span></p>
+    </div>
+  </div>
+  <div class="highlight-green">
+    🌍 <strong>פיזור גיאוגרפי חשוב לא פחות:</strong> ארה"ב, אירופה, שווקים מתעוררים, ישראל.<br>
+    MSCI World לבד = ~70% ארה"ב + 30% שאר העולם. זה כבר פיזור טוב להתחיל.
+  </div>
+</div>
+
+<!-- שקף 6: 3 תיקים לדוגמה -->
+<div class="slide bg-dark" id="s6">
+  <div class="slide-num">06</div>
+  <div class="session-label">מפגש 2</div>
+  <div class="tag">לפי מטרה ורמת סיכון</div>
+  <h2>3 תיקים לדוגמה —<br><span>שמרני, מאוזן, צמיחה</span></h2>
+  <div class="portfolio-grid">
+    <div class="portfolio-card" style="background:rgba(93,202,165,0.08);border:1px solid rgba(93,202,165,0.25)">
+      <div class="pct" style="color:#5DCAA5">🛡️</div>
+      <h3>שמרני<br><span style="color:rgba(255,255,255,0.45);font-size:12px;font-weight:400">טווח קצר-בינוני</span></h3>
+      <div class="pct-row">
+        <strong>50%</strong> קרן כספית<br>
+        <strong>30%</strong> אג"ח ממשלתי<br>
+        <strong>20%</strong> ETF מניות<br>
+        <br><span style="color:#5DCAA5;font-size:12px">סיכון נמוך · ~4–5% צפוי</span>
+      </div>
+    </div>
+    <div class="portfolio-card" style="background:rgba(239,159,39,0.08);border:1px solid rgba(239,159,39,0.3)">
+      <div class="pct" style="color:#EF9F27">⚖️</div>
+      <h3>מאוזן<br><span style="color:rgba(255,255,255,0.45);font-size:12px;font-weight:400">טווח 5–10 שנים</span></h3>
+      <div class="pct-row">
+        <strong>20%</strong> קרן כספית<br>
+        <strong>25%</strong> אג"ח<br>
+        <strong>55%</strong> ETF מניות<br>
+        <br><span style="color:#EF9F27;font-size:12px">סיכון בינוני · ~6–7% צפוי</span>
+      </div>
+    </div>
+    <div class="portfolio-card" style="background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.3)">
+      <div class="pct" style="color:#1D9E75">🚀</div>
+      <h3>צמיחה<br><span style="color:rgba(255,255,255,0.45);font-size:12px;font-weight:400">טווח 10+ שנים</span></h3>
+      <div class="pct-row">
+        <strong>10%</strong> קרן כספית<br>
+        <strong>10%</strong> אג"ח<br>
+        <strong>80%</strong> ETF מניות<br>
+        <br><span style="color:#1D9E75;font-size:12px">סיכון גבוה · ~7–9% צפוי</span>
+      </div>
+    </div>
+  </div>
+  <div class="highlight" style="margin-top:12px">
+    ⚠️ <strong>אלה דוגמאות בלבד — לא המלצת השקעה.</strong> התיק האישי שלך תלוי בגיל, מטרות, ומצב פיננסי. עדן תעזור לך לבנות את שלך.
+  </div>
+</div>
+
+<!-- שקף 7: ריבית דריבית — עמוק יותר -->
+<div class="slide bg-dark" id="s7">
+  <div class="slide-num">07</div>
+  <div class="session-label">מפגש 2</div>
+  <div class="tag">הכוח שעובד בשקט בשבילך</div>
+  <h2>ריבית דריבית —<br><span>המספרים שמשנים תפיסה</span></h2>
+  <table class="tbl" style="max-width:820px;margin-bottom:14px">
+    <thead>
+      <tr>
+        <th>הפקדה</th>
+        <th>10 שנים</th>
+        <th>20 שנים</th>
+        <th>30 שנים</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>₪10,000 חד-פעמי</td>
+        <td class="best">₪19,672</td>
+        <td class="best">₪38,697</td>
+        <td class="best">₪76,123</td>
+      </tr>
+      <tr>
+        <td>₪500 בחודש</td>
+        <td class="warn">₪86,408</td>
+        <td class="warn">₪260,463</td>
+        <td class="warn">₪606,438</td>
+      </tr>
+      <tr style="background:rgba(255,255,255,0.05)">
+        <td style="font-weight:700;color:white">₪10,000 + ₪500/חודש</td>
+        <td style="color:#5DCAA5;font-weight:700">₪106,080</td>
+        <td style="color:#5DCAA5;font-weight:700">₪299,160</td>
+        <td style="color:#EF9F27;font-weight:900;font-size:1.1em">₪682,561</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="highlight">
+    🧮 <strong>בחישוב 7% תשואה שנתית.</strong> שימי לב — ₪500 בחודש = ₪180,000 הפקדה לאורך 30 שנה.<br>
+    הסכום שצברת: ₪682,000. <strong>הרווח מריבית דריבית: כמעט ₪500,000 — כסף שהעבודה עשתה לבד.</strong>
+  </div>
+</div>
+
+<!-- שקף 8: איפה קונים — בתי השקעות -->
+<div class="slide bg-dark" id="s8">
+  <div class="slide-num">08</div>
+  <div class="session-label">מפגש 2</div>
+  <div class="tag">בפועל — איפה מתחילות</div>
+  <h2>איפה קונים <span>קרנות סל?</span></h2>
+  <div class="cards cards-2" style="max-width:820px;margin-bottom:14px">
+    <div class="card">
+      <span class="card-icon">🏢</span>
+      <h3>בית השקעות (מיטב, IBI, אקסלנס...)</h3>
+      <p>פלטפורמה ייעודית לניירות ערך.<br>עמלות נמוכות יותר ממנהול דרך הבנק.<br>ממשק פשוט לצפייה ורכישה.<br><br><span class="accent">מומלץ: להתחיל פה.</span></p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🏦</span>
+      <h3>הבנק שלך</h3>
+      <p>ניתן לסחור דרך הבנק — אבל <span class="gold">עמלות גבוהות יותר.</span><br>נוח אם כל הכספים אצלך שם.<br><br>מתאים יותר לאג"ח ממשלתי ישראלי.</p>
+    </div>
+  </div>
+  <ul class="bullet-list">
+    <li><strong>פתיחת חשבון:</strong> תהליך מקוון, כ-15 דקות. לרוב ללא עמלות פתיחה.</li>
+    <li><strong>רכישה ראשונה:</strong> בית השקעות + קרן סל אחת זה מספיק להתחיל.</li>
+    <li><strong>עמלות לבדוק:</strong> עמלת קנייה/מכירה, עמלת שמירה שנתית, עמלת המרת מט"ח.</li>
+  </ul>
+</div>
+
+<!-- שקף 9: טעויות נפוצות -->
+<div class="slide bg-dark" id="s9">
+  <div class="slide-num">09</div>
+  <div class="session-label">מפגש 2</div>
+  <div class="tag">לא לעשות את זה</div>
+  <h2>5 טעויות שמתחילות <span>חוזרות עליהן</span></h2>
+  <ul class="bullet-list">
+    <li><strong>לחכות לרגע "הנכון"</strong> — אין רגע מושלם. ההשקעה הטובה ביותר היא שמתחילה היום.</li>
+    <li><strong>להשקיע את כל הסכום בבת אחת</strong> — השקעה שוטפת חודשית (DCA) מפחיתה סיכון של תזמון שוק.</li>
+    <li><strong>לבחור קרן לפי ביצועי שנה אחת</strong> — שנה אחת לא אומרת כלום. תסתכלי על 5+ שנים ודמי ניהול.</li>
+    <li><strong>לגעת בתיק בכל ירידה</strong> — הפאניקה עולה כסף. ירידות הן חלק מהמשחק.</li>
+    <li><strong>לשים הכל בחברה אחת</strong> — זו ספקולציה, לא השקעה. ETF = פיזור אוטומטי.</li>
+  </ul>
+  <div class="highlight-green">
+    ✅ <strong>הנוסחה הפשוטה:</strong> פתחי חשבון · קני ETF עולמי + קרן כספית · הפקידי כל חודש · אל תיגעי.
+  </div>
+</div>
+
+<!-- שקף 10: תרגול עם עדן -->
+<div class="slide bg-dark" id="s10">
+  <div class="slide-num">10</div>
+  <div class="session-label">מפגש 2</div>
+  <div class="tag">תרגול</div>
+  <h2>עכשיו <span>מתרגלות</span> עם עדן</h2>
+  <ul class="bullet-list">
+    <li>שואלות עדן: <strong>"הראי לי קרנות MSCI World ישראליות לפי דמי ניהול"</strong></li>
+    <li>שואלות עדן: <strong>"מה זה גידור מטבע ומתי כדאי?"</strong></li>
+    <li>מחשבון ריבית דריבית — <strong>מזיזות את המחוונים עם הסכום האישי שלכן</strong></li>
+    <li>בונות פרופיל — <strong>עדן מתאימה תיק לפי הטווח ורמת הסיכון שלכן</strong></li>
+  </ul>
+  <div class="eden-card">
+    <img class="eden-av" src="screenshots/eden.png" alt="עדן">
+    <p><strong>עדן זמינה 24/7</strong> — שאלו אותה כמה פעמים שרוצות. אין שאלה טפשה. היא מכירה אתכן ותמיד שם.</p>
+  </div>
+  <div class="highlight" style="margin-top:14px">
+    📅 <strong>מפגש 3:</strong> הכסף, הראש, וההמשך — מיסוי, פסיכולוגיה של השקעה, ועולמות שמחכים לכן.
+  </div>
+</div>
+
+<!-- ניווט -->
+<div class="nav-bar">
+  <button class="nav-btn" id="prev" onclick="go(-1)">→</button>
+  <div class="dots" id="dots"></div>
+  <span class="slide-counter" id="counter">1 / 10</span>
+  <button class="nav-btn" id="next" onclick="go(1)">←</button>
+</div>
+
+<script>
+const total = 10;
+let cur = 1;
+
+const dotsEl = document.getElementById('dots');
+for (let i=1;i<=total;i++) {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i===1?' active':'');
+  d.onclick = ()=>{ cur=i; render(); };
+  dotsEl.appendChild(d);
+}
+
+function render() {
+  document.querySelectorAll('.slide').forEach((s,i)=>{
+    s.classList.toggle('active', i+1===cur);
+  });
+  document.querySelectorAll('.dot').forEach((d,i)=>{
+    d.classList.toggle('active', i+1===cur);
+  });
+  document.getElementById('counter').textContent = cur+' / '+total;
+  document.getElementById('prev').disabled = cur===1;
+  document.getElementById('next').disabled = cur===total;
+}
+
+function go(dir) {
+  cur = Math.max(1, Math.min(total, cur+dir));
+  render();
+}
+
+function toggleFS() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen?.();
+  } else {
+    document.exitFullscreen?.();
+  }
+}
+
+document.addEventListener('fullscreenchange', ()=>{
+  document.getElementById('fsBtn').textContent = document.fullscreenElement ? '✕' : '⛶';
+});
+
+document.addEventListener('keydown', e=>{
+  if (e.key==='ArrowLeft' || e.key==='ArrowDown') go(1);
+  if (e.key==='ArrowRight' || e.key==='ArrowUp') go(-1);
+  if (e.key==='f' || e.key==='F') toggleFS();
+});
+
+render();
+</script>
+</body>
+</html>
