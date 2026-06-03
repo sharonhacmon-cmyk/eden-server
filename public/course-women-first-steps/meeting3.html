@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מפגש 3 — פתיחת תיק השקעות | קורס נשים</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; overflow:hidden; background:#062e24; }
+body { font-family:'Heebo',sans-serif; direction:rtl; }
+
+.slide {
+  width:100vw; height:100vh;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:60px 80px;
+  position:relative;
+  overflow:hidden;
+}
+.slide.active { display:flex; }
+
+.bg-dark { background:linear-gradient(160deg,#062e24 0%,#085041 60%,#0d6b57 100%); }
+
+/* לוגו נתיב */
+.nativ-logo {
+  position:fixed; bottom:28px; right:28px; z-index:200;
+  display:flex; flex-direction:column; align-items:flex-end; line-height:1.3;
+  pointer-events:none;
+}
+.nativ-logo .logo-name {
+  font-size:14px; font-weight:900; color:rgba(255,255,255,0.7); letter-spacing:1px;
+}
+.nativ-logo .logo-name span { color:#5DCAA5; }
+.nativ-logo .logo-tag {
+  font-size:10px; font-weight:400; color:rgba(255,255,255,0.35);
+  letter-spacing:0.5px;
+}
+
+.fs-btn {
+  position:fixed; top:16px; left:16px; z-index:200;
+  background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
+  color:white; font-size:18px; width:40px; height:40px;
+  border-radius:10px; cursor:pointer; display:flex;
+  align-items:center; justify-content:center;
+  transition:background 0.2s;
+}
+.fs-btn:hover { background:rgba(255,255,255,0.22); }
+
+.slide::before {
+  content:''; position:absolute;
+  width:600px; height:600px; border-radius:50%;
+  background:#1D9E75; opacity:0.05;
+  top:-250px; left:-200px; pointer-events:none;
+}
+.slide::after {
+  content:''; position:absolute;
+  width:500px; height:500px; border-radius:50%;
+  background:#EF9F27; opacity:0.04;
+  bottom:-200px; right:-150px; pointer-events:none;
+}
+
+.nav-bar {
+  position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
+  display:flex; align-items:center; gap:16px; z-index:100;
+  background:rgba(0,0,0,0.35); border-radius:50px; padding:10px 20px;
+  backdrop-filter:blur(8px);
+}
+.nav-btn {
+  background:rgba(255,255,255,0.12); border:none; color:white;
+  width:40px; height:40px; border-radius:50%; font-size:18px;
+  cursor:pointer; transition:background 0.2s;
+  display:flex; align-items:center; justify-content:center;
+}
+.nav-btn:hover { background:rgba(255,255,255,0.25); }
+.nav-btn:disabled { opacity:0.3; cursor:default; }
+.slide-counter { font-size:13px; color:rgba(255,255,255,0.6); min-width:50px; text-align:center; }
+.dots { display:flex; gap:6px; align-items:center; }
+.dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.2); transition:all 0.2s; cursor:pointer; }
+.dot.active { background:#EF9F27; width:20px; border-radius:4px; }
+
+.slide-num {
+  position:absolute; top:24px; left:32px;
+  font-size:11px; font-weight:700; letter-spacing:2px;
+  color:rgba(255,255,255,0.2);
+}
+.session-label {
+  position:absolute; top:24px; right:32px;
+  font-size:11px; font-weight:700; letter-spacing:1px;
+  color:rgba(255,255,255,0.3);
+}
+
+.tag {
+  font-size:12px; font-weight:700; letter-spacing:3px;
+  color:#5DCAA5; margin-bottom:16px; text-align:center;
+}
+h1 {
+  font-size:clamp(32px,5vw,60px); font-weight:900; color:white;
+  text-align:center; line-height:1.2; margin-bottom:16px;
+}
+h1 span { color:#EF9F27; }
+h2 {
+  font-size:clamp(22px,3vw,38px); font-weight:900; color:white;
+  line-height:1.2; margin-bottom:18px; text-align:center;
+}
+h2 span { color:#EF9F27; }
+.lead {
+  font-size:clamp(15px,2vw,20px); color:rgba(255,255,255,0.65);
+  font-weight:300; line-height:1.8; text-align:center;
+  max-width:700px; margin-bottom:24px;
+}
+
+.cards { display:grid; gap:14px; width:100%; max-width:900px; }
+.cards-2 { grid-template-columns:1fr 1fr; }
+.cards-3 { grid-template-columns:1fr 1fr 1fr; }
+.card {
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:18px; padding:20px 18px;
+}
+.card-icon { font-size:26px; margin-bottom:8px; display:block; }
+.card h3 { font-size:15px; font-weight:800; color:white; margin-bottom:7px; }
+.card p { font-size:clamp(13px,1.5vw,16px); color:rgba(255,255,255,0.75); line-height:1.8; font-weight:300; }
+.card .accent { color:#5DCAA5; font-weight:700; }
+.card .gold { color:#EF9F27; font-weight:700; }
+.card.card-red { border-color:rgba(239,100,100,0.3); }
+.card.card-green { border-color:rgba(93,202,165,0.35); }
+
+.highlight {
+  background:rgba(239,159,39,0.12);
+  border-right:4px solid #EF9F27;
+  padding:16px 20px; border-radius:12px; margin:20px 0;
+}
+.highlight h3 { color:#EF9F27; margin-bottom:8px; }
+
+.example {
+  background:rgba(93,202,165,0.1);
+  border:1px solid rgba(93,202,165,0.2);
+  border-radius:12px; padding:16px 20px; margin:20px 0;
+}
+.example h3 { color:#5DCAA5; margin-bottom:8px; }
+
+.exercise {
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:12px; padding:16px 20px; margin:20px 0;
+}
+.exercise h3 { color:#EF9F27; margin-bottom:8px; }
+
+.steps {
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:12px; padding:16px 20px; margin:20px 0;
+}
+.steps h3 { color:#5DCAA5; margin-bottom:8px; }
+.step { margin-bottom:12px; padding-right:8px; position:relative; }
+.step::before {
+  content: counter(step);
+  counter-increment: step;
+  position:absolute; right:-8px; top:0;
+  background:#EF9F27; color:white; width:20px; height:20px;
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:700;
+}
+.steps { counter-reset: step; }
+
+.checklist {
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px; padding:16px 20px; margin:20px 0;
+}
+.checklist h3 { color:#EF9F27; margin-bottom:8px; }
+.checklist ul { list-style:none; padding:0; }
+.checklist li { margin-bottom:8px; padding-right:20px; position:relative; }
+.checklist li::before { content:'✓'; position:absolute; right:0; color:#5DCAA5; font-weight:700; }
+</style>
+</head>
+<body>
+
+<!-- לוגו -->
+<div class="nativ-logo">
+  <div class="logo-name">נתיב <span>עדן</span></div>
+  <div class="logo-tag">קורס נשים · צעדים ראשונים</div>
+</div>
+
+<!-- כפתור מסך מלא -->
+<button class="fs-btn" onclick="toggleFullscreen()">⛶</button>
+
+<!-- שקף דיסקליימר -->
+<div class="slide bg-dark active" id="s-disclaimer">
+  <div class="tag">לפני שמתחילות</div>
+  <h2>דיסקליימר <span>חשוב</span></h2>
+  <div class="highlight" style="max-width:800px;text-align:right;margin-bottom:20px">
+    <h3>⚠️ לתשומת לבך</h3>
+    <p style="line-height:2">
+      המידע המוצג בקורס זה הינו <strong>לצורכי לימוד והעשרה בלבד</strong> ואינו מהווה ייעוץ השקעות, ייעוץ פיננסי, ייעוץ מס או המלצה לרכישה או מכירה של ניירות ערך כלשהם.
+    </p>
+  </div>
+  <div class="cards cards-3" style="max-width:900px">
+    <div class="card card-red">
+      <div class="card-icon">⚖️</div>
+      <h3>החלטה אישית</h3>
+      <p>כל החלטת השקעה תלויה בנסיבות ובמצב הפיננסי האישי. מה שמתאים לאחרת — לא בהכרח מתאים לך.</p>
+    </div>
+    <div class="card card-red">
+      <div class="card-icon">📊</div>
+      <h3>תשואות עבר</h3>
+      <p>נתונים היסטוריים אינם מהווים ערובה לתשואות עתידיות. שוק ההון כרוך בסיכון ועשוי לרדת.</p>
+    </div>
+    <div class="card card-red">
+      <div class="card-icon">👩‍💼</div>
+      <h3>ייעוץ מקצועי</h3>
+      <p>לפני החלטות השקעה משמעותיות מומלץ להתייעץ עם יועץ השקעות מורשה המכיר את מצבך האישי.</p>
+    </div>
+  </div>
+</div>
+
+<!-- שקף 1: כותרת -->
+<div class="slide bg-dark" id="s1">
+  <div class="session-label">מפגש 3 מתוך 5</div>
+  <div class="tag">קורס נשים · שרון חכמון</div>
+  <h1>פתיחת תיק <span>השקעות</span></h1>
+  <p class="lead">היום אנחנו עושות את הצעד הכי חשוב — פותחות תיק השקעות. נעשה את זה ביחד, צעד אחר צעד</p>
+  <div class="cover-sub">
+    <div class="cover-pill">📅 מפגש 3 מתוך 5</div>
+    <div class="cover-pill">⏱ כשעה</div>
+    <div class="cover-pill">🏦 פתיחת תיק מעשית</div>
+  </div>
+</div>
+
+<!-- שקף 2: למה היום -->
+<div class="slide bg-dark" id="s2">
+  <div class="slide-num">02</div>
+  <div class="session-label">מפגש 3</div>
+  <div class="tag">למה דווקא היום</div>
+  <h2>למה לפתוח תיק <span>עכשיו</span></h2>
+  <div class="cards cards-2" style="max-width:800px">
+    <div class="card">
+      <div class="card-icon">⏰</div>
+      <h3>הזמן עובד בשבילנו</h3>
+      <p>ככל שנתחיל מוקדם יותר, הכסף שלנו יעבוד יותר זמן. גם סכום קטן יכול לגדול מאוד.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">👥</div>
+      <h3>ביחד זה קל יותר</h3>
+      <p>כולנו נעשה את זה ביחד היום. אם מישהו תתקל בקושי — נעזור אחת לשנייה.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎯</div>
+      <h3>מהתיאוריה למעשה</h3>
+      <p>עד עכשיו דיברנו. היום נעשה. זה ייתן לנו ביטחון להמשיך.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">💪</div>
+      <h3>כוח הקבוצה</h3>
+      <p>כשכולנו עושות את אותו דבר באותו זמן, זה נותן מוטיבציה ומעודד.</p>
+    </div>
+  </div>
+</div>
+
+<!-- שקף 3: בחירת בית השקעות -->
+<div class="slide bg-dark" id="s3">
+  <div class="slide-num">03</div>
+  <div class="session-label">מפגש 3</div>
+  <div class="tag">איפה לפתוח תיק</div>
+  <h2>בחירת בית <span>השקעות</span></h2>
+  <div class="highlight">
+    <h3>המלצה שלנו:</h3>
+    <p>נתחיל עם <strong>אינטרסנט</strong> או <strong>פסגות</strong> — הם פשוטים למתחילות, עם עמלות נמוכות ואפליקציה טובה.</p>
+  </div>
+  <div class="cards cards-2" style="max-width:900px;margin-top:30px">
+    <div class="card">
+      <div class="card-icon">📱</div>
+      <h3>אינטרסנט</h3>
+      <p>אפליקציה מעולה, עמלות נמוכות, מתאים למתחילות. קל לפתוח תיק אונליין.</p>
+      <div class="accent">מומלץ למתחילות!</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🏛️</div>
+      <h3>פסגות</h3>
+      <p>בנק השקעות ותיק, אמין ויציב. טוב למי שרוצה שירות מלא.</p>
+      <div class="accent">טוב לטווח ארוך</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">💰</div>
+      <h3>בנקים גדולים</h3>
+      <p>פועלים, לאומי, דיסקונט — נוח אם יש לכן חשבון שם, אבל עמלות גבוהות יותר.</p>
+      <div class="gold">פחות מומלץ למתחילות</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🌐</div>
+      <h3>ברוקרים בינלאומיים</h3>
+      <p>IBKR, Interactive Brokers — טוב למתקדמות, אבל מסובך יותר ודורש ידע באנגלית.</p>
+      <div class="gold">לשלב מאוחר יותר</div>
+    </div>
+  </div>
+</div>
+
+<!-- שקף 4: מה צריך להכין -->
+<div class="slide bg-dark" id="s4">
+  <div class="slide-num">04</div>
+  <div class="session-label">מפגש 3</div>
+  <div class="tag">הכנות לפני הפתיחה</div>
+  <h2>מה צריך <span>להכין</span></h2>
+  <div class="checklist">
+    <h3>מסמכים נדרשים:</h3>
+    <ul>
+      <li>תעודת זהות או דרכון</li>
+      <li>אישור כתובת (חשבון חשמל/מים/טלפון)</li>
+      <li>אישור הכנסה (תלוש משכורת או טופס 106)</li>
+      <li>פרטי חשבון בנק (למשיכת כספים)</li>
+    </ul>
+  </div>
+  <div class="highlight" style="margin-top:20px">
+    <h3>טיפ חשוב:</h3>
+    <p>התחילו עם סכום קטן — 500-1000₪. אפשר להוסיף כסף מאוחר יותר. אל תתחילו עם סכום גדול מדי.</p>
+  </div>
+  <div class="cards cards-2" style="max-width:800px;margin-top:30px">
+    <div class="card">
+      <div class="card-icon">📋</div>
+      <h3>טופס פתיחת תיק</h3>
+      <p>ימלאו אונליין. זה לוקח 10-15 דקות.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📸</div>
+      <h3>צילום מסמכים</h3>
+      <p>צלמו את התעודות בטלפון. וודאו שהן ברורות.</p>
+    </div>
+  </div>
+</div>
+
+<!-- שקף 5: תהליך הפתיחה -->
+<div class="slide bg-dark" id="s5">
+  <div class="slide-num">05</div>
+  <div class="session-label">מפגש 3</div>
+  <div class="tag">צעד אחר צעד</div>
+  <h2>תהליך <span>הפתיחה</span></h2>
+  <div class="steps">
+    <h3>8 צעדים לפתיחת התיק:</h3>
+    <div class="step">בחרו בית השקעות (אינטרסנט/פסגות)</div>
+    <div class="step">היכנסו לאתר והירשמו</div>
+    <div class="step">מלאו את הטופס האישי</div>
+    <div class="step">העלו תמונות של המסמכים</div>
+    <div class="step">עברו אימות טלפוני או וידאו</div>
+    <div class="step">קיבלו אישור ואפליקציה</div>
+    <div class="step">הפקידו כסף ראשוני (500₪+)</div>
+    <div class="step">עשו קנייה ראשונה קטנה</div>
+  </div>
+  <div class="example" style="margin-top:30px">
+    <h3>דוגמה עם אינטרסנט:</h3>
+    <p>נכנסו ל-intersant.co.il → "פתח תיק" → מלאו פרטים → העלו תעודת זהות → קיבלו SMS עם קוד → הכנסתם כסף דרך ביט.</p>
+  </div>
+</div>
+
+<!-- שקף 6: בזמן המפגש -->
+<div class="slide bg-dark" id="s6">
+  <div class="slide-num">06</div>
+  <div class="session-label">מפגש 3</div>
+  <div class="tag">מה נעשה היום</div>
+  <h2>בזמן <span>המפגש</span></h2>
+  <div class="exercise">
+    <h3>התוכנית שלנו:</h3>
+    <ul style="color:rgba(255,255,255,0.8);line-height:1.8;margin-top:10px">
+      <li>15 דקות: הסבר על בחירת בית השקעות</li>
+      <li>20 דקות: הכנות מסמכים (כולנו ביחד)</li>
+      <li>20 דקות: פתיחת התיק בפועל (עם עזרה)</li>
+      <li>5 דקות: סיכום ותמיכה</li>
+    </ul>
+  </div>
+  <div class="highlight" style="margin-top:30px">
+    <h3>חשוב:</h3>
+    <p>אם יש בעיה — אל תדאגו! נעזור לכן. אם לא תספיקו היום — תוכלו להמשיך לבד בבית.</p>
+  </div>
+</div>
+
+<!-- שקף 7: אחרי הפתיחה -->
+<div class="slide bg-dark" id="s7">
+  <div class="slide-num">07</div>
+  <div class="session-label">מפגש 3</div>
+  <div class="tag">מה הלאה</div>
+  <h2>אחרי <span>הפתיחה</span></h2>
+  <div class="cards cards-3" style="max-width:1000px">
+    <div class="card">
+      <div class="card-icon">📱</div>
+      <h3>הורידו אפליקציה</h3>
+      <p>אינטרסנט/פסגות יש אפליקציות מעולות. התחברו וראו את התיק.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">💰</div>
+      <h3>הפקידו כסף</h3>
+      <p>העבירו מ-500₪. אפשר דרך ביט או העברה בנקאית.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎯</div>
+      <h3>קנייה ראשונה</h3>
+      <p>התחילו עם ETF בטוח. נלמד איך במפגש הבא.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <h3>עקבו אחרי התיק</h3>
+      <p>בדקו פעם בחודש, לא כל יום. זה בריא יותר.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📞</div>
+      <h3>שירות לקוחות</h3>
+      <p>אם יש שאלות — התקשרו. הם עוזרים למתחילות.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">👥</div>
+      <h3>שתפו בקבוצה</h3>
+      <p>ספרו לנו איך היה! נחגוג איתכן.</p>
+    </div>
+  </div>
+</div>
+
+<!-- שקף 8: שאלות נפוצות -->
+<div class="slide bg-dark" id="s8">
+  <div class="slide-num">08</div>
+  <div class="session-label">מפגש 3</div>
+  <div class="tag">שאלות לפני שמתחילות</div>
+  <h2>שאלות <span>נפוצות</span></h2>
+  <div class="cards cards-2" style="max-width:900px">
+    <div class="card">
+      <h3>כמה זמן זה לוקח?</h3>
+      <p>פתיחת התיק: 30-60 דקות. אישור: 1-3 ימים. הפקדת כסף: מיידי.</p>
+    </div>
+    <div class="card">
+      <h3>מה אם אני לא מבינה?</h3>
+      <p>אנחנו כאן! נעזור לכן צעד אחר צעד. אפשר גם להתקשר לבית ההשקעות.</p>
+    </div>
+    <div class="card">
+      <h3>האם זה בטוח?</h3>
+      <p>כן! בתי השקעות מפוקחים על ידי רשות ניירות ערך. הכסף שלכן מוגן.</p>
+    </div>
+    <div class="card">
+      <h3>מה אם אני אתחרט?</h3>
+      <p>אפשר לסגור תיק בכל זמן. אבל נתחיל קטן — 500₪ זה לא סיכון גדול.</p>
+    </div>
+    <div class="card">
+      <h3>אני צריכה יועץ?</h3>
+      <p>לא חובה. נלמד לעשות בעצמנו. אבל אם תרצו — אפשר להוסיף יועץ מאוחר יותר.</p>
+    </div>
+    <div class="card">
+      <h3>מה עם מסים?</h3>
+      <p>נדבר על זה במפגש הבא. בינתיים — התחילו, זה לא מסובך.</p>
+    </div>
+  </div>
+</div>
+
+<!-- שקף 9: סיכום -->
+<div class="slide bg-dark" id="s9">
+  <div class="slide-num">09</div>
+  <div class="session-label">מפגש 3</div>
+  <div class="tag">סיכום — צעד גדול</div>
+  <h2>מה עשינו <span>היום</span></h2>
+  <div class="cards cards-3" style="max-width:1000px">
+    <div class="card card-green">
+      <div class="card-icon">✅</div>
+      <h3>בחרנו בית השקעות</h3>
+      <p>אינטרסנט או פסגות — פשוט ונוח.</p>
+    </div>
+    <div class="card card-green">
+      <div class="card-icon">✅</div>
+      <h3>הכנו מסמכים</h3>
+      <p>תעודת זהות, אישור כתובת, חשבון בנק.</p>
+    </div>
+    <div class="card card-green">
+      <div class="card-icon">✅</div>
+      <h3>פתחנו תיק</h3>
+      <p>צעד אחר צעד, ביחד כקבוצה.</p>
+    </div>
+  </div>
+  <div class="highlight" style="margin-top:30px">
+    <h3>מפגש הבא:</h3>
+    <p>נבנה את התיק — נבחר השקעות מתאימות ונעמיק במי שלא הצליחה.</p>
+  </div>
+</div>
+
+<!-- ניווט -->
+<div class="nav-bar">
+  <button class="nav-btn" onclick="prevSlide()" id="prev-btn" disabled>‹</button>
+  <div class="slide-counter" id="slide-counter">1 / 9</div>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" onclick="nextSlide()" id="next-btn">›</button>
+</div>
+
+<script>
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const dotsContainer = document.getElementById('dots');
+const counter = document.getElementById('slide-counter');
+
+// יצירת נקודות
+slides.forEach((_, i) => {
+  const dot = document.createElement('div');
+  dot.className = 'dot';
+  dot.onclick = () => goToSlide(i);
+  dotsContainer.appendChild(dot);
+});
+
+function updateUI() {
+  slides.forEach((slide, i) => {
+    slide.classList.toggle('active', i === currentSlide);
+  });
+  document.querySelectorAll('.dot').forEach((dot, i) => {
+    dot.classList.toggle('active', i === currentSlide);
+  });
+  counter.textContent = `${currentSlide + 1} / ${slides.length}`;
+  document.getElementById('prev-btn').disabled = currentSlide === 0;
+  document.getElementById('next-btn').disabled = currentSlide === slides.length - 1;
+}
+
+function nextSlide() {
+  if (currentSlide < slides.length - 1) {
+    currentSlide++;
+    updateUI();
+  }
+}
+
+function prevSlide() {
+  if (currentSlide > 0) {
+    currentSlide--;
+    updateUI();
+  }
+}
+
+function goToSlide(index) {
+  currentSlide = index;
+  updateUI();
+}
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+}
+
+// מקלדת
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+  if (e.key === 'ArrowLeft') prevSlide();
+  if (e.key >= '1' && e.key <= '9') goToSlide(parseInt(e.key) - 1);
+});
+
+updateUI();
+</script>
+
+</body>
+</html>

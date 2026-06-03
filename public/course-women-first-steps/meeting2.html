@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מפגש 2 — הפסיכולוגיה של ההשקעה | קורס נשים</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; overflow:hidden; background:#062e24; }
+body { font-family:'Heebo',sans-serif; direction:rtl; }
+
+.slide {
+  width:100vw; height:100vh;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:60px 80px;
+  position:relative;
+  overflow:hidden;
+}
+.slide.active { display:flex; }
+
+.bg-dark { background:linear-gradient(160deg,#062e24 0%,#085041 60%,#0d6b57 100%); }
+
+/* לוגו נתיב */
+.nativ-logo {
+  position:fixed; bottom:28px; right:28px; z-index:200;
+  display:flex; flex-direction:column; align-items:flex-end; line-height:1.3;
+  pointer-events:none;
+}
+.nativ-logo .logo-name {
+  font-size:14px; font-weight:900; color:rgba(255,255,255,0.7); letter-spacing:1px;
+}
+.nativ-logo .logo-name span { color:#5DCAA5; }
+.nativ-logo .logo-tag {
+  font-size:10px; font-weight:400; color:rgba(255,255,255,0.35);
+  letter-spacing:0.5px;
+}
+
+.fs-btn {
+  position:fixed; top:16px; left:16px; z-index:200;
+  background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
+  color:white; font-size:18px; width:40px; height:40px;
+  border-radius:10px; cursor:pointer; display:flex;
+  align-items:center; justify-content:center;
+  transition:background 0.2s;
+}
+.fs-btn:hover { background:rgba(255,255,255,0.22); }
+
+.slide::before {
+  content:''; position:absolute;
+  width:600px; height:600px; border-radius:50%;
+  background:#1D9E75; opacity:0.05;
+  top:-250px; left:-200px; pointer-events:none;
+}
+.slide::after {
+  content:''; position:absolute;
+  width:500px; height:500px; border-radius:50%;
+  background:#EF9F27; opacity:0.04;
+  bottom:-200px; right:-150px; pointer-events:none;
+}
+
+.nav-bar {
+  position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
+  display:flex; align-items:center; gap:16px; z-index:100;
+  background:rgba(0,0,0,0.35); border-radius:50px; padding:10px 20px;
+  backdrop-filter:blur(8px);
+}
+.nav-btn {
+  background:rgba(255,255,255,0.12); border:none; color:white;
+  width:40px; height:40px; border-radius:50%; font-size:18px;
+  cursor:pointer; transition:background 0.2s;
+  display:flex; align-items:center; justify-content:center;
+}
+.nav-btn:hover { background:rgba(255,255,255,0.25); }
+.nav-btn:disabled { opacity:0.3; cursor:default; }
+.slide-counter { font-size:13px; color:rgba(255,255,255,0.6); min-width:50px; text-align:center; }
+.dots { display:flex; gap:6px; align-items:center; }
+.dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.2); transition:all 0.2s; cursor:pointer; }
+.dot.active { background:#EF9F27; width:20px; border-radius:4px; }
+
+.slide-num {
+  position:absolute; top:24px; left:32px;
+  font-size:11px; font-weight:700; letter-spacing:2px;
+  color:rgba(255,255,255,0.2);
+}
+.session-label {
+  position:absolute; top:24px; right:32px;
+  font-size:11px; font-weight:700; letter-spacing:1px;
+  color:rgba(255,255,255,0.3);
+}
+
+.tag {
+  font-size:12px; font-weight:700; letter-spacing:3px;
+  color:#5DCAA5; margin-bottom:16px; text-align:center;
+}
+h1 {
+  font-size:clamp(32px,5vw,60px); font-weight:900; color:white;
+  text-align:center; line-height:1.2; margin-bottom:16px;
+}
+h1 span { color:#EF9F27; }
+h2 {
+  font-size:clamp(22px,3vw,38px); font-weight:900; color:white;
+  line-height:1.2; margin-bottom:18px; text-align:center;
+}
+h2 span { color:#EF9F27; }
+.lead {
+  font-size:clamp(15px,2vw,20px); color:rgba(255,255,255,0.65);
+  font-weight:300; line-height:1.8; text-align:center;
+  max-width:700px; margin-bottom:24px;
+}
+
+.cards { display:grid; gap:14px; width:100%; max-width:900px; }
+.cards-2 { grid-template-columns:1fr 1fr; }
+.cards-3 { grid-template-columns:1fr 1fr 1fr; }
+.card {
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:18px; padding:20px 18px;
+}
+.card-icon { font-size:26px; margin-bottom:8px; display:block; }
+.card h3 { font-size:15px; font-weight:800; color:white; margin-bottom:7px; }
+.card p { font-size:clamp(13px,1.5vw,16px); color:rgba(255,255,255,0.75); line-height:1.8; font-weight:300; }
+.card .accent { color:#5DCAA5; font-weight:700; }
+.card .gold { color:#EF9F27; font-weight:700; }
+.card.card-red { border-color:rgba(239,100,100,0.3); }
+.card.card-green { border-color:rgba(93,202,165,0.35); }
+
+.highlight {
+  background:rgba(239,159,39,0.12);
+  border-right:4px solid #EF9F27;
+  padding:16px 20px; border-radius:12px; margin:20px 0;
+}
+.highlight h3 { color:#EF9F27; margin-bottom:8px; }
+
+.example {
+  background:rgba(93,202,165,0.1);
+  border:1px solid rgba(93,202,165,0.2);
+  border-radius:12px; padding:16px 20px; margin:20px 0;
+}
+.example h3 { color:#5DCAA5; margin-bottom:8px; }
+
+.exercise {
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:12px; padding:16px 20px; margin:20px 0;
+}
+.exercise h3 { color:#EF9F27; margin-bottom:8px; }
+
+.story {
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:12px; padding:16px 20px; margin:20px 0;
+}
+.story h3 { color:#EF9F27; margin-bottom:8px; }
+</style>
+</head>
+<body>
+
+<!-- לוגו -->
+<div class="nativ-logo">
+  <div class="logo-name">נתיב <span>עדן</span></div>
+  <div class="logo-tag">קורס נשים · צעדים ראשונים</div>
+</div>
+
+<!-- כפתור מסך מלא -->
+<button class="fs-btn" onclick="toggleFullscreen()">⛶</button>
+
+<!-- שקף דיסקליימר -->
+<div class="slide bg-dark active" id="s-disclaimer">
+  <div class="tag">לפני שמתחילות</div>
+  <h2>דיסקליימר <span>חשוב</span></h2>
+  <div class="highlight" style="max-width:800px;text-align:right;margin-bottom:20px">
+    <h3>⚠️ לתשומת לבך</h3>
+    <p style="line-height:2">
+      המידע המוצג בקורס זה הינו <strong>לצורכי לימוד והעשרה בלבד</strong> ואינו מהווה ייעוץ השקעות, ייעוץ פיננסי, ייעוץ מס או המלצה לרכישה או מכירה של ניירות ערך כלשהם.
+    </p>
+  </div>
+  <div class="cards cards-3" style="max-width:900px">
+    <div class="card card-red">
+      <div class="card-icon">⚖️</div>
+      <h3>החלטה אישית</h3>
+      <p>כל החלטת השקעה תלויה בנסיבות ובמצב הפיננסי האישי. מה שמתאים לאחרת — לא בהכרח מתאים לך.</p>
+    </div>
+    <div class="card card-red">
+      <div class="card-icon">📊</div>
+      <h3>תשואות עבר</h3>
+      <p>נתונים היסטוריים אינם מהווים ערובה לתשואות עתידיות. שוק ההון כרוך בסיכון ועשוי לרדת.</p>
+    </div>
+    <div class="card card-red">
+      <div class="card-icon">👩‍💼</div>
+      <h3>ייעוץ מקצועי</h3>
+      <p>לפני החלטות השקעה משמעותיות מומלץ להתייעץ עם יועץ השקעות מורשה המכיר את מצבך האישי.</p>
+    </div>
+  </div>
+</div>
+
+<!-- שקף 1: כותרת -->
+<div class="slide bg-dark" id="s1">
+  <div class="session-label">מפגש 2 מתוך 5</div>
+  <div class="tag">קורס נשים · שרון חכמון</div>
+  <h1>הפסיכולוגיה של <span>ההשקעה</span></h1>
+  <p class="lead">השקעה זה לא רק מספרים — זה גם רגשות. נלמד איך להתמודד עם הפחדים והטעויות שלנו</p>
+  <div class="cover-sub">
+    <div class="cover-pill">📅 מפגש 2 מתוך 5</div>
+    <div class="cover-pill">⏱ כשעה</div>
+    <div class="cover-pill">🧠 פסיכולוגיה והתנהגות</div>
+  </div>
+</div>
+
+<!-- שקף 2: למה פסיכולוגיה חשובה -->
+<div class="slide bg-dark" id="s2">
+  <div class="slide-num">02</div>
+  <div class="session-label">מפגש 2</div>
+  <div class="tag">למה זה חשוב</div>
+  <h2>למה הפסיכולוגיה <span>כל כך חשובה</span></h2>
+  <div class="highlight">
+    <h3>עובדה מדעית:</h3>
+    <p>80% מהצלחה בהשקעה תלויה בהתנהגות שלנו, לא בבחירת ההשקעות הנכונות.</p>
+  </div>
+  <div class="cards cards-2" style="max-width:800px;margin-top:30px">
+    <div class="card">
+      <div class="card-icon">😨</div>
+      <h3>המוח שלנו מפחד</h3>
+      <p>אנחנו מעדיפות להימנע מהפסד מאשר לרדוף אחרי רווח. זה הגיוני מבחינה אבולוציונית, אבל מפריע להשקעה.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎭</div>
+      <h3>אנחנו לא רציונליות</h3>
+      <p>לפעמים אנחנו מקבלות החלטות רגשיות, לא הגיוניות. זה בסדר — העיקר להכיר בזה.</p>
+    </div>
+  </div>
+</div>
+
+<!-- שקף 3: הטיות קוגניטיביות נפוצות -->
+<div class="slide bg-dark" id="s3">
+  <div class="slide-num">03</div>
+  <div class="session-label">מפגש 2</div>
+  <div class="tag">הטיות שכדאי להכיר</div>
+  <h2>הטיות <span>קוגניטיביות</span></h2>
+  <div class="cards cards-2" style="max-width:1000px">
+    <div class="card">
+      <div class="card-icon">📉</div>
+      <h3>התעלמות מהפסד</h3>
+      <p>אנחנו מתמקדות בהפסדים יותר מאשר ברווחים. הפסד של 100₪ כואב יותר מרווח של 100₪ משמח.</p>
+      <div class="example">
+        <h3>דוגמה:</h3>
+        <p>מכרת מניה ברווח קטן כי "זה לא מספיק", אבל מחזיקה בהפסד כי "זה יעלה".</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎯</div>
+      <h3>אשליה של שליטה</h3>
+      <p>אנחנו חושבות שאנחנו יכולות לחזות את השוק. "אני יודעת שזה יעלה מחר".</p>
+      <div class="example">
+        <h3>דוגמה:</h3>
+        <p>קניית מניה כי "אני אוהבת את המוצר של החברה" — אבל זה לא מבטיח הצלחה.</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🐑</div>
+      <h3>הטיית עדר</h3>
+      <p>אנחנו עושות מה שכולם עושות. אם כולם קונים — גם אנחנו. אם כולם מוכרים — גם אנחנו.</p>
+      <div class="example">
+        <h3>דוגמה:</h3>
+        <p>קניית ביטקוין כי "כולם מדברים על זה" — גם כשהמחירים מטורפים.</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔍</div>
+      <h3>חיפוש אישור</h3>
+      <p>אנחנו מחפשות מידע שמאשר את מה שאנחנו כבר חושבות, ומתעלמות ממידע סותר.</p>
+      <div class="example">
+        <h3>דוגמה:</h3>
+        <p>קראת חדשות טובות על מניה שאת אוהבת — מאמינה לה. חדשות רעות — "זה זמני".</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- שקף 4: FOMO -->
+<div class="slide bg-dark" id="s4">
+  <div class="slide-num">04</div>
+  <div class="session-label">מפגש 2</div>
+  <div class="tag">הפחד הכי גדול</div>
+  <h2>FOMO — <span>Fear Of Missing Out</span></h2>
+  <div class="highlight">
+    <h3>מה זה FOMO?</h3>
+    <p>הפחד להפסיד הזדמנות. "כולם מרוויחים, אני לא רוצה להישאר מאחור!"</p>
+  </div>
+  <div class="cards cards-2" style="max-width:800px;margin-top:30px">
+    <div class="card card-red">
+      <div class="card-icon">😰</div>
+      <h3>למה זה מסוכן</h3>
+      <p>FOMO גורם לנו לקנות יקר, למכור זול, או להיכנס להשקעות שאנחנו לא מבינות.</p>
+    </div>
+    <div class="card card-green">
+      <div class="card-icon">🛡️</div>
+      <h3>איך להתמודד</h3>
+      <p>זכרו: אם זה הזדמנות אמיתית, היא תחכה. אל תמהרו בגלל לחץ חברתי.</p>
+    </div>
+  </div>
+  <div class="example" style="margin-top:30px">
+    <h3>סיפור אמיתי:</h3>
+    <p>רות ראתה שחברה שלה הרוויחה 50% בביטקוין. היא קנתה גם, אבל המחיר ירד. היא מכרה בהפסד כי "זה ירד עוד". בסוף זה עלה שוב — בלעדיה.</p>
+  </div>
+</div>
+
+<!-- שקף 5: איך לבנות משמעת -->
+<div class="slide bg-dark" id="s5">
+  <div class="slide-num">05</div>
+  <div class="session-label">מפגש 2</div>
+  <div class="tag">כלים מעשיים</div>
+  <h2>איך לבנות <span>משמעת</span></h2>
+  <div class="cards cards-3" style="max-width:1000px">
+    <div class="card">
+      <div class="card-icon">📝</div>
+      <h3>תוכנית ברורה</h3>
+      <p>החליטו מראש: כמה להשקיע, מתי לקנות, מתי למכור. אל תחליטו ברגע של פאניקה.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⏰</div>
+      <h3>השקעה קבועה</h3>
+      <p>השקיעו סכום קבוע כל חודש. זה מונע קנייה ברגעי FOMO ומכירה בפאניקה.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🚫</div>
+      <h3>הימנעו מבדיקות יומיות</h3>
+      <p>אל תבדקו את התיק כל יום. זה יוצר לחץ מיותר. בדקו פעם בחודש.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">👥</div>
+      <h3>קהילה תומכת</h3>
+      <p>שתפו עם הקבוצה. כשאתן מתלבטות — שאלו. אנחנו כאן אחת בשביל השנייה.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎯</div>
+      <h3>מטרות ברורות</h3>
+      <p>הגדירו למה אתן משקיעות. "לבית חדש" או "לעצמאות כלכלית". זה עוזר להחזיק מעמד.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <h3>תיעוד החלטות</h3>
+      <p>רשמו למה קניתן או מכרתן. זה עוזר ללמוד מהטעויות.</p>
+    </div>
+  </div>
+</div>
+
+<!-- שקף 6: סיפור מוטיבציה -->
+<div class="slide bg-dark" id="s6">
+  <div class="slide-num">06</div>
+  <div class="session-label">מפגש 2</div>
+  <div class="tag">סיפור שנותן השראה</div>
+  <h2>סיפור של <span>הצלחה</span></h2>
+  <div class="story">
+    <h3>שרה והתיק שלה:</h3>
+    <p>שרה התחילה עם 2000₪. היא פחדה מאוד, אבל החליטה להשקיע 200₪ בחודש ב-ETF. היא לא בדקה כל יום, היא סמכה על התוכנית. אחרי שנה — 2800₪. אחרי 3 שנים — 8500₪. היא לא עשתה כלום מיוחד, רק הייתה משמעתית.</p>
+  </div>
+  <div class="highlight" style="margin-top:30px">
+    <h3>הלקח:</h3>
+    <p>הצלחה בהשקעה היא לא על להיות גאון, אלא על להיות עקבית ולא לפחד מהטעויות.</p>
+  </div>
+</div>
+
+<!-- שקף 7: תרגיל -->
+<div class="slide bg-dark" id="s7">
+  <div class="slide-num">07</div>
+  <div class="session-label">מפגש 2</div>
+  <div class="tag">תרגול — בואו נתאמן</div>
+  <h2>תרגיל <span>פסיכולוגי</span></h2>
+  <div class="exercise">
+    <h3>שאלות לעצמך:</h3>
+    <ul style="color:rgba(255,255,255,0.8);line-height:1.8;margin-top:10px">
+      <li>מה הפחד הכי גדול שלי מהשקעה? (למה?)</li>
+      <li>מתי אני מרגישה FOMO? (מה עוזר לי להתמודד?)</li>
+      <li>איך אני אזכור להיות משמעתית? (תזכורת? חברה?)</li>
+    </ul>
+  </div>
+  <p style="color:rgba(255,255,255,0.7);text-align:center;margin-top:30px;font-size:18px">
+    כתבו את התשובות. נשתף בקבוצה בעוד 10 דקות.
+  </p>
+</div>
+
+<!-- שקף 8: סיכום -->
+<div class="slide bg-dark" id="s8">
+  <div class="slide-num">08</div>
+  <div class="session-label">מפגש 2</div>
+  <div class="tag">סיכום — מה למדנו</div>
+  <h2>מה לקחנו <span>מהמפגש</span></h2>
+  <div class="cards cards-3" style="max-width:1000px">
+    <div class="card card-green">
+      <div class="card-icon">✅</div>
+      <h3>המוח שלנו מפחד</h3>
+      <p>זה טבעי, אבל אנחנו יכולות ללמוד להתמודד.</p>
+    </div>
+    <div class="card card-green">
+      <div class="card-icon">✅</div>
+      <h3>FOMO הוא אויב</h3>
+      <p>הפחד להפסיד הזדמנות גורם לטעויות. סבלנות היא המפתח.</p>
+    </div>
+    <div class="card card-green">
+      <div class="card-icon">✅</div>
+      <h3>משמעת מנצחת</h3>
+      <p>תוכנית ברורה, השקעה קבועה, קהילה — זה הדרך להצליח.</p>
+    </div>
+  </div>
+  <div class="highlight" style="margin-top:30px">
+    <h3>הביתה:</h3>
+    <p>חשבו על התוכנית שלכן. במפגש הבא נפתח תיק השקעות!</p>
+  </div>
+</div>
+
+<!-- ניווט -->
+<div class="nav-bar">
+  <button class="nav-btn" onclick="prevSlide()" id="prev-btn" disabled>‹</button>
+  <div class="slide-counter" id="slide-counter">1 / 8</div>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" onclick="nextSlide()" id="next-btn">›</button>
+</div>
+
+<script>
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const dotsContainer = document.getElementById('dots');
+const counter = document.getElementById('slide-counter');
+
+// יצירת נקודות
+slides.forEach((_, i) => {
+  const dot = document.createElement('div');
+  dot.className = 'dot';
+  dot.onclick = () => goToSlide(i);
+  dotsContainer.appendChild(dot);
+});
+
+function updateUI() {
+  slides.forEach((slide, i) => {
+    slide.classList.toggle('active', i === currentSlide);
+  });
+  document.querySelectorAll('.dot').forEach((dot, i) => {
+    dot.classList.toggle('active', i === currentSlide);
+  });
+  counter.textContent = `${currentSlide + 1} / ${slides.length}`;
+  document.getElementById('prev-btn').disabled = currentSlide === 0;
+  document.getElementById('next-btn').disabled = currentSlide === slides.length - 1;
+}
+
+function nextSlide() {
+  if (currentSlide < slides.length - 1) {
+    currentSlide++;
+    updateUI();
+  }
+}
+
+function prevSlide() {
+  if (currentSlide > 0) {
+    currentSlide--;
+    updateUI();
+  }
+}
+
+function goToSlide(index) {
+  currentSlide = index;
+  updateUI();
+}
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+}
+
+// מקלדת
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+  if (e.key === 'ArrowLeft') prevSlide();
+  if (e.key >= '1' && e.key <= '9') goToSlide(parseInt(e.key) - 1);
+});
+
+updateUI();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>לביאה פיננסית — תוכן וובינר</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red: #8B1F1F;
+    --red-dark: #5c1010;
+    --cream: #F7EFE3;
+    --cream2: #FDFAF6;
+    --brown: #2b1010;
+    --brown2: #5a3a3a;
+    --gold: #c8860a;
+  }
+
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: #e8e0d4;
+    direction: rtl;
+    padding: 30px 20px;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 22px;
+    color: var(--red-dark);
+    margin-bottom: 8px;
+  }
+
+  .nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+  .nav a {
+    background: var(--red);
+    color: white;
+    font-family: 'Heebo', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 18px;
+    border-radius: 30px;
+    text-decoration: none;
+  }
+  .nav a:hover { background: var(--red-dark); }
+
+  .section-title {
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--red-dark);
+    margin: 50px 0 20px;
+    text-align: center;
+    letter-spacing: 1px;
+  }
+
+  /* ── קרוסלה ── */
+  .carousel-wrap {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 16px;
+    scroll-snap-type: x mandatory;
+  }
+  .carousel-wrap::-webkit-scrollbar { height: 4px; }
+  .carousel-wrap::-webkit-scrollbar-thumb { background: var(--red); border-radius: 2px; }
+
+  .slide {
+    flex-shrink: 0;
+    width: 320px;
+    height: 320px;
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 24px 22px;
+    scroll-snap-align: start;
+    position: relative;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  }
+
+  /* שקף 0 — כריכה */
+  .slide-cover {
+    background: linear-gradient(160deg, #6e1515 0%, #8B1F1F 60%, #a52828 100%);
+    text-align: center;
+  }
+  .slide-cover .lion { width: 110px; margin-bottom: 10px; }
+  .slide-cover .cover-tag {
+    font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.6);
+    letter-spacing: 3px; text-transform: uppercase; margin-bottom: 6px;
+  }
+  .slide-cover h2 {
+    font-size: 26px; font-weight: 900; color: #fff; line-height: 1.25;
+    margin-bottom: 8px;
+  }
+  .slide-cover .cover-sub {
+    font-size: 14px; color: rgba(255,255,255,0.75); line-height: 1.5;
+  }
+  .slide-cover .brand { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: auto; padding-top: 10px; }
+
+  /* שקפים 1-5 */
+  .slide-item { background: var(--cream); text-align: right; }
+
+  .slide-num {
+    position: absolute;
+    top: 16px;
+    left: 18px;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--red);
+    color: #fff;
+    font-size: 16px; font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .slide-icon { font-size: 44px; margin-bottom: 6px; }
+  .slide-reason {
+    font-size: 11px; font-weight: 900; color: var(--red);
+    letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px;
+  }
+  .slide-title {
+    font-size: 22px; font-weight: 900; color: var(--brown); line-height: 1.3;
+    margin-bottom: 10px;
+  }
+  .slide-body {
+    font-size: 14px; color: var(--brown2); line-height: 1.6;
+    border-right: 3px solid var(--red);
+    padding-right: 10px;
+    flex: 1;
+  }
+  .slide-brand { font-size: 11px; color: var(--red); font-weight: 700; align-self: flex-end; }
+
+  /* שקף סיום */
+  .slide-end {
+    background: linear-gradient(160deg, #6e1515 0%, #8B1F1F 100%);
+    text-align: center;
+  }
+  .slide-end .end-tag { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5); letter-spacing: 2px; margin-bottom: 10px; }
+  .slide-end h2 { font-size: 24px; font-weight: 900; color: #fff; line-height: 1.3; margin-bottom: 12px; }
+  .slide-end .date-box {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 12px;
+    padding: 10px 20px;
+    color: #fff;
+    font-size: 15px; font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .slide-end .cta {
+    font-size: 14px; color: rgba(255,255,255,0.8); line-height: 1.5;
+  }
+  .slide-end .brand { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: auto; }
+
+  /* ── פוסטים ── */
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+    margin-bottom: 60px;
+  }
+
+  .post-card {
+    background: var(--cream2);
+    border-radius: 18px;
+    padding: 26px 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .post-date {
+    font-size: 11px; font-weight: 700; color: var(--red);
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+  .post-tag {
+    font-size: 11px; background: var(--red); color: #fff;
+    border-radius: 20px; padding: 3px 10px; font-weight: 700;
+  }
+
+  .post-text {
+    font-size: 15px; color: var(--brown); line-height: 1.8;
+    white-space: pre-line;
+  }
+
+  .post-copy {
+    background: #f3e8e0;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-family: 'Heebo', sans-serif;
+    font-size: 12px; font-weight: 700;
+    color: var(--red);
+    cursor: pointer;
+    align-self: flex-start;
+    transition: background 0.2s;
+  }
+  .post-copy:hover { background: #e8d4c4; }
+  .post-copy.copied { background: #c8f0d8; color: #1a6630; }
+
+  .brand-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .brand-bar img { width: 28px; }
+  .brand-bar span { font-size: 12px; font-weight: 700; color: var(--red); }
+
+</style>
+</head>
+<body>
+
+<h1>לביאה פיננסית — תוכן לוובינר 14.6</h1>
+<p style="text-align:center;color:#888;font-size:13px;margin-bottom:24px">לביאות משקיעות | 14 ביוני 2026, 20:30</p>
+
+<div class="nav">
+  <a href="#carousel">קרוסלה</a>
+  <a href="#posts-warm">פוסטי חימום</a>
+  <a href="#posts-announce">הכרזה</a>
+  <a href="#posts-remind">תזכורות</a>
+</div>
+
+<!-- ══════════════════════════════════ -->
+<!--           קרוסלה                   -->
+<!-- ══════════════════════════════════ -->
+<div id="carousel" class="section-title">קרוסלה — 5 סיבות להתחיל להשקיע עכשיו</div>
+
+<div class="carousel-wrap">
+
+  <!-- כריכה -->
+  <div class="slide slide-cover">
+    <img class="lion" src="תמונה לביאה פיננסית.jpeg" alt="לביאה פיננסית">
+    <div>
+      <div class="cover-tag">5 סיבות</div>
+      <h2>למה דווקא<br>עכשיו?</h2>
+      <div class="cover-sub">כי לחכות עולה יותר<br>ממה שנדמה לך</div>
+    </div>
+    <div class="brand">לביאה פיננסית</div>
+  </div>
+
+  <!-- סיבה 1 -->
+  <div class="slide slide-item">
+    <div class="slide-num">1</div>
+    <div class="slide-icon">⏰</div>
+    <div class="slide-reason">סיבה ראשונה</div>
+    <div class="slide-title">הזמן עובד<br>בשבילך — או נגדך</div>
+    <div class="slide-body">
+      ₪10,000 שהשקעת לפני 10 שנים שווים היום ~₪32,000.<br>
+      לא עשית כלום. הכסף עבד.
+    </div>
+    <div class="slide-brand">לביאה פיננסית</div>
+  </div>
+
+  <!-- סיבה 2 -->
+  <div class="slide slide-item">
+    <div class="slide-num">2</div>
+    <div class="slide-icon">💸</div>
+    <div class="slide-reason">סיבה שנייה</div>
+    <div class="slide-title">הכסף בעו"ש<br>מתכווץ בשקט</div>
+    <div class="slide-body">
+      אינפלציה של 3% בשנה אומרת שהכסף שלך שווה פחות כל יום שהוא יושב ולא עובד.
+    </div>
+    <div class="slide-brand">לביאה פיננסית</div>
+  </div>
+
+  <!-- סיבה 3 -->
+  <div class="slide slide-item">
+    <div class="slide-num">3</div>
+    <div class="slide-icon">🦁</div>
+    <div class="slide-reason">סיבה שלישית</div>
+    <div class="slide-title">לא צריך<br>הרבה כסף כדי להתחיל</div>
+    <div class="slide-body">
+      כמה מאות שקלים מספיקים.<br>
+      מה שאי אפשר להתחיל בלעדיו — זה הידע הנכון.
+    </div>
+    <div class="slide-brand">לביאה פיננסית</div>
+  </div>
+
+  <!-- סיבה 4 -->
+  <div class="slide slide-item">
+    <div class="slide-num">4</div>
+    <div class="slide-icon">📚</div>
+    <div class="slide-reason">סיבה רביעית</div>
+    <div class="slide-title">זה פחות מסובך<br>ממה שסיפרו לך</div>
+    <div class="slide-body">
+      שוק ההון נשמע כמו עולם זר.<br>
+      אבל עם ההסבר הנכון, בשפה הנכונה — זה ברור ופשוט.
+    </div>
+    <div class="slide-brand">לביאה פיננסית</div>
+  </div>
+
+  <!-- סיבה 5 -->
+  <div class="slide slide-item">
+    <div class="slide-num">5</div>
+    <div class="slide-icon">💪</div>
+    <div class="slide-reason">סיבה חמישית</div>
+    <div class="slide-title">ביטחון כלכלי<br>מגיע מידע — לא ממזל</div>
+    <div class="slide-body">
+      נשים שיודעות מה לעשות עם הכסף שלהן ישנות טוב יותר בלילה. פשוט כך.
+    </div>
+    <div class="slide-brand">לביאה פיננסית</div>
+  </div>
+
+  <!-- סיום -->
+  <div class="slide slide-end">
+    <div class="end-tag">הצעד הבא</div>
+    <h2>רוצה להתחיל<br>לדעת?</h2>
+    <div class="date-box">📅 14 ביוני | 20:30<br>לביאות משקיעות</div>
+    <div class="cta">וובינר חינמי — צעדים ראשונים<br>לפתיחת תיק השקעות עצמאי</div>
+    <div class="brand">לביאה פיננסית</div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════ -->
+<!--        פוסטי חימום                 -->
+<!-- ══════════════════════════════════ -->
+<div id="posts-warm" class="section-title">פוסטי חימום — לפרסם עכשיו עד 10.6</div>
+<div class="posts-grid">
+
+  <div class="post-card">
+    <div class="post-meta">
+      <div class="post-date">3–4 ביוני</div>
+      <div class="post-tag">חימום</div>
+    </div>
+    <div class="brand-bar">
+      <img src="תמונה לביאה פיננסית.jpeg">
+      <span>לביאה פיננסית</span>
+    </div>
+    <div class="post-text">יש שאלה שאני שומעת כבר 25 שנה:
+
+"משקיעות זה לא בשבילי, לא?"
+
+ותמיד מאותן נשים — חכמות, עצמאיות, שמנהלות הכל.
+רק בעניין הזה — מחכות שמישהו אחר יטפל.
+
+אז אני שואלת אותך ישירות:
+מה גורם לך להרגיש שהשוק הוא לא בשבילך?
+
+רשמי בתגובות. אני קוראת הכל. 💛
+
+(שואלת לא סתם — יש לי תוכניות)</div>
+    <button class="post-copy" onclick="copyPost(this)">העתיקי טקסט</button>
+  </div>
+
+  <div class="post-card">
+    <div class="post-meta">
+      <div class="post-date">6–7 ביוני</div>
+      <div class="post-tag">חימום</div>
+    </div>
+    <div class="brand-bar">
+      <img src="תמונה לביאה פיננסית.jpeg">
+      <span>לביאה פיננסית</span>
+    </div>
+    <div class="post-text">הכסף שלך לא מחכה שתהיי מוכנה.
+
+כל חודש שהוא יושב בעו"ש — הוא מפסיד.
+לא בגלל שקרה משהו רע.
+פשוט כי האינפלציה לא מחכה לאף אחת.
+
+זה לא כדי להפחיד.
+זה כי אף אחד לא אמר לך את זה בגובה העיניים.
+
+ובקרוב — אני הולכת לשנות את זה. 🦁</div>
+    <button class="post-copy" onclick="copyPost(this)">העתיקי טקסט</button>
+  </div>
+
+  <div class="post-card">
+    <div class="post-meta">
+      <div class="post-date">9–10 ביוני</div>
+      <div class="post-tag">חימום</div>
+    </div>
+    <div class="brand-bar">
+      <img src="תמונה לביאה פיננסית.jpeg">
+      <span>לביאה פיננסית</span>
+    </div>
+    <div class="post-text">הדבר שהכי עצר נשים מלהשקיע לבד —
+
+לא חוסר כסף.
+לא חוסר זמן.
+
+המשפט: "אני לא מבינה בזה."
+
+אבל לא נולדת עם ידע פיננסי, כמו שלא נולדת יודעת לנהוג.
+מישהו פשוט לא לימד אותך.
+
+אני מכינה משהו בדיוק בשביל זה.
+פרטים בקרוב 🔜</div>
+    <button class="post-copy" onclick="copyPost(this)">העתיקי טקסט</button>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════ -->
+<!--          הכרזה                     -->
+<!-- ══════════════════════════════════ -->
+<div id="posts-announce" class="section-title">פוסט הכרזה — לפרסם 11–12 ביוני</div>
+<div class="posts-grid">
+
+  <div class="post-card">
+    <div class="post-meta">
+      <div class="post-date">11–12 ביוני</div>
+      <div class="post-tag">הכרזה</div>
+    </div>
+    <div class="brand-bar">
+      <img src="תמונה לביאה פיננסית.jpeg">
+      <span>לביאה פיננסית</span>
+    </div>
+    <div class="post-text">25 שנה בעולם הפיננסי לימדו אותי דבר אחד בטוח:
+
+כל אישה יכולה להשקיע לבד.
+כל אישה.
+
+מה שחסר זה לא כישרון. לא "ראש לכסף".
+מה שחסר זה מישהי שתסביר את זה בשפה אנושית, צעד אחר צעד.
+
+📅 לביאות משקיעות — וובינר חינמי
+14 ביוני | יום ראשון | 20:30
+
+איך פותחות תיק השקעות עצמאי ומתחילות להשקיע בשוק ההון.
+ללא ניסיון קודם. ממש מההתחלה.
+
+לינק בביו 👇</div>
+    <button class="post-copy" onclick="copyPost(this)">העתיקי טקסט</button>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════ -->
+<!--          תזכורות                   -->
+<!-- ══════════════════════════════════ -->
+<div id="posts-remind" class="section-title">תזכורות — 13 + 14 ביוני</div>
+<div class="posts-grid">
+
+  <div class="post-card">
+    <div class="post-meta">
+      <div class="post-date">13 ביוני</div>
+      <div class="post-tag">תזכורת</div>
+    </div>
+    <div class="brand-bar">
+      <img src="תמונה לביאה פיננסית.jpeg">
+      <span>לביאה פיננסית</span>
+    </div>
+    <div class="post-text">"אין לי מספיק כסף כדי להשקיע."
+
+שמעתי את המשפט הזה מאות פעמים.
+ובכל פעם הלב שלי נשבר קצת.
+
+כי זה לא נכון.
+אפשר להתחיל בכמה מאות שקלים.
+
+מה שאי אפשר להתחיל בלעדיו — זה ידע.
+
+מחר בלילה אני נותנת לך בדיוק את זה.
+חינם. בשעה אחת.
+
+📅 14 ביוני | 20:30 | לביאות משקיעות
+לינק בביו 👇</div>
+    <button class="post-copy" onclick="copyPost(this)">העתיקי טקסט</button>
+  </div>
+
+  <div class="post-card">
+    <div class="post-meta">
+      <div class="post-date">14 ביוני — בוקר</div>
+      <div class="post-tag">יום הוובינר</div>
+    </div>
+    <div class="brand-bar">
+      <img src="תמונה לביאה פיננסית.jpeg">
+      <span>לביאה פיננסית</span>
+    </div>
+    <div class="post-text">הערב.
+
+שעה אחת. בית שלך. כוס משהו חם.
+
+ואת יוצאת עם ידע שאנשים שילמו הרבה כסף כדי לקבל.
+
+וובינר חינמי — לביאות משקיעות
+הלילה | 20:30
+
+עוד לא נרשמת? עכשיו הזמן 🦁
+לינק בביו 👇</div>
+    <button class="post-copy" onclick="copyPost(this)">העתיקי טקסט</button>
+  </div>
+
+</div>
+
+<script>
+function copyPost(btn) {
+  const text = btn.previousElementSibling.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ הועתק!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'העתיקי טקסט';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
+
+</body>
+</html>

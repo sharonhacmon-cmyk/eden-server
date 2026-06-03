@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מפגש 4 — בניית התיק והעמקה | קורס נשים</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; overflow:hidden; background:#062e24; }
+body { font-family:'Heebo',sans-serif; direction:rtl; }
+
+.slide {
+  width:100vw; height:100vh;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:60px 80px;
+  position:relative;
+  overflow:hidden;
+}
+.slide.active { display:flex; }
+
+.bg-dark { background:linear-gradient(160deg,#062e24 0%,#085041 60%,#0d6b57 100%); }
+
+/* לוגו נתיב */
+.nativ-logo {
+  position:fixed; bottom:28px; right:28px; z-index:200;
+  display:flex; flex-direction:column; align-items:flex-end; line-height:1.3;
+  pointer-events:none;
+}
+.nativ-logo .logo-name {
+  font-size:14px; font-weight:900; color:rgba(255,255,255,0.7); letter-spacing:1px;
+}
+.nativ-logo .logo-name span { color:#5DCAA5; }
+.nativ-logo .logo-tag {
+  font-size:10px; font-weight:400; color:rgba(255,255,255,0.35);
+  letter-spacing:0.5px;
+}
+
+.fs-btn {
+  position:fixed; top:16px; left:16px; z-index:200;
+  background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
+  color:white; font-size:18px; width:40px; height:40px;
+  border-radius:10px; cursor:pointer; display:flex;
+  align-items:center; justify-content:center;
+  transition:background 0.2s;
+}
+.fs-btn:hover { background:rgba(255,255,255,0.22); }
+
+.slide::before {
+  content:''; position:absolute;
+  width:600px; height:600px; border-radius:50%;
+  background:#1D9E75; opacity:0.05;
+  top:-250px; left:-200px; pointer-events:none;
+}
+.slide::after {
+  content:''; position:absolute;
+  width:500px; height:500px; border-radius:50%;
+  background:#EF9F27; opacity:0.04;
+  bottom:-200px; right:-150px; pointer-events:none;
+}
+
+.nav-bar {
+  position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
+  display:flex; align-items:center; gap:16px; z-index:100;
+  background:rgba(0,0,0,0.35); border-radius:50px; padding:10px 20px;
+  backdrop-filter:blur(8px);
+}
+.nav-btn {
+  background:rgba(255,255,255,0.12); border:none; color:white;
+  width:40px; height:40px; border-radius:50%; font-size:18px;
+  cursor:pointer; transition:background 0.2s;
+  display:flex; align-items:center; justify-content:center;
+}
+.nav-btn:hover { background:rgba(255,255,255,0.25); }
+.nav-btn:disabled { opacity:0.3; cursor:default; }
+.slide-counter { font-size:13px; color:rgba(255,255,255,0.6); min-width:50px; text-align:center; }
+.dots { display:flex; gap:6px; align-items:center; }
+.dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.2); transition:all 0.2s; cursor:pointer; }
+.dot.active { background:#EF9F27; width:20px; border-radius:4px; }
+
+.slide-num {
+  position:absolute; top:24px; left:32px;
+  font-size:11px; font-weight:700; letter-spacing:2px;
+  color:rgba(255,255,255,0.2);
+}
+.session-label {
+  position:absolute; top:24px; right:32px;
+  font-size:11px; font-weight:700; letter-spacing:1px;
+  color:rgba(255,255,255,0.3);
+}
+
+.tag {
+  font-size:12px; font-weight:700; letter-spacing:3px;
+  color:#5DCAA5; margin-bottom:16px; text-align:center;
+}
+h1 {
+  font-size:clamp(32px,5vw,60px); font-weight:900; color:white;
+  text-align:center; line-height:1.2; margin-bottom:16px;
+}
+h1 span { color:#EF9F27; }
+h2 {
+  font-size:clamp(22px,3vw,38px); font-weight:900; color:white;
+  line-height:1.2; margin-bottom:18px; text-align:center;
+}
+h2 span { color:#EF9F27; }
+.lead {
+  font-size:clamp(15px,2vw,20px); color:rgba(255,255,255,0.65);
+  font-weight:300; line-height:1.8; text-align:center;
+  max-width:700px; margin-bottom:24px;
+}
+
+.cards { display:grid; gap:14px; width:100%; max-width:900px; }
+.cards-2 { grid-template-columns:1fr 1fr; }
+.cards-3 { grid-template-columns:1fr 1fr 1fr; }
+.card {
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:18px; padding:20px 18px;
+}
+.card-icon { font-size:26px; margin-bottom:8px; display:block; }
+.card h3 { font-size:15px; font-weight:800; color:white; margin-bottom:7px; }
+.card p { font-size:clamp(13px,1.5vw,16px); color:rgba(255,255,255,0.75); line-height:1.8; font-weight:300; }
+.card .accent { color:#5DCAA5; font-weight:700; }
+.card .gold { color:#EF9F27; font-weight:700; }
+.card.card-red { border-color:rgba(239,100,100,0.3); }
+.card.card-green { border-color:rgba(93,202,165,0.35); }
+
+.highlight {
+  background:rgba(239,159,39,0.12);
+  border-right:4px solid #EF9F27;
+  padding:16px 20px; border-radius:12px; margin:20px 0;
+}
+.highlight h3 { color:#EF9F27; margin-bottom:8px; }
+
+.example {
+  background:rgba(93,202,165,0.1);
+  border:1px solid rgba(93,202,165,0.2);
+  border-radius:12px; padding:16px 20px; margin:20px 0;
+}
+.example h3 { color:#5DCAA5; margin-bottom:8px; }
+
+.exercise {
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:12px; padding:16px 20px; margin:20px 0;
+}
+.exercise h3 { color:#EF9F27; margin-bottom:8px; }
+
+.portfolio {
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:12px; padding:16px 20px; margin:20px 0;
+}
+.portfolio h3 { color:#5DCAA5; margin-bottom:8px; }
+
+.allocation {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.1);
+}
+.allocation:last-child { border-bottom:none; }
+.allocation-name { font-weight:700; color:white; }
+.allocation-percent { font-weight:700; color:#EF9F27; }
+.allocation-desc { font-size:13px; color:rgba(255,255,255,0.6); margin-top:4px; }
+</style>
+</head>
+<body>
+
+<!-- לוגו -->
+<div class="nativ-logo">
+  <div class="logo-name">נתיב <span>עדן</span></div>
+  <div class="logo-tag">קורס נשים · צעדים ראשונים</div>
+</div>
+
+<!-- כפתור מסך מלא -->
+<button class="fs-btn" onclick="toggleFullscreen()">⛶</button>
+
+<!-- שקף דיסקליימר -->
+<div class="slide bg-dark active" id="s-disclaimer">
+  <div class="tag">לפני שמתחילות</div>
+  <h2>דיסקליימר <span>חשוב</span></h2>
+  <div class="highlight" style="max-width:800px;text-align:right;margin-bottom:20px">
+    <h3>⚠️ לתשומת לבך</h3>
+    <p style="line-height:2">
+      המידע המוצג בקורס זה הינו <strong>לצורכי לימוד והעשרה בלבד</strong> ואינו מהווה ייעוץ השקעות, ייעוץ פיננסי, ייעוץ מס או המלצה לרכישה או מכירה של ניירות ערך כלשהם.
+    </p>
+  </div>
+  <div class="cards cards-3" style="max-width:900px">
+    <div class="card card-red">
+      <div class="card-icon">⚖️</div>
+      <h3>החלטה אישית</h3>
+      <p>כל החלטת השקעה תלויה בנסיבות ובמצב הפיננסי האישי. מה שמתאים לאחרת — לא בהכרח מתאים לך.</p>
+    </div>
+    <div class="card card-red">
+      <div class="card-icon">📊</div>
+      <h3>תשואות עבר</h3>
+      <p>נתונים היסטוריים אינם מהווים ערובה לתשואות עתידיות. שוק ההון כרוך בסיכון ועשוי לרדת.</p>
+    </div>
+    <div class="card card-red">
+      <div class="card-icon">👩‍💼</div>
+      <h3>ייעוץ מקצועי</h3>
+      <p>לפני החלטות השקעה משמעותיות מומלץ להתייעץ עם יועץ השקעות מורשה המכיר את מצבך האישי.</p>
+    </div>
+  </div>
+</div>
+
+<!-- שקף 1: כותרת -->
+<div class="slide bg-dark" id="s1">
+  <div class="session-label">מפגש 4 מתוך 5</div>
+  <div class="tag">קורס נשים · שרון חכמון</div>
+  <h1>בניית התיק <span>והעמקה</span></h1>
+  <p class="lead">היום נבנה את התיק שלנו — נבחר השקעות מתאימות. למי שלא הצליחה לפתוח תיק — נעזור במיוחד</p>
+  <div class="cover-sub">
+    <div class="cover-pill">📅 מפגש 4 מתוך 5</div>
+    <div class="cover-pill">⏱ כשעה</div>
+    <div class="cover-pill">📊 בניית תיק + תמיכה</div>
+  </div>
+</div>
+
+<!-- שקף 2: בדיקת מצב -->
+<div class="slide bg-dark" id="s2">
+  <div class="slide-num">02</div>
+  <div class="session-label">מפגש 4</div>
+  <div class="tag">איפה אנחנו</div>
+  <h2>בדיקת <span>מצב</span></h2>
+  <div class="exercise">
+    <h3>בואו נראה איפה כל אחת:</h3>
+    <ul style="color:rgba(255,255,255,0.8);line-height:1.8;margin-top:10px">
+      <li>מי פתחה תיק? (יד למעלה)</li>
+      <li>מי הפקידה כסף? (יד למעלה)</li>
+      <li>מי עשתה קנייה ראשונה? (יד למעלה)</li>
+      <li>מי צריכה עזרה עם פתיחת התיק? (יד למעלה)</li>
+    </ul>
+  </div>
+  <div class="highlight" style="margin-top:30px">
+    <h3>היום נעשה:</h3>
+    <p>למי שפתחה — נבנה תיק. למי שלא — נעזור לפתוח ולהתחיל.</p>
+  </div>
+</div>
+
+<!-- שקף 3: אסטרטגיית השקעה -->
+<div class="slide bg-dark" id="s3">
+  <div class="slide-num">03</div>
+  <div class="session-label">מפגש 4</div>
+  <div class="tag">איך נשקיע</div>
+  <h2>אסטרטגיית <span>השקעה</span></h2>
+  <div class="cards cards-2" style="max-width:800px">
+    <div class="card">
+      <div class="card-icon">🎯</div>
+      <h3>השקעה פסיבית</h3>
+      <p>לא מנסים לנחש את השוק. קונים את כל השוק דרך ETF. פשוט, זול, עובד לאורך זמן.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📈</div>
+      <h3>השקעה לטווח ארוך</h3>
+      <p>השקעה לשנים, לא לחודשים. השוק עולה לאורך זמן, גם עם ירידות בדרך.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔄</div>
+      <h3>גיוון (דיוורסיפיקציה)</h3>
+      <p>לא שמים הכל במקום אחד. מפזרים בין מניות, אג"ח, מדינות שונות.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⏰</div>
+      <h3>השקעה קבועה</h3>
+      <p>מוסיפים כסף כל חודש. זה מונע קנייה ברגעי פאניקה ומכירה ברווח.</p>
+    </div>
+  </div>
+</div>
+
+<!-- שקף 4: תיק בסיסי למתחילות -->
+<div class="slide bg-dark" id="s4">
+  <div class="slide-num">04</div>
+  <div class="session-label">מפגש 4</div>
+  <div class="tag">תיק בסיסי</div>
+  <h2>תיק בסיסי <span>למתחילות</span></h2>
+  <div class="portfolio">
+    <h3>חלוקה מומלצת (לסיכון בינוני):</h3>
+    <div class="allocation">
+      <div>
+        <div class="allocation-name">ETF של מדד ת"א 35</div>
+        <div class="allocation-desc">מניות ישראליות גדולות</div>
+      </div>
+      <div class="allocation-percent">40%</div>
+    </div>
+    <div class="allocation">
+      <div>
+        <div class="allocation-name">ETF של מדד S&P 500</div>
+        <div class="allocation-desc">מניות אמריקה גדולות</div>
+      </div>
+      <div class="allocation-percent">30%</div>
+    </div>
+    <div class="allocation">
+      <div>
+        <div class="allocation-name">קרן אג"ח ממשלתית</div>
+        <div class="allocation-desc">השקעה בטוחה יותר</div>
+      </div>
+      <div class="allocation-percent">20%</div>
+    </div>
+    <div class="allocation">
+      <div>
+        <div class="allocation-name">קרן כספית</div>
+        <div class="allocation-desc">לכסף שאולי נצטרך בקרוב</div>
+      </div>
+      <div class="allocation-percent">10%</div>
+    </div>
+  </div>
+  <div class="example" style="margin-top:30px">
+    <h3>דוגמה עם 2000₪:</h3>
+    <p>800₪ ב-ת"א 35, 600₪ ב-S&P 500, 400₪ באג"ח, 200₪ בכספית.</p>
+  </div>
+</div>
+
+<!-- שקף 5: איך לקנות -->
+<div class="slide bg-dark" id="s5">
+  <div class="slide-num">05</div>
+  <div class="session-label">מפגש 4</div>
+  <div class="tag">איך עושים קנייה</div>
+  <h2>איך <span>לקנות</span></h2>
+  <div class="cards cards-2" style="max-width:900px">
+    <div class="card">
+      <div class="card-icon">📱</div>
+      <h3>דרך האפליקציה</h3>
+      <p>פותחים את אפליקציית בית ההשקעות → "קנייה" → בוחרים את ה-ETF → מזינים סכום → מאשרים.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">💡</div>
+      <h3>מה לקנות קודם</h3>
+      <p>מתחילות עם ETF פשוט. באינטרסנט: "תא 35" או "ארהב". בפסגות: "פסגות תא 35".</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⏳</div>
+      <h3>מתי לקנות</h3>
+      <p>כל יום הוא טוב. לא צריך לחכות ל"זמן מושלם". השקעה קבועה עובדת טוב יותר.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">💰</div>
+      <h3>עמלות</h3>
+      <p>ב-ETF עמלות נמוכות (0.1-0.3%). לא צריך לדאוג — זה זול.</p>
+    </div>
+  </div>
+</div>
+
+<!-- שקף 6: עזרה למי שלא הצליחה -->
+<div class="slide bg-dark" id="s6">
+  <div class="slide-num">06</div>
+  <div class="session-label">מפגש 4</div>
+  <div class="tag">עזרה מיוחדת</div>
+  <h2>עזרה למי שלא <span>הצליחה</span></h2>
+  <div class="exercise">
+    <h3>אם לא פתחת תיק:</h3>
+    <ul style="color:rgba(255,255,255,0.8);line-height:1.8;margin-top:10px">
+      <li>איזה בעיה הייתה? (מסמכים? זמן? פחד?)</li>
+      <li>בואו נפתור יחד — צעד אחר צעד</li>
+      <li>אפשר להתחיל היום עם עזרה אישית</li>
+    </ul>
+  </div>
+  <div class="cards cards-2" style="max-width:800px;margin-top:30px">
+    <div class="card">
+      <div class="card-icon">📞</div>
+      <h3>עזרה טלפונית</h3>
+      <p>נתקשר יחד לבית ההשקעות. הם עוזרים למתחילות.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">👥</div>
+      <h3>עזרה מהקבוצה</h3>
+      <p>מי שכבר פתחה — תעזרו למי שצריכה.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📋</div>
+      <h3>רשימת משימות</h3>
+      <p>נעשה רשימה אישית לכל אחת — מה לעשות השבוע.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⏰</div>
+      <h3>זמן נוסף</h3>
+      <p>אם צריך — נקבע מפגש נוסף או עזרה פרטנית.</p>
+    </div>
+  </div>
+</div>
+
+<!-- שקף 7: תרגול מעשי -->
+<div class="slide bg-dark" id="s7">
+  <div class="slide-num">07</div>
+  <div class="session-label">מפגש 4</div>
+  <div class="tag">בואו נעשה</div>
+  <h2>תרגול <span>מעשי</span></h2>
+  <div class="exercise">
+    <h3>היום נעשה:</h3>
+    <ul style="color:rgba(255,255,255,0.8);line-height:1.8;margin-top:10px">
+      <li>מי שפתחה תיק — תעשה קנייה ראשונה (עם עזרה)</li>
+      <li>מי שלא — תפתח תיק (עם עזרה מלאה)</li>
+      <li>כולנו נתכנן את התיק הבא</li>
+    </ul>
+  </div>
+  <div class="highlight" style="margin-top:30px">
+    <h3>זכרו:</h3>
+    <p>זה בסדר לעשות טעויות. כל אחת מתחילה מאיפשהו. אנחנו כאן לתמוך.</p>
+  </div>
+</div>
+
+<!-- שקף 8: שאלות ותשובות -->
+<div class="slide bg-dark" id="s8">
+  <div class="slide-num">08</div>
+  <div class="session-label">מפגש 4</div>
+  <div class="tag">שאלות נפוצות</div>
+  <h2>שאלות <span>ותשובות</span></h2>
+  <div class="cards cards-2" style="max-width:900px">
+    <div class="card">
+      <h3>אני מפחדת להפסיד</h3>
+      <p>מובן! לכן מתחילות קטן ומגוון. השוק עולה לאורך זמן.</p>
+    </div>
+    <div class="card">
+      <h3>איזה ETF לקנות?</h3>
+      <p>תא 35 או S&P 500. הם פשוטים ובטוחים יחסית.</p>
+    </div>
+    <div class="card">
+      <h3>כמה להשקיע?</h3>
+      <p>מה שאת מרגישה בנוח. אפשר להתחיל מ-200₪ בחודש.</p>
+    </div>
+    <div class="card">
+      <h3>מה אם אני טועה?</h3>
+      <p>זה בסדר! נלמד מהטעויות. אפשר תמיד למכור ולקנות משהו אחר.</p>
+    </div>
+    <div class="card">
+      <h3>איך אני יודעת שזה עובד?</h3>
+      <p>בדקי פעם בחודש. אם זה ירד — זה זמני. אם עלה — יופי!</p>
+    </div>
+    <div class="card">
+      <h3>אני צריכה יועץ?</h3>
+      <p>לא חובה. אבל אם את רוצה — אפשר להוסיף מאוחר יותר.</p>
+    </div>
+  </div>
+</div>
+
+<!-- שקף 9: סיכום -->
+<div class="slide bg-dark" id="s9">
+  <div class="slide-num">09</div>
+  <div class="session-label">מפגש 4</div>
+  <div class="tag">סיכום — התקדמנו</div>
+  <h2>מה עשינו <span>היום</span></h2>
+  <div class="cards cards-3" style="max-width:1000px">
+    <div class="card card-green">
+      <div class="card-icon">✅</div>
+      <h3>בדקנו מצב</h3>
+      <p>ראינו מי איפה ומי צריכה עזרה.</p>
+    </div>
+    <div class="card card-green">
+      <div class="card-icon">✅</div>
+      <h3>למדנו אסטרטגיה</h3>
+      <p>השקעה פסיבית, גיוון, טווח ארוך.</p>
+    </div>
+    <div class="card card-green">
+      <div class="card-icon">✅</div>
+      <h3>בנינו תיק</h3>
+      <p>תיק בסיסי עם ETF ואג"ח.</p>
+    </div>
+    <div class="card card-green">
+      <div class="card-icon">✅</div>
+      <h3>עזרנו זו לזו</h3>
+      <p>מי שלא הצליחה — קיבלה עזרה מיוחדת.</p>
+    </div>
+    <div class="card card-green">
+      <div class="card-icon">✅</div>
+      <h3>עשינו קנייה</h3>
+      <p>התחלנו להשקיע בפועל.</p>
+    </div>
+    <div class="card card-green">
+      <div class="card-icon">✅</div>
+      <h3>תכננו הלאה</h3>
+      <p>יודעות מה לעשות השבוע.</p>
+    </div>
+  </div>
+  <div class="highlight" style="margin-top:30px">
+    <h3>מפגש הבא:</h3>
+    <p>מסים, תחזוקת התיק, וסיום עם ביטחון מלא.</p>
+  </div>
+</div>
+
+<!-- ניווט -->
+<div class="nav-bar">
+  <button class="nav-btn" onclick="prevSlide()" id="prev-btn" disabled>‹</button>
+  <div class="slide-counter" id="slide-counter">1 / 9</div>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" onclick="nextSlide()" id="next-btn">›</button>
+</div>
+
+<script>
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const dotsContainer = document.getElementById('dots');
+const counter = document.getElementById('slide-counter');
+
+// יצירת נקודות
+slides.forEach((_, i) => {
+  const dot = document.createElement('div');
+  dot.className = 'dot';
+  dot.onclick = () => goToSlide(i);
+  dotsContainer.appendChild(dot);
+});
+
+function updateUI() {
+  slides.forEach((slide, i) => {
+    slide.classList.toggle('active', i === currentSlide);
+  });
+  document.querySelectorAll('.dot').forEach((dot, i) => {
+    dot.classList.toggle('active', i === currentSlide);
+  });
+  counter.textContent = `${currentSlide + 1} / ${slides.length}`;
+  document.getElementById('prev-btn').disabled = currentSlide === 0;
+  document.getElementById('next-btn').disabled = currentSlide === slides.length - 1;
+}
+
+function nextSlide() {
+  if (currentSlide < slides.length - 1) {
+    currentSlide++;
+    updateUI();
+  }
+}
+
+function prevSlide() {
+  if (currentSlide > 0) {
+    currentSlide--;
+    updateUI();
+  }
+}
+
+function goToSlide(index) {
+  currentSlide = index;
+  updateUI();
+}
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+}
+
+// מקלדת
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+  if (e.key === 'ArrowLeft') prevSlide();
+  if (e.key >= '1' && e.key <= '9') goToSlide(parseInt(e.key) - 1);
+});
+
+updateUI();
+</script>
+
+</body>
+</html>
