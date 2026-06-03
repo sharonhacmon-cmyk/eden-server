@@ -38,7 +38,7 @@
   .header {
     position: fixed;
     top: 0; left: 0; right: 0;
-    height: 54px;
+    height: 58px;
     background: linear-gradient(90deg, #0f1420 0%, #1a1f2e 60%, #1e2438 100%);
     border-bottom: 2px solid #EF9F27;
     box-shadow: 0 2px 20px rgba(239,159,39,0.15);
@@ -95,7 +95,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding: 66px 60px 70px;
+    padding: 62px 48px 66px;
     text-align: center;
     opacity: 0;
     pointer-events: none;
@@ -169,13 +169,13 @@
   }
   .dark-slide .tag, .gold-slide .tag { color: var(--gold2); }
 
-  h1 { font-size: clamp(46px,6vw,92px); font-weight: 900; line-height: 1.1; color: var(--dark); }
-  h2 { font-size: clamp(38px,5.2vw,78px) !important; font-weight: 900 !important; line-height: 1.15; color: var(--dark); }
-  .tag { font-size: 14px !important; font-weight: 900 !important; letter-spacing: 3px !important; }
+  h1 { font-size: clamp(52px,7vw,100px); font-weight: 900; line-height: 1.1; color: var(--dark); }
+  h2 { font-size: clamp(42px,5.8vw,86px) !important; font-weight: 900 !important; line-height: 1.15; color: var(--dark); }
+  .tag { font-size: 16px !important; font-weight: 900 !important; letter-spacing: 3px !important; }
   .dark-slide h2, .gold-slide h2 { color: #fff; }
   .dark-slide h1, .gold-slide h1 { color: #fff; }
 
-  .sub { font-size: clamp(16px,1.8vw,22px); color: var(--gray); font-weight: 400; line-height: 1.7; }
+  .sub { font-size: clamp(18px,2.2vw,26px); color: var(--gray); font-weight: 400; line-height: 1.7; }
   .dark-slide .sub, .gold-slide .sub { color: rgba(255,255,255,0.75); }
 
   .gold { color: var(--gold); }
@@ -279,7 +279,7 @@
     border-right: 4px solid var(--red);
     border-radius: 0 14px 14px 0;
     padding: 12px 16px;
-    font-size: 18px;
+    font-size: clamp(17px,2vw,24px);
     color: var(--dark);
     display: flex;
     gap: 10px;
@@ -307,7 +307,7 @@
     border-right: 4px solid #EF9F27;
     border-radius: 0 14px 14px 0;
     padding: 13px 16px;
-    font-size: 18px;
+    font-size: clamp(17px,2vw,24px);
     color: var(--dark);
     display: flex;
     gap: 10px;
@@ -338,7 +338,7 @@
     text-align: center;
     box-shadow: 0 4px 16px rgba(239,159,39,0.08);
   }
-  .stat-box .s-num { font-size: 42px; font-weight: 900; line-height: 1; color: var(--gold); }
+  .stat-box .s-num { font-size: clamp(42px,5vw,64px); font-weight: 900; line-height: 1; color: var(--gold); }
   .stat-box .s-label { font-size: 13px; color: var(--gray); margin-top: 6px; line-height: 1.5; }
 
   /* ── INVEST COMPARE ── */
@@ -719,6 +719,7 @@
 <!-- ── HEADER ── -->
 <div class="header">
   <div class="header-logo">
+    <img src="תמונה לביאה פיננסית.jpeg" style="width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid #EF9F27;margin-left:10px;" alt="לביאה פיננסית">
     <div>
       <div class="logo-text">לביאה <span class="gold-dot">פיננסית</span></div>
       <div class="logo-sub">ידע פיננסי שייך לכל אישה</div>
