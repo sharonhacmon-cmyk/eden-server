@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מחשבון החלומות | לביאה פיננסית</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&display=swap');
+
+:root {
+  --red:      #8B1F1F;
+  --red-mid:  #a52828;
+  --red-light:#c0392b;
+  --cream:    #fdf8f3;
+  --warm:     #f5ede3;
+  --gold:     #c9963a;
+  --text:     #1a1a1a;
+  --muted:    #7a6a5a;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Heebo', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── HERO HEADER ── */
+.hero {
+  background: linear-gradient(135deg, #6b1616 0%, var(--red) 40%, #b03030 100%);
+  padding: 40px 20px 60px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 70% 30%, rgba(255,200,100,0.12) 0%, transparent 60%),
+              radial-gradient(ellipse at 20% 80%, rgba(255,255,255,0.06) 0%, transparent 50%);
+}
+.hero-brand {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 28px;
+  opacity: 0.9;
+}
+.hero-brand span {
+  color: rgba(255,255,255,0.75);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+}
+.hero h1 {
+  position: relative;
+  color: #fff;
+  font-size: clamp(30px, 6vw, 52px);
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 12px;
+}
+.hero h1 em {
+  font-style: normal;
+  color: #f5c77a;
+}
+.hero p {
+  position: relative;
+  color: rgba(255,255,255,0.82);
+  font-size: clamp(15px, 2.5vw, 18px);
+  font-weight: 300;
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ── WAVE ── */
+.wave {
+  height: 50px;
+  background: var(--cream);
+  margin-top: -1px;
+  clip-path: ellipse(55% 100% at 50% 100%);
+}
+
+/* ── CARD ── */
+.card {
+  background: #fff;
+  border-radius: 24px;
+  padding: 36px 32px;
+  box-shadow: 0 8px 48px rgba(100,20,20,0.10);
+  margin: -30px auto 0;
+  max-width: 600px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ── INPUTS ── */
+.field {
+  margin-bottom: 24px;
+}
+.field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+.field input[type="text"],
+.field input[type="number"] {
+  width: 100%;
+  border: 2px solid #e8ddd4;
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-family: 'Heebo', sans-serif;
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--text);
+  background: var(--cream);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  text-align: right;
+}
+.field input:focus {
+  border-color: var(--red-mid);
+  box-shadow: 0 0 0 4px rgba(139,31,31,0.08);
+}
+
+/* dream input עם emoji */
+.dream-wrap {
+  position: relative;
+}
+.dream-wrap .emoji-hint {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 22px;
+  pointer-events: none;
+}
+
+/* שדה מספר */
+.amount-wrap {
+  position: relative;
+}
+.amount-wrap::after {
+  content: '₪';
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gold);
+  pointer-events: none;
+}
+.amount-wrap input {
+  padding-left: 36px !important;
+}
+
+/* ── SLIDER ── */
+.slider-section {
+  background: var(--warm);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+.slider-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 16px;
+}
+.slider-header label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--red);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.slider-header .years-val {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--red);
+  line-height: 1;
+}
+.slider-header .years-val span {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-right: 2px;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to left, var(--red) var(--pct, 40%), #d9c9bd var(--pct, 40%));
+  outline: none;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 2px 8px rgba(139,31,31,0.35);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* ── RESULT BOX ── */
+.result-box {
+  background: linear-gradient(135deg, #6b1616, var(--red));
+  border-radius: 20px;
+  padding: 28px 24px;
+  text-align: center;
+  margin-bottom: 24px;
+  display: none;
+  position: relative;
+  overflow: hidden;
+}
+.result-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 80% 20%, rgba(255,200,100,0.15) 0%, transparent 60%);
+}
+.result-box.visible { display: block; }
+
+.result-monthly-label {
+  position: relative;
+  color: rgba(255,255,255,0.75);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+.result-monthly {
+  position: relative;
+  color: #f5c77a;
+  font-size: clamp(40px, 10vw, 62px);
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.result-monthly small {
+  font-size: 22px;
+  font-weight: 400;
+  color: rgba(245,199,122,0.7);
+}
+.result-subtitle {
+  position: relative;
+  color: rgba(255,255,255,0.7);
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+.result-subtitle strong {
+  color: #fff;
+}
+
+/* breakdown */
+.breakdown {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.breakdown-item {
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 12px 16px;
+  text-align: center;
+  min-width: 120px;
+}
+.breakdown-item .val {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  display: block;
+  margin-bottom: 2px;
+}
+.breakdown-item .lbl {
+  font-size: 11px;
+  color: rgba(255,255,255,0.65);
+}
+
+/* ── PROGRESS BAR ── */
+.progress-section {
+  display: none;
+  margin-bottom: 24px;
+}
+.progress-section.visible { display: block; }
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.progress-track {
+  height: 14px;
+  background: #e8ddd4;
+  border-radius: 7px;
+  overflow: hidden;
+}
+.progress-fill-savings {
+  height: 100%;
+  background: linear-gradient(90deg, var(--red), var(--red-light));
+  border-radius: 7px 0 0 7px;
+  transition: width 0.6s cubic-bezier(.4,0,.2,1);
+  float: right;
+}
+.progress-fill-growth {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), #e8b347);
+  border-radius: 0 7px 7px 0;
+  transition: width 0.6s cubic-bezier(.4,0,.2,1);
+  float: right;
+}
+.progress-legend {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--muted);
+  justify-content: center;
+}
+.progress-legend span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dot-red { background: var(--red); }
+.dot-gold { background: var(--gold); }
+
+/* ── MOTIVATIONAL ── */
+.motivation {
+  background: var(--warm);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  display: none;
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.6;
+  border-right: 4px solid var(--red);
+}
+.motivation.visible { display: block; }
+.motivation strong { color: var(--red); }
+
+/* ── CTA ── */
+.cta-section {
+  text-align: center;
+  padding: 36px 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.cta-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--red);
+  margin-bottom: 8px;
+}
+.cta-text {
+  font-size: 15px;
+  color: var(--muted);
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+.btn-cta {
+  display: inline-block;
+  background: linear-gradient(135deg, #6b1616, var(--red));
+  color: #fff;
+  font-family: 'Heebo', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 16px 36px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 6px 24px rgba(139,31,31,0.30);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.btn-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(139,31,31,0.38);
+}
+.webinar-date {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.webinar-date strong { color: var(--red); }
+
+/* ── FOOTER ── */
+footer {
+  text-align: center;
+  padding: 24px;
+  font-size: 12px;
+  color: #bbb;
+}
+footer strong { color: var(--red); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.result-box.visible,
+.progress-section.visible,
+.motivation.visible {
+  animation: fadeUp 0.4s ease both;
+}
+
+/* Mobile */
+@media (max-width: 500px) {
+  .card { padding: 24px 18px; margin: -20px 12px 0; }
+  .breakdown { gap: 8px; }
+  .breakdown-item { min-width: 100px; padding: 10px 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-brand">
+    <span>לביאה פיננסית</span>
+  </div>
+  <h1>מחשבון<br><em>החלומות</em></h1>
+  <p>כמה צריך לחסוך כל חודש כדי שהחלום שלך יהפוך למציאות?</p>
+</div>
+<div class="wave"></div>
+
+<!-- CARD -->
+<div style="padding: 0 20px 40px; max-width: 640px; margin: 0 auto;">
+<div class="card">
+
+  <!-- dream name -->
+  <div class="field">
+    <label>מה החלום שלך?</label>
+    <div class="dream-wrap">
+      <input type="text" id="dreamName" placeholder="למשל: דירה בתל אביב, טיול לניו זילנד..." oninput="calc()">
+      <span class="emoji-hint">✨</span>
+    </div>
+  </div>
+
+  <!-- target amount -->
+  <div class="field">
+    <label>כמה זה שווה?</label>
+    <div class="amount-wrap">
+      <input type="number" id="targetAmount" placeholder="500,000" min="1000" step="1000" oninput="calc()">
+    </div>
+  </div>
+
+  <!-- years slider -->
+  <div class="slider-section">
+    <div class="slider-header">
+      <label>בכמה שנים תגיעי ליעד?</label>
+      <div class="years-val" id="yearsDisplay"><span>שנים</span> 10</div>
+    </div>
+    <input type="range" id="yearsSlider" min="2" max="30" value="10" oninput="updateSlider(); calc()">
+    <div class="slider-labels">
+      <span>30 שנה</span>
+      <span>2 שנה</span>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result-box" id="resultBox">
+    <div class="result-monthly-label">חיסכון חודשי נדרש</div>
+    <div class="result-monthly" id="monthlyPayment">—<small> ₪</small></div>
+    <div class="result-subtitle" id="resultSubtitle"></div>
+    <div class="breakdown">
+      <div class="breakdown-item">
+        <span class="val" id="totalContrib">—</span>
+        <span class="lbl">סה"כ הפקדות שלך</span>
+      </div>
+      <div class="breakdown-item">
+        <span class="val" id="totalGrowth">—</span>
+        <span class="lbl">רווח מהשוק (8%)</span>
+      </div>
+      <div class="breakdown-item">
+        <span class="val" id="totalFV">—</span>
+        <span class="lbl">סה"כ בסוף הדרך</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESS BAR -->
+  <div class="progress-section" id="progressSection">
+    <div class="progress-label">
+      <span>פירוק הסכום הסופי</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill-growth" id="growthBar" style="width:0%"></div>
+      <div class="progress-fill-savings" id="savingsBar" style="width:0%"></div>
+    </div>
+    <div class="progress-legend">
+      <span><span class="dot dot-red"></span> הפקדות שלך</span>
+      <span><span class="dot dot-gold"></span> רווחי שוק</span>
+    </div>
+  </div>
+
+  <!-- MOTIVATION -->
+  <div class="motivation" id="motivation"></div>
+
+</div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="cta-title">רוצה ללמוד איך מתחילים?</div>
+  <div class="cta-text">
+    בוובינר חינמי "לביאות משקיעות" נעבור יחד על הצעדים הראשונים,<br>
+    איך פותחים תיק השקעות ומתחילות לגרום לכסף לעבוד בשבילך.
+  </div>
+  <a href="#" class="btn-cta">הצטרפי לוובינר החינמי</a>
+  <div class="webinar-date"><strong>14 ביוני | 20:30</strong> — שמרי מקום עכשיו</div>
+</div>
+
+<footer>
+  © לביאה פיננסית | החישוב מבוסס על תשואה שנתית ממוצעת של 8% עם ריבית דריבית חודשית.<br>
+  אין בכך ייעוץ השקעות. <strong>תשואות עבר אינן מבטיחות תשואות עתיד.</strong>
+</footer>
+
+<script>
+function fmt(n) {
+  return Math.round(n).toLocaleString('he-IL');
+}
+
+function updateSlider() {
+  const slider = document.getElementById('yearsSlider');
+  const val = parseInt(slider.value);
+  document.getElementById('yearsDisplay').innerHTML = `<span>שנות חיסכון</span>${val}`;
+  const pct = ((val - 2) / (30 - 2)) * 100;
+  slider.style.setProperty('--pct', pct + '%');
+}
+
+function motivationText(years, monthly, dreamName) {
+  const name = dreamName || 'החלום הזה';
+  if (monthly < 500) {
+    return `<strong>${fmt(monthly)} ₪ בחודש</strong> זה פחות ממה שרבות מאיתנו מוציאות על קניות לא מתוכננות. ${name} יכול להתחיל היום.`;
+  } else if (years <= 5) {
+    return `${name} בעוד 5 שנים זה אמיץ ומציאותי. <strong>כל חודש שעובר בלי להתחיל — עולה לך יותר.</strong>`;
+  } else if (years >= 20) {
+    return `עם ${years} שנה לפניך, <strong>הריבית דריבית עושה את רוב העבודה</strong>. כמעט מחצית הסכום הסופי יגיע מהשוק — לא ממך.`;
+  } else {
+    return `<strong>${years} שנות השקעה</strong> זה מספיק זמן כדי שהשוק יכפיל את הכסף שלך. הצעד הראשון הוא הקשה ביותר.`;
+  }
+}
+
+function calc() {
+  const target = parseFloat(document.getElementById('targetAmount').value);
+  const years  = parseInt(document.getElementById('yearsSlider').value);
+  const dream  = document.getElementById('dreamName').value.trim();
+
+  if (!target || target <= 0) {
+    document.getElementById('resultBox').classList.remove('visible');
+    document.getElementById('progressSection').classList.remove('visible');
+    document.getElementById('motivation').classList.remove('visible');
+    return;
+  }
+
+  const r = 0.08 / 12;       // ריבית חודשית
+  const n = years * 12;      // מספר חודשים
+  // PMT = FV * r / ((1+r)^n - 1)
+  const pmt = target * r / (Math.pow(1 + r, n) - 1);
+  const totalContrib = pmt * n;
+  const totalGrowth  = target - totalContrib;
+  const savingsPct   = (totalContrib / target) * 100;
+  const growthPct    = (totalGrowth / target) * 100;
+
+  // הצג תוצאות
+  document.getElementById('monthlyPayment').innerHTML = `${fmt(pmt)}<small> ₪</small>`;
+  document.getElementById('resultSubtitle').innerHTML =
+    `למשך <strong>${years} שנים</strong> כדי להגיע ל<strong>₪${fmt(target)}</strong>` +
+    (dream ? ` — <strong>${dream}</strong>` : '');
+  document.getElementById('totalContrib').textContent = '₪' + fmt(totalContrib);
+  document.getElementById('totalGrowth').textContent  = '₪' + fmt(totalGrowth);
+  document.getElementById('totalFV').textContent      = '₪' + fmt(target);
+
+  // Progress bar
+  document.getElementById('savingsBar').style.width = savingsPct.toFixed(1) + '%';
+  document.getElementById('growthBar').style.width  = growthPct.toFixed(1) + '%';
+
+  // motivation
+  document.getElementById('motivation').innerHTML = motivationText(years, pmt, dream);
+
+  // show
+  document.getElementById('resultBox').classList.add('visible');
+  document.getElementById('progressSection').classList.add('visible');
+  document.getElementById('motivation').classList.add('visible');
+}
+
+// init slider
+updateSlider();
+</script>
+</body>
+</html>
