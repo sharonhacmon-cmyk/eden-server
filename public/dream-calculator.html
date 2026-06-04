@@ -111,6 +111,34 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.18); }
 .insight.visible { display: block; animation: fadeUp .35s ease both; }
 .insight strong { color: var(--red); }
 
+/* SHORT-TERM WARNING */
+.warning-box {
+  display: none;
+  background: #fff8e1;
+  border: 1.5px solid #f0c040;
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #7a5c00;
+  line-height: 1.6;
+}
+.warning-box.visible { display: block; animation: fadeUp .3s ease both; }
+.warning-box .w-title { font-weight: 700; font-size: 14px; color: #5a4000; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }
+.warning-box strong { color: #5a4000; }
+
+/* RATE BADGE */
+.rate-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 20px;
+  padding: 3px 10px;
+  margin-bottom: 14px;
+}
+.rate-badge.long  { background: #e8f5e9; color: #2e7d32; }
+.rate-badge.short { background: #fff8e1; color: #7a5c00; }
+
 .timeline { display: none; }
 .timeline.visible { display: block; }
 .tl-empty { text-align: center; color: var(--border); font-size: 13px; padding: 24px; }
@@ -208,11 +236,15 @@ footer strong { color: var(--muted); }
         </div>
         <div class="bar-legend">
           <span><span class="dot dot-r"></span> הפקדות</span>
-          <span><span class="dot dot-g"></span> רווחי שוק (8% שנתי)</span>
+          <span><span class="dot dot-g"></span> <span id="rateLabel">רווחי שוק (7% שנתי)</span></span>
         </div>
       </div>
     </div>
 
+    <div class="warning-box" id="warningBox">
+      <div class="w-title">⚠️ שים לב — טווח קצר מועד</div>
+      שוק ההון <strong>אינו מומלץ לטווח של פחות מ-5 שנים.</strong> בתקופה קצרה שוק המניות עלול לרדת ולא יהיה מספיק זמן להתאושש. לכן החישוב מבוסס על <strong>2.5% שנתי</strong> — תשואה שמרנית המתאימה לחיסכון / פיקדון / קרן כספית.
+    </div>
     <div class="insight" id="insight"></div>
   </div>
 
@@ -231,12 +263,18 @@ footer strong { color: var(--muted); }
 </div>
 
 <footer>
-  החישוב מבוסס על תשואה שנתית ממוצעת של <strong>8%</strong> עם ריבית דריבית חודשית.<br>
+  החישוב לטווח ארוך (5+ שנים) מבוסס על תשואה שנתית ממוצעת של <strong>7%</strong> עם ריבית דריבית חודשית. לטווח קצר (פחות מ-5 שנים) — <strong>2.5%</strong> (חיסכון שמרני).<br>
   <strong>אין בכך ייעוץ השקעות.</strong> תשואות עבר אינן מבטיחות תשואות עתיד. ההשקעה בשוק ההון כרוכה בסיכון.
 </footer>
 
 <script>
-const R = 0.08 / 12;
+const R_LONG  = 0.07 / 12;   // 7% שנתי — שוק ההון, טווח ארוך
+const R_SHORT = 0.025 / 12;  // 2.5% שנתי — חיסכון שמרני, טווח קצר
+const SHORT_TERM_YEARS = 5;
+
+function getRate(years) {
+  return years < SHORT_TERM_YEARS ? R_SHORT : R_LONG;
+}
 
 function fmtShort(n) {
   if (n >= 1000000) return (n/1000000).toFixed(1).replace(".0","") + "M ₪";
@@ -247,9 +285,9 @@ function fmtFull(n) {
   return "₪" + Math.round(n).toLocaleString("he-IL");
 }
 
-function fv(pmt, existing, months) {
+function fv(pmt, existing, months, R) {
   const fvE = existing * Math.pow(1 + R, months);
-  const fvP = pmt * (Math.pow(1 + R, months) - 1) / R;
+  const fvP = pmt > 0 ? pmt * (Math.pow(1 + R, months) - 1) / R : 0;
   return fvE + fvP;
 }
 
@@ -261,17 +299,16 @@ function updateSlider() {
   document.getElementById("yearsSlider").style.setProperty("--pct", pct + "%");
 }
 
-function drawChart(pmt, existing, years) {
+function drawChart(pmt, existing, years, R) {
   const W = 800, H = 160, PAD = 6;
   const svg = document.getElementById("chartSvg");
 
+  // נקודות חודשיות לגרף חלק יותר, אבל נציג לפי שנים
   const gVals = [], cVals = [];
   for (let y = 0; y <= years; y++) {
     const n = y * 12;
-    const total = fv(pmt, existing, n);
-    const dep   = existing + pmt * n;
-    gVals.push(total);
-    cVals.push(dep);
+    gVals.push(fv(pmt, existing, n, R));
+    cVals.push(existing + pmt * n);
   }
   const maxV = gVals[gVals.length - 1];
   const sx = i => PAD + (i / years) * (W - PAD * 2);
@@ -284,11 +321,14 @@ function drawChart(pmt, existing, years) {
   }
   const base = " L" + sx(years) + " " + (H-PAD) + " L" + sx(0) + " " + (H-PAD) + " Z";
 
+  // צבע עקומת צמיחה: זהב לטווח ארוך, צהוב לטווח קצר
+  const growthColor = years < SHORT_TERM_YEARS ? "#e0a020" : "#c9963a";
+
   svg.innerHTML = `
     <defs>
       <linearGradient id="gg" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#c9963a" stop-opacity="0.4"/>
-        <stop offset="100%" stop-color="#c9963a" stop-opacity="0.03"/>
+        <stop offset="0%" stop-color="${growthColor}" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="${growthColor}" stop-opacity="0.03"/>
       </linearGradient>
       <linearGradient id="gr" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0%" stop-color="#8B1F1F" stop-opacity="0.3"/>
@@ -297,26 +337,24 @@ function drawChart(pmt, existing, years) {
     </defs>
     <path d="${gPath}${base}" fill="url(#gg)"/>
     <path d="${cPath}${base}" fill="url(#gr)"/>
-    <path d="${gPath}" fill="none" stroke="#c9963a" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="${gPath}" fill="none" stroke="${growthColor}" stroke-width="2.5" stroke-linejoin="round"/>
     <path d="${cPath}" fill="none" stroke="#8B1F1F" stroke-width="2" stroke-linejoin="round" stroke-dasharray="6,3"/>
   `;
 
-  // year labels
-  const step = years <= 10 ? 2 : years <= 20 ? 5 : 10;
+  // תוויות ציר X — מותאם למספר שנים
+  const step = years <= 4 ? 1 : years <= 10 ? 2 : years <= 20 ? 5 : 10;
   const labels = [];
   for (let y = 0; y <= years; y += step) labels.push("שנה " + y);
   document.getElementById("tlYears").innerHTML = labels.map(l => `<span>${l}</span>`).join("");
 
-  // milestones: 25%, 50%, 75%, 100%
+  // milestones
   const msEl = document.getElementById("milestones");
   const pcts = [25, 50, 75, 100];
   msEl.innerHTML = pcts.map(p => {
     const targetPct = maxV * p / 100;
-    // find year
-    let yr = 0;
+    let yr = years;
     for (let y = 0; y <= years; y++) {
       if (gVals[y] >= targetPct) { yr = y; break; }
-      yr = years;
     }
     return `<div class="ms-item">
       <div class="ms-year">שנה ${yr}</div>
@@ -326,14 +364,19 @@ function drawChart(pmt, existing, years) {
   }).join("");
 }
 
-function insightText(years, pmt, growthAmt, contrib, dream) {
-  const growthPct = Math.round(growthAmt / (growthAmt + contrib) * 100);
+function insightText(years, pmt, growthAmt, contrib, dream, isShort) {
+  const growthPct = Math.round(growthAmt / Math.max(growthAmt + contrib, 1) * 100);
   const name = dream || "היעד";
   if (pmt === 0) return `עם החיסכון הקיים שלך תגיעי ל<strong>${name}</strong> תוך ${years} שנים — <strong>בלי להוסיף אפילו שקל!</strong>`;
-  if (years >= 20) return `<strong>${growthPct}% מהסכום הסופי</strong> הגיע מהשוק, לא ממך. הזמן הוא הנשק הכי חזק של המשקיע.`;
+  if (isShort) {
+    return `בטווח קצר, <strong>הריבית דריבית עדיין לא מספיקה לפעול</strong>. ${Math.round(growthPct)}% בלבד מהסכום הסופי יגיע מרווחים — רוב הדרך תגיעי מהפקדות שלך.`;
+  }
+  // טווח ארוך — הדגשת ריבית דריבית
+  if (years >= 25) return `<strong>${growthPct}% מהסכום הסופי</strong> יגיע מהשוק — לא ממך. זו כוחה של ריבית דריבית: הכסף שלך מרוויח על הרווחים של עצמו, שנה אחרי שנה.`;
+  if (years >= 15) return `<strong>${growthPct}% מהסכום הסופי</strong> יגיע מרווחי השוק. ריבית דריבית היא הסיבה שכל שנת השקעה מוסיפה יותר מהקודמת — הזמן הוא הנכס הכי יקר שיש.`;
+  if (years >= 10) return `עם ${years} שנות השקעה, <strong>${growthPct}% מהסכום יגיע מהשוק</strong>. ככל שממשיכים — ריבית דריבית עובדת חזק יותר.`;
   if (pmt < 800)   return `פחות מ-800 ₪ לחודש יכולים להגשים את <strong>${name}</strong>. <strong>הצעד הראשון הוא הכי חשוב.</strong>`;
-  if (years <= 3)  return `יעד קצר טווח — <strong>רוב הסכום יגיע מהפקדות שלך</strong>, השוק עוד לא מספיק לפעול. שקלי להאריך את הטווח.`;
-  return `<strong>${growthPct}% מהסכום הסופי</strong> יגיע מרווחי השוק. ככל שתתחילי מוקדם יותר — כך השוק עובד בשבילך יותר.`;
+  return `<strong>${growthPct}% מהסכום הסופי</strong> יגיע מרווחי השוק. ככל שתתחילי מוקדם יותר — כך ריבית דריבית עובדת בשבילך יותר.`;
 }
 
 function calc() {
@@ -348,12 +391,23 @@ function calc() {
     document.getElementById("resultMain").classList.remove("visible");
     document.getElementById("resultEmpty").style.display = "block";
     show("insight", false);
+    show("warningBox", false);
     show("timeline", false);
     document.getElementById("tlEmpty").style.display = "block";
     return;
   }
 
+  const isShort = years < SHORT_TERM_YEARS;
+  const R = getRate(years);
   const n = years * 12;
+
+  // הצג/הסתר warning
+  show("warningBox", isShort);
+
+  // עדכן תווית ריבית
+  document.getElementById("rateLabel").textContent =
+    isShort ? "רווחי חיסכון (2.5% שנתי)" : "רווחי שוק (7% שנתי)";
+
   const fvExisting = existing * Math.pow(1 + R, n);
   const needed = Math.max(0, target - fvExisting);
   const pmt = needed <= 0 ? 0 : needed * R / (Math.pow(1 + R, n) - 1);
@@ -372,7 +426,8 @@ function calc() {
     `למשך <strong>${years} שנ${years===1?"ה":"ים"}</strong>` +
     (dream ? ` להגשמת <strong>${dream}</strong>` : "") +
     ` · יעד: ${fmtFull(target)}` +
-    (existing > 0 ? ` · כולל ${fmtFull(existing)} קיימים` : "");
+    (existing > 0 ? ` · כולל ${fmtFull(existing)} קיימים` : "") +
+    ` · תשואה: ${isShort ? "2.5%" : "7%"}`;
 
   document.getElementById("bkContrib").textContent = fmtShort(totalContrib);
   document.getElementById("bkGrowth").textContent  = fmtShort(totalGrowth);
@@ -380,14 +435,14 @@ function calc() {
 
   document.getElementById("barSavings").style.width = savPct.toFixed(1) + "%";
   document.getElementById("barGrowth").style.width  = grwPct.toFixed(1) + "%";
-  document.getElementById("barPctLabel").textContent = Math.round(grwPct) + "% מהשוק";
+  document.getElementById("barPctLabel").textContent = Math.round(grwPct) + "% רווחים";
 
-  document.getElementById("insight").innerHTML = insightText(years, pmt, totalGrowth, totalContrib, dream);
+  document.getElementById("insight").innerHTML = insightText(years, pmt, totalGrowth, totalContrib, dream, isShort);
   show("insight", true);
 
   document.getElementById("tlEmpty").style.display = "none";
   show("timeline", true);
-  drawChart(pmt, existing, years);
+  drawChart(pmt, existing, years, R);
 }
 
 updateSlider();
