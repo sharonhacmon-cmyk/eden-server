@@ -276,12 +276,21 @@ function getRate(years) {
   return years < SHORT_TERM_YEARS ? R_SHORT : R_LONG;
 }
 
+// עוטף מספר ב-<bdi> למניעת שיבושי RTL
+function bdi(str) { return `<bdi>${str}</bdi>`; }
+
 function fmtShort(n) {
-  if (n >= 1000000) return (n/1000000).toFixed(1).replace(".0","") + "M ₪";
-  if (n >= 10000)   return Math.round(n/1000) + "K ₪";
-  return "₪" + Math.round(n).toLocaleString("he-IL");
+  if (n >= 1000000) return bdi((n/1000000).toFixed(1).replace(".0","") + "M ₪");
+  if (n >= 10000)   return bdi(Math.round(n/1000) + "K ₪");
+  return bdi("₪" + Math.round(n).toLocaleString("he-IL"));
 }
 function fmtFull(n) {
+  return bdi("₪" + Math.round(n).toLocaleString("he-IL"));
+}
+// גרסה ללא bdi — לשימוש ב-textContent בלבד
+function fmtShortPlain(n) {
+  if (n >= 1000000) return (n/1000000).toFixed(1).replace(".0","") + "M ₪";
+  if (n >= 10000)   return Math.round(n/1000) + "K ₪";
   return "₪" + Math.round(n).toLocaleString("he-IL");
 }
 
@@ -357,9 +366,9 @@ function drawChart(pmt, existing, years, R) {
       if (gVals[y] >= targetPct) { yr = y; break; }
     }
     return `<div class="ms-item">
-      <div class="ms-year">שנה ${yr}</div>
+      <div class="ms-year">שנה <bdi>${yr}</bdi></div>
       <div class="ms-val">${fmtShort(gVals[yr])}</div>
-      <div class="ms-pct">${p}% מהיעד</div>
+      <div class="ms-pct"><bdi>${p}%</bdi> מהיעד</div>
     </div>`;
   }).join("");
 }
@@ -367,16 +376,15 @@ function drawChart(pmt, existing, years, R) {
 function insightText(years, pmt, growthAmt, contrib, dream, isShort) {
   const growthPct = Math.round(growthAmt / Math.max(growthAmt + contrib, 1) * 100);
   const name = dream || "היעד";
-  if (pmt === 0) return `עם החיסכון הקיים שלך תגיעי ל<strong>${name}</strong> תוך ${years} שנים — <strong>בלי להוסיף אפילו שקל!</strong>`;
+  if (pmt === 0) return `עם החיסכון הקיים שלך תגיעי ל<strong>${name}</strong> תוך <bdi>${years}</bdi> שנים — <strong>בלי להוסיף אפילו שקל!</strong>`;
   if (isShort) {
-    return `בטווח קצר, <strong>הריבית דריבית עדיין לא מספיקה לפעול</strong>. ${Math.round(growthPct)}% בלבד מהסכום הסופי יגיע מרווחים — רוב הדרך תגיעי מהפקדות שלך.`;
+    return `בטווח קצר, <strong>הריבית דריבית עדיין לא מספיקה לפעול</strong>. <bdi>${Math.round(growthPct)}%</bdi> בלבד מהסכום הסופי יגיע מרווחים — רוב הדרך תגיעי מהפקדות שלך.`;
   }
-  // טווח ארוך — הדגשת ריבית דריבית
-  if (years >= 25) return `<strong>${growthPct}% מהסכום הסופי</strong> יגיע מהשוק — לא ממך. זו כוחה של ריבית דריבית: הכסף שלך מרוויח על הרווחים של עצמו, שנה אחרי שנה.`;
-  if (years >= 15) return `<strong>${growthPct}% מהסכום הסופי</strong> יגיע מרווחי השוק. ריבית דריבית היא הסיבה שכל שנת השקעה מוסיפה יותר מהקודמת — הזמן הוא הנכס הכי יקר שיש.`;
-  if (years >= 10) return `עם ${years} שנות השקעה, <strong>${growthPct}% מהסכום יגיע מהשוק</strong>. ככל שממשיכים — ריבית דריבית עובדת חזק יותר.`;
-  if (pmt < 800)   return `פחות מ-800 ₪ לחודש יכולים להגשים את <strong>${name}</strong>. <strong>הצעד הראשון הוא הכי חשוב.</strong>`;
-  return `<strong>${growthPct}% מהסכום הסופי</strong> יגיע מרווחי השוק. ככל שתתחילי מוקדם יותר — כך ריבית דריבית עובדת בשבילך יותר.`;
+  if (years >= 25) return `<strong><bdi>${growthPct}%</bdi> מהסכום הסופי</strong> יגיע מהשוק — לא ממך. זו כוחה של ריבית דריבית: הכסף שלך מרוויח על הרווחים של עצמו, שנה אחרי שנה.`;
+  if (years >= 15) return `<strong><bdi>${growthPct}%</bdi> מהסכום הסופי</strong> יגיע מרווחי השוק. ריבית דריבית היא הסיבה שכל שנת השקעה מוסיפה יותר מהקודמת — הזמן הוא הנכס הכי יקר שיש.`;
+  if (years >= 10) return `עם <bdi>${years}</bdi> שנות השקעה, <strong><bdi>${growthPct}%</bdi> מהסכום יגיע מהשוק</strong>. ככל שממשיכים — ריבית דריבית עובדת חזק יותר.`;
+  if (pmt < 800)   return `פחות מ-<bdi>800 ₪</bdi> לחודש יכולים להגשים את <strong>${name}</strong>. <strong>הצעד הראשון הוא הכי חשוב.</strong>`;
+  return `<strong><bdi>${growthPct}%</bdi> מהסכום הסופי</strong> יגיע מרווחי השוק. ככל שתתחילי מוקדם יותר — כך ריבית דריבית עובדת בשבילך יותר.`;
 }
 
 function calc() {
@@ -405,8 +413,8 @@ function calc() {
   show("warningBox", isShort);
 
   // עדכן תווית ריבית
-  document.getElementById("rateLabel").textContent =
-    isShort ? "רווחי חיסכון (2.5% שנתי)" : "רווחי שוק (7% שנתי)";
+  document.getElementById("rateLabel").innerHTML =
+    isShort ? "רווחי חיסכון (<bdi>2.5%</bdi> שנתי)" : "רווחי שוק (<bdi>7%</bdi> שנתי)";
 
   const fvExisting = existing * Math.pow(1 + R, n);
   const needed = Math.max(0, target - fvExisting);
@@ -423,19 +431,19 @@ function calc() {
   document.getElementById("monthlyAmt").innerHTML =
     fmtFull(pmt) + ' <small>/ חודש</small>';
   document.getElementById("monthlySub").innerHTML =
-    `למשך <strong>${years} שנ${years===1?"ה":"ים"}</strong>` +
+    `למשך <strong><bdi>${years}</bdi> שנ${years===1?"ה":"ים"}</strong>` +
     (dream ? ` להגשמת <strong>${dream}</strong>` : "") +
     ` · יעד: ${fmtFull(target)}` +
     (existing > 0 ? ` · כולל ${fmtFull(existing)} קיימים` : "") +
-    ` · תשואה: ${isShort ? "2.5%" : "7%"}`;
+    ` · תשואה: <bdi>${isShort ? "2.5%" : "7%"}</bdi>`;
 
-  document.getElementById("bkContrib").textContent = fmtShort(totalContrib);
-  document.getElementById("bkGrowth").textContent  = fmtShort(totalGrowth);
-  document.getElementById("bkTotal").textContent   = fmtShort(target);
+  document.getElementById("bkContrib").innerHTML = fmtShort(totalContrib);
+  document.getElementById("bkGrowth").innerHTML  = fmtShort(totalGrowth);
+  document.getElementById("bkTotal").innerHTML   = fmtShort(target);
 
   document.getElementById("barSavings").style.width = savPct.toFixed(1) + "%";
   document.getElementById("barGrowth").style.width  = grwPct.toFixed(1) + "%";
-  document.getElementById("barPctLabel").textContent = Math.round(grwPct) + "% רווחים";
+  document.getElementById("barPctLabel").innerHTML = `<bdi>${Math.round(grwPct)}%</bdi> רווחים`;
 
   document.getElementById("insight").innerHTML = insightText(years, pmt, totalGrowth, totalContrib, dream, isShort);
   show("insight", true);
