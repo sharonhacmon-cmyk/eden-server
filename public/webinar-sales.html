@@ -251,7 +251,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    transform-origin: top center;
+    transform-origin: center center;
     flex-shrink: 0;
   }
 
@@ -2078,10 +2078,11 @@ document.addEventListener('fullscreenchange', () => {
   function scaleInners() {
     const navH = document.querySelector('.nav').offsetHeight;
     const headerH = document.querySelector('.header').offsetHeight;
-    const avail = window.innerHeight - navH - headerH - 8;
+    const slidePaddingV = 40; /* 20px top + 20px bottom */
+    const avail = window.innerHeight - navH - headerH - 8 - slidePaddingV;
     document.querySelectorAll('.slide-inner').forEach(inner => {
       inner.style.transform = 'none';
-      inner.style.transformOrigin = 'top center';
+      inner.style.transformOrigin = 'center center';
       void inner.offsetHeight;
       const used = inner.scrollHeight;
       if (used > avail) {
@@ -2092,6 +2093,7 @@ document.addEventListener('fullscreenchange', () => {
   }
   window.addEventListener('resize', scaleInners);
   window.addEventListener('load', scaleInners);
+  document.fonts.ready.then(scaleInners);
   setTimeout(scaleInners, 100);
   setTimeout(scaleInners, 600);
 
