@@ -1220,7 +1220,7 @@ function secTableHTML(secKey, title){
   };
   const rows = items.map(s=>`<tr>
     <td><strong>${s.n}</strong><br><span style="font-size:10px;color:#999">${s.note}</span></td>
-    <td>${s.num && s.num !== '—' ? `<a href="https://maya.tase.co.il/funds/mutual/${s.num}" target="_blank" style="font-family:monospace;font-size:12px;color:#085041;text-decoration:none;border-bottom:1px dotted #085041">${s.num} ↗</a>` : '<span style="color:#bbb;font-size:12px">—</span>'}</td>
+    <td>${s.num && s.num !== '—' ? `<a href="https://www.bizportal.co.il/capitalmarket/quote/etf/${s.num}" target="_blank" style="font-family:monospace;font-size:12px;color:#085041;text-decoration:none;border-bottom:1px dotted #085041">${s.num} ↗</a>` : '<span style="color:#bbb;font-size:12px">—</span>'}</td>
     <td><strong style="color:var(--g1)">${s.fee}</strong></td>
     <td>${tagEl(s.risk)}</td>
     <td style="font-weight:700;color:${retColor(s.r1||'0')};font-size:12px">${s.r1||'—'}</td>
@@ -1237,7 +1237,7 @@ function secTableHTML(secKey, title){
     </div>
     <div style="font-size:10px;color:#aaa;padding:6px 4px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px">
       <span>⚠️ תשואות עבר אינן ערובה לעתיד | נתוני תשואה נכון לסוף 2025, לצורך הדגמה בלבד | לחצי על מספר הנייר לנתונים עדכניים במאיה</span>
-      <a href="https://www.funder.co.il" target="_blank" style="color:#085041;font-weight:700;font-size:10px;text-decoration:underline;flex-shrink:0">דוגמאות נוספות ← funder.co.il</a>
+      <a href="https://www.bizportal.co.il" target="_blank" style="color:#085041;font-weight:700;font-size:10px;text-decoration:underline;flex-shrink:0">דוגמאות נוספות ← bizportal.co.il</a>
     </div>
   </div>`;
 }
@@ -2283,7 +2283,7 @@ async function handleCompareChoice(reply){
             <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">
               ${['S&P 500 מנוטרל','S&P 500 חשוף למטבע','MSCI World','נאסד"ק','ת"א 125'].map(n=>`<span style="background:white;border:1px solid #1D9E75;color:#085041;padding:3px 10px;border-radius:14px;font-size:11px;font-weight:700">${n}</span>`).join('')}
             </div>
-            <div style="font-size:11px;color:#666;background:#fff8e1;border-radius:8px;padding:8px 10px">⚠️ אלו דוגמאות בלבד — לא המלצה לרכישה.<br>לדוגמאות נוספות ונתונים על קרנות: <a href="https://www.funder.co.il" target="_blank" style="color:#085041;font-weight:700;text-decoration:underline">funder.co.il ←</a></div>
+            <div style="font-size:11px;color:#666;background:#fff8e1;border-radius:8px;padding:8px 10px">⚠️ אלו דוגמאות בלבד — לא המלצה לרכישה.<br>לדוגמאות נוספות ונתונים על קרנות: <a href="https://www.bizportal.co.il" target="_blank" style="color:#085041;font-weight:700;text-decoration:underline">bizportal.co.il ←</a></div>
           </div>
         </div>
       </div>`;
