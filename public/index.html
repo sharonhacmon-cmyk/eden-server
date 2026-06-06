@@ -1207,6 +1207,10 @@ function portfolioCardHTML(profile){
 
 function secTableHTML(secKey, title){
   const items = SECS[secKey] || [];
+  const isMutualFund = ['cash','bonds'].includes(secKey);
+  const bizUrl = num => isMutualFund
+    ? `https://www.bizportal.co.il/mutualfunds/quote/generalview/${num}`
+    : `https://www.bizportal.co.il/capitalmarket/quote/etf/${num}`;
   const tagEl = r => r==='low'?'<span class="tag tag-low">נמוך</span>':
                      r==='mid'?'<span class="tag tag-mid">בינוני</span>':
                      r==='high'?'<span class="tag tag-high">גבוה</span>':
@@ -1220,7 +1224,7 @@ function secTableHTML(secKey, title){
   };
   const rows = items.map(s=>`<tr>
     <td><strong>${s.n}</strong><br><span style="font-size:10px;color:#999">${s.note}</span></td>
-    <td>${s.num && s.num !== '—' ? `<a href="https://www.bizportal.co.il/capitalmarket/quote/etf/${s.num}" target="_blank" style="font-family:monospace;font-size:12px;color:#085041;text-decoration:none;border-bottom:1px dotted #085041">${s.num} ↗</a>` : '<span style="color:#bbb;font-size:12px">—</span>'}</td>
+    <td>${s.num && s.num !== '—' ? `<a href="${bizUrl(s.num)}" target="_blank" style="font-family:monospace;font-size:12px;color:#085041;text-decoration:none;border-bottom:1px dotted #085041">${s.num} ↗</a>` : '<span style="color:#bbb;font-size:12px">—</span>'}</td>
     <td>${tagEl(s.risk)}</td>
   </tr>`).join('');
   return `<div class="sec-card">
