@@ -593,11 +593,12 @@ const SECS = {
     {n:'iShares NASDAQ 100 (אירית)',     num:'1159243', fee:'0.33%',  risk:'high', note:'נאסד"ק 100 — ותיקה ומוכרת, חשיפה דולר',  r1:'25%', r3:'35%', r5:'149%'},
   ],
   etf_il:[
-    {n:'קרן סל ת"א 35',   num:'—', fee:'0.10%', risk:'mid',  note:'35 מניות הבכורה — ת"א 35 (2025: +69.2%)',  r1:'69%', r3:'23%', r5:'39%'},
-    {n:'קרן סל ת"א 125',  num:'—', fee:'0.12%', risk:'mid',  note:'מדד רחב — 125 חברות (2025: +64.6%)',       r1:'65%', r3:'20%', r5:'47%'},
-    {n:'קרן סל ת"א 90',   num:'—', fee:'0.15%', risk:'mid',  note:'חברות בינוניות — 90 חברות',               r1:'45%', r3:'18%', r5:'38%'},
-    {n:'קרן סל ת"א-רחב',  num:'—', fee:'0.10%', risk:'mid',  note:'כל שוק ישראל — פיזור מקסימלי',            r1:'60%', r3:'19%', r5:'42%'},
-    {n:'Invesco FTSE All-World (אירית)', num:'1209220', fee:'0.15%', risk:'mid', note:'פיזור עולמי רחב — 3,700+ חברות', r1:'17%', r3:'21%', r5:'62%'},
+    {n:'הראל ת"א 35 (לדוגמא)',       num:'5130661', fee:'0.02%', risk:'mid',  note:'35 מניות הבכורה — ת"א 35 (2025: +69.2%) | לחצי ↗ לנתונים עדכניים',  r1:'69%', r3:'23%', r5:'39%'},
+    {n:'קסם ת"א 125',  num:'1146356', fee:'—', risk:'mid', note:'מדד רחב — 125 חברות (2025: +64.6%) | לחצי ↗ לנתונים עדכניים', r1:'65%', r3:'20%', r5:'47%'},
+    {n:'קסם ת"א 125',  num:'1155324', fee:'—', risk:'mid', note:'מדד רחב — 125 חברות | לחצי ↗ לנתונים עדכניים',               r1:'65%', r3:'20%', r5:'47%'},
+    {n:'קסם ת"א 125',  num:'1148899', fee:'—', risk:'mid', note:'מדד רחב — 125 חברות | לחצי ↗ לנתונים עדכניים',               r1:'65%', r3:'20%', r5:'47%'},
+    {n:'קסם ת"א 125',  num:'1143718', fee:'—', risk:'mid', note:'מדד רחב — 125 חברות | לחצי ↗ לנתונים עדכניים',               r1:'65%', r3:'20%', r5:'47%'},
+    {n:'Invesco FTSE All-World (אירית)', num:'1209220', fee:'0.15%', risk:'mid', note:'פיזור עולמי רחב — 3,700+ חברות | לחצי ↗ לנתונים עדכניים', r1:'17%', r3:'21%', r5:'62%'},
   ],
 };
 
@@ -1219,7 +1220,7 @@ function secTableHTML(secKey, title){
   };
   const rows = items.map(s=>`<tr>
     <td><strong>${s.n}</strong><br><span style="font-size:10px;color:#999">${s.note}</span></td>
-    <td><code>${s.num}</code></td>
+    <td>${s.num && s.num !== '—' ? `<a href="https://maya.tase.co.il/funds/mutual/${s.num}" target="_blank" style="font-family:monospace;font-size:12px;color:#085041;text-decoration:none;border-bottom:1px dotted #085041">${s.num} ↗</a>` : '<span style="color:#bbb;font-size:12px">—</span>'}</td>
     <td><strong style="color:var(--g1)">${s.fee}</strong></td>
     <td>${tagEl(s.risk)}</td>
     <td style="font-weight:700;color:${retColor(s.r1||'0')};font-size:12px">${s.r1||'—'}</td>
@@ -1235,7 +1236,7 @@ function secTableHTML(secKey, title){
     </table>
     </div>
     <div style="font-size:10px;color:#aaa;padding:6px 4px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px">
-      <span>⚠️ תשואות עבר אינן ערובה לעתיד | נתונים לצורך הדגמה בלבד</span>
+      <span>⚠️ תשואות עבר אינן ערובה לעתיד | נתוני תשואה נכון לסוף 2025, לצורך הדגמה בלבד | לחצי על מספר הנייר לנתונים עדכניים במאיה</span>
       <a href="https://www.funder.co.il" target="_blank" style="color:#085041;font-weight:700;font-size:10px;text-decoration:underline;flex-shrink:0">דוגמאות נוספות ← funder.co.il</a>
     </div>
   </div>`;
