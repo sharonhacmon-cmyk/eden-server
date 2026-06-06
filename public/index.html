@@ -3277,16 +3277,13 @@ async function sendUser(text){
     }, 1000);
   } else if (stage === 'portfolio' || stage === 'securities') {
     setTimeout(()=>{
-      delay(()=>{
-        addMsg('בואי נמשיך עם התיק שלך 💚');
-        setTimeout(()=>addQRs([
-          'הסבירי על כל מרכיב',
-          'תני לי ניירות ספציפיים 📋',
-          'ללמוד עוד על נושא 📚',
-          'רוצה לשנות משהו בתיק',
-        ], handlePortfolioChoice), 400);
-      }, 500);
-    }, 1000);
+      addQRs([
+        'הסבירי על כל מרכיב',
+        'תני לי ניירות ספציפיים 📋',
+        'ללמוד עוד על נושא 📚',
+        'רוצה לשנות משהו בתיק',
+      ], handlePortfolioChoice);
+    }, 800);
   } else if (stage === 'compare' || stage === 'pre_compare') {
     setTimeout(()=>{
       delay(()=>{
