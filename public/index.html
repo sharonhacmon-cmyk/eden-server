@@ -1221,22 +1221,18 @@ function secTableHTML(secKey, title){
   const rows = items.map(s=>`<tr>
     <td><strong>${s.n}</strong><br><span style="font-size:10px;color:#999">${s.note}</span></td>
     <td>${s.num && s.num !== '—' ? `<a href="https://www.bizportal.co.il/capitalmarket/quote/etf/${s.num}" target="_blank" style="font-family:monospace;font-size:12px;color:#085041;text-decoration:none;border-bottom:1px dotted #085041">${s.num} ↗</a>` : '<span style="color:#bbb;font-size:12px">—</span>'}</td>
-    <td><strong style="color:var(--g1)">${s.fee}</strong></td>
     <td>${tagEl(s.risk)}</td>
-    <td style="font-weight:700;color:${retColor(s.r1||'0')};font-size:12px">${s.r1||'—'}</td>
-    <td style="font-weight:600;color:${retColor(s.r3||'0')};font-size:12px">${s.r3||'—'}</td>
-    <td style="font-weight:600;color:${retColor(s.r5||'0')};font-size:12px">${s.r5||'—'}</td>
   </tr>`).join('');
   return `<div class="sec-card">
     <div class="sec-title">${title}</div>
     <div class="sec-card-scroll">
-    <table class="sec-table" style="min-width:480px">
-      <thead><tr><th>קרן</th><th>מס' נייר</th><th>דמי ניהול</th><th>סיכון</th><th>שנה</th><th>3 שנים</th><th>5 שנים</th></tr></thead>
+    <table class="sec-table" style="min-width:320px">
+      <thead><tr><th>קרן</th><th>מס' נייר</th><th>סיכון</th></tr></thead>
       <tbody>${rows}</tbody>
     </table>
     </div>
     <div style="font-size:10px;color:#aaa;padding:6px 4px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px">
-      <span>⚠️ תשואות עבר אינן ערובה לעתיד | נתוני תשואה נכון לסוף 2025, לצורך הדגמה בלבד | לחצי על מספר הנייר לנתונים עדכניים במאיה</span>
+      <span>⚠️ אלו דוגמאות בלבד — לא המלצה לרכישה | לחצי על מספר הנייר לנתונים עדכניים בביזפורטל</span>
       <a href="https://www.bizportal.co.il" target="_blank" style="color:#085041;font-weight:700;font-size:10px;text-decoration:underline;flex-shrink:0">דוגמאות נוספות ← bizportal.co.il</a>
     </div>
   </div>`;
