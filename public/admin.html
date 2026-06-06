@@ -146,6 +146,18 @@ body{font-family:'Heebo',sans-serif;background:#f5f5f0;color:#1a1a18;direction:r
       <div id="users-list"><div class="empty">טוענת...</div></div>
     </div>
 
+    <!-- כרטיס עדכון קרנות -->
+    <div class="add-card" style="margin-top:28px;">
+      <h2>📊 עדכון נתוני קרנות</h2>
+      <div style="font-size:13px;color:#555;margin-bottom:16px;">
+        עדכון אחרון: <strong id="funds-last-updated">טוען...</strong>
+      </div>
+      <button class="btn-add" id="btn-update-funds" onclick="updateFunds()" style="background:linear-gradient(135deg,#085041,#1D9E75);">
+        🔄 עדכן נתוני תשואה עכשיו
+      </button>
+      <div class="msg" id="funds-msg" style="margin-top:12px;font-size:13px;white-space:pre-wrap;max-height:120px;overflow-y:auto;"></div>
+    </div>
+
   </div>
 </div>
 
@@ -167,8 +179,42 @@ async function loadUsers(){
     document.getElementById('login-screen').style.display='none';
     document.getElementById('main-screen').style.display='block';
     renderUsers(users);
+    loadFundsStatus();
   } catch(e){
     document.getElementById('login-err').textContent='שגיאת חיבור';
+  }
+}
+
+async function loadFundsStatus(){
+  try {
+    const res = await fetch('/admin/funds-status', { headers:{'x-admin-password': adminPassword} });
+    const data = await res.json();
+    document.getElementById('funds-last-updated').textContent = data.last_updated || 'לא ידוע';
+  } catch(e){}
+}
+
+async function updateFunds(){
+  const btn = document.getElementById('btn-update-funds');
+  const msg = document.getElementById('funds-msg');
+  btn.disabled = true;
+  btn.textContent = '⏳ מעדכן... (עשוי לקחת כמה דקות)';
+  msg.className = 'msg';
+  msg.textContent = '';
+  try {
+    const res = await fetch('/admin/update-funds', {
+      method: 'POST',
+      headers: { 'x-admin-password': adminPassword }
+    });
+    const data = await res.json();
+    msg.className = 'msg ' + (data.ok ? 'ok' : 'err');
+    msg.textContent = data.ok ? '✅ עודכן בהצלחה!\n' + data.message : '❌ שגיאה:\n' + data.message;
+    if (data.ok) loadFundsStatus();
+  } catch(e){
+    msg.className = 'msg err';
+    msg.textContent = 'שגיאת חיבור';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🔄 עדכן נתוני תשואה עכשיו';
   }
 }
 

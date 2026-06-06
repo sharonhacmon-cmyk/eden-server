@@ -3,6 +3,7 @@ const cors    = require('cors');
 const Anthropic = require('@anthropic-ai/sdk');
 const fs = require('fs');
 const path = require('path');
+const { spawn } = require('child_process');
 
 
 const app = express();
@@ -107,6 +108,42 @@ app.delete('/admin/users/:code', adminAuth, (req, res) => {
   const list = loadPasswords().filter(p => p.code.toUpperCase() !== req.params.code.toUpperCase());
   savePasswords(list);
   res.json({ ok: true });
+});
+
+// ── עדכון קרנות ───────────────────────────────────
+let fundsUpdateRunning = false;
+
+app.post('/admin/update-funds', adminAuth, (req, res) => {
+  if (fundsUpdateRunning) {
+    return res.json({ ok: false, message: 'עדכון כבר רץ, המתיני...' });
+  }
+  fundsUpdateRunning = true;
+  const script = path.join(__dirname, 'fetch_funds.py');
+  const proc = spawn('python', [script], { cwd: __dirname });
+
+  let output = '';
+  proc.stdout.on('data', d => { output += d.toString(); });
+  proc.stderr.on('data', d => { output += d.toString(); });
+
+  proc.on('close', code => {
+    fundsUpdateRunning = false;
+    res.json({ ok: code === 0, message: output.slice(-500) });
+  });
+
+  proc.on('error', err => {
+    fundsUpdateRunning = false;
+    res.json({ ok: false, message: err.message });
+  });
+});
+
+app.get('/admin/funds-status', adminAuth, (req, res) => {
+  const file = path.join(__dirname, 'public', 'eden_funds.json');
+  try {
+    const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+    res.json({ ok: true, last_updated: data.last_updated, running: fundsUpdateRunning });
+  } catch {
+    res.json({ ok: false, last_updated: null, running: fundsUpdateRunning });
+  }
 });
 
 // ── בריאות ────────────────────────────────────────
