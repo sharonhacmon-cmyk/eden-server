@@ -731,7 +731,10 @@
       <div class="logo-sub">ידע פיננסי שייך לכל אישה</div>
     </div>
   </div>
-  <button onclick="toggleFS()" title="מסך מלא" style="background:rgba(201,162,39,0.2);border:1px solid var(--gold);color:#fff;font-size:18px;padding:6px 12px;border-radius:8px;cursor:pointer;" id="fs-btn">⛶</button>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <button onclick="toggleMusic()" title="מוזיקה" style="background:rgba(201,162,39,0.2);border:1px solid var(--gold);color:#fff;font-size:18px;padding:6px 12px;border-radius:8px;cursor:pointer;" id="music-btn">🎵</button>
+    <button onclick="toggleFS()" title="מסך מלא" style="background:rgba(201,162,39,0.2);border:1px solid var(--gold);color:#fff;font-size:18px;padding:6px 12px;border-radius:8px;cursor:pointer;" id="fs-btn">⛶</button>
+  </div>
 </div>
 <script>
 function toggleFS(){
@@ -2093,6 +2096,19 @@ document.addEventListener('fullscreenchange', () => {
     if (n === TIMER_IDX) startTimer();
     else if (n !== TIMER_IDX) { clearInterval(timerInterval); }
   }
+
+  // פאוז / פלי ידני
+  function toggleMusic() {
+    const btn = document.getElementById('music-btn');
+    if (music.paused) {
+      music.play().catch(()=>{});
+      btn.textContent = '🎵';
+    } else {
+      music.pause();
+      btn.textContent = '🔇';
+    }
+  }
+  window.toggleMusic = toggleMusic;
 
   // הפעל מוזיקה בלחיצה ראשונה (דרישת דפדפן)
   document.body.addEventListener('click', function startOnClick() {
