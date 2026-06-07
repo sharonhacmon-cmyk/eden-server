@@ -101,7 +101,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 20px 48px;
+    padding: 20px 48px 80px;
     text-align: center;
     opacity: 0;
     pointer-events: none;
@@ -2050,15 +2050,18 @@ document.addEventListener('fullscreenchange', () => {
   const WELCOME_IDX = Array.from(slides).findIndex(s => s.id === 's-welcome');
 
   function updateMusic(n) {
-    if (n === LOGO_IDX) {
-      music.volume = 0.7;
-      music.play().catch(()=>{});
-    } else if (n === TIMER_IDX) {
-      music.volume = 0.25;
-      music.play().catch(()=>{});
+    const btn = document.getElementById('music-btn');
+    const fsBtn = document.getElementById('fs-btn');
+    if (n === LOGO_IDX || n === TIMER_IDX) {
+      if (n === LOGO_IDX) { music.volume = 0.7; music.play().catch(()=>{}); }
+      if (n === TIMER_IDX) { music.volume = 0.25; music.play().catch(()=>{}); }
+      btn.style.display = '';
+      fsBtn.style.display = 'none';
     } else if (n >= WELCOME_IDX) {
       music.pause();
       music.currentTime = 0;
+      btn.style.display = 'none';
+      fsBtn.style.display = '';
     }
   }
 
@@ -2181,7 +2184,7 @@ document.addEventListener('fullscreenchange', () => {
   function scaleInners() {
     const navH = document.querySelector('.nav').offsetHeight;
     const headerH = document.querySelector('.header').offsetHeight;
-    const slidePaddingV = 40; /* 20px top + 20px bottom */
+    const slidePaddingV = 100; /* 20px top + 80px bottom */
     const avail = window.innerHeight - navH - headerH - 8 - slidePaddingV;
     document.querySelectorAll('.slide-inner').forEach(inner => {
       inner.style.transform = 'none';
