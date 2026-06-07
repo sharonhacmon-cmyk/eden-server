@@ -722,6 +722,59 @@
 </head>
 <body>
 
+<!-- ── INTRO ROAR ── -->
+<div id="roar-overlay" style="
+  position:fixed;inset:0;background:#000;z-index:9999;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;
+  cursor:pointer;
+">
+  <img src="laviah-logo.jpeg" id="roar-img" style="
+    width:160px;height:160px;border-radius:50%;object-fit:cover;
+    border:4px solid #EF9F27;
+    box-shadow:0 0 40px rgba(239,159,39,0.5);
+    transition:transform 0.6s cubic-bezier(.17,.67,.35,1.3), opacity 0.6s ease;
+    transform:scale(0.5);opacity:0;
+  ">
+  <div id="roar-text" style="
+    font-family:'Heebo',sans-serif;font-size:28px;font-weight:900;
+    color:#EF9F27;letter-spacing:3px;opacity:0;transition:opacity 0.5s ease;
+  ">לביאה פיננסית</div>
+  <div style="font-size:13px;color:rgba(255,255,255,0.3);margin-top:8px;">לחצי להתחיל</div>
+</div>
+<audio id="roar-sound" src="savanna.mp3" preload="auto"></audio>
+
+<script>
+(function(){
+  const overlay = document.getElementById('roar-overlay');
+  const img = document.getElementById('roar-img');
+  const txt = document.getElementById('roar-text');
+  const snd = document.getElementById('roar-sound');
+
+  // אנימציה אוטומטית בטעינה
+  setTimeout(()=>{
+    img.style.transform = 'scale(1.15)';
+    img.style.opacity = '1';
+    setTimeout(()=>{
+      txt.style.opacity = '1';
+      img.style.transform = 'scale(1)';
+    }, 400);
+  }, 300);
+
+  // לחיצה — מנגן שאגה ועובר למצגת
+  overlay.addEventListener('click', ()=>{
+    snd.currentTime = 0;
+    snd.volume = 1;
+    snd.play().catch(()=>{});
+    img.style.transform = 'scale(1.4)';
+    img.style.opacity = '0';
+    txt.style.opacity = '0';
+    overlay.style.opacity = '0';
+    overlay.style.transition = 'opacity 0.8s ease';
+    setTimeout(()=>{ overlay.style.display='none'; }, 900);
+  });
+})();
+</script>
+
 <!-- ── HEADER ── -->
 <div class="header">
   <div class="header-logo">
