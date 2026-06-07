@@ -761,10 +761,42 @@ document.addEventListener('fullscreenchange', () => {
 
 <div class="dots" id="dots"></div>
 
+<!-- ── מוזיקת רקע ── -->
+<audio id="bg-music" src="savanna.mp3" loop preload="auto"></audio>
+
 <div class="deck" id="deck">
 
+  <!-- ═══════════════════ SLIDE 0: לוגו ═══════════════════ -->
+  <div class="slide active dark-slide" id="s-logo">
+  <div class="slide-inner" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;">
+    <img src="laviah-logo.jpeg" style="width:220px;height:220px;border-radius:50%;object-fit:cover;border:4px solid #EF9F27;box-shadow:0 0 60px rgba(239,159,39,0.4);">
+    <div style="font-size:clamp(32px,5vw,72px);font-weight:900;color:#fff;text-align:center;line-height:1.2;">
+      לביאה <span class="gold">פיננסית</span>
+    </div>
+    <div style="font-size:clamp(16px,2vw,26px);color:rgba(255,255,255,0.6);letter-spacing:2px;">
+      ידע פיננסי שייך לכל אישה
+    </div>
+  </div>
+  </div>
+
+  <!-- ═══════════════════ SLIDE 1: שעון עצר ═══════════════════ -->
+  <div class="slide dark-slide" id="s-timer">
+  <div class="slide-inner" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;">
+    <div style="font-size:clamp(18px,2.2vw,28px);font-weight:700;color:rgba(255,255,255,0.6);letter-spacing:3px;">
+      המשדר מתחיל בעוד
+    </div>
+    <div id="timer-display" style="font-size:clamp(80px,14vw,180px);font-weight:900;color:#EF9F27;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:4px;font-family:'Heebo',monospace;">
+      3:00
+    </div>
+    <div style="font-size:clamp(14px,1.6vw,20px);color:rgba(255,255,255,0.45);letter-spacing:1px;">
+      ☕ קחי משהו לשתות — מיד מתחילות
+    </div>
+    <img src="laviah-logo.jpeg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid rgba(239,159,39,0.4);margin-top:12px;opacity:0.7;">
+  </div>
+  </div>
+
   <!-- ═══════════════════ SLIDE WELCOME ═══════════════════ -->
-  <div class="slide active dark-slide" id="s-welcome">
+  <div class="slide dark-slide" id="s-welcome">
   <div class="slide-inner">
     <div class="tag" style="font-size:13px; letter-spacing:3px;">ברוכות הבאות</div>
     <h1 style="font-size:clamp(32px,5vw,72px); color:#fff; margin-bottom:6px; line-height:1.1;">
@@ -2005,6 +2037,49 @@ document.addEventListener('fullscreenchange', () => {
     dotsEl.appendChild(d);
   });
 
+  // ── מוזיקה ──
+  const music = document.getElementById('bg-music');
+  const LOGO_IDX  = Array.from(slides).findIndex(s => s.id === 's-logo');
+  const TIMER_IDX = Array.from(slides).findIndex(s => s.id === 's-timer');
+  const WELCOME_IDX = Array.from(slides).findIndex(s => s.id === 's-welcome');
+
+  function updateMusic(n) {
+    if (n === LOGO_IDX) {
+      music.volume = 0.7;
+      music.play().catch(()=>{});
+    } else if (n === TIMER_IDX) {
+      music.volume = 0.25;
+      music.play().catch(()=>{});
+    } else if (n >= WELCOME_IDX) {
+      music.pause();
+      music.currentTime = 0;
+    }
+  }
+
+  // ── שעון עצר ──
+  let timerInterval = null;
+  let timerSeconds = 180;
+
+  function startTimer() {
+    clearInterval(timerInterval);
+    timerSeconds = 180;
+    updateTimerDisplay();
+    timerInterval = setInterval(() => {
+      timerSeconds--;
+      updateTimerDisplay();
+      if (timerSeconds <= 0) {
+        clearInterval(timerInterval);
+      }
+    }, 1000);
+  }
+
+  function updateTimerDisplay() {
+    const m = Math.floor(timerSeconds / 60);
+    const s = timerSeconds % 60;
+    document.getElementById('timer-display').textContent =
+      m + ':' + String(s).padStart(2, '0');
+  }
+
   function goTo(n) {
     slides[cur].classList.remove('active');
     dotsEl.children[cur].classList.remove('active');
@@ -2014,7 +2089,16 @@ document.addEventListener('fullscreenchange', () => {
     counter.textContent = (cur + 1) + ' / ' + slides.length;
     document.getElementById('btn-prev').disabled = cur === 0;
     document.getElementById('btn-next').disabled = cur === slides.length - 1;
+    updateMusic(n);
+    if (n === TIMER_IDX) startTimer();
+    else if (n !== TIMER_IDX) { clearInterval(timerInterval); }
   }
+
+  // הפעל מוזיקה בלחיצה ראשונה (דרישת דפדפן)
+  document.body.addEventListener('click', function startOnClick() {
+    if (cur === LOGO_IDX) { music.volume = 0.7; music.play().catch(()=>{}); }
+    document.body.removeEventListener('click', startOnClick);
+  }, { once: true });
 
   function go(d) { if (cur + d >= 0 && cur + d < slides.length) goTo(cur + d); }
   window.go = go;
