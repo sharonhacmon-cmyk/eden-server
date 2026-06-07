@@ -179,6 +179,9 @@ h2 span { color:#EF9F27; }
 </head>
 <body>
 
+<!-- ── מוזיקת רקע ── -->
+<audio id="bg-music" src="../savanna.mp3" loop preload="auto"></audio>
+
 <!-- לוגו -->
 <div class="nativ-logo">
   <div class="logo-name">לביאה פיננסית</div>
@@ -186,10 +189,27 @@ h2 span { color:#EF9F27; }
 </div>
 
 <!-- כפתור מסך מלא -->
+<button id="music-btn" onclick="toggleMusic()" title="מוזיקה" style="position:fixed;top:16px;left:70px;z-index:300;background:rgba(201,162,39,0.2);border:1px solid #EF9F27;color:#fff;font-size:18px;padding:6px 12px;border-radius:8px;cursor:pointer;">🎵</button>
 <button class="fs-btn" onclick="toggleFullscreen()">⛶</button>
 
+<!-- ═══ SLIDE LOGO ═══ -->
+<div class="slide bg-dark active" id="s-logo-intro">
+<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;height:100%;">
+  <img src="../laviah-logo.jpeg" style="width:200px;height:200px;border-radius:50%;object-fit:cover;border:4px solid #EF9F27;box-shadow:0 0 60px rgba(239,159,39,0.4);">
+  <div style="font-size:clamp(32px,5vw,72px);font-weight:900;color:#fff;text-align:center;line-height:1.2;">
+    לביאה <span style="color:#EF9F27;">פיננסית</span>
+  </div>
+  <div style="font-size:clamp(16px,2vw,26px);color:rgba(255,255,255,0.6);letter-spacing:2px;">
+    ידע פיננסי שייך לכל אישה
+  </div>
+  <div style="font-size:clamp(18px,2.4vw,32px);font-weight:700;color:#EF9F27;letter-spacing:1px;margin-top:8px;">
+    ✨ מתחילות עוד מעט...
+  </div>
+</div>
+</div>
+
 <!-- שקף דיסקליימר -->
-<div class="slide bg-dark active" id="s-disclaimer">
+<div class="slide bg-dark" id="s-disclaimer">
   <div class="tag">לפני שמתחילות</div>
   <h2>דיסקליימר <span>חשוב</span></h2>
   <div class="highlight" style="max-width:800px;text-align:right;margin-bottom:20px">
@@ -529,6 +549,7 @@ function prevSlide() {
 function goToSlide(index) {
   currentSlide = index;
   updateUI();
+  updateMusic(index);
 }
 
 function toggleFullscreen() {
@@ -545,6 +566,38 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowLeft') prevSlide();
   if (e.key >= '1' && e.key <= '9') goToSlide(parseInt(e.key) - 1);
 });
+
+// ── מוזיקה ──
+const music = document.getElementById('bg-music');
+const LOGO_IDX = 0;
+const SECOND_IDX = 1;
+
+function updateMusic(n) {
+  if (n === LOGO_IDX) {
+    music.volume = 0.7;
+    music.play().catch(()=>{});
+  } else if (n === SECOND_IDX) {
+    music.pause();
+    music.currentTime = 0;
+  }
+}
+
+function toggleMusic() {
+  const btn = document.getElementById('music-btn');
+  if (music.paused) {
+    music.play().catch(()=>{});
+    btn.textContent = '🎵';
+  } else {
+    music.pause();
+    btn.textContent = '🔇';
+  }
+}
+window.toggleMusic = toggleMusic;
+
+document.body.addEventListener('click', function startOnClick() {
+  if (currentSlide === LOGO_IDX) { music.volume = 0.7; music.play().catch(()=>{}); }
+  document.body.removeEventListener('click', startOnClick);
+}, { once: true });
 
 updateUI();
 </script>
