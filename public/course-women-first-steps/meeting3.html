@@ -573,12 +573,18 @@ const LOGO_IDX = 0;
 const SECOND_IDX = 1;
 
 function updateMusic(n) {
+  const btn = document.getElementById('music-btn');
+  const fsBtn = document.querySelector('.fs-btn');
   if (n === LOGO_IDX) {
     music.volume = 0.7;
     music.play().catch(()=>{});
+    if (btn) btn.style.display = '';
+    if (fsBtn) fsBtn.style.display = 'none';
   } else if (n === SECOND_IDX) {
     music.pause();
     music.currentTime = 0;
+    if (btn) btn.style.display = 'none';
+    if (fsBtn) fsBtn.style.display = '';
   }
 }
 
