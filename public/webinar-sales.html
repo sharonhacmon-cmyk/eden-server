@@ -2211,24 +2211,32 @@ document.addEventListener('fullscreenchange', () => {
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({ orientation: 'landscape', unit: 'px', format: [1280, 720] });
 
-    const origCur = cur;
-    for (let i = 0; i < slides.length; i++) {
-      slides.forEach(s => s.classList.remove('active'));
-      slides[i].classList.add('active');
-      await new Promise(r => setTimeout(r, 150));
+    // דלג על שקפי לוגו ושעון — רק תוכן המצגת
+    const skipIds = ['s-logo', 's-timer'];
+    const exportSlides = Array.from(slides).filter(s => !skipIds.includes(s.id));
 
-      const canvas = await html2canvas(slides[i], {
-        scale: 1.5,
+    const origCur = cur;
+    let first = true;
+    for (let i = 0; i < exportSlides.length; i++) {
+      if (btn) btn.textContent = `⏳ ${i+1}/${exportSlides.length}`;
+      slides.forEach(s => s.classList.remove('active'));
+      exportSlides[i].classList.add('active');
+      await new Promise(r => setTimeout(r, 100));
+
+      const canvas = await html2canvas(exportSlides[i], {
+        scale: 1,
         useCORS: true,
-        backgroundColor: slides[i].classList.contains('dark-slide') ? '#1a1f2e' : '#F8F5F0',
+        allowTaint: true,
+        backgroundColor: exportSlides[i].classList.contains('dark-slide') ? '#1a1f2e' : '#F8F5F0',
         width: 1280,
         height: 720,
         windowWidth: 1280,
         windowHeight: 720
       });
 
-      const imgData = canvas.toDataURL('image/jpeg', 0.92);
-      if (i > 0) pdf.addPage();
+      const imgData = canvas.toDataURL('image/jpeg', 0.85);
+      if (!first) pdf.addPage();
+      first = false;
       pdf.addImage(imgData, 'JPEG', 0, 0, 1280, 720);
     }
 
