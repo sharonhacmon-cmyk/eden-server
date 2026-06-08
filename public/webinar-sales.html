@@ -742,11 +742,15 @@ function toggleFS(){
   if(!document.fullscreenElement){
     document.documentElement.requestFullscreen();
     document.getElementById('fs-btn').textContent='✕';
+    const lb = document.getElementById('logo-fs-btn');
+    if(lb) lb.style.display='none';
     document.querySelector('.nav').classList.add('fs-hidden');
     document.querySelector('.counter').style.display='none';
   } else {
     document.exitFullscreen();
     document.getElementById('fs-btn').textContent='⛶';
+    const lb = document.getElementById('logo-fs-btn');
+    if(lb) lb.style.display='flex';
     document.querySelector('.nav').classList.remove('fs-hidden');
     document.querySelector('.counter').style.display='';
   }
@@ -754,6 +758,8 @@ function toggleFS(){
 document.addEventListener('fullscreenchange', () => {
   if(!document.fullscreenElement){
     document.getElementById('fs-btn').textContent='⛶';
+    const lb = document.getElementById('logo-fs-btn');
+    if(lb) lb.style.display='flex';
     document.querySelector('.nav').classList.remove('fs-hidden');
     document.querySelector('.counter').style.display='';
   }
@@ -783,6 +789,9 @@ document.addEventListener('fullscreenchange', () => {
     <div style="font-size:clamp(18px,2.4vw,32px);font-weight:700;color:var(--gold);letter-spacing:1px;margin-top:8px;">
       ✨ מתחילות עוד מעט...
     </div>
+    <button onclick="toggleFS()" style="margin-top:12px;background:rgba(201,162,39,0.15);border:2px solid var(--gold);color:var(--gold);font-family:inherit;font-size:clamp(14px,1.6vw,18px);font-weight:700;padding:10px 28px;border-radius:30px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .2s;" onmouseover="this.style.background='rgba(201,162,39,0.3)'" onmouseout="this.style.background='rgba(201,162,39,0.15)'" id="logo-fs-btn">
+      ⛶ מסך מלא
+    </button>
   </div>
   </div>
 
