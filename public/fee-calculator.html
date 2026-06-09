@@ -285,7 +285,7 @@
 
 <!-- HEADER -->
 <div class="header">
-  <div class="tag">כלי חישוב חינמי</div>
+  <div class="tag">כלי חישוב</div>
   <h1>החסכון שלך<br><span>דרך דמי הניהול</span></h1>
   <p>הכניסי את הנתונים מדוח קרן הפנסיה שלך וגלי כמה כסף נשאר לך בכיס אם תורידי את דמי הניהול — ומה שווי ההפרש לאורך זמן</p>
 </div>
@@ -423,6 +423,16 @@
           <div class="m-label">שנים עד פרישה</div>
           <div class="m-value" id="m-years">—</div>
           <div class="m-sub" id="m-years-sub">—</div>
+        </div>
+        <div class="m-card green-card">
+          <div class="m-label">הפרש דמי ניהול — שנה ראשונה</div>
+          <div class="m-value" id="m-annual-diff">—</div>
+          <div class="m-sub" id="m-annual-diff-sub">—</div>
+        </div>
+        <div class="m-card gold-card">
+          <div class="m-label">שווי כלכלי של ההפרש השנתי לגיל פרישה (4%)</div>
+          <div class="m-value" id="m-annual-fv">—</div>
+          <div class="m-sub" id="m-annual-fv-sub">—</div>
         </div>
         <div class="m-card green-card">
           <div class="m-label">שווי ההפרש — ממוצע חודשי</div>
@@ -573,6 +583,14 @@
     const monthlyDiff = absDiff / (years * 12);
     const fv          = fvAnnuity(monthlyDiff, FV_RATE, years);
 
+    // Annual fee difference — year 1 snapshot
+    const curFeeYear1 = accum * (curAcc / 100) + contrib * (curPrem / 100);
+    const altFeeYear1 = accum * (altAcc / 100) + contrib * (altPrem / 100);
+    const annualDiff  = Math.abs(curFeeYear1 - altFeeYear1);
+    // FV of that annual saving invested at 4% each year until retirement
+    const r4y = FV_RATE / 100;
+    const annualFV = annualDiff * (Math.pow(1 + r4y, years) - 1) / r4y;
+
     // Scenario cards
     const maxVal = Math.max(finalCur, finalAlt, 1);
     const pctCur = (finalCur / maxVal) * 100;
@@ -621,6 +639,14 @@
     fadeIn(document.getElementById('m-years'), years + ' שנים');
     document.getElementById('m-years-sub').textContent =
       `גיל ${age} ← פרישה בגיל ${retireAge}`;
+
+    fadeIn(document.getElementById('m-annual-diff'), fmt(annualDiff) + '/שנה');
+    document.getElementById('m-annual-diff-sub').textContent =
+      `הפרש בדמי ניהול בשנה הנוכחית (צבירה + פרמיה)`;
+
+    fadeIn(document.getElementById('m-annual-fv'), fmt(annualFV));
+    document.getElementById('m-annual-fv-sub').textContent =
+      `${fmt(annualDiff)}/שנה × ${years} שנים × 4% ריבית דריבית`;
 
     fadeIn(document.getElementById('m-monthly'), fmt(monthlyDiff) + '/חודש');
 
