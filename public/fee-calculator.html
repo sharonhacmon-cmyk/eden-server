@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>החסכון שלך דרך דמי הניהול | לביאות משקיעות</title>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:       #0f1e3d;
+      --card:       #162447;
+      --card2:      #1c2e57;
+      --gold:       #EF9F27;
+      --gold2:      #f5c55a;
+      --gold3:      rgba(239,159,39,0.12);
+      --gold-grad:  linear-gradient(90deg,#EF9F27,#f5c55a);
+      --green:      #4caf50;
+      --green2:     #81c784;
+      --red:        #ef5350;
+      --border:     rgba(255,255,255,0.09);
+      --border-g:   rgba(239,159,39,0.28);
+    }
+
+    body {
+      font-family: 'Heebo', Arial, sans-serif;
+      background: var(--navy);
+      color: #fff;
+      min-height: 100vh;
+      direction: rtl;
+    }
+
+    /* ─── HEADER ─── */
+    .header {
+      background: linear-gradient(160deg,#0c1830 0%,#162447 100%);
+      padding: 52px 24px 44px;
+      text-align: center;
+      border-bottom: 1px solid var(--border-g);
+      position: relative;
+      overflow: hidden;
+    }
+    .header::after {
+      content:'';position:absolute;inset:0;
+      background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(239,159,39,0.07) 0%, transparent 70%);
+      pointer-events:none;
+    }
+    .tag {
+      display:inline-block;
+      background:rgba(239,159,39,0.13);
+      border:1px solid var(--border-g);
+      border-radius:30px;
+      padding:4px 18px;
+      font-size:13px;font-weight:700;
+      color:var(--gold2);
+      margin-bottom:18px;
+    }
+    .header h1 {
+      font-size:clamp(30px,5.5vw,52px);
+      font-weight:900;
+      line-height:1.15;
+      margin-bottom:14px;
+    }
+    .header h1 span {
+      background:var(--gold-grad);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+    .header p {
+      font-size:clamp(14px,2vw,17px);
+      color:rgba(255,255,255,0.55);
+      max-width:580px;margin:0 auto;line-height:1.65;
+    }
+
+    /* ─── CONTAINER ─── */
+    .container { max-width:880px;margin:0 auto;padding:32px 20px 72px; }
+
+    /* ─── CARD ─── */
+    .card {
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:22px;
+      padding:28px 28px 24px;
+      margin-bottom:18px;
+    }
+    .card-title {
+      font-size:16px;font-weight:800;color:var(--gold2);
+      margin-bottom:22px;
+      display:flex;align-items:center;gap:9px;
+    }
+    .card-title::before {
+      content:'';display:inline-block;
+      width:4px;height:18px;
+      background:var(--gold-grad);border-radius:3px;flex-shrink:0;
+    }
+
+    /* ─── FORM ─── */
+    .grid-2 { display:grid;grid-template-columns:1fr 1fr;gap:16px; }
+    .grid-3 { display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px; }
+    .form-group { display:flex;flex-direction:column;gap:7px; }
+    .form-group label { font-size:13px;font-weight:600;color:rgba(255,255,255,0.65); }
+
+    input[type=number] {
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.14);
+      border-radius:11px;
+      padding:12px 16px;
+      font-size:16px;font-family:'Heebo',Arial,sans-serif;font-weight:700;
+      color:#fff;width:100%;
+      direction:ltr;text-align:right;
+      transition:border-color .2s,background .2s;
+      -moz-appearance:textfield;
+    }
+    input[type=number]::-webkit-inner-spin-button { -webkit-appearance:none; }
+    input[type=number]:focus { outline:none;border-color:var(--gold);background:rgba(239,159,39,0.06); }
+    input[type=number]::placeholder { color:rgba(255,255,255,0.25);font-weight:400; }
+
+    /* toggle annual/monthly */
+    .toggle-wrap { display:flex;align-items:center;justify-content:space-between;margin-bottom:7px; }
+    .toggle-group {
+      display:flex;background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.12);border-radius:9px;overflow:hidden;
+    }
+    .toggle-btn {
+      flex:1;padding:8px 16px;font-size:13px;font-weight:700;
+      font-family:'Heebo',Arial,sans-serif;background:none;border:none;
+      color:rgba(255,255,255,0.45);cursor:pointer;transition:all .2s;
+    }
+    .toggle-btn.active { background:var(--gold-grad);color:var(--navy); }
+
+    /* retire age buttons */
+    .retire-row { display:flex;gap:10px; }
+    .retire-btn {
+      flex:1;padding:13px 8px;font-size:20px;font-weight:900;
+      font-family:'Heebo',Arial,sans-serif;
+      background:rgba(255,255,255,0.05);
+      border:2px solid rgba(255,255,255,0.1);
+      border-radius:13px;color:rgba(255,255,255,0.5);
+      cursor:pointer;text-align:center;transition:all .2s;
+    }
+    .retire-btn small { display:block;font-size:11px;font-weight:500;margin-top:2px; }
+    .retire-btn.active {
+      background:rgba(239,159,39,0.12);
+      border-color:var(--gold);color:var(--gold2);
+    }
+
+    /* ─── FEE COLUMNS ─── */
+    .fee-cols { display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px; }
+    .fee-col {
+      border-radius:16px;padding:20px;
+    }
+    .fee-col.cur { background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12); }
+    .fee-col.alt { background:rgba(239,159,39,0.05);border:1px solid rgba(239,159,39,0.22); }
+    .fee-col-title {
+      font-size:14px;font-weight:800;margin-bottom:16px;
+      display:flex;align-items:center;gap:8px;
+    }
+    .fee-col.cur .fee-col-title { color:rgba(255,255,255,0.7); }
+    .fee-col.alt .fee-col-title { color:var(--gold2); }
+    .dot { width:8px;height:8px;border-radius:50%;flex-shrink:0; }
+    .fee-col.cur .dot { background:rgba(255,255,255,0.35); }
+    .fee-col.alt .dot { background:var(--gold); }
+    .fee-row-item { display:flex;flex-direction:column;gap:5px;margin-bottom:12px; }
+    .fee-row-item:last-child { margin-bottom:0; }
+    .fee-row-item label { font-size:12px;color:rgba(255,255,255,0.45); }
+    .fee-input-row { display:flex;align-items:center;gap:7px; }
+    .fee-input-row input {
+      flex:1;padding:10px 12px;font-size:16px;font-weight:700;
+      text-align:center;direction:ltr;border-radius:9px;
+    }
+    .fee-col.alt .fee-input-row input { border-color:rgba(239,159,39,0.22);background:rgba(239,159,39,0.04); }
+    .pct { font-size:15px;font-weight:700;color:rgba(255,255,255,0.35); }
+
+    .fee-hint {
+      background:rgba(239,159,39,0.06);border-radius:10px;
+      padding:10px 14px;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.65;
+    }
+    .fee-hint strong { color:rgba(255,255,255,0.75); }
+
+    /* ─── CALC BUTTON ─── */
+    .calc-btn {
+      width:100%;padding:20px;
+      background:var(--gold-grad);border:none;border-radius:14px;
+      font-size:20px;font-weight:900;font-family:'Heebo',Arial,sans-serif;
+      color:var(--navy);cursor:pointer;
+      transition:opacity .2s,transform .1s;
+      margin-bottom:28px;letter-spacing:.5px;
+      box-shadow:0 4px 24px rgba(239,159,39,0.25);
+    }
+    .calc-btn:hover { opacity:.9;transform:translateY(-1px); }
+    .calc-btn:active { transform:translateY(0); }
+
+    /* ─── RESULTS ─── */
+    #results { display:none; }
+    #results.show { display:block; }
+
+    .scenario-grid { display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px; }
+    .sc-card {
+      border-radius:18px;padding:22px 18px 18px;
+      transition:all .3s;
+      display:flex;flex-direction:column;align-items:center;text-align:center;
+    }
+    .sc-card.neutral { background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1); }
+    .sc-card.winner { background:rgba(76,175,80,0.08);border:2px solid rgba(76,175,80,0.4); }
+    .sc-card.loser  { background:rgba(255,255,255,0.03);border:1.5px solid rgba(255,255,255,0.08); }
+    .sc-label { font-size:12px;font-weight:700;color:rgba(255,255,255,0.45);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px; }
+    .sc-value { font-size:clamp(22px,3.5vw,34px);font-weight:900;margin-bottom:6px; }
+    .sc-card.winner .sc-value { color:var(--green2); }
+    .sc-card.neutral .sc-value, .sc-card.loser .sc-value { color:#fff; }
+    .sc-fees { font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:14px; }
+
+    /* bar */
+    .bar-wrap { width:100%;display:flex;align-items:flex-end;justify-content:center;height:56px; }
+    .bar {
+      width:48px;border-radius:7px 7px 0 0;
+      transition:height .9s cubic-bezier(.16,1,.3,1);min-height:4px;
+    }
+    .bar.cur-bar { background:rgba(255,255,255,0.18); }
+    .bar.alt-bar { background:linear-gradient(180deg,#81c784,#2e7d32); }
+    .sc-card.loser .bar { background:rgba(255,255,255,0.1); }
+
+    /* winner badge */
+    .winner-row { text-align:center;margin:4px 0 16px; }
+    .winner-badge {
+      display:inline-flex;align-items:center;gap:8px;
+      border-radius:30px;padding:8px 20px;
+      font-size:14px;font-weight:800;
+    }
+    .winner-badge.green { background:rgba(76,175,80,0.1);border:1px solid rgba(76,175,80,0.35);color:var(--green2); }
+    .winner-badge.gold  { background:rgba(239,159,39,0.1);border:1px solid rgba(239,159,39,0.35);color:var(--gold2); }
+    .winner-badge.gray  { background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.6); }
+
+    /* metrics */
+    .metrics-grid { display:grid;grid-template-columns:1fr 1fr;gap:13px; }
+    .m-card {
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.09);
+      border-radius:15px;padding:16px 18px;
+    }
+    .m-card.gold-card { background:rgba(239,159,39,0.07);border-color:rgba(239,159,39,0.28); }
+    .m-card.green-card { background:rgba(76,175,80,0.07);border-color:rgba(76,175,80,0.28); }
+    .m-label { font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:7px;line-height:1.45; }
+    .m-value { font-size:clamp(19px,2.8vw,28px);font-weight:900; }
+    .m-card.gold-card .m-value { color:var(--gold2); }
+    .m-card.green-card .m-value { color:var(--green2); }
+    .m-card:not(.gold-card):not(.green-card) .m-value { color:#fff; }
+    .m-sub { font-size:11px;color:rgba(255,255,255,0.35);margin-top:4px;line-height:1.5; }
+
+    /* ─── EXPLANATION ─── */
+    .exp-card {
+      background:rgba(255,255,255,0.025);
+      border:1px solid rgba(255,255,255,0.07);
+      border-radius:18px;padding:26px 28px;margin-top:18px;
+    }
+    .exp-title { font-size:15px;font-weight:800;color:rgba(255,255,255,0.75);margin-bottom:18px;display:flex;align-items:center;gap:9px; }
+    .exp-title span { font-size:20px; }
+    .exp-steps { display:flex;flex-direction:column;gap:12px; }
+    .exp-step { display:flex;gap:13px;align-items:flex-start; }
+    .exp-n {
+      width:24px;height:24px;border-radius:50%;flex-shrink:0;
+      background:rgba(239,159,39,0.14);border:1px solid rgba(239,159,39,0.3);
+      display:flex;align-items:center;justify-content:center;
+      font-size:11px;font-weight:800;color:var(--gold2);margin-top:1px;
+    }
+    .exp-text { font-size:13px;color:rgba(255,255,255,0.55);line-height:1.65; }
+    .exp-text strong { color:rgba(255,255,255,0.85); }
+
+    .divider { height:1px;background:var(--border);margin:18px 0; }
+
+    .footer-note {
+      text-align:center;font-size:11px;color:rgba(255,255,255,0.25);
+      margin-top:28px;line-height:1.7;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width:580px) {
+      .grid-2 { grid-template-columns:1fr; }
+      .fee-cols { grid-template-columns:1fr; }
+      .scenario-grid { grid-template-columns:1fr; }
+      .metrics-grid { grid-template-columns:1fr; }
+      .card { padding:20px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="tag">כלי חישוב חינמי — לביאות משקיעות</div>
+  <h1>החסכון שלך<br><span>דרך דמי הניהול</span></h1>
+  <p>הכניסי את נתוני הפנסיה שלך וגלי כמה כסף תחסכי לאורך השנים אם תורידי את דמי הניהול</p>
+</div>
+
+<div class="container">
+
+  <!-- ── INPUTS ── -->
+  <div class="card">
+    <div class="card-title">פרטי הפנסיה שלך</div>
+
+    <div class="grid-2" style="margin-bottom:18px;">
+      <div class="form-group">
+        <label>גיל נוכחי</label>
+        <input type="number" id="age" value="35" min="18" max="66" placeholder="35">
+      </div>
+      <div class="form-group">
+        <label>גיל פרישה</label>
+        <div class="retire-row">
+          <button class="retire-btn" data-age="60" onclick="selectRetire(60)">60<small>מוקדמת</small></button>
+          <button class="retire-btn" data-age="65" onclick="selectRetire(65)">65<small>מוקדמת</small></button>
+          <button class="retire-btn active" data-age="67" onclick="selectRetire(67)">67<small>סטנדרטי</small></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-bottom:18px;">
+      <label>צבירה קיימת (₪) — מדוח קרן הפנסיה</label>
+      <input type="number" id="accumulation" placeholder="למשל: 150000">
+    </div>
+
+    <div class="form-group">
+      <div class="toggle-wrap">
+        <label>הפקדה לפנסיה</label>
+        <div class="toggle-group">
+          <button class="toggle-btn active" id="btn-annual"  onclick="switchContrib('annual')">שנתית</button>
+          <button class="toggle-btn"        id="btn-monthly" onclick="switchContrib('monthly')">חודשית</button>
+        </div>
+      </div>
+      <div style="position:relative;">
+        <input type="number" id="contribution" placeholder="למשל: 18000">
+        <span id="contrib-symbol" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:12px;color:rgba(255,255,255,0.3);font-weight:600;pointer-events:none;">₪/שנה</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FEES ── -->
+  <div class="card">
+    <div class="card-title">דמי הניהול — השוואה</div>
+
+    <div class="fee-cols">
+
+      <div class="fee-col cur">
+        <div class="fee-col-title"><div class="dot"></div>דמי ניהול קיימים</div>
+        <div class="fee-row-item">
+          <label>מהצבירה (% לשנה)</label>
+          <div class="fee-input-row">
+            <input type="number" id="cur-acc" value="0.5" min="0" max="1.05" step="0.05">
+            <span class="pct">%</span>
+          </div>
+        </div>
+        <div class="fee-row-item">
+          <label>מהפרמיה (% מכל הפקדה)</label>
+          <div class="fee-input-row">
+            <input type="number" id="cur-prem" value="4" min="0" max="6" step="0.1">
+            <span class="pct">%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fee-col alt">
+        <div class="fee-col-title"><div class="dot"></div>דמי ניהול חלופיים</div>
+        <div class="fee-row-item">
+          <label>מהצבירה (% לשנה)</label>
+          <div class="fee-input-row">
+            <input type="number" id="alt-acc" value="0.1" min="0" max="1.05" step="0.05">
+            <span class="pct">%</span>
+          </div>
+        </div>
+        <div class="fee-row-item">
+          <label>מהפרמיה (% מכל הפקדה)</label>
+          <div class="fee-input-row">
+            <input type="number" id="alt-prem" value="1" min="0" max="6" step="0.1">
+            <span class="pct">%</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="fee-hint">
+      💡 <strong>ממוצע בשוק:</strong> דמי ניהול מצבירה: 0.1%–0.5% | מפרמיה: 1%–4%<br>
+      ניתן לדרוש הפחתה ישירות מקרן הפנסיה בטלפון — ללא עלות.
+    </div>
+  </div>
+
+  <button class="calc-btn" onclick="calculate()">חשבי לי את ההפרש ←</button>
+
+  <!-- ── RESULTS ── -->
+  <div id="results">
+
+    <div class="card">
+      <div class="card-title">תוצאות הסימולציה</div>
+
+      <div class="scenario-grid">
+        <div class="sc-card neutral" id="sc-cur">
+          <div class="sc-label">דמי ניהול קיימים</div>
+          <div class="sc-value" id="v-cur">—</div>
+          <div class="sc-fees" id="f-cur">—</div>
+          <div class="bar-wrap"><div class="bar cur-bar" id="bar-cur" style="height:10px"></div></div>
+        </div>
+        <div class="sc-card neutral" id="sc-alt">
+          <div class="sc-label">דמי ניהול חלופיים</div>
+          <div class="sc-value" id="v-alt">—</div>
+          <div class="sc-fees" id="f-alt">—</div>
+          <div class="bar-wrap"><div class="bar alt-bar" id="bar-alt" style="height:10px"></div></div>
+        </div>
+      </div>
+
+      <div class="winner-row">
+        <div class="winner-badge gray" id="winner-badge">
+          <span id="winner-icon">↔</span>
+          <span id="winner-text">—</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="metrics-grid">
+        <div class="m-card gold-card">
+          <div class="m-label">הפרש בצבירה בגיל פרישה</div>
+          <div class="m-value" id="m-diff">—</div>
+          <div class="m-sub" id="m-diff-sub">—</div>
+        </div>
+        <div class="m-card">
+          <div class="m-label">שנים עד פרישה</div>
+          <div class="m-value" id="m-years">—</div>
+          <div class="m-sub" id="m-years-sub">—</div>
+        </div>
+        <div class="m-card green-card">
+          <div class="m-label">שווי ההפרש — ממוצע חודשי</div>
+          <div class="m-value" id="m-monthly">—</div>
+          <div class="m-sub">ממוצע לאורך כל תקופת החיסכון</div>
+        </div>
+        <div class="m-card gold-card">
+          <div class="m-label">שווי עתידי של ₪/חודש ב‑4% ריבית</div>
+          <div class="m-value" id="m-fv">—</div>
+          <div class="m-sub" id="m-fv-sub">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXPLANATION -->
+    <div class="exp-card">
+      <div class="exp-title"><span>📊</span>איך מחשבים?</div>
+      <div class="exp-steps">
+        <div class="exp-step">
+          <div class="exp-n">1</div>
+          <div class="exp-text"><strong>סימולציה שנה-שנה:</strong> מתחילות מהצבירה הקיימת. כל שנה: מוסיפים את ההפקדה השנתית בניכוי דמי ניהול מהפרמיה, ומחשבים צמיחה ברוטו של <strong>5% לשנה</strong> — ואז מנכים דמי ניהול מהצבירה.</div>
+        </div>
+        <div class="exp-step">
+          <div class="exp-n">2</div>
+          <div class="exp-text"><strong>השוואת תרחישים:</strong> הסימולציה רצה פעמיים — עם דמי הניהול הקיימים ועם החלופה. ההפרש בין הסכומים הסופיים מציג את ה"עלות" של דמי הניהול הגבוהים לאורך זמן.</div>
+        </div>
+        <div class="exp-step">
+          <div class="exp-n">3</div>
+          <div class="exp-text"><strong>ממוצע חודשי:</strong> ההפרש הכולל מחולק במספר החודשים עד הפרישה — כדי להמחיש כמה "עולה" לך דמי הניהול מדי חודש.</div>
+        </div>
+        <div class="exp-step">
+          <div class="exp-n">4</div>
+          <div class="exp-text"><strong>שווי עתידי:</strong> מה קורה אם הייתה מפקידה את אותו הסכום החודשי בחיסכון נפרד ב-4% ריבית דריבית? — FV = PMT × ((1+r)ⁿ − 1) / r</div>
+        </div>
+        <div class="exp-step">
+          <div class="exp-n" style="font-size:10px;">★</div>
+          <div class="exp-text"><strong>הנחות:</strong> תשואה שנתית ברוטו 5% | הפקדה קבועה | אין שינוי בשכר לאורך הזמן. הסימולציה אינדיקטיבית בלבד — אינה ייעוץ פנסיוני.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /results -->
+
+  <div class="footer-note">
+    * הכלי הוא לצרכי מידע ואינו מהווה ייעוץ פנסיוני, פיננסי או השקעות.<br>
+    לבדיקה אישית מלאה יש לפנות ליועץ פנסיוני מוסמך.
+  </div>
+
+</div><!-- /container -->
+
+<script>
+  let retireAge   = 67;
+  let contribMode = 'annual';
+  const GROSS_RETURN = 5;   // % gross annual return
+  const FV_RATE      = 4;   // % annual for FV of monthly savings
+
+  function selectRetire(age) {
+    retireAge = age;
+    document.querySelectorAll('.retire-btn').forEach(b =>
+      b.classList.toggle('active', parseInt(b.dataset.age) === age)
+    );
+  }
+
+  function switchContrib(mode) {
+    contribMode = mode;
+    document.getElementById('btn-annual').classList.toggle('active',  mode === 'annual');
+    document.getElementById('btn-monthly').classList.toggle('active', mode === 'monthly');
+    const sym = document.getElementById('contrib-symbol');
+    sym.textContent = mode === 'annual' ? '₪/שנה' : '₪/חודש';
+    document.getElementById('contribution').placeholder =
+      mode === 'annual' ? 'למשל: 18000' : 'למשל: 1500';
+  }
+
+  const fmt = n => '₪' + Math.round(n).toLocaleString('he-IL');
+
+  function simulate(age, retAge, accumulation, annualContrib, accFeeP, premFeeP) {
+    let bal   = accumulation;
+    const r   = GROSS_RETURN / 100;
+    const aFee = accFeeP  / 100;
+    const pFee = premFeeP / 100;
+    for (let yr = 0; yr < (retAge - age); yr++) {
+      const netC = annualContrib * (1 - pFee);
+      bal = (bal + netC) * (1 + r - aFee);
+    }
+    return bal;
+  }
+
+  function fvAnnuity(monthlyPmt, annualRate, years) {
+    const r = annualRate / 100 / 12;
+    const n = years * 12;
+    if (r === 0) return monthlyPmt * n;
+    return monthlyPmt * (Math.pow(1 + r, n) - 1) / r;
+  }
+
+  function fadeIn(el, text) {
+    el.style.transition = 'none';
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(8px)';
+    el.textContent = text;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      el.style.transition = 'all .4s ease';
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    }));
+  }
+
+  function calculate() {
+    const age  = parseInt(document.getElementById('age').value)          || 35;
+    const accum = parseFloat(document.getElementById('accumulation').value) || 0;
+    let   contrib = parseFloat(document.getElementById('contribution').value) || 0;
+    if (contribMode === 'monthly') contrib *= 12;
+
+    const curAcc  = parseFloat(document.getElementById('cur-acc').value)  || 0;
+    const curPrem = parseFloat(document.getElementById('cur-prem').value) || 0;
+    const altAcc  = parseFloat(document.getElementById('alt-acc').value)  || 0;
+    const altPrem = parseFloat(document.getElementById('alt-prem').value) || 0;
+
+    if (age >= retireAge) {
+      alert('גיל נוכחי חייב להיות קטן מגיל הפרישה');
+      return;
+    }
+
+    const years = retireAge - age;
+
+    const finalCur = simulate(age, retireAge, accum, contrib, curAcc,  curPrem);
+    const finalAlt = simulate(age, retireAge, accum, contrib, altAcc,  altPrem);
+
+    const diff        = finalAlt - finalCur;
+    const absDiff     = Math.abs(diff);
+    const altIsBetter = diff > 0;
+    const monthlyDiff = absDiff / (years * 12);
+    const fv          = fvAnnuity(monthlyDiff, FV_RATE, years);
+
+    // Scenario cards
+    const maxVal = Math.max(finalCur, finalAlt, 1);
+    const pctCur = (finalCur / maxVal) * 100;
+    const pctAlt = (finalAlt / maxVal) * 100;
+
+    fadeIn(document.getElementById('v-cur'), fmt(finalCur));
+    fadeIn(document.getElementById('v-alt'), fmt(finalAlt));
+    document.getElementById('f-cur').textContent = `מצבירה ${curAcc}% | מפרמיה ${curPrem}%`;
+    document.getElementById('f-alt').textContent = `מצבירה ${altAcc}% | מפרמיה ${altPrem}%`;
+
+    setTimeout(() => {
+      document.getElementById('bar-cur').style.height = Math.max(pctCur,5) + '%';
+      document.getElementById('bar-alt').style.height = Math.max(pctAlt,5) + '%';
+    }, 80);
+
+    // Highlight winner/loser
+    const scCur = document.getElementById('sc-cur');
+    const scAlt = document.getElementById('sc-alt');
+    const badge = document.getElementById('winner-badge');
+
+    if (Math.abs(diff) < 1000) {
+      scCur.className = 'sc-card neutral';
+      scAlt.className = 'sc-card neutral';
+      badge.className = 'winner-badge gray';
+      document.getElementById('winner-icon').textContent = '↔';
+      document.getElementById('winner-text').textContent = 'אין הפרש משמעותי בין שני התרחישים';
+    } else if (altIsBetter) {
+      scCur.className = 'sc-card loser';
+      scAlt.className = 'sc-card winner';
+      badge.className = 'winner-badge green';
+      document.getElementById('winner-icon').textContent = '✓';
+      document.getElementById('winner-text').textContent = 'דמי הניהול החלופיים עדיפים — חוסכות ' + fmt(absDiff);
+    } else {
+      scCur.className = 'sc-card winner';
+      scAlt.className = 'sc-card loser';
+      badge.className = 'winner-badge gold';
+      document.getElementById('winner-icon').textContent = 'ℹ';
+      document.getElementById('winner-text').textContent = 'דמי הניהול הקיימים עדיפים — חוסכות ' + fmt(absDiff);
+    }
+
+    // Metrics
+    fadeIn(document.getElementById('m-diff'),  fmt(absDiff));
+    document.getElementById('m-diff-sub').textContent =
+      altIsBetter ? 'יותר בתרחיש החלופי' : 'יותר בתרחיש הקיים';
+
+    fadeIn(document.getElementById('m-years'), years + ' שנים');
+    document.getElementById('m-years-sub').textContent =
+      `גיל ${age} ← פרישה בגיל ${retireAge}`;
+
+    fadeIn(document.getElementById('m-monthly'), fmt(monthlyDiff) + '/חודש');
+
+    fadeIn(document.getElementById('m-fv'), fmt(fv));
+    document.getElementById('m-fv-sub').textContent =
+      `${fmt(monthlyDiff)}/חודש × ${years} שנים × 4% ריבית דריבית`;
+
+    // Show
+    const res = document.getElementById('results');
+    res.classList.add('show');
+    setTimeout(() => res.scrollIntoView({ behavior:'smooth', block:'start' }), 120);
+  }
+</script>
+
+</body>
+</html>
