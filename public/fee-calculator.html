@@ -279,15 +279,54 @@
       .metrics-grid { grid-template-columns:1fr; }
       .card { padding:20px 16px; }
     }
+    /* ─── BRAND BAR ─── */
+    .brand-bar {
+      background:#0b1628;
+      border-bottom:1px solid rgba(239,159,39,0.15);
+      padding:11px 24px;
+      display:flex;align-items:center;justify-content:space-between;
+      gap:12px;
+    }
+    .brand-logo {
+      display:flex;align-items:center;gap:10px;
+      text-decoration:none;
+    }
+    .brand-lion {
+      width:34px;height:34px;border-radius:50%;
+      background:var(--gold-grad);
+      display:flex;align-items:center;justify-content:center;
+      font-size:18px;flex-shrink:0;
+    }
+    .brand-name {
+      font-size:15px;font-weight:800;color:#fff;line-height:1.15;
+    }
+    .brand-name small { display:block;font-size:11px;font-weight:400;color:rgba(255,255,255,0.45); }
+    .brand-cta {
+      font-size:12px;font-weight:700;color:var(--gold2);
+      text-decoration:none;
+      border:1px solid rgba(239,159,39,0.3);border-radius:20px;
+      padding:5px 14px;white-space:nowrap;
+      transition:background .2s;
+    }
+    .brand-cta:hover { background:rgba(239,159,39,0.1); }
   </style>
 </head>
 <body>
 
+<!-- BRAND BAR -->
+<div class="brand-bar">
+  <a href="https://eden-server-73ms.onrender.com" class="brand-logo" target="_blank">
+    <div class="brand-lion">🦁</div>
+    <div class="brand-name">לביאה פיננסית<small>לביאות משקיעות</small></div>
+  </a>
+  <a href="https://eden-server-73ms.onrender.com/webinar-sales.html" class="brand-cta" target="_blank">לוובינר הקרוב ←</a>
+</div>
+
 <!-- HEADER -->
 <div class="header">
-  <div class="tag">כלי חישוב חינמי — לביאות משקיעות</div>
+  <div class="tag">🦁 כלי חישוב — לביאות משקיעות</div>
   <h1>החסכון שלך<br><span>דרך דמי הניהול</span></h1>
-  <p>הכניסי את נתוני הפנסיה שלך וגלי כמה כסף תחסכי לאורך השנים אם תורידי את דמי הניהול</p>
+  <p>הכניסי את הנתונים מדוח קרן הפנסיה שלך וגלי כמה כסף נשאר לך בכיס אם תורידי את דמי הניהול — ומה שווי ההפרש לאורך זמן</p>
 </div>
 
 <div class="container">
@@ -439,36 +478,65 @@
 
     <!-- EXPLANATION -->
     <div class="exp-card">
-      <div class="exp-title"><span>📊</span>איך מחשבים?</div>
+      <div class="exp-title"><span>📊</span>איך מחשבים? — הסבר על שיטת החישוב</div>
       <div class="exp-steps">
         <div class="exp-step">
           <div class="exp-n">1</div>
-          <div class="exp-text"><strong>סימולציה שנה-שנה:</strong> מתחילות מהצבירה הקיימת. כל שנה: מוסיפים את ההפקדה השנתית בניכוי דמי ניהול מהפרמיה, ומחשבים צמיחה ברוטו של <strong>5% לשנה</strong> — ואז מנכים דמי ניהול מהצבירה.</div>
+          <div class="exp-text">
+            <strong>סימולציה שנה-שנה עד גיל הפרישה:</strong><br>
+            מתחילות מהצבירה הקיימת שלך. בכל שנה מוסיפות את ההפקדה השנתית בניכוי <strong>דמי ניהול מהפרמיה</strong> (% שנגבה מכל שקל שמופקד), ואחר כך מחשבות צמיחה של <strong>5% ברוטו לשנה</strong> — ומנכות <strong>דמי ניהול מהצבירה</strong> (% שנגבה מהסכום הכולל בכל שנה). הסימולציה חוזרת פעמיים — תרחיש קיים ותרחיש חלופי.
+          </div>
         </div>
         <div class="exp-step">
           <div class="exp-n">2</div>
-          <div class="exp-text"><strong>השוואת תרחישים:</strong> הסימולציה רצה פעמיים — עם דמי הניהול הקיימים ועם החלופה. ההפרש בין הסכומים הסופיים מציג את ה"עלות" של דמי הניהול הגבוהים לאורך זמן.</div>
+          <div class="exp-text">
+            <strong>למה דמי הניהול כל כך משמעותיים?</strong><br>
+            דמי ניהול נמוכים ב-0.5% בלבד על הצבירה, על פני 30 שנה עם ריבית דריבית, יכולים להגיע לעשרות אחוזים מסך הצבירה הסופית. ככל שהצבירה גדלה — גם הפגיעה של אחוז אחד קטן גדלה בהתאם.
+          </div>
         </div>
         <div class="exp-step">
           <div class="exp-n">3</div>
-          <div class="exp-text"><strong>ממוצע חודשי:</strong> ההפרש הכולל מחולק במספר החודשים עד הפרישה — כדי להמחיש כמה "עולה" לך דמי הניהול מדי חודש.</div>
+          <div class="exp-text">
+            <strong>ממוצע חודשי של ההפרש:</strong><br>
+            ההפרש הכולל בין שני התרחישים מחולק במספר החודשים עד הפרישה. זה לא אומר שמשלמים את הסכום הזה כל חודש — אלא שכך ניתן להמחיש את ה"עלות" החודשית הממוצעת של דמי הניהול הגבוהים יותר לאורך כל התקופה.
+          </div>
         </div>
         <div class="exp-step">
           <div class="exp-n">4</div>
-          <div class="exp-text"><strong>שווי עתידי:</strong> מה קורה אם הייתה מפקידה את אותו הסכום החודשי בחיסכון נפרד ב-4% ריבית דריבית? — FV = PMT × ((1+r)ⁿ − 1) / r</div>
+          <div class="exp-text">
+            <strong>שווי עתידי של ההפרש החודשי:</strong><br>
+            מה קורה אם הייתי מפקידה את אותו הסכום החודשי בחיסכון נפרד ב-4% ריבית דריבית? מחשבים לפי נוסחת ערך עתידי של קצבה:<br>
+            <strong>FV = PMT × ((1+r)ⁿ − 1) / r</strong><br>
+            כאשר PMT = הסכום החודשי, r = 4%/12 לחודש, n = מספר החודשים
+          </div>
         </div>
         <div class="exp-step">
           <div class="exp-n" style="font-size:10px;">★</div>
-          <div class="exp-text"><strong>הנחות:</strong> תשואה שנתית ברוטו 5% | הפקדה קבועה | אין שינוי בשכר לאורך הזמן. הסימולציה אינדיקטיבית בלבד — אינה ייעוץ פנסיוני.</div>
+          <div class="exp-text">
+            <strong>הנחות החישוב:</strong> תשואה שנתית ברוטו 5% (ממוצע היסטורי סביר לפנסיה מנייתית) | הפקדה קבועה לאורך כל התקופה | אין שינוי בשכר | אין חישוב מס.<br>
+            <strong>הסימולציה היא כלי אינדיקטיבי בלבד</strong> — המספרים האמיתיים תלויים בתנאים אישיים ובביצועי הקרן בפועל.
+          </div>
         </div>
       </div>
+    </div>
+
+    <!-- BRAND CTA -->
+    <div style="background:rgba(239,159,39,0.07);border:1px solid rgba(239,159,39,0.25);border-radius:18px;padding:24px 28px;margin-top:18px;text-align:center;">
+      <div style="font-size:22px;margin-bottom:8px;">🦁</div>
+      <div style="font-size:16px;font-weight:800;color:#fff;margin-bottom:6px;">רוצה ללמוד לנהל את הכסף שלך בעצמך?</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:16px;line-height:1.6;">לביאות משקיעות — תוכנית ליווי לנשים שרוצות להתחיל להשקיע, גם עם סכומים קטנים</div>
+      <a href="https://eden-server-73ms.onrender.com/webinar-sales.html" target="_blank"
+         style="display:inline-block;background:var(--gold-grad);color:var(--navy);font-weight:900;font-size:15px;font-family:'Heebo',Arial,sans-serif;padding:12px 28px;border-radius:30px;text-decoration:none;">
+        לוובינר הקרוב ←
+      </a>
     </div>
 
   </div><!-- /results -->
 
   <div class="footer-note">
     * הכלי הוא לצרכי מידע ואינו מהווה ייעוץ פנסיוני, פיננסי או השקעות.<br>
-    לבדיקה אישית מלאה יש לפנות ליועץ פנסיוני מוסמך.
+    לבדיקה אישית מלאה יש לפנות ליועצת פנסיונית מוסמכת.<br>
+    <span style="color:rgba(239,159,39,0.4);">לביאה פיננסית © 2025 — לביאות משקיעות 🦁</span>
   </div>
 
 </div><!-- /container -->
