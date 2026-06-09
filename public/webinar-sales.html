@@ -463,9 +463,9 @@
     background: rgba(229,57,53,0.05);
     border: 2px solid rgba(229,57,53,0.2);
   }
-  .fomo-col .fc-title { font-size: 20px; font-weight: 900; margin-bottom: 4px; }
+  .fomo-col .fc-title { font-size: clamp(15px,1.7vw,20px); font-weight: 900; margin-bottom: 4px; }
   .fomo-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-  .fomo-col ul li { font-size: 18px; font-weight: 600; color: #ddd; line-height: 1.6; display: flex; gap: 8px; align-items: flex-start; }
+  .fomo-col ul li { font-size: clamp(14px,1.5vw,17px) !important; font-weight: 600; color: #ddd; line-height: 1.5; display: flex; gap: 8px; align-items: flex-start; }
   .fomo-col ul li .li-icon { flex-shrink: 0; margin-top: 1px; }
 
   /* ── OUTCOME GRID ── */
@@ -1552,21 +1552,21 @@ document.addEventListener('fullscreenchange', () => {
       <div class="fomo-col" style="background:rgba(201,162,39,0.08);border:2px solid rgba(201,162,39,0.3);border-radius:18px;padding:22px 20px;">
         <div class="fc-title" style="color:var(--gold2)">✅ אם תתחילי היום</div>
         <ul>
-          <li class="reveal-item" style="font-size:18px;"><span class="li-icon">✈️</span> חופשה שמימנת מהרווחים — בלי לגעת בחיסכון הרגיל</li>
-          <li class="reveal-item" style="font-size:18px;"><span class="li-icon">🏠</span> שיפוץ, רכב, הון עצמי לדירה — הכסף עובד בשבילך</li>
-          <li class="reveal-item" style="font-size:18px;"><span class="li-icon">📚</span> לימודים לילדים — בלי ללחץ על התקציב החודשי</li>
-          <li class="reveal-item" style="font-size:18px;"><span class="li-icon">💼</span> גמישות בעבודה — לא חייבת כל משרה רק בגלל הכסף</li>
-          <li class="reveal-item" style="font-size:18px;"><span class="li-icon">😌</span> שקט נפשי — יודעת שהכסף שלך עובד גם כשאת ישנה</li>
+          <li class="reveal-item"><span class="li-icon">✈️</span> חופשה שמימנת מהרווחים — בלי לגעת בחיסכון הרגיל</li>
+          <li class="reveal-item"><span class="li-icon">🏠</span> שיפוץ, רכב, הון עצמי לדירה — הכסף עובד בשבילך</li>
+          <li class="reveal-item"><span class="li-icon">📚</span> לימודים לילדים — בלי ללחץ על התקציב החודשי</li>
+          <li class="reveal-item"><span class="li-icon">💼</span> גמישות בעבודה — לא חייבת כל משרה רק בגלל הכסף</li>
+          <li class="reveal-item"><span class="li-icon">😌</span> שקט נפשי — יודעת שהכסף שלך עובד גם כשאת ישנה</li>
         </ul>
       </div>
       <div class="fomo-col reveal-item" style="background:rgba(229,57,53,0.07);border:2px solid rgba(229,57,53,0.25);border-radius:18px;padding:22px 20px;">
         <div class="fc-title" style="color:#ef9a9a">❌ אם לא תעשי כלום</div>
         <ul style="color:rgba(255,255,255,0.7)">
-          <li class="reveal-item" style="font-size:18px;"><span class="li-icon">📉</span> הכסף בבנק נשחק — אינפלציה אוכלת אותו בשקט</li>
-          <li class="reveal-item" style="font-size:18px;"><span class="li-icon">⏳</span> בעוד 5 שנים תהיי בדיוק באותו מקום — רק עם פחות זמן</li>
-          <li class="reveal-item" style="font-size:18px;"><span class="li-icon">😰</span> כל התייקרות מרגישה כמו מכה — בלי כרית ביטחון</li>
-          <li class="reveal-item" style="font-size:18px;"><span class="li-icon">🤷</span> ממשיכה לראות אחרות מרוויחות — ולא מבינה איך</li>
-          <li class="reveal-item" style="font-size:18px;"><span class="li-icon">💸</span> הכסף שיכול היה לצמוח — מחכה בעו"ש ולא עושה כלום</li>
+          <li class="reveal-item"><span class="li-icon">📉</span> הכסף בבנק נשחק — אינפלציה אוכלת אותו בשקט</li>
+          <li class="reveal-item"><span class="li-icon">⏳</span> בעוד 5 שנים תהיי בדיוק באותו מקום — רק עם פחות זמן</li>
+          <li class="reveal-item"><span class="li-icon">😰</span> כל התייקרות מרגישה כמו מכה — בלי כרית ביטחון</li>
+          <li class="reveal-item"><span class="li-icon">🤷</span> ממשיכה לראות אחרות מרוויחות — ולא מבינה איך</li>
+          <li class="reveal-item"><span class="li-icon">💸</span> הכסף שיכול היה לצמוח — מחכה בעו"ש ולא עושה כלום</li>
         </ul>
       </div>
     </div>
