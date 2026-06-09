@@ -1672,6 +1672,26 @@ document.addEventListener('fullscreenchange', () => {
   </div>
   </div>
 
+  <!-- ═══════════════════ SLIDE: ואז הבנתי ═══════════════════ -->
+  <div class="slide dark-slide" id="s-aha">
+  <div class="slide-inner" style="align-items:center;gap:16px;padding-top:10px;">
+    <div class="tag">בעצמי</div>
+    <h2 style="color:#fff;text-align:center;line-height:1.3;max-width:860px;">ואז הבנתי מה באמת<br><span style="background:var(--gold-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">חסר לנשים</span></h2>
+    <div style="font-size:clamp(14px,1.5vw,17px);color:rgba(255,255,255,0.55);text-align:center;max-width:780px;line-height:1.5;">לא עוד מידע — לא עוד המלצות שאין לך "לא מביעים מספיק"</div>
+    <div class="divider"></div>
+    <div style="display:flex;flex-direction:column;gap:10px;max-width:800px;width:100%;">
+      <div class="reveal-item" style="background:#fff;border:1px solid rgba(201,162,39,0.2);border-right:4px solid var(--gold);border-radius:0 14px 14px 0;padding:14px 20px;font-size:clamp(15px,1.7vw,20px);font-weight:700;color:var(--dark);">✔ דרך ברורה</div>
+      <div class="reveal-item" style="background:#fff;border:1px solid rgba(201,162,39,0.2);border-right:4px solid var(--gold);border-radius:0 14px 14px 0;padding:14px 20px;font-size:clamp(15px,1.7vw,20px);font-weight:700;color:var(--dark);">✔ ליווי</div>
+      <div class="reveal-item" style="background:#fff;border:1px solid rgba(201,162,39,0.2);border-right:4px solid var(--gold);border-radius:0 14px 14px 0;padding:14px 20px;font-size:clamp(15px,1.7vw,20px);font-weight:700;color:var(--dark);">✔ מקום בטוח לשאול</div>
+      <div class="reveal-item" style="background:#fff;border:1px solid rgba(201,162,39,0.2);border-right:4px solid var(--gold);border-radius:0 14px 14px 0;padding:14px 20px;font-size:clamp(15px,1.7vw,20px);font-weight:700;color:var(--dark);">✔ אנשים שמפשירים בגובה העיניים</div>
+      <div class="reveal-item" style="background:var(--gold3);border:1px solid rgba(201,162,39,0.35);border-right:4px solid var(--gold);border-radius:0 14px 14px 0;padding:14px 20px;font-size:clamp(15px,1.7vw,20px);font-weight:800;color:var(--dark);">✔ מפגשות לעשות את הצעד הראשון בעצמן</div>
+    </div>
+    <div style="background:var(--navy);border:1px solid rgba(239,159,39,0.3);border-radius:14px;padding:14px 28px;max-width:800px;width:100%;text-align:center;margin-top:4px;">
+      <div style="font-size:clamp(15px,1.7vw,20px);font-weight:700;color:rgba(255,255,255,0.85);">ביטחון כלכלי לא נגנב מלדעת. <strong style="color:var(--gold2);">הוא נבנה מלהתחיל.</strong></div>
+    </div>
+  </div>
+  </div>
+
   <!-- ═══════════════════ SLIDE: ובדיוק בשביל זה ═══════════════════ -->
   <div class="slide dark-slide" id="s-therefore">
   <div class="slide-inner" style="align-items:center;justify-content:center;gap:28px;height:100%;">
@@ -2255,7 +2275,7 @@ document.addEventListener('fullscreenchange', () => {
   window.go = go;
 
   // Per-slide step reveal for specific slides
-  const stepSlides = ['s-hook-promise', 's-hook', 's4', 's6', 's-outcomes', 's-beliefs-combined', 's-why-not-2', 's-why-not-3', 's-why-not-4', 's-why-not-5', 's-info-overload-3', 's-why-not', 's-fomo-1'];
+  const stepSlides = ['s-hook-promise', 's-hook', 's4', 's6', 's-outcomes', 's-beliefs-combined', 's-why-not-2', 's-why-not-3', 's-why-not-4', 's-why-not-5', 's-info-overload-3', 's-why-not', 's-fomo-1', 's-aha'];
   stepSlides.forEach(id => {
     const slide = document.getElementById(id);
     if (!slide) return;
