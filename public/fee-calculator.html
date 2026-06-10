@@ -387,105 +387,68 @@
   <div id="results">
 
     <div class="card">
-      <div class="card-title">תוצאות הסימולציה</div>
+      <div class="card-title">תוצאות</div>
 
-      <div class="scenario-grid">
-        <div class="sc-card neutral" id="sc-cur">
-          <div class="sc-label">דמי ניהול קיימים</div>
-          <div class="sc-value" id="v-cur">—</div>
-          <div class="sc-fees" id="f-cur">—</div>
-          <div class="bar-wrap"><div class="bar cur-bar" id="bar-cur" style="height:10px"></div></div>
+      <!-- Fee breakdown row -->
+      <div class="fee-cols" style="margin-bottom:14px;">
+        <div class="fee-col cur">
+          <div class="fee-col-title"><div class="dot"></div>דמי ניהול שנתיים — קיים</div>
+          <div style="font-size:clamp(22px,3.5vw,32px);font-weight:900;color:#fff;margin-bottom:4px;" id="r-cur-fee">—</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.4);" id="r-cur-breakdown">—</div>
         </div>
-        <div class="sc-card neutral" id="sc-alt">
-          <div class="sc-label">דמי ניהול חלופיים</div>
-          <div class="sc-value" id="v-alt">—</div>
-          <div class="sc-fees" id="f-alt">—</div>
-          <div class="bar-wrap"><div class="bar alt-bar" id="bar-alt" style="height:10px"></div></div>
-        </div>
-      </div>
-
-      <div class="winner-row">
-        <div class="winner-badge gray" id="winner-badge">
-          <span id="winner-icon">↔</span>
-          <span id="winner-text">—</span>
+        <div class="fee-col alt">
+          <div class="fee-col-title"><div class="dot"></div>דמי ניהול שנתיים — חלופי</div>
+          <div style="font-size:clamp(22px,3.5vw,32px);font-weight:900;color:var(--gold2);margin-bottom:4px;" id="r-alt-fee">—</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.4);" id="r-alt-breakdown">—</div>
         </div>
       </div>
 
-      <div class="divider"></div>
-
+      <!-- Main result cards -->
       <div class="metrics-grid">
-        <div class="m-card gold-card">
-          <div class="m-label">הפרש בצבירה בגיל פרישה</div>
-          <div class="m-value" id="m-diff">—</div>
-          <div class="m-sub" id="m-diff-sub">—</div>
+        <div class="m-card green-card">
+          <div class="m-label">הפרש שנתי בדמי ניהול</div>
+          <div class="m-value" id="m-annual-diff">—</div>
+          <div class="m-sub" id="m-annual-diff-sub">—</div>
         </div>
         <div class="m-card">
           <div class="m-label">שנים עד פרישה</div>
           <div class="m-value" id="m-years">—</div>
           <div class="m-sub" id="m-years-sub">—</div>
         </div>
-        <div class="m-card green-card">
-          <div class="m-label">הפרש דמי ניהול — שנה ראשונה</div>
-          <div class="m-value" id="m-annual-diff">—</div>
-          <div class="m-sub" id="m-annual-diff-sub">—</div>
-        </div>
-        <div class="m-card gold-card">
-          <div class="m-label">שווי כלכלי של ההפרש השנתי לגיל פרישה (4%)</div>
-          <div class="m-value" id="m-annual-fv">—</div>
+        <div class="m-card gold-card" style="grid-column:1/-1;">
+          <div class="m-label">שווי כלכלי של ההפרש לגיל פרישה — בהנחת 4% ריבית דריבית</div>
+          <div class="m-value" style="font-size:clamp(28px,4.5vw,44px);" id="m-annual-fv">—</div>
           <div class="m-sub" id="m-annual-fv-sub">—</div>
-        </div>
-        <div class="m-card green-card">
-          <div class="m-label">שווי ההפרש — ממוצע חודשי</div>
-          <div class="m-value" id="m-monthly">—</div>
-          <div class="m-sub">ממוצע לאורך כל תקופת החיסכון</div>
-        </div>
-        <div class="m-card gold-card">
-          <div class="m-label">שווי עתידי של ₪/חודש ב‑4% ריבית</div>
-          <div class="m-value" id="m-fv">—</div>
-          <div class="m-sub" id="m-fv-sub">—</div>
         </div>
       </div>
     </div>
 
     <!-- EXPLANATION -->
     <div class="exp-card">
-      <div class="exp-title"><span>📊</span>איך מחשבים? — הסבר על שיטת החישוב</div>
+      <div class="exp-title"><span>📊</span>איך מחשבים?</div>
       <div class="exp-steps">
         <div class="exp-step">
           <div class="exp-n">1</div>
           <div class="exp-text">
-            <strong>סימולציה שנה-שנה עד גיל הפרישה:</strong><br>
-            מתחילות מהצבירה הקיימת שלך. בכל שנה מוסיפות את ההפקדה השנתית בניכוי <strong>דמי ניהול מהפרמיה</strong> (% שנגבה מכל שקל שמופקד), ואחר כך מחשבות צמיחה של <strong>5% ברוטו לשנה</strong> — ומנכות <strong>דמי ניהול מהצבירה</strong> (% שנגבה מהסכום הכולל בכל שנה). הסימולציה חוזרת פעמיים — תרחיש קיים ותרחיש חלופי.
+            <strong>דמי ניהול שנתיים:</strong> מחשבים את דמי הניהול שנגבים בשנה — סכום הצבירה × דמי ניהול מצבירה, בתוספת ההפקדה השנתית × דמי ניהול מפרמיה.
           </div>
         </div>
         <div class="exp-step">
           <div class="exp-n">2</div>
           <div class="exp-text">
-            <strong>למה דמי הניהול כל כך משמעותיים?</strong><br>
-            דמי ניהול נמוכים ב-0.5% בלבד על הצבירה, על פני 30 שנה עם ריבית דריבית, יכולים להגיע לעשרות אחוזים מסך הצבירה הסופית. ככל שהצבירה גדלה — גם הפגיעה של אחוז אחד קטן גדלה בהתאם.
+            <strong>הפרש שנתי:</strong> ההפרש בין שני המסלולים — כמה יותר משלמים בדמי ניהול בשנה אחת.
           </div>
         </div>
         <div class="exp-step">
           <div class="exp-n">3</div>
           <div class="exp-text">
-            <strong>ממוצע חודשי של ההפרש:</strong><br>
-            ההפרש הכולל בין שני התרחישים מחולק במספר החודשים עד הפרישה. זה לא אומר שמשלמים את הסכום הזה כל חודש — אלא שכך ניתן להמחיש את ה"עלות" החודשית הממוצעת של דמי הניהול הגבוהים יותר לאורך כל התקופה.
-          </div>
-        </div>
-        <div class="exp-step">
-          <div class="exp-n">4</div>
-          <div class="exp-text">
-            <strong>שווי עתידי של ההפרש החודשי:</strong><br>
-            מה קורה אם הייתי מפקידה את אותו הסכום החודשי בחיסכון נפרד ב-4% ריבית דריבית? מחשבים לפי נוסחת ערך עתידי של קצבה:<br>
-            <strong>FV = PMT × ((1+r)ⁿ − 1) / r</strong><br>
-            כאשר PMT = הסכום החודשי, r = 4%/12 לחודש, n = מספר החודשים
+            <strong>שווי כלכלי לגיל פרישה:</strong> מה שווה אותו הפרש שנתי אם היה מושקע ב-4% ריבית דריבית כל שנה עד הפרישה — לפי נוסחת ערך עתידי של קצבה: <strong>FV = PMT × ((1+r)ⁿ − 1) / r</strong>
           </div>
         </div>
         <div class="exp-step">
           <div class="exp-n" style="font-size:10px;">★</div>
           <div class="exp-text">
-            <strong>הנחות החישוב:</strong> תשואה שנתית ברוטו 5% (ממוצע היסטורי סביר לפנסיה מנייתית) | הפקדה קבועה לאורך כל התקופה | אין שינוי בשכר | אין חישוב מס.<br>
-            <strong>הסימולציה היא כלי אינדיקטיבי בלבד</strong> — המספרים האמיתיים תלויים בתנאים אישיים ובביצועי הקרן בפועל.
+            <strong>הנחות:</strong> ההפרש השנתי קבוע לאורך כל התקופה | ריבית 4% לשנה | אינדיקטיבי בלבד, אינו ייעוץ פנסיוני.
           </div>
         </div>
       </div>
@@ -503,8 +466,7 @@
 <script>
   let retireAge   = 67;
   let contribMode = 'annual';
-  const GROSS_RETURN = 5;   // % gross annual return
-  const FV_RATE      = 4;   // % annual for FV of monthly savings
+  const FV_RATE = 4;   // % annual compound interest
 
   function selectRetire(age) {
     retireAge = age;
@@ -525,25 +487,6 @@
 
   const fmt = n => '₪' + Math.round(n).toLocaleString('he-IL');
 
-  function simulate(age, retAge, accumulation, annualContrib, accFeeP, premFeeP) {
-    let bal   = accumulation;
-    const r   = GROSS_RETURN / 100;
-    const aFee = accFeeP  / 100;
-    const pFee = premFeeP / 100;
-    for (let yr = 0; yr < (retAge - age); yr++) {
-      const netC = annualContrib * (1 - pFee);
-      bal = (bal + netC) * (1 + r - aFee);
-    }
-    return bal;
-  }
-
-  function fvAnnuity(monthlyPmt, annualRate, years) {
-    const r = annualRate / 100 / 12;
-    const n = years * 12;
-    if (r === 0) return monthlyPmt * n;
-    return monthlyPmt * (Math.pow(1 + r, n) - 1) / r;
-  }
-
   function fadeIn(el, text) {
     el.style.transition = 'none';
     el.style.opacity = '0';
@@ -557,8 +500,8 @@
   }
 
   function calculate() {
-    const age  = parseInt(document.getElementById('age').value)          || 35;
-    const accum = parseFloat(document.getElementById('accumulation').value) || 0;
+    const age    = parseInt(document.getElementById('age').value) || 35;
+    const accum  = parseFloat(document.getElementById('accumulation').value) || 0;
     let   contrib = parseFloat(document.getElementById('contribution').value) || 0;
     if (contribMode === 'monthly') contrib *= 12;
 
@@ -574,85 +517,42 @@
 
     const years = retireAge - age;
 
-    const finalCur = simulate(age, retireAge, accum, contrib, curAcc,  curPrem);
-    const finalAlt = simulate(age, retireAge, accum, contrib, altAcc,  altPrem);
+    // Annual fees for each scenario
+    const curFeeAcc  = accum  * (curAcc  / 100);
+    const curFeePrem = contrib * (curPrem / 100);
+    const curFeeTotal = curFeeAcc + curFeePrem;
 
-    const diff        = finalAlt - finalCur;
-    const absDiff     = Math.abs(diff);
-    const altIsBetter = diff > 0;
-    const monthlyDiff = absDiff / (years * 12);
-    const fv          = fvAnnuity(monthlyDiff, FV_RATE, years);
+    const altFeeAcc  = accum  * (altAcc  / 100);
+    const altFeePrem = contrib * (altPrem / 100);
+    const altFeeTotal = altFeeAcc + altFeePrem;
 
-    // Annual fee difference — year 1 snapshot
-    const curFeeYear1 = accum * (curAcc / 100) + contrib * (curPrem / 100);
-    const altFeeYear1 = accum * (altAcc / 100) + contrib * (altPrem / 100);
-    const annualDiff  = Math.abs(curFeeYear1 - altFeeYear1);
-    // FV of that annual saving invested at 4% each year until retirement
+    const annualDiff = Math.abs(curFeeTotal - altFeeTotal);
+
+    // FV of annual difference invested at 4% compounded yearly
     const r4y = FV_RATE / 100;
     const annualFV = annualDiff * (Math.pow(1 + r4y, years) - 1) / r4y;
 
-    // Scenario cards
-    const maxVal = Math.max(finalCur, finalAlt, 1);
-    const pctCur = (finalCur / maxVal) * 100;
-    const pctAlt = (finalAlt / maxVal) * 100;
+    // Display fee breakdown
+    fadeIn(document.getElementById('r-cur-fee'), fmt(curFeeTotal) + '/שנה');
+    document.getElementById('r-cur-breakdown').textContent =
+      `מצבירה: ${fmt(curFeeAcc)} | מפרמיה: ${fmt(curFeePrem)}`;
 
-    fadeIn(document.getElementById('v-cur'), fmt(finalCur));
-    fadeIn(document.getElementById('v-alt'), fmt(finalAlt));
-    document.getElementById('f-cur').textContent = `מצבירה ${curAcc}% | מפרמיה ${curPrem}%`;
-    document.getElementById('f-alt').textContent = `מצבירה ${altAcc}% | מפרמיה ${altPrem}%`;
-
-    setTimeout(() => {
-      document.getElementById('bar-cur').style.height = Math.max(pctCur,5) + '%';
-      document.getElementById('bar-alt').style.height = Math.max(pctAlt,5) + '%';
-    }, 80);
-
-    // Highlight winner/loser
-    const scCur = document.getElementById('sc-cur');
-    const scAlt = document.getElementById('sc-alt');
-    const badge = document.getElementById('winner-badge');
-
-    if (Math.abs(diff) < 1000) {
-      scCur.className = 'sc-card neutral';
-      scAlt.className = 'sc-card neutral';
-      badge.className = 'winner-badge gray';
-      document.getElementById('winner-icon').textContent = '↔';
-      document.getElementById('winner-text').textContent = 'אין הפרש משמעותי בין שני התרחישים';
-    } else if (altIsBetter) {
-      scCur.className = 'sc-card loser';
-      scAlt.className = 'sc-card winner';
-      badge.className = 'winner-badge green';
-      document.getElementById('winner-icon').textContent = '✓';
-      document.getElementById('winner-text').textContent = 'דמי הניהול החלופיים עדיפים — חוסכות ' + fmt(absDiff);
-    } else {
-      scCur.className = 'sc-card winner';
-      scAlt.className = 'sc-card loser';
-      badge.className = 'winner-badge gold';
-      document.getElementById('winner-icon').textContent = 'ℹ';
-      document.getElementById('winner-text').textContent = 'דמי הניהול הקיימים עדיפים — חוסכות ' + fmt(absDiff);
-    }
+    fadeIn(document.getElementById('r-alt-fee'), fmt(altFeeTotal) + '/שנה');
+    document.getElementById('r-alt-breakdown').textContent =
+      `מצבירה: ${fmt(altFeeAcc)} | מפרמיה: ${fmt(altFeePrem)}`;
 
     // Metrics
-    fadeIn(document.getElementById('m-diff'),  fmt(absDiff));
-    document.getElementById('m-diff-sub').textContent =
-      altIsBetter ? 'יותר בתרחיש החלופי' : 'יותר בתרחיש הקיים';
+    fadeIn(document.getElementById('m-annual-diff'), fmt(annualDiff) + '/שנה');
+    document.getElementById('m-annual-diff-sub').textContent =
+      curFeeTotal > altFeeTotal ? 'חיסכון שנתי במעבר לדמי ניהול חלופיים' : 'המסלול הקיים זול יותר';
 
     fadeIn(document.getElementById('m-years'), years + ' שנים');
     document.getElementById('m-years-sub').textContent =
       `גיל ${age} ← פרישה בגיל ${retireAge}`;
 
-    fadeIn(document.getElementById('m-annual-diff'), fmt(annualDiff) + '/שנה');
-    document.getElementById('m-annual-diff-sub').textContent =
-      `הפרש בדמי ניהול בשנה הנוכחית (צבירה + פרמיה)`;
-
     fadeIn(document.getElementById('m-annual-fv'), fmt(annualFV));
     document.getElementById('m-annual-fv-sub').textContent =
       `${fmt(annualDiff)}/שנה × ${years} שנים × 4% ריבית דריבית`;
-
-    fadeIn(document.getElementById('m-monthly'), fmt(monthlyDiff) + '/חודש');
-
-    fadeIn(document.getElementById('m-fv'), fmt(fv));
-    document.getElementById('m-fv-sub').textContent =
-      `${fmt(monthlyDiff)}/חודש × ${years} שנים × 4% ריבית דריבית`;
 
     // Show
     const res = document.getElementById('results');
