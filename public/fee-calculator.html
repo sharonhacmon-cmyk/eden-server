@@ -410,6 +410,11 @@
           <div class="m-value" id="m-annual-diff">—</div>
           <div class="m-sub" id="m-annual-diff-sub">—</div>
         </div>
+        <div class="m-card green-card">
+          <div class="m-label">הפרש חודשי בדמי ניהול</div>
+          <div class="m-value" id="m-monthly-diff">—</div>
+          <div class="m-sub">להזנה במחשבון פיננסי</div>
+        </div>
         <div class="m-card">
           <div class="m-label">שנים עד פרישה</div>
           <div class="m-value" id="m-years">—</div>
@@ -545,6 +550,8 @@
     fadeIn(document.getElementById('m-annual-diff'), fmt(annualDiff) + '/שנה');
     document.getElementById('m-annual-diff-sub').textContent =
       curFeeTotal > altFeeTotal ? 'חיסכון שנתי במעבר לדמי ניהול חלופיים' : 'המסלול הקיים זול יותר';
+
+    fadeIn(document.getElementById('m-monthly-diff'), fmt(annualDiff / 12) + '/חודש');
 
     fadeIn(document.getElementById('m-years'), years + ' שנים');
     document.getElementById('m-years-sub').textContent =
