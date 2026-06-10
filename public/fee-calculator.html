@@ -532,9 +532,11 @@
 
     const annualDiff = Math.abs(curFeeTotal - altFeeTotal);
 
-    // FV of annual difference invested at 4% compounded yearly
-    const r4y = FV_RATE / 100;
-    const annualFV = annualDiff * (Math.pow(1 + r4y, years) - 1) / r4y;
+    // FV of monthly difference invested at 4% compounded monthly
+    const monthlyDiff = annualDiff / 12;
+    const r4m = FV_RATE / 100 / 12;
+    const n   = years * 12;
+    const annualFV = monthlyDiff * (Math.pow(1 + r4m, n) - 1) / r4m;
 
     // Display fee breakdown
     fadeIn(document.getElementById('r-cur-fee'), fmt(curFeeTotal) + '/שנה');
@@ -558,7 +560,7 @@
 
     fadeIn(document.getElementById('m-annual-fv'), fmt(annualFV));
     document.getElementById('m-annual-fv-sub').textContent =
-      `${fmt(annualDiff)}/שנה × ${years} שנים × 4% ריבית דריבית`;
+      `${fmt(monthlyDiff)}/חודש × ${years} שנים × 4% ריבית דריבית`;
 
     // Show
     const res = document.getElementById('results');
