@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>שרון חכמון | נתיב פיננסי</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Heebo', sans-serif;
+      background-color: #FDF6F9;
+      color: #2C2C2C;
+      direction: rtl;
+      text-align: right;
+    }
+
+    /* HEADER */
+    .header {
+      background-color: #FDF6F9;
+      border-bottom: 3px solid #D4789A;
+      padding: 24px 40px;
+      text-align: right;
+    }
+
+    .header-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .header-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: #B05080;
+    }
+
+    .header-tagline {
+      font-size: 14px;
+      color: #888;
+      font-weight: 400;
+    }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, #C06090 0%, #E8A0C0 100%);
+      padding: 60px 40px;
+      text-align: center;
+      color: white;
+    }
+
+    .hero h1 {
+      font-size: 42px;
+      font-weight: 900;
+      margin-bottom: 12px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .hero p {
+      font-size: 20px;
+      font-weight: 300;
+      opacity: 0.95;
+    }
+
+    /* MAIN CONTENT */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 50px 30px;
+    }
+
+    /* SHARON SECTION */
+    .sharon-section {
+      display: flex;
+      gap: 40px;
+      align-items: flex-start;
+      margin-bottom: 60px;
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 4px 24px rgba(196,154,42,0.12);
+    }
+
+    .sharon-photo {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: top;
+      border: 4px solid #C06090;
+      flex-shrink: 0;
+    }
+
+    .sharon-text h2 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #B05080;
+      margin-bottom: 6px;
+    }
+
+    .sharon-text .title {
+      font-size: 16px;
+      color: #7CAF52;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+
+    .sharon-text p {
+      font-size: 16px;
+      line-height: 1.9;
+      color: #444;
+    }
+
+    /* STORY SECTION */
+    .story-section {
+      margin-bottom: 50px;
+    }
+
+    .story-section h3 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #B05080;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #7CAF52;
+    }
+
+    .story-section p {
+      font-size: 17px;
+      line-height: 2;
+      color: #444;
+      margin-bottom: 16px;
+    }
+
+    .highlight-box {
+      background: linear-gradient(135deg, #FDF0F5, #F5F9F0);
+      border-right: 5px solid #C06090;
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin: 30px 0;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.8;
+      color: #333;
+    }
+
+    /* WHAT I OFFER */
+    .offers-section {
+      margin-bottom: 50px;
+    }
+
+    .offers-section h3 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #B05080;
+      margin-bottom: 30px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #7CAF52;
+    }
+
+    .offer-card {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    .offer-icon {
+      font-size: 36px;
+      flex-shrink: 0;
+    }
+
+    .offer-logo {
+      width: 90px;
+      height: 90px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .offer-content h4 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #2C2C2C;
+      margin-bottom: 8px;
+    }
+
+    .offer-content p {
+      font-size: 15px;
+      line-height: 1.8;
+      color: #666;
+    }
+
+    /* EDEN SECTION */
+    .eden-section {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 50px;
+      box-shadow: 0 4px 24px rgba(196,154,42,0.12);
+      display: flex;
+      gap: 30px;
+      align-items: center;
+    }
+
+    .eden-photo {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #F2A7BE;
+      flex-shrink: 0;
+    }
+
+    .eden-text h3 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #B05080;
+      margin-bottom: 8px;
+    }
+
+    .eden-text p {
+      font-size: 15px;
+      line-height: 1.9;
+      color: #555;
+    }
+
+    /* CTA */
+    .cta-section {
+      text-align: center;
+      background: linear-gradient(135deg, #C06090, #9B4070);
+      border-radius: 20px;
+      padding: 50px 30px;
+      color: white;
+      margin-bottom: 40px;
+    }
+
+    .cta-section h3 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .cta-section p {
+      font-size: 17px;
+      opacity: 0.9;
+      margin-bottom: 30px;
+    }
+
+    .whatsapp-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: white;
+      color: #25D366;
+      font-size: 18px;
+      font-weight: 700;
+      padding: 16px 40px;
+      border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .whatsapp-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 28px rgba(0,0,0,0.2);
+    }
+
+    .whatsapp-icon {
+      width: 28px;
+      height: 28px;
+    }
+
+    /* FOOTER */
+    .footer {
+      text-align: center;
+      padding: 30px;
+      color: #999;
+      font-size: 13px;
+      border-top: 1px solid #EEE;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      .header { padding: 16px 20px; }
+      .hero h1 { font-size: 28px; }
+      .hero p { font-size: 16px; }
+      .sharon-section { flex-direction: column; align-items: center; text-align: center; }
+      .eden-section { flex-direction: column; align-items: center; text-align: center; }
+      .container { padding: 30px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-brand">
+      <span class="header-name">שרון חכמון</span>
+      <span class="header-tagline">נתיב הכסף החכם שלך</span>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>שרון חכמון</h1>
+    <p>כלכלנית | 25 שנות ניסיון פיננסי | מנגישה ידע לנשים</p>
+  </div>
+
+  <div class="container">
+
+    <!-- SHARON -->
+    <div class="sharon-section">
+      <img src="sharon.jpeg" alt="שרון חכמון" class="sharon-photo">
+      <div class="sharon-text">
+        <h2>שרון חכמון</h2>
+        <div class="title">כלכלנית ומנחה פיננסית</div>
+        <p>
+          25 שנה עבדתי בתפקידים ניהוליים בתוך המערכת הפיננסית — בבנקים ובחברות ביטוח.
+          בגיל 54 פרשתי — לא כי הייתי חייבת, אלא כי יכולתי.
+          בניתי לעצמי בסיס כלכלי בשתי ידי, שמאפשר לי לבחור במה לעסוק ובאיזה קצב.
+        </p>
+      </div>
+    </div>
+
+    <!-- STORY -->
+    <div class="story-section">
+      <h3>למה אני עושה את זה</h3>
+      <p>
+        ראיתי יותר מדי נשים שהתעוררו לעולם הכלכלי שלהן רק אחרי משבר — גירושין, התאלמנות.
+        כשהכסף פתאום הפך לאחריות שלהן לבד.
+        הידע צריך לבוא לפני, לא אחרי.
+      </p>
+      <p>
+        גם לי היה רגע כזה. כסטודנטית נכנסתי לשוק ההון בלי להבין מה אני עושה —
+        עם כסף שלא היה מיועד לטווח ארוך. הפסדתי.
+        ומאותו רגע התחלתי ללמוד — ולא הפסקתי.
+      </p>
+
+      <div class="highlight-box">
+        ביטחון כלכלי מאפשר לנו לקבל החלטות על החיים שלנו — כשאנחנו רוצות, לא כשאנחנו חייבות.
+      </div>
+    </div>
+
+    <!-- WHAT I OFFER -->
+    <div class="offers-section">
+      <h3>מה אני מציעה</h3>
+
+      <div class="offer-card">
+        <img src="logo-hamaagl.png" alt="המעגל הפיננסי" class="offer-logo">
+        <div class="offer-content">
+          <h4>המעגל הפיננסי — קהילת נשים</h4>
+          <p>
+            בית פיננסי לנשים שרוצות להבין את הכספים שלהן ולקבל החלטות בביטחון.
+            מפגשי הדרכה חודשיים בזום, שיחות בגובה העיניים, ותמיכה הדדית בקהילה.
+          </p>
+        </div>
+      </div>
+
+      <div class="offer-card">
+        <div class="offer-icon">📈</div>
+        <div class="offer-content">
+          <h4>קורס "נתיב ההשקעות"</h4>
+          <p>
+            5 מפגשים של צעדים ראשונים בשוק ההון — בשפה פשוטה, ישירה, עם יישום אמיתי.
+            כי ידע פיננסי שייך לכל אישה.
+          </p>
+        </div>
+      </div>
+
+      <div class="offer-card">
+        <img src="logo-sharon.png" alt="ליווי לצמיחה כלכלית" class="offer-logo">
+        <div class="offer-content">
+          <h4>ליווי אישי אחת על אחת</h4>
+          <p>
+            מפגשי זום אישיים שמותאמים לך ולמצבך הכלכלי.
+            נשים שרוצות לשלוט בתזרים שלהן, להכיר את הנכסים שלהן,
+            ולדעת איך לגרום לכסף לעבוד עבורן — בקצב שלהן, עם ליווי צמוד.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- EDEN -->
+    <div class="eden-section">
+      <img src="eden.png" alt="עדן" class="eden-photo">
+      <div class="eden-text">
+        <h3>עדן — המלווה האישית שלך</h3>
+        <p>
+          עוזרת אישית חכמה שפיתחתי, שמלווה את הצעדים הראשונים שלך בשוק ההון.
+          יש שאלה שעלתה אחרי המפגש? רוצה לוודא שהבנת משהו?
+          עדן זמינה בכל שעה — בשפה פשוטה ובלי שיפוט.
+        </p>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-section">
+      <h3>מוזמנת להצטרף אלינו 💛</h3>
+      <p>המעגל הפיננסי — קהילת וואטסאפ לנשים שמדברות על כסף</p>
+      <a href="https://chat.whatsapp.com/F8iXq6t56CeA9qKCZzgVI0?s=cl&p=a&ilr=0" class="whatsapp-btn" target="_blank">
+        <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="#25D366">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+          <path d="M12 0C5.373 0 0 5.373 0 12c0 2.115.554 4.103 1.524 5.824L.057 23.926l6.244-1.637A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.814 9.814 0 01-5.001-1.368l-.36-.214-3.707.972.99-3.614-.235-.372A9.818 9.818 0 012.182 12C2.182 6.58 6.58 2.182 12 2.182S21.818 6.58 21.818 12 17.42 21.818 12 21.818z"/>
+        </svg>
+        הצטרפי לקבוצה
+      </a>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    שרון חכמון | נתיב פיננסי | המעגל הפיננסי
+  </div>
+
+</body>
+</html>
