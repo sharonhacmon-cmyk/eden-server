@@ -2,184 +2,178 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>שרון חכמון | כלכלנית ומלווה פיננסית</title>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="שרון חכמון | כלכלנית ומלווה פיננסית">
+  <meta property="og:description" content="מלווה נשים לקחת שליטה על הכסף שלהן — בשפה פשוטה, בלי לחץ, עם ביטחון.">
+  <meta property="og:image" content="https://eden-server-73ms.onrender.com/og.jpg">
+  <meta property="og:url" content="https://eden-server-73ms.onrender.com/card-sharon-v2.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://eden-server-73ms.onrender.com/og.jpg">
+
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
+    html, body {
+      width: 100%; min-height: 100vh;
       font-family: 'Heebo', sans-serif;
-      background: #f0e8d5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+      direction: rtl;
+      background: #FEFAF4;
     }
 
-    .card {
-      width: 900px;
-      height: 500px;
-      background: linear-gradient(145deg, #FEFAF4 60%, #f5edd8);
-      border-radius: 28px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-      display: flex;
+    /* ── תמונה ── */
+    .photo-wrap {
+      width: 100%;
+      height: 55vw;
+      max-height: 320px;
       overflow: hidden;
       position: relative;
     }
-
-    /* פס זהב בצד ימין */
-    .card::before {
+    .photo-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+    }
+    .photo-wrap::after {
       content: '';
-      position: absolute;
-      right: 0;
-      top: 0;
-      width: 8px;
-      height: 100%;
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 80px;
+      background: linear-gradient(to top, #FEFAF4, transparent);
+    }
+    .gold-stripe {
+      position: absolute; top: 0; right: 0;
+      width: 6px; height: 100%;
       background: linear-gradient(to bottom, #8B6914, #C49A2A, #8B6914);
     }
 
-    /* תמונת שרון */
-    .photo-side {
-      width: 320px;
-      flex-shrink: 0;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .photo-side img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: top center;
-    }
-
-    .photo-overlay {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 120px;
-      background: linear-gradient(to top, rgba(254,250,244,0.95), transparent);
-    }
-
-    /* תוכן */
-    .content-side {
-      flex: 1;
-      padding: 50px 50px 40px 30px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      direction: rtl;
-      text-align: right;
-    }
-
-    .top-content {}
-
-    .logo-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 28px;
-    }
-
-    .logo-row img {
-      height: 50px;
-      object-fit: contain;
+    /* ── תוכן ── */
+    .content {
+      padding: 4px 24px 36px;
     }
 
     .name {
-      font-size: 38px;
+      font-size: 32px;
       font-weight: 900;
       color: #8B6914;
-      line-height: 1.1;
-      margin-bottom: 6px;
+      margin-bottom: 3px;
     }
-
     .subtitle {
-      font-size: 17px;
+      font-size: 14px;
       color: #B8860B;
       font-weight: 500;
-      margin-bottom: 20px;
+      margin-bottom: 14px;
     }
-
     .divider {
-      width: 60px;
-      height: 3px;
+      width: 48px; height: 3px;
       background: linear-gradient(to left, #8B6914, #F2A7BE);
       border-radius: 2px;
-      margin-bottom: 20px;
+      margin-bottom: 14px;
     }
-
     .tagline {
-      font-size: 18px;
+      font-size: 15px;
       color: #444;
-      font-weight: 400;
       line-height: 1.7;
+      margin-bottom: 24px;
     }
+    .tagline strong { color: #8B6914; }
 
-    .tagline strong {
-      color: #8B6914;
-      font-weight: 700;
-    }
+    /* ── כפתורי קשר ── */
+    .contacts { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
 
-    .bottom-row {
+    .btn {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 12px;
+      text-decoration: none;
+      padding: 13px 16px;
+      border-radius: 14px;
+      font-family: 'Heebo', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: #3a2a00;
+      background: rgba(139,105,20,0.08);
+      border: 1px solid rgba(139,105,20,0.18);
+      cursor: pointer;
+      transition: background 0.15s;
     }
+    .btn:active { background: rgba(139,105,20,0.18); }
+    .btn-icon { font-size: 20px; flex-shrink: 0; }
 
-    .cta-badge {
-      background: linear-gradient(135deg, #8B6914, #C49A2A);
-      color: white;
-      font-size: 16px;
+    /* ── כפתור ראשי ── */
+    .btn-main {
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      background: linear-gradient(135deg, #8B6914 0%, #C49A2A 100%);
+      color: #fff;
+      font-family: 'Heebo', sans-serif;
+      font-size: 17px;
       font-weight: 700;
-      padding: 14px 32px;
+      padding: 16px 24px;
       border-radius: 50px;
-      letter-spacing: 0.3px;
+      margin-bottom: 22px;
+      box-shadow: 0 4px 18px rgba(139,105,20,0.32);
+      cursor: pointer;
     }
+    .btn-main:active { opacity: 0.88; }
 
-    .logos-bottom {
+    /* ── לוגואים ── */
+    .logos {
       display: flex;
       gap: 16px;
       align-items: center;
+      justify-content: center;
+      padding-top: 18px;
+      border-top: 1px solid rgba(139,105,20,0.15);
     }
-
-    .logos-bottom img {
-      height: 44px;
-      object-fit: contain;
-      opacity: 0.85;
-    }
+    .logos img { height: 36px; object-fit: contain; opacity: 0.75; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <div class="photo-side">
-      <img src="eden-server/public/sharon.jpeg" alt="שרון חכמון">
-      <div class="photo-overlay"></div>
+
+  <div class="photo-wrap">
+    <div class="gold-stripe"></div>
+    <img src="sharon.jpeg" alt="שרון חכמון">
+  </div>
+
+  <div class="content">
+    <div class="name">שרון חכמון</div>
+    <div class="subtitle">כלכלנית, מנחה ומלווה פיננסית &nbsp;|&nbsp; 25 שנות ניסיון</div>
+    <div class="divider"></div>
+    <div class="tagline">
+      מלווה נשים לקחת שליטה על הכסף שלהן —<br>
+      <strong>בשפה פשוטה, בלי לחץ, עם ביטחון.</strong>
     </div>
 
-    <div class="content-side">
-      <div class="top-content">
-        <div class="name">שרון חכמון</div>
-        <div class="subtitle">כלכלנית | 25 שנות ניסיון פיננסי</div>
-        <div class="divider"></div>
-        <div class="tagline">
-          מלווה פיננסית לנשים.
-        </div>
-      </div>
-
-      <div class="contact-row" style="font-size:15px; color:#555; margin-bottom:16px; display:flex; flex-direction:column; gap:4px;">
+    <div class="contacts">
+      <a href="tel:0545629181" class="btn">
+        <span class="btn-icon">📞</span>
         <span>054-562-9181</span>
+      </a>
+      <a href="mailto:sharon.hacmon@gmail.com" class="btn">
+        <span class="btn-icon">✉️</span>
         <span>sharon.hacmon@gmail.com</span>
-      </div>
-      <div class="bottom-row">
-        <div class="cta-badge">לכרטיס הביקור שלי ←</div>
-        <div class="logos-bottom">
-          <img src="עיצוב/מעגל פיננסי - לוגו.png" alt="המעגל הפיננסי">
-          <img src="../לוגו/Picture1.png" alt="שרון חכמון">
-        </div>
-      </div>
+      </a>
+      <a href="https://chat.whatsapp.com/F8iXq6t56CeA9qKCZzgVI0" target="_blank" class="btn">
+        <span class="btn-icon">💬</span>
+        <span>המעגל הפיננסי — קבוצת WhatsApp</span>
+      </a>
+    </div>
+
+    <a href="https://eden-server-73ms.onrender.com/prospectus-sharon.html" class="btn-main">
+      לכרטיס ביקור מפורט ←
+    </a>
+
+    <div class="logos">
+      <img src="logo-hamaagl.png" alt="המעגל הפיננסי">
+      <img src="logo-sharon.png" alt="שרון חכמון">
     </div>
   </div>
+
 </body>
 </html>
