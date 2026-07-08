@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מחשבון דמי ניהול | המעגל הפיננסי</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg1:      #1a0535;
+  --bg2:      #0d1040;
+  --purple:   #8b5cf6;
+  --purple2:  #a78bfa;
+  --pink:     #e879a0;
+  --gold:     #f4c542;
+  --gold2:    #fde68a;
+  --white:    #ffffff;
+  --soft:     rgba(255,255,255,0.85);
+  --dim:      rgba(255,255,255,0.42);
+  --card:     rgba(255,255,255,0.06);
+  --border:   rgba(139,92,246,0.35);
+  --glow:     rgba(139,92,246,0.15);
+  --good:     #34d399;
+  --bad:      #f87171;
+}
+
+body {
+  font-family: 'Heebo', sans-serif;
+  background: linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 100%);
+  color: var(--white);
+  min-height: 100vh;
+  direction: rtl;
+}
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 10% 20%, rgba(139,92,246,0.18) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 45% at 90% 80%, rgba(232,121,160,0.12) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--purple) 0%, var(--pink) 50%, var(--gold) 100%);
+  z-index: 1000;
+}
+
+.page-wrap {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 24px 64px;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 36px;
+  text-align: center;
+}
+.logo-wrap img {
+  height: 60px; width: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 20px rgba(139,92,246,0.50);
+}
+.brand { font-size: 18px; font-weight: 300; color: var(--dim); letter-spacing: 0.06em; }
+
+.badge {
+  display: inline-block;
+  background: rgba(244,197,66,0.10);
+  border: 1px solid rgba(244,197,66,0.35);
+  border-radius: 24px;
+  padding: 5px 18px;
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+
+h1 {
+  font-size: 38px;
+  font-weight: 900;
+  line-height: 1.2;
+  color: var(--white);
+}
+
+.underline {
+  width: 60px; height: 3px;
+  background: linear-gradient(90deg, var(--purple), var(--pink));
+  border-radius: 3px;
+  margin: 0 auto;
+}
+
+/* CALCULATOR LAYOUT */
+.calc-wrap {
+  width: 100%;
+  max-width: 920px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 640px) {
+  .calc-wrap { grid-template-columns: 1fr; }
+  h1 { font-size: 28px; }
+}
+
+/* CALCULATOR BOX */
+.calc-box {
+  background: rgba(139,92,246,0.08);
+  border: 1px solid rgba(139,92,246,0.38);
+  border-radius: 20px;
+  padding: 26px 28px;
+}
+
+.calc-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.calc-row:last-child { margin-bottom: 0; }
+
+.calc-label {
+  font-size: 18px;
+  color: var(--dim);
+  min-width: 160px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.calc-input {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(139,92,246,0.40);
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--white);
+  font-family: 'Heebo', sans-serif;
+  width: 120px;
+  text-align: center;
+  direction: ltr;
+}
+.calc-input:focus { outline: none; border-color: var(--purple); }
+
+.calc-unit { font-size: 18px; color: var(--dim); flex-shrink: 0; }
+
+.divider { border-top: 1px solid var(--border); margin: 16px 0; }
+
+/* MODE BUTTONS */
+.mode-btn-group {
+  display: flex;
+  gap: 0;
+  border: 1px solid rgba(139,92,246,0.40);
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.mode-btn {
+  padding: 7px 16px;
+  font-size: 15px;
+  font-family: 'Heebo', sans-serif;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.mode-btn.active { background: rgba(139,92,246,0.55); color: #fff; }
+.mode-btn.inactive { background: transparent; color: var(--purple2); }
+
+/* RESULTS */
+.results-col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px 24px;
+  box-shadow: 0 4px 28px var(--glow);
+}
+.card-green { background: rgba(52,211,153,0.08);  border-color: rgba(52,211,153,0.30); }
+.card-red   { background: rgba(248,113,113,0.08); border-color: rgba(248,113,113,0.30); }
+.card-gold  { background: rgba(244,197,66,0.08);  border-color: rgba(244,197,66,0.36); }
+
+.result-label { font-size: 17px; color: var(--dim); margin-bottom: 5px; }
+.result-val   { font-size: 38px; font-weight: 900; line-height: 1; margin-bottom: 4px; }
+.result-sub   { font-size: 15px; color: var(--dim); }
+
+.good-text { color: var(--good); }
+.bad-text  { color: var(--bad); }
+.gold-text { color: var(--gold); }
+
+/* TIP */
+.tip {
+  background: rgba(244,197,66,0.07);
+  border: 1px solid rgba(244,197,66,0.30);
+  border-radius: 14px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.tip-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+.tip-text { font-size: 19px; font-weight: 400; color: var(--gold2); line-height: 1.55; }
+
+/* FOOTER */
+.page-footer {
+  margin-top: 48px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--dim);
+}
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo-wrap">
+      <img src="../../עיצוב/מעגל פיננסי - לוגו.png" alt="המעגל הפיננסי">
+    </div>
+    <div class="brand">המעגל הפיננסי — נשים מדברות על כסף</div>
+    <div class="badge">🧮 מחשבון חי</div>
+    <h1>כמה שווים דמי הניהול שלך?</h1>
+    <div class="underline"></div>
+  </div>
+
+  <!-- CALCULATOR -->
+  <div class="calc-wrap">
+
+    <!-- INPUTS -->
+    <div class="calc-box">
+      <div class="calc-row">
+        <span class="calc-label">סוג הפקדה</span>
+        <div class="mode-btn-group">
+          <button class="mode-btn active" id="btnAnnual" onclick="setMode('annual')">שנתית</button>
+          <button class="mode-btn inactive" id="btnMonthly" onclick="setMode('monthly')">חודשית</button>
+        </div>
+      </div>
+      <div class="calc-row">
+        <span class="calc-label" id="pmtLabel">הפקדה שנתית</span>
+        <input class="calc-input" id="cPmt" type="number" value="80000" min="1000" step="1000" oninput="calcFees()">
+        <span class="calc-unit">₪</span>
+      </div>
+      <div class="calc-row">
+        <span class="calc-label">שנות חיסכון</span>
+        <input class="calc-input" id="cYrs" type="number" value="20" min="1" max="40" step="1" oninput="calcFees()">
+        <span class="calc-unit">שנה</span>
+      </div>
+      <div class="calc-row">
+        <span class="calc-label">תשואה שנתית</span>
+        <input class="calc-input" id="cRet" type="number" value="7" min="1" max="15" step="0.5" oninput="calcFees()">
+        <span class="calc-unit">%</span>
+      </div>
+      <div class="divider"></div>
+      <div class="calc-row">
+        <span class="calc-label" style="color:var(--good);">דמי ניהול נמוכים</span>
+        <input class="calc-input" id="cFee1" type="number" value="0.2" min="0" max="2" step="0.1" oninput="calcFees()" style="border-color:rgba(52,211,153,0.45);">
+        <span class="calc-unit">%</span>
+      </div>
+      <div class="calc-row">
+        <span class="calc-label" style="color:var(--bad);">דמי ניהול גבוהים</span>
+        <input class="calc-input" id="cFee2" type="number" value="1.1" min="0" max="2" step="0.1" oninput="calcFees()" style="border-color:rgba(248,113,113,0.45);">
+        <span class="calc-unit">%</span>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="results-col">
+      <div class="card card-green">
+        <div class="result-label">עם דמי ניהול נמוכים</div>
+        <div class="result-val good-text" id="rLow">3,207,000 ₪</div>
+        <div class="result-sub">שווי בפרישה</div>
+      </div>
+      <div class="card card-red">
+        <div class="result-label">עם דמי ניהול גבוהים</div>
+        <div class="result-val bad-text" id="rHigh">2,913,000 ₪</div>
+        <div class="result-sub">שווי בפרישה</div>
+      </div>
+      <div class="card card-gold" style="text-align:center;">
+        <div class="result-label">ההפרש שנשאר בכיס שלך</div>
+        <div class="result-val gold-text" id="rDiff">294,000 ₪</div>
+        <div class="result-sub">בגלל בחירת קופה נכונה</div>
+      </div>
+      <div class="tip">
+        <span class="tip-icon">💡</span>
+        <p class="tip-text">שתי קופות, אותן הפקדות — ההפרש רק בדמי הניהול</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="page-footer">שרון חכמון &nbsp;|&nbsp; המעגל הפיננסי</div>
+
+</div>
+
+<script>
+var calcMode = 'annual';
+
+function setMode(mode) {
+  calcMode = mode;
+  var isMonthly = (mode === 'monthly');
+  document.getElementById('pmtLabel').textContent = isMonthly ? 'הפקדה חודשית' : 'הפקדה שנתית';
+  document.getElementById('cPmt').value = isMonthly ? '6000' : '80000';
+  document.getElementById('cPmt').step  = isMonthly ? '500' : '1000';
+  document.getElementById('btnAnnual').className  = 'mode-btn ' + (isMonthly ? 'inactive' : 'active');
+  document.getElementById('btnMonthly').className = 'mode-btn ' + (isMonthly ? 'active' : 'inactive');
+  calcFees();
+}
+
+function fv(pmt, years, annualPct) {
+  if (annualPct <= 0) return pmt * years;
+  var r = annualPct / 100;
+  return pmt * ((Math.pow(1 + r, years) - 1) / r);
+}
+
+function fvMonthly(monthlyPmt, years, annualPct) {
+  if (annualPct <= 0) return monthlyPmt * years * 12;
+  var r = annualPct / 100 / 12;
+  var n = years * 12;
+  return monthlyPmt * ((Math.pow(1 + r, n) - 1) / r);
+}
+
+function fmt(n) {
+  return Math.round(n).toLocaleString('he-IL') + ' ₪';
+}
+
+function calcFees() {
+  var pmt  = parseFloat(document.getElementById('cPmt').value)  || (calcMode === 'monthly' ? 6000 : 80000);
+  var yrs  = parseFloat(document.getElementById('cYrs').value)  || 20;
+  var ret  = parseFloat(document.getElementById('cRet').value)  || 7;
+  var fee1 = parseFloat(document.getElementById('cFee1').value) || 0.2;
+  var fee2 = parseFloat(document.getElementById('cFee2').value) || 1.1;
+  var v1, v2;
+  if (calcMode === 'monthly') {
+    v1 = fvMonthly(pmt, yrs, ret - fee1);
+    v2 = fvMonthly(pmt, yrs, ret - fee2);
+  } else {
+    v1 = fv(pmt, yrs, ret - fee1);
+    v2 = fv(pmt, yrs, ret - fee2);
+  }
+  document.getElementById('rLow').textContent  = fmt(v1);
+  document.getElementById('rHigh').textContent = fmt(v2);
+  document.getElementById('rDiff').textContent = fmt(Math.max(0, v1 - v2));
+}
+
+calcFees();
+</script>
+</body>
+</html>
