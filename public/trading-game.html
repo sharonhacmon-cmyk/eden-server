@@ -441,7 +441,7 @@ body {
       <label class="form-label" id="txt-code-label">קוד גישה</label>
       <input class="form-input" id="inputCode" type="text" placeholder="הכנס קוד" autocomplete="off" style="text-align:center;font-size:20px;letter-spacing:0.1em;text-transform:uppercase">
     </div>
-    <button class="btn btn-primary" onclick="doLogin()" id="txt-login-btn">כניסה לשוק 🚀</button>
+    <button type="button" class="btn btn-primary" onclick="doLogin()" id="txt-login-btn">כניסה לשוק 🚀</button>
     <p style="text-align:center;margin-top:16px;font-size:13px;color:var(--dim)" id="txt-login-hint"></p>
   </div>
 </div>
@@ -1796,6 +1796,10 @@ function renderIntro() {
     <div class="intro-tip"><span class="ti">✅</span><span>${he
       ? 'לחצו על כל מניה ובחרו <strong>"למה המניה זזה היום?"</strong> לקבל הסבר'
       : 'Tap any stock and tap <strong>"Why did this stock move?"</strong> for an explanation'
+    }</span></div>
+    <div class="intro-tip"><span class="ti">📈</span><span>${he
+      ? 'לחצו על כל מניה לצפייה ב<strong>גרף היסטוריה</strong> — ראו מה קרה בשבוע האחרון ובחודש האחרון'
+      : 'Tap any stock to see its <strong>price history chart</strong> — view the last 7 or 30 days'
     }</span></div>
   </div>
 
