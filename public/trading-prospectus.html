@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="שוק ההון הווירטואלי — משחק מסחר חינוכי לילדים ובני נוער. ילדכם לומד כלכלה אמיתית בסביבה בטוחה ומרתקת.">
+<title>שוק ההון הווירטואלי — נתיב | הכשרה פיננסית לילדים</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+/* ── RESET & ROOT ─────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #07071A;
+  --bg2:      #0B0B24;
+  --card:     #0F0F2E;
+  --card2:    #13133A;
+  --purple:   #7C5CFC;
+  --purple2:  #A78BFA;
+  --purple3:  #5B3FD4;
+  --gold:     #FFD700;
+  --gold2:    #FFF3B0;
+  --green:    #00E676;
+  --green2:   #69F0AE;
+  --red:      #FF5252;
+  --text:     #EEEEFF;
+  --dim:      rgba(238,238,255,0.55);
+  --dim2:     rgba(238,238,255,0.3);
+  --border:   rgba(124,92,252,0.25);
+  --border2:  rgba(124,92,252,0.5);
+  --glow:     rgba(124,92,252,0.15);
+  --glow2:    rgba(0,230,118,0.12);
+  --glow-gold: rgba(255,215,0,0.12);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Heebo', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.7;
+}
+
+/* ── UTILITIES ────────────────────────────────── */
+.container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.section { padding: 88px 0; }
+.section-sm { padding: 64px 0; }
+
+.tag {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--purple2);
+  background: rgba(124,92,252,0.12);
+  border: 1px solid rgba(124,92,252,0.3);
+  border-radius: 40px;
+  padding: 5px 16px;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: clamp(26px, 4vw, 40px);
+  font-weight: 800;
+  line-height: 1.25;
+  margin-bottom: 16px;
+}
+
+.section-subtitle {
+  font-size: clamp(15px, 2vw, 18px);
+  color: var(--dim);
+  max-width: 600px;
+  margin: 0 auto 56px;
+}
+
+.text-center { text-align: center; }
+.text-purple { color: var(--purple2); }
+.text-gold   { color: var(--gold); }
+.text-green  { color: var(--green); }
+
+/* ── GLOWING LINE ─────────────────────────────── */
+.glow-line {
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--purple), var(--green));
+  border-radius: 2px;
+  margin: 0 auto 32px;
+}
+
+/* ── TICKER BAR ───────────────────────────────── */
+.ticker-bar {
+  background: rgba(7,7,26,0.98);
+  border-bottom: 1px solid var(--border);
+  padding: 0;
+  height: 36px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.ticker-track {
+  display: flex;
+  gap: 40px;
+  white-space: nowrap;
+  animation: ticker 30s linear infinite;
+  padding: 0 20px;
+}
+
+.ticker-item {
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  direction: ltr;
+}
+
+.ticker-sym { color: var(--purple2); }
+.ticker-up  { color: var(--green); }
+.ticker-dn  { color: var(--red); }
+
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ── NAV ──────────────────────────────────────── */
+.nav {
+  background: rgba(7,7,26,0.95);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 36px;
+  z-index: 99;
+}
+
+.nav-logo {
+  font-size: 20px;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--purple2), var(--green));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-decoration: none;
+}
+
+.nav-cta {
+  background: linear-gradient(135deg, var(--purple3), var(--purple));
+  color: #fff;
+  font-family: 'Heebo', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  border-radius: 40px;
+  padding: 9px 22px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.2s, transform 0.2s;
+  display: inline-block;
+}
+
+.nav-cta:hover { opacity: 0.88; transform: translateY(-1px); }
+
+/* ── HERO ─────────────────────────────────────── */
+.hero {
+  position: relative;
+  padding: 100px 0 96px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(124,92,252,0.22) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(0,230,118,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.hero-eyebrow::before,
+.hero-eyebrow::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--green);
+  opacity: 0.5;
+}
+
+.hero-title {
+  font-size: clamp(34px, 6vw, 68px);
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 28px;
+  letter-spacing: -0.01em;
+}
+
+.hero-title .highlight {
+  background: linear-gradient(135deg, var(--purple2), var(--green2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: clamp(16px, 2.2vw, 21px);
+  color: var(--dim);
+  max-width: 620px;
+  margin: 0 auto 48px;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 72px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--purple3), var(--purple));
+  color: #fff;
+  font-family: 'Heebo', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  border-radius: 50px;
+  padding: 16px 36px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 0 0 32px rgba(124,92,252,0.35);
+  transition: all 0.25s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 44px rgba(124,92,252,0.5);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  font-family: 'Heebo', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  border: 1px solid var(--border2);
+  border-radius: 50px;
+  padding: 15px 32px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.25s;
+}
+
+.btn-secondary:hover {
+  background: var(--glow);
+  border-color: var(--purple2);
+}
+
+/* ── HERO STATS ───────────────────────────────── */
+.hero-stats {
+  display: flex;
+  gap: 0;
+  justify-content: center;
+  flex-wrap: wrap;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: rgba(15,15,46,0.7);
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.hero-stat {
+  flex: 1;
+  min-width: 140px;
+  padding: 28px 20px;
+  text-align: center;
+  border-left: 1px solid var(--border);
+}
+
+.hero-stat:last-child { border-left: none; }
+
+.hero-stat-value {
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.hero-stat-label {
+  font-size: 13px;
+  color: var(--dim);
+  font-weight: 500;
+}
+
+/* ── TRUSTED BY ───────────────────────────────── */
+.trusted {
+  padding: 36px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: rgba(15,15,46,0.4);
+  text-align: center;
+}
+
+.trusted-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim2);
+  margin-bottom: 20px;
+}
+
+.trusted-logos {
+  display: flex;
+  gap: 48px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.trusted-logo-item {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--dim);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── WHY SECTION ──────────────────────────────── */
+.why-section {
+  background: var(--bg2);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  margin-top: 56px;
+}
+
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px 28px;
+  transition: border-color 0.25s, transform 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, var(--glow), transparent 70%);
+  pointer-events: none;
+}
+
+.stat-card:hover {
+  border-color: var(--border2);
+  transform: translateY(-4px);
+}
+
+.stat-card-num {
+  font-size: 48px;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.stat-card-text {
+  font-size: 15px;
+  color: var(--dim);
+  line-height: 1.6;
+}
+
+.stat-card-source {
+  font-size: 11px;
+  color: var(--dim2);
+  margin-top: 10px;
+}
+
+/* ── WHAT THEY LEARN ──────────────────────────── */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 56px;
+}
+
+.skill-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px 28px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  transition: all 0.25s;
+}
+
+.skill-card:hover {
+  border-color: var(--purple2);
+  background: var(--card2);
+  transform: translateY(-3px);
+}
+
+.skill-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.skill-icon.purple { background: rgba(124,92,252,0.15); }
+.skill-icon.green  { background: rgba(0,230,118,0.12); }
+.skill-icon.gold   { background: rgba(255,215,0,0.12); }
+.skill-icon.blue   { background: rgba(64,196,255,0.12); }
+
+.skill-body h3 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  line-height: 1.35;
+}
+
+.skill-body p {
+  font-size: 14px;
+  color: var(--dim);
+  line-height: 1.65;
+}
+
+/* ── HOW IT WORKS ─────────────────────────────── */
+.how-section {
+  background: var(--bg2);
+  position: relative;
+}
+
+.steps-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 32px;
+  margin-top: 56px;
+  position: relative;
+}
+
+.step-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 40px 32px;
+  text-align: center;
+  position: relative;
+  transition: all 0.25s;
+}
+
+.step-card:hover {
+  border-color: var(--border2);
+  transform: translateY(-4px);
+}
+
+.step-num {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--purple3), var(--purple));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 900;
+  margin: 0 auto 24px;
+  box-shadow: 0 0 24px rgba(124,92,252,0.4);
+}
+
+.step-card h3 {
+  font-size: 19px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.step-card p {
+  font-size: 15px;
+  color: var(--dim);
+  line-height: 1.7;
+}
+
+/* ── FEATURES SHOWCASE ────────────────────────── */
+.features-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 48px;
+}
+
+@media (max-width: 600px) {
+  .features-list { grid-template-columns: 1fr; }
+}
+
+.feature-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.2s;
+}
+
+.feature-item:hover {
+  border-color: var(--border2);
+}
+
+.feature-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+  box-shadow: 0 0 8px rgba(0,230,118,0.5);
+}
+
+.feature-item p {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* ── MOCK SCREEN ──────────────────────────────── */
+.mock-phone {
+  background: var(--card);
+  border: 2px solid var(--border2);
+  border-radius: 28px;
+  padding: 24px 20px;
+  max-width: 340px;
+  margin: 56px auto 0;
+  box-shadow:
+    0 0 60px rgba(124,92,252,0.2),
+    0 30px 80px rgba(0,0,0,0.5);
+  position: relative;
+}
+
+.mock-notch {
+  width: 100px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border2);
+  margin: 0 auto 20px;
+}
+
+.mock-ticker {
+  background: rgba(124,92,252,0.1);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 11px;
+  color: var(--purple2);
+  margin-bottom: 16px;
+  font-weight: 600;
+  direction: ltr;
+}
+
+.mock-stock {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  margin-bottom: 10px;
+  transition: background 0.2s;
+}
+
+.mock-stock:hover { background: rgba(124,92,252,0.07); }
+
+.mock-stock-name { font-size: 13px; font-weight: 700; }
+.mock-stock-sub  { font-size: 11px; color: var(--dim); }
+
+.mock-stock-price {
+  font-size: 14px;
+  font-weight: 700;
+  direction: ltr;
+}
+
+.mock-up   { color: var(--green); }
+.mock-dn   { color: var(--red); }
+.mock-gold { color: var(--gold); }
+
+.mock-wallet {
+  margin-top: 16px;
+  background: linear-gradient(135deg, rgba(124,92,252,0.2), rgba(0,230,118,0.1));
+  border: 1px solid var(--border2);
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mock-wallet-label { font-size: 12px; color: var(--dim); }
+.mock-wallet-val   { font-size: 20px; font-weight: 900; color: var(--gold); }
+
+/* ── TESTIMONIALS ─────────────────────────────── */
+.testimonials-section {
+  background: var(--bg);
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 56px;
+}
+
+.testimonial-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 36px 32px;
+  position: relative;
+  transition: all 0.25s;
+}
+
+.testimonial-card:hover {
+  border-color: var(--border2);
+  transform: translateY(-3px);
+}
+
+.testimonial-quote {
+  font-size: 40px;
+  line-height: 1;
+  color: var(--purple2);
+  opacity: 0.4;
+  margin-bottom: 8px;
+  font-family: Georgia, serif;
+}
+
+.testimonial-text {
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.75;
+  margin-bottom: 28px;
+  font-style: italic;
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.testimonial-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--purple3), var(--purple2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.testimonial-name {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.testimonial-role {
+  font-size: 12px;
+  color: var(--dim);
+}
+
+/* ── FAQ ──────────────────────────────────────── */
+.faq-section {
+  background: var(--bg2);
+}
+
+.faq-list {
+  max-width: 720px;
+  margin: 56px auto 0;
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--border);
+}
+
+.faq-question {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-family: 'Heebo', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  text-align: right;
+  padding: 28px 0;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  transition: color 0.2s;
+}
+
+.faq-question:hover { color: var(--purple2); }
+
+.faq-chevron {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--border2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--purple2);
+  transition: transform 0.25s;
+}
+
+.faq-item.open .faq-chevron { transform: rotate(180deg); }
+
+.faq-answer {
+  font-size: 15px;
+  color: var(--dim);
+  line-height: 1.75;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, padding 0.3s;
+}
+
+.faq-item.open .faq-answer {
+  max-height: 400px;
+  padding-bottom: 28px;
+}
+
+/* ── CTA SECTION ──────────────────────────────── */
+.cta-section {
+  background: var(--bg);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 80% at 50% 100%, rgba(124,92,252,0.2) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.cta-box {
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: 32px;
+  padding: 64px 48px;
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.cta-box::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(124,92,252,0.18), transparent 70%);
+  pointer-events: none;
+}
+
+.cta-box h2 {
+  font-size: clamp(26px, 4vw, 40px);
+  font-weight: 900;
+  margin-bottom: 18px;
+}
+
+.cta-box p {
+  font-size: 17px;
+  color: var(--dim);
+  margin-bottom: 40px;
+  line-height: 1.7;
+}
+
+.contact-options {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.contact-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(124,92,252,0.1);
+  border: 1px solid var(--border2);
+  border-radius: 50px;
+  padding: 13px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+  transition: all 0.22s;
+}
+
+.contact-option:hover {
+  background: rgba(124,92,252,0.2);
+  border-color: var(--purple2);
+  transform: translateY(-2px);
+}
+
+.contact-option.whatsapp {
+  background: rgba(0,230,118,0.1);
+  border-color: rgba(0,230,118,0.3);
+}
+
+.contact-option.whatsapp:hover {
+  background: rgba(0,230,118,0.18);
+  border-color: var(--green);
+}
+
+/* ── ABOUT BAR ────────────────────────────────── */
+.about-bar {
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  padding: 56px 0;
+}
+
+.about-inner {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.about-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--purple3), var(--green));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 900;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.about-text h3 {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.about-text p {
+  font-size: 15px;
+  color: var(--dim);
+  line-height: 1.7;
+  max-width: 560px;
+}
+
+/* ── FOOTER ───────────────────────────────────── */
+footer {
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  padding: 32px 0;
+  text-align: center;
+}
+
+footer p {
+  font-size: 13px;
+  color: var(--dim2);
+  line-height: 1.8;
+}
+
+footer a {
+  color: var(--purple2);
+  text-decoration: none;
+}
+
+footer a:hover { text-decoration: underline; }
+
+/* ── BADGE ────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gold);
+  background: rgba(255,215,0,0.1);
+  border: 1px solid rgba(255,215,0,0.25);
+  border-radius: 6px;
+  padding: 3px 10px;
+}
+
+/* ── DIVIDER ──────────────────────────────────── */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0;
+}
+
+/* ── RESPONSIVE ───────────────────────────────── */
+@media (max-width: 768px) {
+  .section { padding: 64px 0; }
+  .hero { padding: 72px 0 64px; }
+  .hero-stat { padding: 20px 14px; }
+  .hero-stat-value { font-size: 24px; }
+  .cta-box { padding: 44px 28px; }
+  .about-inner { justify-content: center; text-align: center; }
+  .features-list { grid-template-columns: 1fr; }
+  .steps-container { grid-template-columns: 1fr; }
+  .nav-logo { font-size: 17px; }
+}
+
+@media (max-width: 480px) {
+  .hero-stats { flex-direction: column; }
+  .hero-stat { border-left: none; border-bottom: 1px solid var(--border); }
+  .hero-stat:last-child { border-bottom: none; }
+  .skills-grid { grid-template-columns: 1fr; }
+  .testimonials-grid { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: 1fr; }
+}
+
+/* ── PRINT ────────────────────────────────────── */
+@media print {
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  :root {
+    --bg:    #ffffff;
+    --bg2:   #f8f8fc;
+    --card:  #f2f2fa;
+    --card2: #eaeaf5;
+    --text:  #0d0d2a;
+    --dim:   #4a4a6a;
+    --dim2:  #8888aa;
+    --border: #ddddf0;
+    --border2: #c0c0e8;
+  }
+
+  body { background: #fff; color: #0d0d2a; }
+  .ticker-bar { display: none; }
+  .nav { position: static; border-bottom: 2px solid #ddddf0; background: #fff; }
+  .nav-cta { display: none; }
+  .btn-primary, .btn-secondary { display: none; }
+  .hero::before, .cta-section::before, .cta-box::before { display: none; }
+  .hero { padding: 48px 0 40px; }
+  .section { padding: 40px 0; }
+  .section-sm { padding: 28px 0; }
+  .mock-phone { display: none; }
+  .faq-answer { max-height: none !important; padding-bottom: 16px; }
+  .cta-box { box-shadow: none; border: 2px solid #ddddf0; }
+  .contact-option { border: 1px solid #c0c0e8; }
+  .contact-option.whatsapp { border: 1px solid #b0d8c0; }
+  footer { border-top: 1px solid #ddddf0; }
+  .stat-card, .skill-card, .step-card, .testimonial-card, .feature-item { break-inside: avoid; }
+  h1, h2, h3 { break-after: avoid; }
+
+  .hero-title .highlight {
+    -webkit-text-fill-color: #5B3FD4;
+    background: none;
+    color: #5B3FD4;
+  }
+
+  .nav-logo {
+    -webkit-text-fill-color: #5B3FD4;
+    background: none;
+    color: #5B3FD4;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ── TICKER ─────────────────────────────────── -->
+<div class="ticker-bar" aria-hidden="true">
+  <div class="ticker-track">
+    <!-- first half -->
+    <div class="ticker-item"><span class="ticker-sym">AAPL</span><span class="ticker-up">+1.8%</span></div>
+    <div class="ticker-item"><span class="ticker-sym">TSLA</span><span class="ticker-dn">−2.3%</span></div>
+    <div class="ticker-item"><span class="ticker-sym">GOOGL</span><span class="ticker-up">+0.9%</span></div>
+    <div class="ticker-item"><span class="ticker-sym">תל אביב 35</span><span class="ticker-up">+0.5%</span></div>
+    <div class="ticker-item"><span class="ticker-sym">NVIDIA</span><span class="ticker-up">+4.1%</span></div>
+    <div class="ticker-item"><span class="ticker-sym">בנק לאומי</span><span class="ticker-dn">−0.7%</span></div>
+    <div class="ticker-item"><span class="ticker-sym">AMZN</span><span class="ticker-up">+1.4%</span></div>
+    <div class="ticker-item"><span class="ticker-sym">צ'קפוינט</span><span class="ticker-up">+2.2%</span></div>
+    <div class="ticker-item"><span class="ticker-sym">S&amp;P 500</span><span class="ticker-up">+0.6%</span></div>
+    <div class="ticker-item"><span class="ticker-sym">MSFT</span><span class="ticker-dn">−0.4%</span></div>
+    <!-- second half (duplicate for seamless loop) -->
+    <div class="ticker-item"><span class="ticker-sym">AAPL</span><span class="ticker-up">+1.8%</span></div>
+    <div class="ticker-item"><span class="ticker-sym">TSLA</span><span class="ticker-dn">−2.3%</span></div>
+    <div class="ticker-item"><span class="ticker-sym">GOOGL</span><span class="ticker-up">+0.9%</span></div>
+    <div class="ticker-item"><span class="ticker-sym">תל אביב 35</span><span class="ticker-up">+0.5%</span></div>
+    <div class="ticker-item"><span class="ticker-sym">NVIDIA</span><span class="ticker-up">+4.1%</span></div>
+    <div class="ticker-item"><span class="ticker-sym">בנק לאומי</span><span class="ticker-dn">−0.7%</span></div>
+    <div class="ticker-item"><span class="ticker-sym">AMZN</span><span class="ticker-up">+1.4%</span></div>
+    <div class="ticker-item"><span class="ticker-sym">צ'קפוינט</span><span class="ticker-up">+2.2%</span></div>
+    <div class="ticker-item"><span class="ticker-sym">S&amp;P 500</span><span class="ticker-up">+0.6%</span></div>
+    <div class="ticker-item"><span class="ticker-sym">MSFT</span><span class="ticker-dn">−0.4%</span></div>
+  </div>
+</div>
+
+<!-- ── NAV ────────────────────────────────────── -->
+<nav class="nav">
+  <a class="nav-logo" href="#">נתיב</a>
+  <a class="nav-cta" href="#contact">צרו קשר</a>
+</nav>
+
+<!-- ── HERO ───────────────────────────────────── -->
+<section class="hero">
+  <div class="container">
+
+    <div class="hero-eyebrow">הכשרה פיננסית לגיל 10–17</div>
+
+    <h1 class="hero-title">
+      ילדכם לומד<br>
+      <span class="highlight">להשקיע בשוק ההון —</span><br>
+      עם כסף וירטואלי, כישורים אמיתיים
+    </h1>
+
+    <p class="hero-subtitle">
+      משחק מסחר חינוכי שמציב את ילדכם מול 30 ניירות ערך אמיתיים,
+      ומלמד אותו לחשוב כלכלית — לפני שיש לו כסף אמיתי להפסיד.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">רוצה לשמוע עוד</a>
+      <a href="#how" class="btn-secondary">איך זה עובד?</a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-value text-gold">₪50,000</div>
+        <div class="hero-stat-label">הון התחלתי וירטואלי</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value text-green">30</div>
+        <div class="hero-stat-label">מניות, ETF ואגח אמיתיים</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value text-purple">AI</div>
+        <div class="hero-stat-label">מסביר כל תנועת שוק</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value text-gold">100%</div>
+        <div class="hero-stat-label">בטוח — ללא הרשמה</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── TRUSTED ─────────────────────────────────── -->
+<div class="trusted">
+  <div class="container">
+    <div class="trusted-label">מתאים לגילאים ולמסגרות</div>
+    <div class="trusted-logos">
+      <div class="trusted-logo-item">בית ספר יסודי (כיתות ד׳–ו׳)</div>
+      <div class="trusted-logo-item">חטיבת ביניים</div>
+      <div class="trusted-logo-item">תיכון</div>
+      <div class="trusted-logo-item">קייטנות קיץ</div>
+      <div class="trusted-logo-item">חוגים אחר הצהריים</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── WHY FINANCIAL EDUCATION? ────────────────── -->
+<section class="why-section section">
+  <div class="container text-center">
+    <div class="tag">למה זה חשוב?</div>
+    <h2 class="section-title">ילדים שלא לומדים כסף — לומדים אותו בדרך הקשה</h2>
+    <p class="section-subtitle">
+      המחקרים מדברים בעד עצמם. הרגלים כלכליים נקבעים בגיל ההתבגרות — ולרוב הורים לא מלמדים, בתי ספר לא מלמדים, ואז מגיעים לחיי המבוגרים ללא מושג בסיסי.
+    </p>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-card-num text-red">72%</div>
+        <div class="stat-card-text">מהמבוגרים בישראל מרגישים שלא קיבלו הכשרה פיננסית מספקת בבית הספר.</div>
+        <div class="stat-card-source">מקור: סקרי OECD על אוריינות פיננסית</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-num text-gold">גיל 7</div>
+        <div class="stat-card-text">לפי מחקרי מוח, הבסיס לרגלי חסכון, דחיית סיפוקים וניהול כסף נוצר עד גיל שבע.</div>
+        <div class="stat-card-source">מקור: Cambridge University Judge Business School</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-num text-green">3x</div>
+        <div class="stat-card-text">ילדים שקיבלו חינוך פיננסי עשירים פי שלושה בממוצע בגיל 40 לעומת בני גילם שלא קיבלו.</div>
+        <div class="stat-card-source">מקור: מחקר FINRA Foundation</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-num text-purple">87%</div>
+        <div class="stat-card-text">מבני הנוער מדווחים שלא מבינים מה זה ריבית דריבית — הכלי החשוב ביותר לבניית עושר.</div>
+        <div class="stat-card-source">מקור: Investopedia/Harris Poll Survey</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHAT DO THEY LEARN? ──────────────────────── -->
+<section class="section">
+  <div class="container text-center">
+    <div class="tag">מה הילד רוכש?</div>
+    <h2 class="section-title">6 כישורים שישמשו אותו כל החיים</h2>
+    <p class="section-subtitle">
+      לא תיאוריה יבשה — אלא חוויה שמובילה לתובנות. כל החלטה במשחק מלמדת משהו אמיתי על כסף, סיכון והזדמנות.
+    </p>
+
+    <div class="skills-grid">
+
+      <div class="skill-card">
+        <div class="skill-icon purple">📈</div>
+        <div class="skill-body">
+          <h3>הבנת שוק ההון</h3>
+          <p>מניות, ETF ואגרות חוב — הילד לומד מה כל נייר ערך מייצג ולמה מחירו משתנה, דרך מסחר יומי אמיתי.</p>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon green">🧠</div>
+        <div class="skill-body">
+          <h3>חשיבה ביקורתית</h3>
+          <p>בכל יום מגיע עדכון חדשות שמשפיע על מחירי המניות. הילד לומד לנתח מידע ולקבל החלטות מבוססות — לא להגיב מרגש.</p>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon gold">⚖️</div>
+        <div class="skill-body">
+          <h3>ניהול סיכון</h3>
+          <p>כיצד מחלקים תיק השקעות? מה ההבדל בין "לשים הכל על קלף אחד" לבין פיזור נכון? הילד מגלה זאת מניסיון.</p>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon blue">🌍</div>
+        <div class="skill-body">
+          <h3>הבנת הכלכלה הגלובלית</h3>
+          <p>מניות ישראליות ואמריקאיות, שקלים ודולרים — הילד מבין שעולם הכסף הוא גלובלי ומקושר.</p>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon purple">🏆</div>
+        <div class="skill-body">
+          <h3>תחרות בריאה ומוטיבציה</h3>
+          <p>לוח מובילים מאפשר לילד להתחרות עם חברים — ומייצר מוטיבציה חיובית ללמוד ולהשתפר.</p>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon green">📚</div>
+        <div class="skill-body">
+          <h3>ידע פיננסי מעשי</h3>
+          <p>מפת ידע עם 8 מאמרים חינוכיים ומדריך משחק — הילד לומד קונספטים אמיתיים בזמן שהוא מתרגש לשחק.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ────────────────────────────── -->
+<section class="how-section section" id="how">
+  <div class="container text-center">
+    <div class="tag">איך זה עובד?</div>
+    <h2 class="section-title">שלושה צעדים, וילדכם כבר סוחר</h2>
+    <p class="section-subtitle">
+      פשוט, מהיר ובטוח. אין הרשמה, אין פרטים אישיים — רק קוד גישה ייחודי.
+    </p>
+
+    <div class="steps-container">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h3>מקבלים קוד גישה</h3>
+        <p>תקבלו קוד ייחודי מאיתנו. הילד מקליד אותו ומתחבר מיידית — ללא הרשמה, ללא אימייל, ללא סיסמה לזכור.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h3>פותחים את החשבון</h3>
+        <p>הילד מקבל ₪50,000 וירטואליים ורואה 30 ניירות ערך אמיתיים — מניות כמו אפל ואמזון, ועד מניות ישראליות מוכרות.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h3>מתחילים לסחור וללמוד</h3>
+        <p>הילד קונה, מוכר, עוקב אחרי גרפים, קורא הסברי AI ומתחרה בלוח המובילים — כל זה פועל בכל טלפון או מחשב.</p>
+      </div>
+    </div>
+
+    <!-- Features list -->
+    <div class="features-list" style="max-width:700px; margin: 40px auto 0;">
+      <div class="feature-item">
+        <div class="feature-dot"></div>
+        <p>גרפי מחיר ל-7 ו-30 יום</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-dot"></div>
+        <p>AI מסביר כל עלייה וירידה בשפה פשוטה</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-dot"></div>
+        <p>לוח מובילים — תחרות עם חברים</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-dot"></div>
+        <p>מפת ידע עם 8 מאמרים חינוכיים</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-dot"></div>
+        <p>מניות ישראליות ואמריקאיות — ₪ ו-$</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-dot"></div>
+        <p>עובד על כל מכשיר — טלפון, טאבלט, מחשב</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-dot"></div>
+        <p>מדריך משחק מובנה לתחילת הדרך</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-dot"></div>
+        <p>בטוח לחלוטין — אין פרטים אישיים</p>
+      </div>
+    </div>
+
+    <!-- Mock Phone -->
+    <div class="mock-phone" role="img" aria-label="תצוגה מקדימה של ממשק המשחק">
+      <div class="mock-notch"></div>
+      <div class="mock-ticker">AAPL +1.8%  &nbsp; TSLA -2.3%  &nbsp; NVDA +4.1%  &nbsp; LUMI -0.7%</div>
+
+      <div class="mock-stock">
+        <div>
+          <div class="mock-stock-name">Apple Inc.</div>
+          <div class="mock-stock-sub">AAPL · נאסד"ק</div>
+        </div>
+        <div class="mock-stock-price mock-up">$189.40 &nbsp;+1.8%</div>
+      </div>
+
+      <div class="mock-stock">
+        <div>
+          <div class="mock-stock-name">טסלה</div>
+          <div class="mock-stock-sub">TSLA · נאסד"ק</div>
+        </div>
+        <div class="mock-stock-price mock-dn">$242.10 &nbsp;−2.3%</div>
+      </div>
+
+      <div class="mock-stock">
+        <div>
+          <div class="mock-stock-name">בנק לאומי</div>
+          <div class="mock-stock-sub">LUMI · ת"א</div>
+        </div>
+        <div class="mock-stock-price mock-dn">₪22.84 &nbsp;−0.7%</div>
+      </div>
+
+      <div class="mock-stock">
+        <div>
+          <div class="mock-stock-name">NVIDIA</div>
+          <div class="mock-stock-sub">NVDA · נאסד"ק</div>
+        </div>
+        <div class="mock-stock-price mock-up">$134.60 &nbsp;+4.1%</div>
+      </div>
+
+      <div class="mock-wallet">
+        <div>
+          <div class="mock-wallet-label">שווי תיק</div>
+          <div class="mock-wallet-val">₪53,741</div>
+        </div>
+        <div style="text-align:left;">
+          <div class="mock-wallet-label">תשואה</div>
+          <div style="font-size:15px; font-weight:800; color: var(--green);">+7.48%</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── TESTIMONIALS ────────────────────────────── -->
+<section class="testimonials-section section" id="testimonials">
+  <div class="container text-center">
+    <div class="tag">מה אומרים הורים?</div>
+    <h2 class="section-title">ילדים שמתחילים לשאול שאלות שלא ציפינו</h2>
+    <p class="section-subtitle">
+      ממה שהורים סיפרו לנו: השינוי הוא לא רק במשחק — הוא בשיחות ארוחת הערב.
+    </p>
+
+    <div class="testimonials-grid">
+
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">
+          הבן שלי בן 13 ביקש ממני להסביר לו מה זה דוח רבעוני של חברה — כי הוא ראה שמחיר המניה ירד אחרי פרסום אחד. לפני שלושה חודשים הוא לא ידע מה זה בכלל מניה. זה מדהים אותי.
+        </p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">מ</div>
+          <div>
+            <div class="testimonial-name">מיכל, אמא לבן 13</div>
+            <div class="testimonial-role">פתח תקווה</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">
+          הבת שלי בחרה לקנות מניות של חברה שהיא אוהבת את המוצרים שלה. זה גרם לנו לשוחח על ההבדל בין לאהוב מוצר ולהשקיע בחברה. שיחה שלא הייתה לנו בחיים ללא המשחק הזה.
+        </p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">א</div>
+          <div>
+            <div class="testimonial-name">אבנר, אבא לבת 15</div>
+            <div class="testimonial-role">תל אביב</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">
+          חשבתי שילד בגיל 11 לא יבין. טעיתי. הוא מסביר לאחיו הגדול ממנו למה הוא קנה ETF על המדד ולא מניה בודדת. זה ממש מרגש — ממש הדלקנו בו משהו.
+        </p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">ר</div>
+          <div>
+            <div class="testimonial-name">רחל, אמא לבן 11</div>
+            <div class="testimonial-role">חיפה</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ─────────────────────────────────────── -->
+<section class="faq-section section" id="faq">
+  <div class="container text-center">
+    <div class="tag">שאלות ותשובות</div>
+    <h2 class="section-title">מה שהורים בדרך כלל שואלים</h2>
+
+    <div class="faq-list" style="text-align:right;">
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          האם המשחק בטוח לילד? האם נדרש מידע אישי?
+          <span class="faq-chevron">▾</span>
+        </button>
+        <div class="faq-answer">
+          המשחק מיועד לגיל 10 ומעלה ותוכנן עם בטיחות כעדיפות עליונה. לא נדרשת הרשמה — אין שם פרטי, אין כתובת מייל, אין מספר טלפון. הילד מתחבר אך ורק עם קוד גישה ייחודי שמקבלים ממני. אין שום כסף אמיתי מעורב בשום שלב.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          כמה זמן ביום זה לוקח? האם זה מסיח מלימודים?
+          <span class="faq-chevron">▾</span>
+        </button>
+        <div class="faq-answer">
+          זו אחת השאלות הנפוצות — ולרוב ההפך קורה. המשחק מיועד ל-5–15 דקות ביום: הילד בודק את תיק ההשקעות שלו, קורא עדכון חדשות קצר ומקבל החלטה. זה פחות זמן ממה שנדרש לרוב המשחקים הדיגיטליים, אבל עם תוצר חינוכי אמיתי. הורים רבים מדווחים שהמשחק פתח שיחות ושיפר עניין בחדשות ובמתמטיקה.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          מה אם הילד לא יודע כלום על שוק ההון — האם זה מתאים לו?
+          <span class="faq-chevron">▾</span>
+        </button>
+        <div class="faq-answer">
+          בדיוק בשבילו. המשחק נבנה מאפס להסביר הכול — מה זו מניה, מה זה ETF, מה ההבדל בין ישראל לארה"ב, למה מחיר עולה או יורד. יש מדריך משחק מובנה שמלווה את הילד בצעדים הראשונים, ו-AI שמסביר כל תנועה בשפה פשוטה ונגישה. ילדים שהתחילו בלי שום ידע מוקדם — הגיעו תוך שבועות לשאול שאלות שמפתיעות את הוריהם.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          האם זה מתאים גם לקבוצה — לכיתה, חוג, קייטנה?
+          <span class="faq-chevron">▾</span>
+        </button>
+        <div class="faq-answer">
+          כן, ואפילו ייטיב עם קבוצה. לוח המובילים מיועד בדיוק לכך — ילדים שמתחרים זה עם זה לומדים טוב יותר. ניתן ליצור קוד גישה עבור כיתה שלמה, חוג ייעודי או קבוצת קייטנה. צרו קשר ונתאים את הפתרון.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT SHARON ────────────────────────────── -->
+<div class="about-bar">
+  <div class="container">
+    <div class="about-inner">
+      <div class="about-avatar">ש</div>
+      <div class="about-text">
+        <h3>שרון הכמון — מייסדת נתיב, הכשרה פיננסית</h3>
+        <p>
+          שרון הכמון היא מומחית להכשרה פיננסית עם ניסיון של שנים בהנגשת עולם ההשקעות לציבור הרחב.
+          נתיב היא תשתית חינוך פיננסי שבנתה שרון מתוך אמונה שאוריינות כלכלית היא זכות — לא פריבילגיה.
+          שוק ההון הווירטואלי הוא חלק מהמשימה הזו: לתת לכל ילד בישראל את ההתחלה שמגיעה לו.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CTA ─────────────────────────────────────── -->
+<section class="cta-section section" id="contact">
+  <div class="container">
+    <div class="cta-box">
+
+      <div class="tag" style="margin-bottom:24px;">מוכנים להתחיל?</div>
+
+      <h2>
+        תנו לילדכם את<br>
+        <span class="text-purple">ה-head start הפיננסי</span>
+      </h2>
+
+      <p>
+        צרו קשר עם שרון — ותוך פחות מ-24 שעות הילד שלכם יקבל קוד גישה ויתחיל לסחור.
+        ללא התחייבות, ללא הפתעות. רק שיחה קצרה ועתיד כלכלי טוב יותר לילדכם.
+      </p>
+
+      <div class="contact-options">
+        <a href="https://wa.me/972XXXXXXXXX" class="contact-option whatsapp" target="_blank" rel="noopener">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#00E676" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.564 4.14 1.545 5.876L0 24l6.29-1.515A11.956 11.956 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.848 0-3.585-.5-5.083-1.37l-.364-.215-3.732.899.933-3.636-.236-.376A9.955 9.955 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          וואטסאפ
+        </a>
+        <a href="mailto:sharon@natev.co.il" class="contact-option">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          מייל
+        </a>
+        <a href="tel:+972XXXXXXXXX" class="contact-option">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.7A2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.15a16 16 0 006.94 6.94l1.52-1.52a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          שיחת טלפון
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ──────────────────────────────────── -->
+<footer>
+  <div class="container">
+    <p>
+      <strong style="color: var(--purple2);">נתיב</strong> — הכשרה פיננסית לכולם &nbsp;|&nbsp;
+      שרון הכמון &nbsp;|&nbsp;
+      שוק ההון הווירטואלי הוא כלי חינוכי בלבד.<br>
+      כל המחירים, הנתונים והתשואות במשחק הם וירטואליים ואינם מהווים ייעוץ השקעות.
+    </p>
+    <p style="margin-top:10px; font-size:12px;">
+      &copy; 2026 נתיב, שרון הכמון. כל הזכויות שמורות.
+    </p>
+  </div>
+</footer>
+
+<script>
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+
+  // Close all
+  document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+
+  // Open this one if it was closed
+  if (!isOpen) item.classList.add('open');
+}
+
+// Smooth nav link scroll
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', e => {
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+// Fade-in on scroll
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.stat-card, .skill-card, .step-card, .testimonial-card, .feature-item').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(24px)';
+  el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+  observer.observe(el);
+});
+</script>
+
+</body>
+</html>
