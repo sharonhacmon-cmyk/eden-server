@@ -275,9 +275,9 @@ app.get('/api/stocks', async (req, res) => {
     const prices = {};
     results.forEach(q => {
       prices[q.symbol] = {
-        price:         q.regularMarketPrice,
-        change:        q.regularMarketChange,
-        changePercent: q.regularMarketChangePercent,
+        price:         q.price,
+        change:        q.change,
+        changePercent: q.changePercent,
         name:          q.longName || q.shortName || q.symbol,
       };
     });

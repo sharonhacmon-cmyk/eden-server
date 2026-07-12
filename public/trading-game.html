@@ -412,6 +412,7 @@ body {
 <!-- ══ SCREEN: SETUP ══════════════════════════════ -->
 <div class="screen" id="screen-setup">
   <div class="setup-box">
+    <button onclick="backToLogin()" style="background:none;border:none;color:var(--dim);font-size:15px;cursor:pointer;padding:0 0 12px;font-family:'Heebo',sans-serif">← חזרה לכניסה</button>
     <div style="font-size:56px;text-align:center;margin-bottom:8px">👤</div>
     <div class="setup-title" id="txt-setup-title">ספר/י לנו עליך</div>
     <div class="setup-sub" id="txt-setup-sub">רק פעם אחת — השיא שלך ישמר!</div>
@@ -510,7 +511,10 @@ body {
 <!-- ══ BUY/SELL MODAL ═════════════════════════════ -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal-box">
-    <div class="modal-handle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+      <div class="modal-handle" style="margin:0"></div>
+      <button onclick="document.getElementById('modalOverlay').classList.remove('open')" style="background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;color:var(--dim);display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
     <div class="modal-stock-header">
       <div class="modal-emoji" id="modalEmoji">🍎</div>
       <div>
@@ -817,6 +821,13 @@ async function doLogin() {
   btn.textContent = t('login-btn'); btn.disabled = false;
 }
 
+function backToLogin() {
+  localStorage.removeItem('tg_token');
+  S.token = null; S.player = null;
+  document.getElementById('inputCode').value = '';
+  showScreen('login');
+}
+
 // allow Enter key on code input
 document.getElementById('inputCode').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
 
@@ -898,7 +909,7 @@ function buildTicker() {
   const symbols = Object.keys(S.prices);
   const items = [...symbols, ...symbols].map(sym => {
     const p = S.prices[sym];
-    if (!p) return '';
+    if (!p || !p.price) return '';
     const up = p.changePercent >= 0;
     return `<span class="ticker-item">
       <span class="sym">${sym}</span>
@@ -1032,7 +1043,7 @@ function renderStocks() {
     const p     = S.prices[sym];
     const name  = S.lang === 'he' ? info.nameHe : info.nameEn;
     const owned = S.player?.portfolio?.[sym];
-    if (!p) return '';
+    if (!p || !p.price) return '';
     const up = p.changePercent >= 0;
     return `<div class="stock-card" onclick="openModal('${sym}')">
       <div class="stock-emoji">${info.emoji}</div>
