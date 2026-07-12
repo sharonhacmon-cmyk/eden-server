@@ -431,7 +431,7 @@ body {
       <input class="form-input" id="inputCode" type="text" placeholder="הכנס קוד" autocomplete="off" style="text-align:center;font-size:20px;letter-spacing:0.1em;text-transform:uppercase">
     </div>
     <button class="btn btn-primary" onclick="doLogin()" id="txt-login-btn">כניסה לשוק 🚀</button>
-    <p style="text-align:center;margin-top:16px;font-size:13px;color:var(--dim)" id="txt-login-hint">קוד הגישה מתקבל ממורה/מנחה</p>
+    <p style="text-align:center;margin-top:16px;font-size:13px;color:var(--dim)" id="txt-login-hint"></p>
   </div>
 </div>
 
@@ -774,7 +774,7 @@ const STOCK_INFO = {
 const T = {
   he: {
     'login-title':'שוק ההון הווירטואלי','login-sub':'סוחרים, מרוויחים, לומדים',
-    'code-label':'קוד גישה','login-btn':'כניסה לשוק 🚀','login-hint':'קוד הגישה מתקבל ממורה/מנחה',
+    'code-label':'קוד גישה','login-btn':'כניסה לשוק 🚀','login-hint':'',
     'setup-title':'ספר/י לנו עליך','setup-sub':'רק פעם אחת — השם שלך ישמר!',
     'name-label':'שם (כינוי)','gender-label':'אני','lang-label':'שפה',
     'setup-btn':'יאללה, מתחילים! 🎯',
@@ -799,7 +799,7 @@ const T = {
   },
   en: {
     'login-title':'Virtual Stock Market','login-sub':'Trade, Earn, Learn',
-    'code-label':'Access Code','login-btn':'Enter Market 🚀','login-hint':'Code provided by teacher/instructor',
+    'code-label':'Access Code','login-btn':'Enter Market 🚀','login-hint':'',
     'setup-title':'Tell us about you','setup-sub':'Just once — your name will be saved!',
     'name-label':'Nickname','gender-label':'I am','lang-label':'Language',
     'setup-btn':'Let\'s go! 🎯',
@@ -906,6 +906,7 @@ function navigate(screen) {
   if (screen === 'leaderboard') loadLeaderboard();
   if (screen === 'portfolio')   renderPortfolio();
   if (screen === 'learn')       renderLearn();
+  if (screen === 'intro')       renderIntro();
 }
 
 // ══════════════════════════════════════════════════
@@ -1609,6 +1610,89 @@ const LEARN_TOPICS = [
 <p><strong>הפתרון:</strong><br>קבע כללים מראש ותדבק בהם. "אקנה כל חודש X. לא אמכור בירידה של פחות מ-Y%." כללים מכניים מנצחים רגשות.</p>`
   },
 ];
+
+function renderIntro() {
+  const el = document.getElementById('introContent');
+  if (!el) return;
+  const he = S.lang !== 'en';
+  el.innerHTML = `
+  <div class="intro-hero">
+    <div class="icon">🚀</div>
+    <h1>${he ? 'ברוכים לשוק ההון הווירטואלי!' : 'Welcome to the Virtual Stock Market!'}</h1>
+    <p>${he ? 'לפני שמתחילים — כמה דקות כדאי לקרוא' : 'Before you start — take a minute to read this'}</p>
+  </div>
+
+  <div class="intro-section">
+    <h3>${he ? '🎮 מה יש כאן?' : '🎮 What is this?'}</h3>
+    <div class="intro-tip"><span class="ti">💰</span><span>${he
+      ? 'כל שחקן מתחיל עם <strong>50,000 ₪ וירטואלי</strong> — כסף שלא קיים באמת, אבל ההחלטות הן אמיתיות!'
+      : 'Every player starts with <strong>₪50,000 virtual money</strong> — not real cash, but real decisions!'
+    }</span></div>
+    <div class="intro-tip"><span class="ti">📊</span><span>${he
+      ? '<strong>30 נכסים לבחירה</strong>: מניות ישראליות, מניות אמריקאיות, תעודות סל, אגרות חוב, נדל"ן וסחורות.'
+      : '<strong>30 assets to choose from</strong>: Israeli stocks, US stocks, ETFs, bonds, real estate and commodities.'
+    }</span></div>
+    <div class="intro-tip"><span class="ti">🏆</span><span>${he
+      ? 'עקבו אחרי הביצועים שלכם ב<strong>לוח השיא</strong> — ומי שרוצה לנצח יצטרך לחשוב חכם!'
+      : 'Track your performance on the <strong>leaderboard</strong> — smart thinking wins!'
+    }</span></div>
+  </div>
+
+  <div class="intro-section">
+    <h3>${he ? '📅 מתי להיכנס?' : '📅 When to check in?'}</h3>
+    <div class="intro-tip"><span class="ti">✅</span><span>${he
+      ? 'לפחות <strong>פעם בשבוע</strong> — המחירים משתנים כל יום!'
+      : 'At least <strong>once a week</strong> — prices change every day!'
+    }</span></div>
+    <div class="intro-tip"><span class="ti">✅</span><span>${he
+      ? 'בכל כניסה בדקו: האם המניות עלו? ירדו? האם כדאי לקנות עוד או למכור?'
+      : 'Each visit: did your stocks go up? Down? Should you buy more or sell?'
+    }</span></div>
+    <div class="intro-tip"><span class="ti">✅</span><span>${he
+      ? 'לחצו על כל מניה ושאלו את <strong>עדן</strong> "למה המניה זזה היום?"'
+      : 'Tap any stock and ask <strong>Eden</strong> "Why did this stock move today?"'
+    }</span></div>
+  </div>
+
+  <div class="intro-section">
+    <h3>${he ? '🏆 איך ליצור הובלה?' : '🏆 How to take the lead?'}</h3>
+    <div class="intro-tip"><span class="ti">💡</span><span>${he
+      ? '<strong>קנה בנמוך, מכור בגבוה</strong> — זה העיקרון הבסיסי.'
+      : '<strong>Buy low, sell high</strong> — the golden rule.'
+    }</span></div>
+    <div class="intro-tip"><span class="ti">💡</span><span>${he
+      ? '<strong>פיזור חכם</strong>: אל תשים את כל הכסף במניה אחת. כמה נכסים שונים = פחות סיכון.'
+      : '<strong>Diversify</strong>: don\'t put all your money in one stock. Multiple assets = less risk.'
+    }</span></div>
+    <div class="intro-tip"><span class="ti">💡</span><span>${he
+      ? 'בדוק את <strong>לוח השיא</strong> ותראה מה עושים המובילים.'
+      : 'Check the <strong>leaderboard</strong> and see what the leaders are doing.'
+    }</span></div>
+  </div>
+
+  <div class="intro-section">
+    <h3>${he ? '⚠️ ממה להיזהר?' : '⚠️ Watch out for...'}</h3>
+    <div class="intro-tip"><span class="ti">⚠️</span><span>${he
+      ? 'מניות יכולות לרדת מהר. <strong>אל תשקיע את כל הכסף במקום אחד.</strong>'
+      : 'Stocks can drop fast. <strong>Never put all your money in one place.</strong>'
+    }</span></div>
+    <div class="intro-tip"><span class="ti">⚠️</span><span>${he
+      ? 'מניות תנודתיות (טסלה, נפט) עולות ויורדות הרבה — מסוכנות אבל גם מרגשות!'
+      : 'Volatile stocks (Tesla, Oil) swing a lot — exciting but risky!'
+    }</span></div>
+    <div class="intro-tip"><span class="ti">⚠️</span><span>${he
+      ? 'לפני שקונים — <strong>קרא/י את ההסבר</strong> על הנכס.'
+      : 'Before buying — <strong>read the description</strong> of each asset.'
+    }</span></div>
+  </div>
+
+  <button class="btn btn-primary" onclick="navigate('market')" style="margin-bottom:12px">
+    ${he ? 'יאללה, לשוק המניות! 🚀' : "Let's trade! 🚀"}
+  </button>
+  <button class="btn btn-outline" onclick="navigate('portfolio')" style="font-size:14px">
+    ${he ? 'לתיק שלי ←' : '← My Portfolio'}
+  </button>`;
+}
 
 function renderLearn() {
   const container = document.getElementById('learnTopics');
