@@ -987,7 +987,7 @@ async function afterLogin() {
   applyLang();
   showScreen('portfolio');
   renderPortfolio();
-  loadPrices();
+  loadFxRate().then(() => loadPrices());
   // show admin button if admin pw known
   if (S.adminPw) document.getElementById('adminBtn').style.display='inline-block';
 }
@@ -1068,6 +1068,12 @@ function renderPortfolio() {
       const pl    = val - h.avgPrice * h.shares;
       const up    = pl >= 0;
       const name  = S.lang === 'he' ? info.nameHe : info.nameEn;
+      const usd   = isUSD(sym);
+      const valStr = usd ? fmtPrice(sym, val) + ` <span style="font-size:11px;color:var(--dim)">(${fmt(val)})</span>` : fmt(val);
+      const plSign = pl >= 0 ? '+' : '';
+      const plStr  = usd
+        ? plSign + '$' + (Math.abs(pl/FX_RATE) >= 100 ? Math.round(Math.abs(pl/FX_RATE)).toLocaleString('en-US') : Math.abs(pl/FX_RATE).toFixed(2))
+        : plSign + fmt(Math.abs(pl));
       return `<div class="holding-card">
         <div class="holding-emoji">${info.emoji}</div>
         <div class="holding-info">
@@ -1075,9 +1081,9 @@ function renderPortfolio() {
           <div class="holding-sym">${sym} · ${h.shares} ${t('shares')}</div>
         </div>
         <div class="holding-right">
-          <div class="holding-val">${fmt(val)}</div>
+          <div class="holding-val">${valStr}</div>
           <div class="holding-pl" style="color:${up?'var(--green)':'var(--red)'}">
-            ${up?'+':''}${fmt(pl)}
+            ${plStr}
           </div>
         </div>
       </div>`;
@@ -1102,7 +1108,7 @@ function renderPortfolio() {
           <div class="trade-date">${dateStr}</div>
         </div>
         <div class="trade-amount" style="color:${isBuy?'var(--red)':'var(--green)'}">
-          ${isBuy?'-':'+'}${fmt(tr.total)}
+          ${isBuy?'-':'+'}${isUSD(tr.symbol) ? fmtPrice(tr.symbol, tr.total) : fmt(tr.total)}
         </div>
       </div>`;
     }).join('');
@@ -1112,8 +1118,20 @@ function renderPortfolio() {
 // ══════════════════════════════════════════════════
 // CURRENCY
 // ══════════════════════════════════════════════════
-const FX_RATE = 3.70; // ₪ per $
+let FX_RATE = 3.70; // ₪ per $ — updated from Bank of Israel API
+let FX_DATE = '';
 const USD_CATS = new Set(['us-stocks','etf','bonds','reit','commodity']);
+
+async function loadFxRate() {
+  try {
+    const r = await fetch('/api/fxrate');
+    const d = await r.json();
+    if (d.rate && d.rate > 0) {
+      FX_RATE = d.rate;
+      FX_DATE = d.date || '';
+    }
+  } catch {}
+}
 
 function isUSD(sym) { return USD_CATS.has(STOCK_INFO[sym]?.cat); }
 
@@ -1244,7 +1262,9 @@ function openModal(sym) {
   if (isUSD(sym)) {
     const usdPrice = (nisPrice / FX_RATE).toFixed(2);
     const nisEquiv = Math.round(nisPrice).toLocaleString('he-IL');
-    fxEl.innerHTML = `💱 שער חליפין: 1$ = ${FX_RATE} ₪ &nbsp;|&nbsp; מחיר: $${usdPrice} = ${nisEquiv} ₪`;
+    const rateRound = FX_RATE.toFixed(2);
+    const dateLabel = FX_DATE ? ` (${FX_DATE})` : '';
+    fxEl.innerHTML = `💱 שער בנק ישראל${dateLabel}: 1$ = ${rateRound} ₪ &nbsp;|&nbsp; $${usdPrice} = ${nisEquiv} ₪`;
     fxEl.style.display = 'block';
   } else {
     fxEl.style.display = 'none';
@@ -1479,7 +1499,7 @@ async function init() {
       applyLang();
       showScreen('portfolio');
       renderPortfolio();
-      loadPrices();
+      loadFxRate().then(() => loadPrices());
     } catch { showScreen('login'); }
   } else {
     showScreen('login');

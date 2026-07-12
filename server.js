@@ -268,6 +268,32 @@ app.get('/api/trading/me', tradingAuth, (req, res) => {
   res.json(player);
 });
 
+// ── שער חליפין דולר/שקל (בנק ישראל) ─────────────────
+let fxCache = { rate: 3.70, date: null };
+
+app.get('/api/fxrate', async (req, res) => {
+  const today = new Date().toISOString().slice(0,10);
+  if (fxCache.date === today) return res.json({ rate: fxCache.rate, date: today, source: 'cache' });
+  try {
+    const url = 'https://edge.boi.gov.il/FusionEdgeSite/dataseries/api/v1/series?format=json&id=RER_USD_ILS';
+    const r   = await fetch(url, { signal: AbortSignal.timeout(5000) });
+    const json = await r.json();
+    const series = json?.payload?.value;
+    if (series && series.length) {
+      // series is array of { index, period, value }; last item = most recent
+      const last = series[series.length - 1];
+      const rate = parseFloat(last.value);
+      if (rate > 0) {
+        fxCache = { rate, date: last.period || today };
+        return res.json({ rate, date: last.period || today, source: 'boi' });
+      }
+    }
+    res.json({ rate: fxCache.rate, date: fxCache.date || today, source: 'fallback' });
+  } catch {
+    res.json({ rate: fxCache.rate, date: fxCache.date || today, source: 'fallback' });
+  }
+});
+
 // All stock prices
 app.get('/api/stocks', async (req, res) => {
   try {
