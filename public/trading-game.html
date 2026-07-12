@@ -911,7 +911,7 @@ async function api(path, method='GET', body=null) {
 // ══════════════════════════════════════════════════
 // NAVIGATION
 // ══════════════════════════════════════════════════
-function showScreen(name) {
+function showScreen(name, opts) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('screen-'+name).classList.add('active');
   const nav = document.getElementById('bottomNav');
@@ -923,9 +923,9 @@ function showScreen(name) {
   document.querySelectorAll('.nav-tab').forEach(t => {
     t.classList.toggle('active', t.dataset.screen === name);
   });
-  // Scroll to top only when switching main screens (not login/setup/article)
-  if (['portfolio','market','leaderboard','learn'].includes(name)) {
-    window.scrollTo(0, 0);
+  // Scroll to top of the screen element (below ticker), unless noScroll
+  if (!opts?.noScroll && ['portfolio','market','leaderboard','learn'].includes(name)) {
+    document.getElementById('screen-'+name).scrollIntoView({ behavior:'instant' });
   }
 }
 
@@ -1835,10 +1835,10 @@ function renderIntro() {
     }</span></div>
   </div>
 
-  <button class="btn btn-primary" onclick="closeIntroModal();navigate('market')" style="margin-bottom:12px">
+  <button type="button" class="btn btn-primary" onclick="closeIntroModal();showScreen('market',{noScroll:true});renderStocks()" style="margin-bottom:12px">
     ${he ? 'לשוק המניות! 🚀' : "Let's trade! 🚀"}
   </button>
-  <button class="btn btn-outline" onclick="closeIntroModal();navigate('portfolio')" style="font-size:14px;margin-top:6px">
+  <button type="button" class="btn btn-outline" onclick="closeIntroModal();showScreen('portfolio',{noScroll:true});renderPortfolio()" style="font-size:14px;margin-top:6px">
     ${he ? 'לתיק שלי ←' : '← My Portfolio'}
   </button>`;
 }
