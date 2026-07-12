@@ -375,6 +375,13 @@ body {
 .loading-dots span:nth-child(3){animation-delay:.4s}
 @keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
 
+/* ── ARTICLE ─────────────────────────── */
+#articleBody h3 { font-size:18px; font-weight:900; color:var(--gold); margin-bottom:10px; }
+#articleBody p  { margin-bottom:12px; }
+#articleBody ul { padding-right:20px; margin-bottom:12px; }
+#articleBody li { margin-bottom:6px; }
+#articleBody strong { color:var(--text); }
+
 /* ── INTRO SCREEN ────────────────────── */
 #screen-intro {
   padding:24px 20px 48px;
@@ -592,6 +599,24 @@ body {
   </div>
 </div>
 
+<!-- ══ SCREEN: LEARN ══════════════════════════════ -->
+<div class="screen" id="screen-learn">
+  <div class="page-header" style="padding-top:16px;margin-bottom:4px">
+    <div class="page-title">📚 מפת הידע</div>
+    <div class="page-sub">לחץ על נושא ללמידה</div>
+  </div>
+  <div id="learnTopics" style="padding:8px 16px 16px"></div>
+</div>
+
+<!-- ══ SCREEN: LEARN ARTICLE ═════════════════════ -->
+<div class="screen" id="screen-article">
+  <div style="padding:16px 16px 0;display:flex;align-items:center;gap:10px">
+    <button onclick="navigate('learn')" style="background:rgba(255,255,255,0.08);border:none;border-radius:50%;width:36px;height:36px;font-size:18px;cursor:pointer;color:var(--text);display:flex;align-items:center;justify-content:center">←</button>
+    <div class="page-title" id="articleTitle" style="font-size:20px"></div>
+  </div>
+  <div id="articleBody" style="padding:16px;font-size:15px;line-height:1.8;color:rgba(238,238,255,0.88)"></div>
+</div>
+
 <!-- ══ SCREEN: INTRO / HOW TO PLAY ═══════════════ -->
 <div class="screen" id="screen-intro">
   <div class="intro-hero">
@@ -656,6 +681,10 @@ body {
     <button class="nav-tab" data-screen="leaderboard" onclick="navigate('leaderboard')">
       <span class="icon">🏆</span>
       <span id="txt-nav-leader">דירוג</span>
+    </button>
+    <button class="nav-tab" data-screen="learn" onclick="navigate('learn')">
+      <span class="icon">📚</span>
+      <span>למידה</span>
     </button>
   </div>
 </div>
@@ -878,7 +907,7 @@ function showScreen(name) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('screen-'+name).classList.add('active');
   const nav = document.getElementById('bottomNav');
-  const showNav = ['portfolio','market','leaderboard'].includes(name);
+  const showNav = ['portfolio','market','leaderboard','learn','article'].includes(name);
   nav.classList.toggle('visible', showNav);
   document.getElementById('langBtn').style.display = showNav ? 'block' : 'none';
   document.getElementById('tickerWrap').style.display = showNav ? 'flex' : 'none';
@@ -894,6 +923,7 @@ function navigate(screen) {
   if (screen === 'market')      renderStocks();
   if (screen === 'leaderboard') loadLeaderboard();
   if (screen === 'portfolio')   renderPortfolio();
+  if (screen === 'learn')       renderLearn();
 }
 
 // ══════════════════════════════════════════════════
@@ -1282,6 +1312,7 @@ function openModal(sym) {
   document.getElementById('edenBox').style.display = 'none';
   document.getElementById('edenBtn').textContent = '🤔 למה המניה זזה היום?';
   document.getElementById('edenBtn').disabled = false;
+  document.getElementById('edenBtn').style.display = 'block';
   setModalTab('buy');
   updateTotal();
   document.getElementById('modalOverlay').classList.add('open');
@@ -1455,7 +1486,7 @@ End with one thing to watch for with this company.`;
       document.getElementById('edenAnswer').textContent = data.content;
       document.getElementById('edenBox').style.display = 'block';
       document.getElementById('edenBox').scrollIntoView({ behavior:'smooth', block:'nearest' });
-      btn.textContent = '🔄 שאלי שוב';
+      btn.style.display = 'none';  // hide button after answer — close ✕ exists on the box
     } else {
       btn.textContent = '🤔 למה המניה זזה היום?';
     }
@@ -1463,6 +1494,126 @@ End with one thing to watch for with this company.`;
     btn.textContent = '🤔 למה המניה זזה היום?';
   }
   btn.disabled = false;
+}
+
+// ══════════════════════════════════════════════════
+// LEARN — מפת ידע
+// ══════════════════════════════════════════════════
+const LEARN_TOPICS = [
+  {
+    emoji:'🏦', title:'מה זה שוק ההון?', color:'rgba(124,92,252,0.15)', border:'rgba(124,92,252,0.4)',
+    body:`<h3>שוק ההון — המקום שבו כסף עובד בשבילך</h3>
+<p>שוק ההון הוא מקום (פיזי ווירטואלי) שבו אנשים וחברות קונים ומוכרים ניירות ערך — מניות, אגרות חוב, תעודות סל ועוד.</p>
+<p><strong>למה זה חשוב?</strong><br>חברות צריכות כסף כדי לגדול. במקום ללוות מהבנק — הן מוכרות "חתיכות" ממניותיהן לציבור. אתה קונה מניה → אתה שותף בחברה!</p>
+<p><strong>מי מנהל?</strong><br>בישראל — הבורסה לניירות ערך בתל אביב. בארה"ב — NYSE ו-Nasdaq.</p>
+<p><strong>מחיר מניה — מה קובע אותו?</strong><br>היצע וביקוש. כשהרבה אנשים רוצים לקנות — מחיר עולה. כשכולם מוכרים — יורד. הסיבות: רווחי החברה, חדשות, מצב הכלכלה, ריבית ועוד.</p>`
+  },
+  {
+    emoji:'📈', title:'מה זה מניה?', color:'rgba(0,230,118,0.08)', border:'rgba(0,230,118,0.3)',
+    body:`<h3>מניה = חלק בעלות בחברה</h3>
+<p>כשחברה מנפיקה מניות, היא מחלקת את עצמה למיליוני "פירורים" קטנים. כל פירור = מניה אחת.</p>
+<p><strong>דוגמה:</strong><br>אם לאפל יש 15 מיליארד מניות, ואתה קונה מניה אחת — אתה הבעלים של 1/15,000,000,000 מאפל! קטן? כן. אבל כשאפל שווה 3 טריליון דולר — גם החלק הקטן שלך שווה הרבה.</p>
+<p><strong>איך מרוויחים?</strong></p>
+<ul>
+<li>📈 <strong>עליית ערך:</strong> קנית ב-100 ₪, מכרת ב-150 ₪ = רווח של 50%</li>
+<li>💰 <strong>דיבידנד:</strong> חברות רווחיות מחלקות חלק מהרווח לבעלי המניות</li>
+</ul>
+<p><strong>מה הסיכון?</strong><br>מניה יכולה גם לרדת. אם החברה בצרות — המניה יורדת. אם היא פשטה רגל — ייתכן שתאבד את כל ההשקעה.</p>`
+  },
+  {
+    emoji:'📊', title:'מה זה תעודת סל (ETF)?', color:'rgba(64,196,255,0.08)', border:'rgba(64,196,255,0.3)',
+    body:`<h3>ETF — קונים סל שלם במחיר אחד</h3>
+<p>ETF (Exchange Traded Fund) היא קרן שקונה עשרות ומאות מניות יחד, ואתה קונה "יחידה" ממנה — ובכך מקבל חשיפה לכולן.</p>
+<p><strong>למה זה חכם?</strong><br>במקום לנחש איזו מניה תנצח — אתה קונה את כולן. אם חברה אחת נופלת, האחרות מאזנות.</p>
+<p><strong>דוגמאות:</strong></p>
+<ul>
+<li>📊 <strong>SPY</strong> — 500 החברות הגדולות בארה"ב. ה-S&P 500.</li>
+<li>💻 <strong>QQQ</strong> — 100 חברות הטכנולוגיה: אפל, גוגל, אנבידיה...</li>
+<li>🌐 <strong>VTI</strong> — כל השוק האמריקאי, אלפי חברות.</li>
+</ul>
+<p><strong>ETF vs מניה בודדת:</strong><br>מניה בודדת = יותר סיכון, יותר סיכוי. ETF = פחות סיכון, תשואה "ממוצעת" של השוק.</p>`
+  },
+  {
+    emoji:'🏛️', title:'מה זה אגרת חוב (אג"ח)?', color:'rgba(255,215,0,0.08)', border:'rgba(255,215,0,0.3)',
+    body:`<h3>אג"ח = אתה ה"בנק" שמלווה כסף</h3>
+<p>כשאתה קונה אגרת חוב — אתה מלווה כסף לממשלה או לחברה. הם מבטיחים להחזיר עם ריבית קבועה.</p>
+<p><strong>מאפיינים:</strong></p>
+<ul>
+<li>🔒 <strong>יציב יותר</strong> ממניות — יש הבטחה להחזרה</li>
+<li>📉 <strong>תשואה נמוכה יותר</strong> ממניות בטווח הארוך</li>
+<li>🏛️ <strong>אג"ח ממשלתי</strong> = הכי בטוח (ממשלת ארה"ב לא תפשוט רגל)</li>
+<li>🎯 <strong>אג"ח קונצרני (חברות)</strong> = יותר ריבית, יותר סיכון</li>
+</ul>
+<p><strong>קשר לריבית:</strong><br>כשריבית עולה → מחיר אג"ח ישנות יורד (כי יש אג"ח חדשות עם ריבית גבוהה יותר).<br>כשריבית יורדת → מחיר אג"ח עולה.</p>`
+  },
+  {
+    emoji:'💱', title:'שוק מטבע חוץ — דולר ושקל', color:'rgba(255,152,0,0.08)', border:'rgba(255,152,0,0.3)',
+    body:`<h3>מה זה שער חליפין?</h3>
+<p>שער חליפין הוא המחיר של מטבע אחד ביחידות של מטבע אחר.</p>
+<p><strong>דוגמה:</strong><br>1$ = 3.70 ₪ אומר שצריך לשלם 3.70 שקלים כדי לקנות דולר אחד.</p>
+<p><strong>מה משפיע על שער הדולר?</strong></p>
+<ul>
+<li>📊 מצב הכלכלה הישראלית לעומת האמריקאית</li>
+<li>🌍 מתחים גיאופוליטיים (מלחמה, אי-יציבות → שקל נחלש)</li>
+<li>💹 ריבית בנק ישראל לעומת ריבית הפד האמריקאי</li>
+<li>🛢️ מחיר הנפט ויבוא/יצוא ישראלי</li>
+</ul>
+<p><strong>למה זה חשוב לך כמשקיע?</strong><br>אם קנית מניית אפל בדולרים, ואחר כך הדולר עלה — ההשקעה שלך שווה יותר שקלים, גם אם מחיר המניה לא זז!</p>`
+  },
+  {
+    emoji:'🎯', title:'אסטרטגיות השקעה', color:'rgba(255,82,82,0.08)', border:'rgba(255,82,82,0.3)',
+    body:`<h3>איך משקיעים בצורה חכמה?</h3>
+<p><strong>1. פיזור (Diversification)</strong><br>אל תשים את כל הביצים בסל אחד! השקע בסוגים שונים: מניות + אג"ח + נדל"ן. כשאחד יורד, השני עולה לרוב.</p>
+<p><strong>2. השקעה לאורך זמן (Buy & Hold)</strong><br>בטווח ארוך, שוק ההון עולה. מי שקנה ב-S&P 500 לפני 20 שנה — כפל את כספו כמה פעמים.</p>
+<p><strong>3. ממוצע עלות (DCA)</strong><br>במקום להשקיע הכל בבת אחת — משקיעים סכום קבוע כל חודש. כשהשוק ירד — קונים יותר. כשעלה — קונים פחות. יוצא ממוצע טוב.</p>
+<p><strong>4. הבן מה אתה קונה</strong><br>לעולם אל תקנה מניה שאתה לא מבין מה החברה עושה. וורן באפט: "השקע רק בעסקים שאתה מבין."</p>
+<p><strong>⚠️ פחדים ותאוות</strong><br>הטעות הכי גדולה: למכור בפאניקה כשהשוק יורד, ולקנות בהתרגשות כשעולה. עשה הפוך!</p>`
+  },
+  {
+    emoji:'🔍', title:'איך לנתח מניה?', color:'rgba(167,139,250,0.1)', border:'rgba(167,139,250,0.4)',
+    body:`<h3>מה לבדוק לפני שקונים מניה?</h3>
+<p><strong>1. מה החברה עושה?</strong><br>הכי בסיסי — הבן את העסק. אם לא יכול להסביר לחבר מה החברה מוכרת, אל תקנה.</p>
+<p><strong>2. האם החברה מרוויחה?</strong><br>חפש EPS (רווח למניה). חברה שמפסידה כסף היא הימור, לא השקעה.</p>
+<p><strong>3. מה המחיר ביחס לרווח? (P/E)</strong><br>P/E = מחיר מניה ÷ רווח שנתי למניה. P/E גבוה = המניה יקרה. P/E נמוך = זולה יחסית.</p>
+<p><strong>4. מה הצמיחה?</strong><br>האם ההכנסות עולות? האם יש לחברה שוק גדל? חברה שנמצאת בתעשייה מתכווצת = סיכון.</p>
+<p><strong>5. מי המתחרים?</strong><br>האם יש לחברה יתרון תחרותי ("חפיר")? פטנטים, מותג חזק, עלויות מעבר גבוהות ללקוח.</p>`
+  },
+  {
+    emoji:'🧠', title:'פסיכולוגיה של השקעות', color:'rgba(0,188,212,0.08)', border:'rgba(0,188,212,0.3)',
+    body:`<h3>המוח שלנו הוא האויב הכי גדול שלנו בשוק</h3>
+<p><strong>הטיות שגורמות להפסדים:</strong></p>
+<ul>
+<li>😨 <strong>אפקט הפסד:</strong> הפסד של 100 ₪ כואב פי 2 מהנאה מרווח של 100 ₪. לכן מוכרים מנצחים ומחזיקים מפסידים.</li>
+<li>🐑 <strong>עדר:</strong> קונים כשכולם קונים (שיא), מוכרים כשכולם מוכרים (תחתית).</li>
+<li>💡 <strong>אשליית שליטה:</strong> "אני בטוח שהמניה הזו תעלה" — אי אפשר לנבא שוק.</li>
+<li>🎰 <strong>הימור:</strong> לאחר רווח גדול, לוקחים יותר סיכון ("כבר הרווחתי, אין מה להפסיד").</li>
+</ul>
+<p><strong>הפתרון:</strong><br>קבע כללים מראש ותדבק בהם. "אקנה כל חודש X. לא אמכור בירידה של פחות מ-Y%." כללים מכניים מנצחים רגשות.</p>`
+  },
+];
+
+function renderLearn() {
+  const container = document.getElementById('learnTopics');
+  container.innerHTML = LEARN_TOPICS.map((topic, i) => `
+    <div onclick="openArticle(${i})" style="
+      margin-bottom:12px; border-radius:16px; padding:16px 18px;
+      background:${topic.color}; border:1px solid ${topic.border};
+      cursor:pointer; display:flex; align-items:center; gap:14px;
+      transition:transform .15s;" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform=''">
+      <div style="font-size:34px;flex-shrink:0">${topic.emoji}</div>
+      <div>
+        <div style="font-size:16px;font-weight:800">${topic.title}</div>
+        <div style="font-size:12px;color:var(--dim);margin-top:3px">לחץ לקריאה ←</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openArticle(i) {
+  const topic = LEARN_TOPICS[i];
+  document.getElementById('articleTitle').textContent = topic.emoji + ' ' + topic.title;
+  document.getElementById('articleBody').innerHTML = topic.body;
+  showScreen('article');
 }
 
 // ══════════════════════════════════════════════════

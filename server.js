@@ -273,23 +273,22 @@ let fxCache = { rate: 3.70, date: null };
 
 app.get('/api/fxrate', async (req, res) => {
   const today = new Date().toISOString().slice(0,10);
-  if (fxCache.date === today) return res.json({ rate: fxCache.rate, date: today, source: 'cache' });
+  if (fxCache.date === today) return res.json({ rate: fxCache.rate, date: fxCache.date, source: 'cache' });
   try {
-    const url = 'https://edge.boi.gov.il/FusionEdgeSite/dataseries/api/v1/series?format=json&id=RER_USD_ILS';
-    const r   = await fetch(url, { signal: AbortSignal.timeout(5000) });
-    const json = await r.json();
-    const series = json?.payload?.value;
-    if (series && series.length) {
-      // series is array of { index, period, value }; last item = most recent
-      const last = series[series.length - 1];
-      const rate = parseFloat(last.value);
-      if (rate > 0) {
-        fxCache = { rate, date: last.period || today };
-        return res.json({ rate, date: last.period || today, source: 'boi' });
-      }
+    // Bank of Israel public API — returns array with currentExchangeRate per currency
+    const url = 'https://www.boi.org.il/PublicApi/GetExchangeRates?asXml=false';
+    const r   = await fetch(url, { signal: AbortSignal.timeout(6000),
+      headers: { 'Accept': 'application/json', 'User-Agent': 'EdenFinance/1.0' } });
+    const arr = await r.json();
+    const usd = Array.isArray(arr) && arr.find(x => x.key === 'USD');
+    if (usd && usd.currentExchangeRate > 0) {
+      const rate = usd.currentExchangeRate;
+      const date = usd.lastUpdate ? usd.lastUpdate.slice(0,10) : today;
+      fxCache = { rate, date };
+      return res.json({ rate, date, source: 'boi' });
     }
     res.json({ rate: fxCache.rate, date: fxCache.date || today, source: 'fallback' });
-  } catch {
+  } catch(e) {
     res.json({ rate: fxCache.rate, date: fxCache.date || today, source: 'fallback' });
   }
 });
