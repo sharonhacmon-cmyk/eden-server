@@ -33,14 +33,15 @@ body {
   font-family:'Heebo',sans-serif;
   background: var(--bg);
   color: var(--text);
-  overflow: hidden; /* SPA — no page scroll, screens scroll internally */
-  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* ── TICKER ──────────────────────────── */
 .ticker-wrap {
-  position:fixed; top:0; left:0; right:0; z-index:90;
-  overflow:hidden;
+  position:sticky; top:0; z-index:90;
+  width:100%; overflow:hidden;
   background:rgba(7,7,26,0.97);
   border-bottom:1px solid var(--border);
   height:34px; display:flex; align-items:center;
@@ -56,21 +57,8 @@ body {
 @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
 /* ── SCREENS ─────────────────────────── */
-.screen { display:none; }
-/* Login / Setup: full screen, no ticker */
-#screen-login.active, #screen-setup.active {
-  display:block; position:fixed; inset:0; overflow-y:auto;
-  -webkit-overflow-scrolling:touch;
-}
-/* Main app screens: fixed between ticker (34px) and bottom nav (64px) */
-#screen-portfolio.active, #screen-market.active,
-#screen-leaderboard.active, #screen-learn.active,
-#screen-article.active {
-  display:block; position:fixed;
-  top:34px; bottom:var(--nav-h); left:0; right:0;
-  overflow-y:auto; -webkit-overflow-scrolling:touch;
-  padding-bottom:8px;
-}
+.screen { display:none; padding-bottom:calc(var(--nav-h) + 16px); }
+.screen.active { display:block; }
 
 /* ── BOTTOM NAV ──────────────────────── */
 .bottom-nav {
@@ -935,10 +923,9 @@ function showScreen(name, opts) {
   document.querySelectorAll('.nav-tab').forEach(t => {
     t.classList.toggle('active', t.dataset.screen === name);
   });
-  // Scroll screen to top (internal scroll, not window)
-  if (!opts?.noScroll) {
-    const el = document.getElementById('screen-'+name);
-    if (el) el.scrollTop = 0;
+  // Scroll to top of active screen (below sticky ticker)
+  if (!opts?.noScroll && ['portfolio','market','leaderboard','learn'].includes(name)) {
+    document.getElementById('screen-'+name).scrollIntoView({ behavior:'instant', block:'start' });
   }
 }
 
