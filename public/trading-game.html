@@ -480,7 +480,7 @@ body {
 
   <!-- Guide button -->
   <div style="text-align:center;margin:-4px 16px 8px">
-    <button onclick="showScreen('intro')" style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);border-radius:20px;padding:6px 18px;color:var(--gold);font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;cursor:pointer">
+    <button onclick="showIntroModal()" style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);border-radius:20px;padding:6px 18px;color:var(--gold);font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;cursor:pointer" id="guideBtnEl">
       📖 מדריך המשחק
     </button>
   </div>
@@ -574,7 +574,7 @@ body {
     <div id="edenBox" style="display:none;margin-bottom:12px">
       <div style="background:rgba(0,230,118,0.07);border:1px solid rgba(0,230,118,0.25);border-radius:12px;padding:12px 14px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <div id="edenBoxLabel" style="font-size:12px;color:var(--green);font-weight:700">🤖 עדן מסבירה</div>
+          <div id="edenBoxLabel" style="font-size:12px;color:var(--green);font-weight:700">🤖 הסבר AI</div>
           <button onclick="document.getElementById('edenBox').style.display='none'" style="background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer;color:var(--dim);display:flex;align-items:center;justify-content:center">✕</button>
         </div>
         <div id="edenAnswer" style="font-size:14px;color:rgba(238,238,255,0.85);line-height:1.65"></div>
@@ -616,9 +616,11 @@ body {
   <div id="articleBody" style="padding:16px;font-size:15px;line-height:1.8;color:rgba(238,238,255,0.88)"></div>
 </div>
 
-<!-- ══ SCREEN: INTRO / HOW TO PLAY ═══════════════ -->
-<div class="screen" id="screen-intro">
-  <div id="introContent"></div>
+<!-- ══ INTRO MODAL ════════════════════════════════ -->
+<div id="introModal" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.82);overflow-y:auto;-webkit-overflow-scrolling:touch;">
+  <div style="max-width:480px;margin:0 auto;padding:20px 16px 40px;">
+    <div id="introContent"></div>
+  </div>
 </div>
 
 <!-- ══ BOTTOM NAV ══════════════════════════════════ -->
@@ -791,7 +793,7 @@ const T = {
     'owned':'יש ברשותך','shares':'מניות',
     'confirm-buy':'אשר קנייה','confirm-sell':'אשר מכירה',
     'total':'סה"כ',
-    'eden-label':'🤖 עדן מסבירה','eden-btn':'🤔 למה המניה זזה היום?',
+    'eden-label':'🤖 הסבר AI','eden-btn':'🤔 למה המניה זזה היום?',
     'guide-btn':'📖 מדריך המשחק',
     'learn-title':'📚 מפת הידע','learn-sub':'לחץ על נושא ללמידה',
     'read-more':'לחץ לקריאה ←',
@@ -851,11 +853,11 @@ function applyLang() {
   if (edenBoxLabel) edenBoxLabel.textContent = t('eden-label');
   const edenBtn = document.getElementById('edenBtn');
   if (edenBtn && !edenBtn.disabled) edenBtn.textContent = t('eden-btn');
-  const guideBtn = document.querySelector('[onclick="showScreen(\'intro\')"]');
+  const guideBtn = document.getElementById('guideBtnEl');
   if (guideBtn) guideBtn.textContent = t('guide-btn');
 
   // Re-render dynamic screens
-  if (S.player) { renderPortfolio(); renderStocks(); renderIntro(); }
+  if (S.player) { renderPortfolio(); renderStocks(); }
   // Re-render learn if visible
   const learnEl = document.getElementById('learnTopics');
   if (learnEl && learnEl.children.length) renderLearn();
@@ -895,7 +897,7 @@ function showScreen(name) {
     t.classList.toggle('active', t.dataset.screen === name);
   });
   // Scroll to top only when switching main screens (not login/setup)
-  if (['portfolio','market','leaderboard','learn','intro','article'].includes(name)) {
+  if (['portfolio','market','leaderboard','learn','article'].includes(name)) {
     window.scrollTo(0, 0);
   }
 }
@@ -906,7 +908,6 @@ function navigate(screen) {
   if (screen === 'leaderboard') loadLeaderboard();
   if (screen === 'portfolio')   renderPortfolio();
   if (screen === 'learn')       renderLearn();
-  if (screen === 'intro')       renderIntro();
 }
 
 // ══════════════════════════════════════════════════
@@ -1029,8 +1030,9 @@ async function doSetup() {
     localStorage.setItem('tg_lang', S.lang);
     applyLang();
     loadFxRate().then(() => loadPrices());
-    renderIntro();
-    showScreen('intro');
+    showScreen('portfolio');
+    renderPortfolio();
+    showIntroModal();
   } catch(e) {
     btn.textContent = t('setup-btn'); btn.disabled = false;
     showToast(S.lang==='he' ? 'שגיאת חיבור — נסה/י שוב' : 'Connection error — try again', 'error');
@@ -1475,7 +1477,7 @@ async function askEden() {
   if (!sym || !p) return;
 
   const btn = document.getElementById('edenBtn');
-  btn.textContent = S.lang === 'he' ? '⏳ עדן חושבת...' : '⏳ Eden is thinking...';
+  btn.textContent = S.lang === 'he' ? '⏳ מחשב...' : '⏳ Thinking...';
   btn.disabled = true;
 
   const name    = S.lang === 'he' ? info.nameHe : info.nameEn;
@@ -1485,11 +1487,11 @@ async function askEden() {
   const langHe  = S.lang === 'he';
 
   const prompt = langHe
-    ? `אתה עדן, מדריכה פיננסית לילדים. הסבר לילד/ה בגיל ${age} בשפה פשוטה, קצרה וכיפית (3 משפטים בלבד):
+    ? `אתה מדריך פיננסי לילדים. הסבר בשפה פשוטה, קצרה וכיפית (3 משפטים בלבד):
 מניית ${name} (${sym}) ${dir} ב-${pct}% היום.
 מה יכול לגרום לתנועה כזו? השתמש בדוגמאות מהחיים שילד מכיר.
 סיים עם משפט קצר על מה כדאי לשים לב בחברה הזו.`
-    : `You are Eden, a financial guide for kids. Explain in simple, fun language (3 sentences only) to a ${age}-year-old:
+    : `You are a financial guide for kids. Explain in simple, fun language (3 sentences only):
 ${name} (${sym}) ${p.changePercent >= 0 ? 'went up' : 'went down'} ${pct}% today.
 What could cause this? Use examples kids relate to.
 End with one thing to watch for with this company.`;
@@ -1501,8 +1503,8 @@ End with one thing to watch for with this company.`;
       body: JSON.stringify({
         messages: [{ role:'user', content: prompt }],
         system: langHe
-          ? 'את עדן — מדריכה פיננסית לילדים. תענה בעברית פשוטה, קצרה ומעניינת. אין כוכביות, אין כותרות — רק טקסט רגיל.'
-          : 'You are Eden — a financial guide for kids. Answer in simple, short, engaging English. No bullet points, no headers — plain text only.'
+          ? 'אתה מדריך פיננסי לילדים. תענה בעברית פשוטה, קצרה ומעניינת. אין כוכביות, אין כותרות — רק טקסט רגיל.'
+          : 'You are a financial guide for kids. Answer in simple, short, engaging English. No bullet points, no headers — plain text only.'
       })
     });
     const data = await r.json();
@@ -1617,6 +1619,15 @@ const LEARN_TOPICS = [
   },
 ];
 
+function showIntroModal() {
+  renderIntro();
+  document.getElementById('introModal').style.display = 'block';
+  document.getElementById('introModal').scrollTop = 0;
+}
+function closeIntroModal() {
+  document.getElementById('introModal').style.display = 'none';
+}
+
 function renderIntro() {
   const el = document.getElementById('introContent');
   if (!el) return;
@@ -1655,8 +1666,8 @@ function renderIntro() {
       : 'Each visit: did your stocks go up? Down? Should you buy more or sell?'
     }</span></div>
     <div class="intro-tip"><span class="ti">✅</span><span>${he
-      ? 'לחצו על כל מניה ושאלו את <strong>עדן</strong> "למה המניה זזה היום?"'
-      : 'Tap any stock and ask <strong>Eden</strong> "Why did this stock move today?"'
+      ? 'לחצו על כל מניה ובחרו <strong>"למה המניה זזה היום?"</strong> לקבל הסבר'
+      : 'Tap any stock and tap <strong>"Why did this stock move?"</strong> for an explanation'
     }</span></div>
   </div>
 
@@ -1692,10 +1703,10 @@ function renderIntro() {
     }</span></div>
   </div>
 
-  <button class="btn btn-primary" onclick="navigate('market')" style="margin-bottom:12px">
-    ${he ? 'יאללה, לשוק המניות! 🚀' : "Let's trade! 🚀"}
+  <button class="btn btn-primary" onclick="closeIntroModal();navigate('market')" style="margin-bottom:12px">
+    ${he ? 'לשוק המניות! 🚀' : "Let's trade! 🚀"}
   </button>
-  <button class="btn btn-outline" onclick="navigate('portfolio')" style="font-size:14px">
+  <button class="btn btn-outline" onclick="closeIntroModal();navigate('portfolio')" style="font-size:14px;margin-top:6px">
     ${he ? 'לתיק שלי ←' : '← My Portfolio'}
   </button>`;
 }
