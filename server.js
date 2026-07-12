@@ -149,7 +149,41 @@ app.get('/admin/funds-status', adminAuth, (req, res) => {
 // ══════════════════════════════════════════════════
 // ── TRADING GAME ──────────────────────────────────
 // ══════════════════════════════════════════════════
-const yahooFinance = require('yahoo-finance2').default;
+
+// ── Yahoo Finance — native fetch, no external package ──
+async function yahooQuote(symbol) {
+  const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(symbol)}`;
+  const r = await fetch(url, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
+      'Accept': 'application/json',
+      'Accept-Language': 'en-US,en;q=0.9',
+    }
+  });
+  const data = await r.json();
+  const q = data?.quoteResponse?.result?.[0];
+  if (!q) throw new Error('No data for ' + symbol);
+  return {
+    regularMarketPrice:         q.regularMarketPrice,
+    regularMarketChange:        q.regularMarketChange,
+    regularMarketChangePercent: q.regularMarketChangePercent,
+    longName:  q.longName || q.shortName || symbol,
+    shortName: q.shortName || symbol,
+  };
+}
+
+async function yahooQuoteBulk(symbols) {
+  const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbols.join(',')}`;
+  const r = await fetch(url, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
+      'Accept': 'application/json',
+      'Accept-Language': 'en-US,en;q=0.9',
+    }
+  });
+  const data = await r.json();
+  return data?.quoteResponse?.result || [];
+}
 
 const TRADING_FILE  = path.join(__dirname, 'trading_data.json');
 const STARTING_CASH = 50000;
@@ -208,16 +242,14 @@ app.get('/api/trading/me', tradingAuth, (req, res) => {
 // All stock prices
 app.get('/api/stocks', async (req, res) => {
   try {
-    const results = await Promise.all(
-      TRADEABLE_STOCKS.map(sym => yahooFinance.quote(sym).catch(() => null))
-    );
+    const results = await yahooQuoteBulk(TRADEABLE_STOCKS);
     const prices = {};
-    results.forEach((q, i) => {
-      if (q) prices[TRADEABLE_STOCKS[i]] = {
-        price: q.regularMarketPrice,
-        change: q.regularMarketChange,
+    results.forEach(q => {
+      prices[q.symbol] = {
+        price:         q.regularMarketPrice,
+        change:        q.regularMarketChange,
         changePercent: q.regularMarketChangePercent,
-        name: q.longName || q.shortName || TRADEABLE_STOCKS[i],
+        name:          q.longName || q.shortName || q.symbol,
       };
     });
     res.json(prices);
@@ -235,7 +267,7 @@ app.post('/api/trading/buy', tradingAuth, async (req, res) => {
     return res.status(400).json({ error: 'נתונים לא תקינים' });
   }
   try {
-    const q    = await yahooFinance.quote(sym);
+    const q    = await yahooQuote(sym);
     const price = q.regularMarketPrice;
     const total = price * numShares;
     const data  = loadTradingData();
@@ -270,7 +302,7 @@ app.post('/api/trading/sell', tradingAuth, async (req, res) => {
     return res.status(400).json({ error: 'אין מספיק מניות' });
   }
   try {
-    const q    = await yahooFinance.quote(sym);
+    const q    = await yahooQuote(sym);
     const price = q.regularMarketPrice;
     const total = price * numShares;
     player.cash += total;
@@ -291,9 +323,10 @@ app.get('/api/trading/leaderboard', async (req, res) => {
     const allSymbols = new Set();
     Object.values(data).forEach(p => Object.keys(p.portfolio || {}).forEach(s => allSymbols.add(s)));
     const prices = {};
-    await Promise.all([...allSymbols].map(async sym => {
-      try { const q = await yahooFinance.quote(sym); prices[sym] = q.regularMarketPrice; } catch {}
-    }));
+    if (allSymbols.size > 0) {
+      const bulk = await yahooQuoteBulk([...allSymbols]).catch(() => []);
+      bulk.forEach(q => { prices[q.symbol] = q.regularMarketPrice; });
+    }
     const ranked = Object.values(data).map(p => {
       let pv = 0;
       Object.entries(p.portfolio || {}).forEach(([sym, h]) => { pv += (prices[sym] || h.avgPrice) * h.shares; });
