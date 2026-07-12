@@ -438,31 +438,30 @@ body {
 <!-- ══ SCREEN: SETUP ══════════════════════════════ -->
 <div class="screen" id="screen-setup">
   <div class="setup-box">
-    <button onclick="backToLogin()" style="background:none;border:none;color:var(--dim);font-size:15px;cursor:pointer;padding:0 0 12px;font-family:'Heebo',sans-serif">← חזרה לכניסה</button>
+    <button onclick="backToLogin()" id="setupBackBtn" style="background:none;border:none;color:var(--dim);font-size:15px;cursor:pointer;padding:0 0 12px;font-family:'Heebo',sans-serif">← חזרה לכניסה</button>
     <div style="font-size:56px;text-align:center;margin-bottom:8px">👤</div>
     <div class="setup-title" id="txt-setup-title">ספר/י לנו עליך</div>
-    <div class="setup-sub" id="txt-setup-sub">רק פעם אחת — השיא שלך ישמר!</div>
+    <div class="setup-sub" id="txt-setup-sub">רק פעם אחת — השם שלך ישמר!</div>
+    <!-- שפה — ראשון -->
+    <div class="form-group">
+      <label class="form-label" id="txt-lang-label">שפה / Language</label>
+      <div class="seg-group">
+        <button type="button" class="seg-btn active" id="l-he" onclick="setLangPref('he')">עברית</button>
+        <button type="button" class="seg-btn"        id="l-en" onclick="setLangPref('en')">English</button>
+      </div>
+    </div>
+    <!-- שם -->
     <div class="form-group">
       <label class="form-label" id="txt-name-label">שם (כינוי)</label>
-      <input class="form-input" id="setupName" type="text" placeholder="איך קוראים לך?" maxlength="20">
+      <input class="form-input" id="setupName" type="text" placeholder="איך קוראים לך?" maxlength="20" id="setupNameInput">
     </div>
+    <!-- מגדר -->
     <div class="form-group">
       <label class="form-label" id="txt-gender-label">אני</label>
       <div class="seg-group">
-        <button class="seg-btn" id="g-female" onclick="setGender('female')" id="txt-g-female">בת</button>
-        <button class="seg-btn" id="g-male"   onclick="setGender('male')" id="txt-g-male">בן</button>
-        <button class="seg-btn" id="g-other"  onclick="setGender('other')" id="txt-g-other">אחר</button>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label" id="txt-age-label">גיל</label>
-      <div class="seg-group" id="ageGroup"></div>
-    </div>
-    <div class="form-group">
-      <label class="form-label" id="txt-lang-label">שפה</label>
-      <div class="seg-group">
-        <button class="seg-btn active" id="l-he" onclick="setLangPref('he')">עברית</button>
-        <button class="seg-btn"        id="l-en" onclick="setLangPref('en')">English</button>
+        <button type="button" class="seg-btn" id="g-female" onclick="setGender('female')">בת</button>
+        <button type="button" class="seg-btn" id="g-male"   onclick="setGender('male')">בן</button>
+        <button type="button" class="seg-btn" id="g-other"  onclick="setGender('other')">אחר/ת</button>
       </div>
     </div>
     <button class="btn btn-primary" onclick="doSetup()" id="txt-setup-btn">יאללה, מתחילים! 🎯</button>
@@ -575,7 +574,7 @@ body {
     <div id="edenBox" style="display:none;margin-bottom:12px">
       <div style="background:rgba(0,230,118,0.07);border:1px solid rgba(0,230,118,0.25);border-radius:12px;padding:12px 14px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <div style="font-size:12px;color:var(--green);font-weight:700">🤖 עדן מסבירה</div>
+          <div id="edenBoxLabel" style="font-size:12px;color:var(--green);font-weight:700">🤖 עדן מסבירה</div>
           <button onclick="document.getElementById('edenBox').style.display='none'" style="background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer;color:var(--dim);display:flex;align-items:center;justify-content:center">✕</button>
         </div>
         <div id="edenAnswer" style="font-size:14px;color:rgba(238,238,255,0.85);line-height:1.65"></div>
@@ -602,8 +601,8 @@ body {
 <!-- ══ SCREEN: LEARN ══════════════════════════════ -->
 <div class="screen" id="screen-learn">
   <div class="page-header" style="padding-top:16px;margin-bottom:4px">
-    <div class="page-title">📚 מפת הידע</div>
-    <div class="page-sub">לחץ על נושא ללמידה</div>
+    <div class="page-title" id="txt-learn-title">📚 מפת הידע</div>
+    <div class="page-sub" id="txt-learn-sub">לחץ על נושא ללמידה</div>
   </div>
   <div id="learnTopics" style="padding:8px 16px 16px"></div>
 </div>
@@ -619,52 +618,7 @@ body {
 
 <!-- ══ SCREEN: INTRO / HOW TO PLAY ═══════════════ -->
 <div class="screen" id="screen-intro">
-  <div class="intro-hero">
-    <div class="icon">🚀</div>
-    <h1>ברוכים לשוק ההון הווירטואלי!</h1>
-    <p>לפני שמתחילים — כמה דקות כדאי לקרוא</p>
-  </div>
-
-  <div class="intro-section">
-    <h3>🎮 מה יש כאן?</h3>
-    <div class="intro-tip"><span class="ti">💰</span><span>כל שחקן מתחיל עם <strong>50,000 ₪ וירטואלי</strong> — כסף שלא קיים באמת, אבל ההחלטות הן אמיתיות!</span></div>
-    <div class="intro-tip"><span class="ti">📊</span><span><strong>30 נכסים לבחירה</strong>: מניות ישראליות, מניות אמריקאיות, תעודות סל, אגרות חוב, נדל"ן וסחורות.</span></div>
-    <div class="intro-tip"><span class="ti">🏆</span><span>בסוף תקופת המשחק — לוח השיא מכריע מי ניצח!</span></div>
-  </div>
-
-  <div class="intro-section">
-    <h3>📅 מתי להיכנס?</h3>
-    <div class="intro-tip"><span class="ti">✅</span><span>לפחות <strong>פעם בשבוע</strong> — המחירים משתנים כל יום!</span></div>
-    <div class="intro-tip"><span class="ti">✅</span><span>בכל כניסה בדקו: האם המניות עלו? ירדו? האם כדאי לקנות עוד או למכור?</span></div>
-    <div class="intro-tip"><span class="ti">✅</span><span>לחצו על כל מניה ושאלו את <strong>עדן</strong> "למה המניה זזה היום?"</span></div>
-  </div>
-
-  <div class="intro-section">
-    <h3>🏆 איך ליצור הובלה?</h3>
-    <div class="intro-tip"><span class="ti">💡</span><span><strong>קנה בנמוך, מכור בגבוה</strong> — זה העיקרון הבסיסי.</span></div>
-    <div class="intro-tip"><span class="ti">💡</span><span><strong>פיזור חכם</strong>: אל תשים את כל הכסף במניה אחת. כמה נכסים שונים = פחות סיכון.</span></div>
-    <div class="intro-tip"><span class="ti">💡</span><span>בדוק את <strong>לוח השיא</strong> ותראה מה עושים המובילים — ואיזה מניות הם בחרו.</span></div>
-  </div>
-
-  <div class="intro-section">
-    <h3>⚠️ ממה להיזהר?</h3>
-    <div class="intro-tip"><span class="ti">⚠️</span><span>מניות יכולות לרדת מהר. <strong>אל תשקיע את כל הכסף במקום אחד.</strong></span></div>
-    <div class="intro-tip"><span class="ti">⚠️</span><span>מניות תנודתיות (טסלה, נפט) עולות ויורדות הרבה — מסוכנות אבל גם מרגשות!</span></div>
-    <div class="intro-tip"><span class="ti">⚠️</span><span>לפני שקונים — <strong>קרא/י את ההסבר</strong> על הנכס. כל מניה מסמנת את הסיכון שלה.</span></div>
-  </div>
-
-  <div class="intro-section">
-    <h3>⏱️ כמה זמן המשחק?</h3>
-    <div class="intro-tip"><span class="ti">📆</span><span>תקופת המשחק נקבעת ע"י המורה/מנחה — שבועיים, חודש, או סמסטר.</span></div>
-    <div class="intro-tip"><span class="ti">🎯</span><span>בסיום — הלוח השיא קובע את המנצח. <strong>אבל הלמידה היא הפרס הגדול!</strong></span></div>
-  </div>
-
-  <button class="btn btn-primary" onclick="navigate('market')" style="margin-bottom:12px">
-    יאללה, לשוק המניות! 🚀
-  </button>
-  <button class="btn btn-outline" onclick="navigate('portfolio')" style="font-size:14px">
-    לתיק שלי ←
-  </button>
+  <div id="introContent"></div>
 </div>
 
 <!-- ══ BOTTOM NAV ══════════════════════════════════ -->
@@ -821,14 +775,14 @@ const T = {
   he: {
     'login-title':'שוק ההון הווירטואלי','login-sub':'סוחרים, מרוויחים, לומדים',
     'code-label':'קוד גישה','login-btn':'כניסה לשוק 🚀','login-hint':'קוד הגישה מתקבל ממורה/מנחה',
-    'setup-title':'ספר/י לנו עליך','setup-sub':'רק פעם אחת — השיא שלך ישמר!',
-    'name-label':'שם (כינוי)','gender-label':'אני','age-label':'גיל','lang-label':'שפה',
+    'setup-title':'ספר/י לנו עליך','setup-sub':'רק פעם אחת — השם שלך ישמר!',
+    'name-label':'שם (כינוי)','gender-label':'אני','lang-label':'שפה',
     'setup-btn':'יאללה, מתחילים! 🎯',
     'portfolio-label':'שווי תיק כולל','holdings-title':'המניות שלי','trades-title':'עסקאות אחרונות',
     'market-title':'שוק המניות','market-sub':'לחץ על מניה לקנייה/מכירה','cash-avail':'מזומן זמין',
     'filter-all':'הכל','filter-local':'🇮🇱 ישראלי','filter-intl':'🌍 בינלאומי',
     'leader-title':'🏆 לוח שיא','refresh-btn':'רענן',
-    'nav-portfolio':'תיק','nav-market':'שוק','nav-leader':'דירוג',
+    'nav-portfolio':'תיק','nav-market':'שוק','nav-leader':'דירוג','nav-learn':'למידה',
     'tab-buy':'קנייה','tab-sell':'מכירה',
     'no-holdings':'עדיין אין מניות בתיק\nקנה את הראשונה! 🎯',
     'no-trades':'עדיין לא בוצעו עסקאות',
@@ -837,26 +791,36 @@ const T = {
     'owned':'יש ברשותך','shares':'מניות',
     'confirm-buy':'אשר קנייה','confirm-sell':'אשר מכירה',
     'total':'סה"כ',
+    'eden-label':'🤖 עדן מסבירה','eden-btn':'🤔 למה המניה זזה היום?',
+    'guide-btn':'📖 מדריך המשחק',
+    'learn-title':'📚 מפת הידע','learn-sub':'לחץ על נושא ללמידה',
+    'read-more':'לחץ לקריאה ←',
+    'trades-label':'עסקאות','fx-label':'שער בנק ישראל',
   },
   en: {
     'login-title':'Virtual Stock Market','login-sub':'Trade, Earn, Learn',
     'code-label':'Access Code','login-btn':'Enter Market 🚀','login-hint':'Code provided by teacher/instructor',
-    'setup-title':'Tell us about you','setup-sub':'Just once — your progress will be saved!',
-    'name-label':'Nickname','gender-label':'I am','age-label':'Age','lang-label':'Language',
+    'setup-title':'Tell us about you','setup-sub':'Just once — your name will be saved!',
+    'name-label':'Nickname','gender-label':'I am','lang-label':'Language',
     'setup-btn':'Let\'s go! 🎯',
-    'portfolio-label':'Total Portfolio Value','holdings-title':'My Stocks','trades-title':'Recent Trades',
+    'portfolio-label':'Total Portfolio Value','holdings-title':'My Holdings','trades-title':'Recent Trades',
     'market-title':'Stock Market','market-sub':'Tap a stock to buy/sell','cash-avail':'Available Cash',
     'filter-all':'All','filter-local':'🇮🇱 Israeli','filter-intl':'🌍 International',
     'leader-title':'🏆 Leaderboard','refresh-btn':'Refresh',
-    'nav-portfolio':'Portfolio','nav-market':'Market','nav-leader':'Ranking',
+    'nav-portfolio':'Portfolio','nav-market':'Market','nav-leader':'Rankings','nav-learn':'Learn',
     'tab-buy':'Buy','tab-sell':'Sell',
-    'no-holdings':'No stocks yet\nBuy your first one! 🎯',
+    'no-holdings':'No holdings yet\nBuy your first stock! 🎯',
     'no-trades':'No trades yet',
     'bought':'shares bought ✅','sold':'shares sold ✅',
     'g-female':'Girl','g-male':'Boy','g-other':'Other',
     'owned':'You own','shares':'shares',
     'confirm-buy':'Confirm Buy','confirm-sell':'Confirm Sell',
     'total':'Total',
+    'eden-label':'🤖 Eden explains','eden-btn':'🤔 Why did this stock move today?',
+    'guide-btn':'📖 Game Guide',
+    'learn-title':'📚 Knowledge Map','learn-sub':'Tap a topic to learn',
+    'read-more':'Tap to read →',
+    'trades-label':'trades','fx-label':'Bank of Israel rate',
   }
 };
 
@@ -866,10 +830,11 @@ function applyLang() {
   document.documentElement.lang = S.lang;
   document.documentElement.dir  = S.lang === 'he' ? 'rtl' : 'ltr';
   const ids = ['login-title','login-sub','code-label','login-btn','login-hint',
-    'setup-title','setup-sub','name-label','gender-label','age-label','lang-label','setup-btn',
+    'setup-title','setup-sub','name-label','gender-label','lang-label','setup-btn',
     'portfolio-label','holdings-title','trades-title','market-title','market-sub','cash-avail',
     'filter-all','filter-local','filter-intl','leader-title','refresh-btn',
-    'nav-portfolio','nav-market','nav-leader','tab-buy','tab-sell'];
+    'nav-portfolio','nav-market','nav-leader','tab-buy','tab-sell',
+    'learn-title','learn-sub'];
   ids.forEach(id => {
     const el = document.getElementById('txt-'+id);
     if (el) el.textContent = t(id);
@@ -878,8 +843,22 @@ function applyLang() {
   document.getElementById('g-male').textContent   = t('g-male');
   document.getElementById('g-other').textContent  = t('g-other');
   document.getElementById('langBtn').textContent  = S.lang === 'he' ? 'EN' : 'עב';
-  // refresh current screen content
-  if (S.player) { renderPortfolio(); renderStocks(); }
+
+  // Dynamic elements
+  const navLearn = document.querySelector('[data-screen="learn"] span:last-child');
+  if (navLearn) navLearn.textContent = t('nav-learn');
+  const edenBoxLabel = document.getElementById('edenBoxLabel');
+  if (edenBoxLabel) edenBoxLabel.textContent = t('eden-label');
+  const edenBtn = document.getElementById('edenBtn');
+  if (edenBtn && !edenBtn.disabled) edenBtn.textContent = t('eden-btn');
+  const guideBtn = document.querySelector('[onclick="showScreen(\'intro\')"]');
+  if (guideBtn) guideBtn.textContent = t('guide-btn');
+
+  // Re-render dynamic screens
+  if (S.player) { renderPortfolio(); renderStocks(); renderIntro(); }
+  // Re-render learn if visible
+  const learnEl = document.getElementById('learnTopics');
+  if (learnEl && learnEl.children.length) renderLearn();
 }
 
 function toggleLang() {
@@ -907,15 +886,18 @@ function showScreen(name) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('screen-'+name).classList.add('active');
   const nav = document.getElementById('bottomNav');
-  const showNav = ['portfolio','market','leaderboard','learn','article'].includes(name);
+  const showNav    = ['portfolio','market','leaderboard','learn','article'].includes(name);
+  const showTicker = ['portfolio','market','leaderboard'].includes(name);
   nav.classList.toggle('visible', showNav);
-  document.getElementById('langBtn').style.display = showNav ? 'block' : 'none';
-  document.getElementById('tickerWrap').style.display = showNav ? 'flex' : 'none';
+  document.getElementById('langBtn').style.display    = showTicker ? 'block' : 'none';
+  document.getElementById('tickerWrap').style.display = showTicker ? 'flex'  : 'none';
   document.querySelectorAll('.nav-tab').forEach(t => {
     t.classList.toggle('active', t.dataset.screen === name);
   });
-  // Scroll to top when switching screens
-  window.scrollTo(0, 0);
+  // Scroll to top only when switching main screens (not login/setup)
+  if (['portfolio','market','leaderboard','learn','intro','article'].includes(name)) {
+    window.scrollTo(0, 0);
+  }
 }
 
 function navigate(screen) {
@@ -967,43 +949,77 @@ document.getElementById('inputCode').addEventListener('keydown', e => { if(e.key
 // ══════════════════════════════════════════════════
 // SETUP
 // ══════════════════════════════════════════════════
-let selectedGender = '';
-let selectedAge    = '';
+let selectedGender   = '';
 let selectedLangPref = 'he';
+
+// Gender-aware address helpers (Hebrew only; English is neutral)
+function genderHe(female, male, other) {
+  const g = S.player?.gender || selectedGender;
+  if (g === 'female') return female;
+  if (g === 'male')   return male;
+  return other || female + '/' + male;
+}
+// e.g. "קנה/קני" → genderWord('קני','קנה')
+// Returns correct form based on current player gender
+function gHe(f, m) { return genderHe(f, m, f+'/'+m); }
 
 function setGender(g) {
   selectedGender = g;
   ['female','male','other'].forEach(x => document.getElementById('g-'+x).classList.toggle('active', x===g));
+  // Update placeholder text dynamically
+  const nameInput = document.getElementById('setupName');
+  if (nameInput && S.lang === 'he') {
+    nameInput.placeholder = g === 'female' ? 'איך קוראים לך?' : g === 'male' ? 'איך קוראים לך?' : 'מה השם שלך?';
+  }
 }
 
 function setLangPref(l) {
   selectedLangPref = l;
+  S.lang = l;
   ['he','en'].forEach(x => document.getElementById('l-'+x).classList.toggle('active', x===l));
+  // Switch direction immediately
+  document.documentElement.lang = l;
+  document.documentElement.dir  = l === 'he' ? 'rtl' : 'ltr';
+  // Update labels
+  const nameLabel   = document.getElementById('txt-name-label');
+  const genderLabel = document.getElementById('txt-gender-label');
+  const setupTitle  = document.getElementById('txt-setup-title');
+  const setupSub    = document.getElementById('txt-setup-sub');
+  const setupBtn    = document.getElementById('txt-setup-btn');
+  const backBtn     = document.getElementById('setupBackBtn');
+  const nameInput   = document.getElementById('setupName');
+  if (l === 'en') {
+    if (setupTitle)  setupTitle.textContent  = 'Tell us about you';
+    if (setupSub)    setupSub.textContent    = 'Just once — your name will be saved!';
+    if (nameLabel)   nameLabel.textContent   = 'Nickname';
+    if (genderLabel) genderLabel.textContent = 'I am';
+    if (setupBtn)    setupBtn.textContent    = "Let's go! 🎯";
+    if (backBtn)     backBtn.textContent     = '← Back';
+    if (nameInput)   nameInput.placeholder  = 'What do we call you?';
+    document.getElementById('g-female').textContent = 'Girl';
+    document.getElementById('g-male').textContent   = 'Boy';
+    document.getElementById('g-other').textContent  = 'Other';
+  } else {
+    if (setupTitle)  setupTitle.textContent  = 'ספר/י לנו עליך';
+    if (setupSub)    setupSub.textContent    = 'רק פעם אחת — השם שלך ישמר!';
+    if (nameLabel)   nameLabel.textContent   = 'שם (כינוי)';
+    if (genderLabel) genderLabel.textContent = 'אני';
+    if (setupBtn)    setupBtn.textContent    = 'יאללה, מתחילים! 🎯';
+    if (backBtn)     backBtn.textContent     = '← חזרה לכניסה';
+    if (nameInput)   nameInput.placeholder  = 'איך קוראים לך?';
+    document.getElementById('g-female').textContent = 'בת';
+    document.getElementById('g-male').textContent   = 'בן';
+    document.getElementById('g-other').textContent  = 'אחר/ת';
+  }
 }
-
-// Build age buttons 10–18
-(function buildAge() {
-  const grp = document.getElementById('ageGroup');
-  [10,11,12,13,14,15,16,17,18].forEach(age => {
-    const b = document.createElement('button');
-    b.className = 'seg-btn'; b.textContent = age;
-    b.onclick = () => {
-      selectedAge = age;
-      grp.querySelectorAll('.seg-btn').forEach(x => x.classList.remove('active'));
-      b.classList.add('active');
-    };
-    grp.appendChild(b);
-  });
-})();
 
 async function doSetup() {
   const name = document.getElementById('setupName').value.trim();
   if (!name)           { showToast(S.lang==='he' ? 'מה השם שלך?' : 'Enter a nickname', 'error'); return; }
-  if (!selectedGender) { showToast(S.lang==='he' ? 'בחר/י מין' : 'Select gender', 'error'); return; }
-  if (!selectedAge)    { showToast(S.lang==='he' ? 'בחר/י גיל' : 'Select age', 'error'); return; }
+  if (!selectedGender) { showToast(S.lang==='he' ? 'בחרי/בחר מין' : 'Select gender', 'error'); return; }
   const btn = document.getElementById('txt-setup-btn');
   btn.textContent = '...'; btn.disabled = true;
-  const r = await api('/api/trading/setup','POST',{ name, gender:selectedGender, age:selectedAge, language:selectedLangPref });
+  const r = await api('/api/trading/setup','POST',{ name, gender:selectedGender, language:selectedLangPref });
   btn.textContent = t('setup-btn'); btn.disabled=false;
   if (r.error) { showToast(r.error,'error'); return; }
   S.player = r.player;
@@ -1192,28 +1208,28 @@ const CAT_LABELS = {
 
 const CAT_EXPLAIN = {
   'israeli': {
-    title: '🇮🇱 מניות ישראליות — נסחרות בשקלים (₪)',
-    text: 'חברות ישראליות שנסחרות בבורסות. כשקונים מניה — אתם שותפים בחברה! מחיר בשקלים ישראליים.\n✅ לא צריך המרת מטבע — קנייה ישירה בשקלים.\n⚡ מושפעות ממצב הביטחון, הכלכלה הישראלית, וחדשות החברה.'
+    he: { title:'🇮🇱 מניות ישראליות — נסחרות בשקלים (₪)', text:'חברות ישראליות שנסחרות בבורסה. כשקונים מניה — אתם שותפים בחברה!\n✅ מחיר בשקלים — אין צורך בהמרת מטבע.\n⚡ מושפעות ממצב הביטחון, הכלכלה הישראלית וחדשות החברה.' },
+    en: { title:'🇮🇱 Israeli Stocks — traded in Shekels (₪)', text:'Israeli companies listed on the stock exchange. Buy a share = become a co-owner!\n✅ Priced in NIS — no currency conversion needed.\n⚡ Affected by security situation, Israeli economy and company news.' },
   },
   'us-stocks': {
-    title: '🇺🇸 מניות אמריקאיות — נסחרות בדולרים ($)',
-    text: 'חברות ענק מארה"ב. המחיר מוצג בדולרים, והקנייה מחושבת בשקלים לפי שער החליפין.\n💱 שער יום: 1$ = 3.70 ₪\nכשהדולר עולה — ההשקעה שלכם שווה יותר בשקלים. כשיורד — פחות.'
+    he: { title:'🇺🇸 מניות אמריקאיות — נסחרות בדולרים ($)', text:'חברות ענק מארה"ב. המחיר מוצג בדולרים.\n💱 שער יום (בנק ישראל): כשהדולר עולה — ההשקעה שווה יותר בשקלים. כשיורד — פחות.' },
+    en: { title:'🇺🇸 US Stocks — traded in Dollars ($)', text:'Giant American companies. Prices shown in USD.\n💱 Exchange rate from Bank of Israel — when the dollar rises, your investment is worth more in NIS. When it falls, less.' },
   },
   'etf': {
-    title: '📊 תעודות סל (ETF) — במקום מניה אחת, קונים סל שלם!',
-    text: 'ETF מכיל הרבה מניות יחד. SPY = 500 חברות אמריקאיות, QQQ = 100 חברות טכנולוגיה.\n✅ פחות סיכון כי הפיזור גדול — אם חברה אחת נפגעת, האחרות מאזנות.\n💱 כל תעודות הסל פה הן אמריקאיות — מחיר בדולרים, שער: 1$ = 3.70 ₪'
+    he: { title:'📊 תעודות סל (ETF) — סל מניות במחיר אחד', text:'ETF מכיל הרבה מניות יחד. SPY = 500 חברות, QQQ = 100 חברות טכנולוגיה.\n✅ פחות סיכון — פיזור רחב.\n💱 מחיר בדולרים.' },
+    en: { title:'📊 ETFs — a basket of stocks in one click', text:'An ETF holds many stocks together. SPY = 500 companies, QQQ = 100 tech companies.\n✅ Less risk — broad diversification.\n💱 Priced in USD.' },
   },
   'bonds': {
-    title: '🏛️ אגרות חוב (אג"ח) — הכי בטוח, הכי יציב',
-    text: 'אג"ח = הלוואה שאתם נותנים למדינה או חברה. הם מבטיחים להחזיר עם ריבית.\n🔑 כשריבית עולה — מחיר האג"ח יורד. כשריבית יורדת — מחיר עולה.\n✅ שימושי לאיזון תיק ובזמן ירידות בשוק. מחיר בדולרים, שער: 1$ = 3.70 ₪'
+    he: { title:'🏛️ אגרות חוב (אג"ח) — הכי יציב', text:'אג"ח = הלוואה שאתם נותנים למדינה או חברה. הם מחזירים עם ריבית.\n🔑 כשריבית עולה — מחיר אג"ח יורד. כשיורדת — עולה.\n💱 מחיר בדולרים.' },
+    en: { title:'🏛️ Bonds — the safest investment', text:'A bond = you lend money to a government or company. They repay with interest.\n🔑 When interest rates rise → bond price falls. When rates fall → price rises.\n💱 Priced in USD.' },
   },
   'reit': {
-    title: '🏠 קרנות נדל"ן (REIT) — נדל"ן בלי לקנות דירה',
-    text: 'הקרן קונה בניינים, מחסנים וקניונים, גובה שכירות ומחלקת רווחים לבעלי המניות.\n⚠️ ריבית גבוהה פוגעת בנדל"ן — כדאי לבדוק לאן הריבית הולכת.\n💱 מחיר בדולרים, שער: 1$ = 3.70 ₪'
+    he: { title:'🏠 קרנות נדל"ן (REIT) — נדל"ן בלי לקנות דירה', text:'הקרן קונה בניינים וקניונים, גובה שכירות ומחלקת רווחים.\n⚠️ ריבית גבוהה פוגעת בנדל"ן.\n💱 מחיר בדולרים.' },
+    en: { title:'🏠 Real Estate (REIT) — own property without buying it', text:'The fund buys buildings and malls, collects rent, and shares profits with investors.\n⚠️ High interest rates hurt real estate values.\n💱 Priced in USD.' },
   },
   'commodity': {
-    title: '🥇 סחורות — זהב, כסף, נפט',
-    text: 'חומרים פיזיים שיש להם מחיר גלובלי. זהב = "מקלט בטוח" כשהשוק יורד. נפט תלוי בפוליטיקה וביקוש.\n⚠️ הכי תנודתיות מכל הקטגוריות — יכולות לעלות ולרדת 10% בשבוע!\n💱 מחיר בדולרים, שער: 1$ = 3.70 ₪'
+    he: { title:'🥇 סחורות — זהב, כסף, נפט', text:'חומרים פיזיים בעלי מחיר גלובלי. זהב = מקלט בטוח. נפט = תלוי בפוליטיקה.\n⚠️ הכי תנודתי! יכולות לזוז 10% בשבוע.\n💱 מחיר בדולרים.' },
+    en: { title:'🥇 Commodities — Gold, Silver, Oil', text:'Physical materials with global prices. Gold = safe haven. Oil = depends on politics.\n⚠️ Most volatile! Can move 10% in a week.\n💱 Priced in USD.' },
   },
 };
 
@@ -1226,8 +1242,9 @@ function setFilter(f) {
   const ex  = CAT_EXPLAIN[f];
   const box = document.getElementById('catExplainer');
   if (ex) {
-    document.getElementById('catExplainerTitle').textContent = ex.title;
-    document.getElementById('catExplainerText').textContent  = ex.text;
+    const lx = ex[S.lang] || ex.he;
+    document.getElementById('catExplainerTitle').textContent = lx.title;
+    document.getElementById('catExplainerText').textContent  = lx.text;
     box.style.display = 'block';
   } else {
     box.style.display = 'none';
@@ -1451,7 +1468,7 @@ async function askEden() {
   if (!sym || !p) return;
 
   const btn = document.getElementById('edenBtn');
-  btn.textContent = '⏳ עדן חושבת...';
+  btn.textContent = S.lang === 'he' ? '⏳ עדן חושבת...' : '⏳ Eden is thinking...';
   btn.disabled = true;
 
   const name    = S.lang === 'he' ? info.nameHe : info.nameEn;
@@ -1501,7 +1518,8 @@ End with one thing to watch for with this company.`;
 // ══════════════════════════════════════════════════
 const LEARN_TOPICS = [
   {
-    emoji:'🏦', title:'מה זה שוק ההון?', color:'rgba(124,92,252,0.15)', border:'rgba(124,92,252,0.4)',
+    emoji:'🏦', color:'rgba(124,92,252,0.15)', border:'rgba(124,92,252,0.4)',
+    he:{ title:'מה זה שוק ההון?' }, en:{ title:'What is the Stock Market?' },
     body:`<h3>שוק ההון — המקום שבו כסף עובד בשבילך</h3>
 <p>שוק ההון הוא מקום (פיזי ווירטואלי) שבו אנשים וחברות קונים ומוכרים ניירות ערך — מניות, אגרות חוב, תעודות סל ועוד.</p>
 <p><strong>למה זה חשוב?</strong><br>חברות צריכות כסף כדי לגדול. במקום ללוות מהבנק — הן מוכרות "חתיכות" ממניותיהן לציבור. אתה קונה מניה → אתה שותף בחברה!</p>
