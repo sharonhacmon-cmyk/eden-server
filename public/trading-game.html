@@ -240,8 +240,12 @@ body {
   display:inline-block; font-size:10px; padding:2px 7px;
   border-radius:8px; margin-top:3px; font-weight:600;
 }
-.tag-local { background:rgba(0,188,212,0.15); color:var(--cyan); border:1px solid rgba(0,188,212,0.3); }
-.tag-intl  { background:rgba(124,92,252,0.15); color:var(--purple2); border:1px solid rgba(124,92,252,0.3); }
+.tag-israeli   { background:rgba(0,188,212,0.15);  color:var(--cyan);    border:1px solid rgba(0,188,212,0.3); }
+.tag-us-stocks { background:rgba(64,196,255,0.15); color:#40C4FF;        border:1px solid rgba(64,196,255,0.3); }
+.tag-etf       { background:rgba(0,230,118,0.12);  color:var(--green);   border:1px solid rgba(0,230,118,0.3); }
+.tag-bonds     { background:rgba(255,215,0,0.12);  color:var(--gold);    border:1px solid rgba(255,215,0,0.3); }
+.tag-reit      { background:rgba(255,152,0,0.12);  color:#FF9800;        border:1px solid rgba(255,152,0,0.3); }
+.tag-commodity { background:rgba(255,193,7,0.12);  color:#FFC107;        border:1px solid rgba(255,193,7,0.3); }
 .stock-right { text-align:left; flex-shrink:0; }
 .stock-price  { font-size:18px; font-weight:900; direction:ltr; }
 .stock-change { font-size:13px; font-weight:600; }
@@ -478,9 +482,13 @@ body {
   </div>
 
   <div class="market-filter">
-    <button class="filter-btn active" data-filter="all" onclick="setFilter('all')" id="txt-filter-all">הכל</button>
-    <button class="filter-btn" data-filter="local" onclick="setFilter('local')" id="txt-filter-local">🇮🇱 ישראלי</button>
-    <button class="filter-btn" data-filter="intl"  onclick="setFilter('intl')"  id="txt-filter-intl">🌍 בינלאומי</button>
+    <button class="filter-btn active" data-filter="all"       onclick="setFilter('all')">הכל</button>
+    <button class="filter-btn"        data-filter="israeli"   onclick="setFilter('israeli')">🇮🇱 ישראלי</button>
+    <button class="filter-btn"        data-filter="us-stocks" onclick="setFilter('us-stocks')">🇺🇸 מניות</button>
+    <button class="filter-btn"        data-filter="etf"       onclick="setFilter('etf')">📊 תעודות סל</button>
+    <button class="filter-btn"        data-filter="bonds"     onclick="setFilter('bonds')">🏛️ אג"ח</button>
+    <button class="filter-btn"        data-filter="reit"      onclick="setFilter('reit')">🏠 נדל"ן</button>
+    <button class="filter-btn"        data-filter="commodity" onclick="setFilter('commodity')">🥇 סחורות</button>
   </div>
 
   <div id="stocksList">
@@ -563,50 +571,113 @@ const S = {
 };
 
 const STOCK_INFO = {
-  // ישראלי
-  'CHKP': { nameHe:'צ׳ק פוינט', nameEn:'Check Point', emoji:'🛡️', market:'local',
-    descHe:'חברה ישראלית שמגנה על מחשבים ורשתות מפני מתקפות סייבר. אחת מחברות האבטחה הגדולות בעולם!',
-    descEn:'Israeli cybersecurity giant protecting networks worldwide from hackers and cyber attacks.' },
-  'WIX':  { nameHe:'ויקס', nameEn:'Wix.com', emoji:'🌐', market:'local',
-    descHe:'חברה ישראלית שמאפשרת לכל אחד לבנות אתר אינטרנט בקלות, ללא ידע בתכנות. מיליוני משתמשים ברחבי העולם!',
-    descEn:'Israeli company letting anyone build a website easily. Used by millions worldwide.' },
-  'MNDY': { nameHe:'מאנדיי', nameEn:'Monday.com', emoji:'📅', market:'local',
-    descHe:'חברה ישראלית שבנתה פלטפורמה לניהול עבודה לצוותים. חברות ענק בכל העולם משתמשות בה מדי יום!',
-    descEn:'Israeli work management platform used by teams worldwide to organize projects.' },
-  'TEVA': { nameHe:'טבע', nameEn:'Teva', emoji:'💊', market:'local',
-    descHe:'חברת התרופות הגנריות הגדולה בעולם — ישראלית! מייצרת תרופות זולות שמגיעות לאנשים ברחבי העולם.',
-    descEn:'World\'s largest generic drug maker — Israeli! Provides affordable medicines globally.' },
-  'GLBE': { nameHe:'גלובל-אי', nameEn:'Global-E', emoji:'🌍', market:'local',
-    descHe:'חברה ישראלית שעוזרת לחנויות מקוונות למכור ללקוחות מכל העולם בשפה ובמטבע המקומי שלהם.',
-    descEn:'Israeli company helping online stores sell globally in local languages and currencies.' },
-  // בינלאומי
-  'SPY':  { nameHe:'מדד S&P 500', nameEn:'S&P 500 ETF', emoji:'📊', market:'intl',
-    descHe:'קרן שמכילה את 500 החברות הגדולות בארה"ב יחד. במקום לבחור מניה אחת — קונים "חתיכה" מכולן!',
-    descEn:'A fund holding the 500 largest US companies. Buy one share = own a piece of 500 companies!' },
-  'QQQ':  { nameHe:'נאסד"ק', nameEn:'Nasdaq ETF', emoji:'💻', market:'intl',
-    descHe:'קרן שמכילה את חברות הטכנולוגיה הגדולות בעולם — אפל, מיקרוסופט, אנבידיה ועוד.',
-    descEn:'ETF holding the biggest tech companies — Apple, Microsoft, Nvidia and more.' },
-  'AAPL': { nameHe:'אפל', nameEn:'Apple', emoji:'🍎', market:'intl',
-    descHe:'יצרנית האייפון, המק ו-AirPods. אחת החברות השוות ביותר בהיסטוריה. הטלפון שבכיסך = שלהם!',
-    descEn:'Makes the iPhone, Mac & AirPods. One of the most valuable companies ever. Check your pocket!' },
-  'MSFT': { nameHe:'מיקרוסופט', nameEn:'Microsoft', emoji:'🪟', market:'intl',
-    descHe:'יצרנית Windows, Office ו-Xbox. גם השקיעה מיליארדים ב-ChatGPT. מחשבים בכל בית = שלהם!',
-    descEn:'Makes Windows, Office & Xbox. Invested billions in ChatGPT. Computers everywhere = theirs!' },
-  'NVDA': { nameHe:'אנבידיה', nameEn:'Nvidia', emoji:'🎮', market:'intl',
-    descHe:'מייצרת שבבים רבי עוצמה שמפעילים את ה-AI (בינה מלאכותית). כל מי שמשתמש ב-ChatGPT — תלוי בהם!',
-    descEn:'Makes the powerful chips running AI. Every ChatGPT query runs on their hardware!' },
-  'TSLA': { nameHe:'טסלה', nameEn:'Tesla', emoji:'🚗', market:'intl',
-    descHe:'מייצרת מכוניות חשמליות ומשנה את עולם הרכב. אילון מאסק הוא המנכ"ל — גם של SpaceX!',
-    descEn:'Makes electric cars changing the auto industry. Elon Musk is CEO — also of SpaceX!' },
-  'META': { nameHe:'מטא', nameEn:'Meta', emoji:'👾', market:'intl',
-    descHe:'הבעלים של פייסבוק, אינסטגרם ו-WhatsApp! מיליארדי אנשים משתמשים באפליקציות שלהם כל יום.',
-    descEn:'Owns Facebook, Instagram & WhatsApp! Billions of people use their apps daily.' },
-  'AMZN': { nameHe:'אמזון', nameEn:'Amazon', emoji:'📦', market:'intl',
-    descHe:'חנות האינטרנט הגדולה בעולם. גם מספקת שרתים ענן לאתרים ברחבי העולם (AWS).',
-    descEn:'World\'s biggest online store. Also powers the internet with cloud servers (AWS).' },
-  'GOOGL':{ nameHe:'גוגל', nameEn:'Google', emoji:'🔍', market:'intl',
-    descHe:'מנוע החיפוש שכולם מכירים! גם YouTube, Gmail, מפות גוגל ו-Android — הכל שלהם.',
-    descEn:'The search engine everyone knows! YouTube, Gmail, Maps & Android — all theirs.' },
+  // ══ ישראלי ══
+  'CHKP':{ nameHe:'צ׳ק פוינט', nameEn:'Check Point', emoji:'🛡️', cat:'israeli',
+    descHe:'חברה ישראלית שמגנה על מחשבים ורשתות מפני האקרים ומתקפות סייבר. לקוחות: ממשלות, בנקים וחברות ענק. אחת מחברות האבטחה הגדולות בעולם!\n⚠️ סיכון: תחרות גדולה בתחום הסייבר.',
+    descEn:'Israeli company protecting networks from hackers. Clients: governments and major banks.\n⚠️ Risk: High competition in cybersecurity.' },
+  'WIX':{ nameHe:'ויקס', nameEn:'Wix.com', emoji:'🌐', cat:'israeli',
+    descHe:'חברה ישראלית שמאפשרת לכל אחד לבנות אתר אינטרנט בקלות, בלי ידע בתכנות. 250+ מיליון משתמשים!\n⚠️ סיכון: מתחרה קשה עם Squarespace ו-Shopify.',
+    descEn:'Build a website without coding. 250M+ users worldwide.\n⚠️ Risk: Competition from Squarespace & Shopify.' },
+  'MNDY':{ nameHe:'מאנדיי', nameEn:'Monday.com', emoji:'📅', cat:'israeli',
+    descHe:'חברה ישראלית לניהול פרויקטים וצוותים. חברות ענק משתמשות בה כדי לנהל עבודה יומיומית.\n⚠️ סיכון: עדיין לא מרוויחה הרבה — "חברת צמיחה".',
+    descEn:'Team & project management platform used by large corporations.\n⚠️ Risk: Still a growth company — not yet highly profitable.' },
+  'TEVA':{ nameHe:'טבע', nameEn:'Teva', emoji:'💊', cat:'israeli',
+    descHe:'חברת התרופות הגנריות הגדולה בעולם — ישראלית! מייצרת תרופות זולות שמצילות חיים ברחבי העולם.\n⚠️ סיכון: חוב גדול ותביעות משפטיות.',
+    descEn:'World\'s largest generic drug maker — Israeli! Saves lives globally with affordable medicine.\n⚠️ Risk: Heavy debt and legal challenges.' },
+  'GLBE':{ nameHe:'גלובל-אי', nameEn:'Global-E', emoji:'🌍', cat:'israeli',
+    descHe:'חברה ישראלית שעוזרת לחנויות מקוונות למכור ללקוחות מכל העולם — בשפה ובמטבע שלהם.\n⚠️ סיכון: חברה צעירה, עדיין בצמיחה.',
+    descEn:'Helps online stores sell globally in local languages and currencies.\n⚠️ Risk: Young company, still growing.' },
+  'NICE':{ nameHe:'נייס', nameEn:'NICE Systems', emoji:'🎙️', cat:'israeli',
+    descHe:'חברה ישראלית שמשתמשת ב-AI לניתוח שיחות ושיפור שירות לקוחות. מוכרת לחברות ביטוח, בנקים ועוד.\n⚠️ סיכון: תלות בלקוחות גדולים.',
+    descEn:'Israeli AI company analyzing calls to improve customer service for banks and insurers.\n⚠️ Risk: Depends on large clients.' },
+  'CYBR':{ nameHe:'סייבר-ארק', nameEn:'CyberArk', emoji:'🔐', cat:'israeli',
+    descHe:'חברת סייבר ישראלית שמגנה על סיסמאות וגישה למערכות קריטיות. לקוחות: הפנטגון, נאס"א ועוד!\n⚠️ סיכון: מחיר גבוה יחסית לרווחים.',
+    descEn:'Protects critical passwords and access. Clients include the Pentagon and NASA!\n⚠️ Risk: High valuation relative to profits.' },
+
+  // ══ מניות ארה"ב ══
+  'AAPL':{ nameHe:'אפל', nameEn:'Apple', emoji:'🍎', cat:'us-stocks',
+    descHe:'יצרנית האייפון, המק ו-AirPods. אחת החברות השוות ביותר בהיסטוריה. הטלפון שבכיסך שלהם!\n⚠️ סיכון: תחרות ממכשירי אנדרואיד ותקנות ממשלתיות.',
+    descEn:'Makes the iPhone, Mac & AirPods. Most valuable company ever. That phone in your pocket!\n⚠️ Risk: Android competition and government regulations.' },
+  'MSFT':{ nameHe:'מיקרוסופט', nameEn:'Microsoft', emoji:'🪟', cat:'us-stocks',
+    descHe:'Windows, Office, Xbox — ועכשיו גם ChatGPT! חברה שנמצאת בכל מחשב בעולם כמעט.\n⚠️ סיכון: חדירה לתחומים רבים = חשיפה לתקנות.',
+    descEn:'Windows, Office, Xbox — and now ChatGPT! On almost every computer worldwide.\n⚠️ Risk: Wide expansion = regulatory exposure.' },
+  'NVDA':{ nameHe:'אנבידיה', nameEn:'Nvidia', emoji:'🎮', cat:'us-stocks',
+    descHe:'מייצרת שבבים שמפעילים את ה-AI. ChatGPT, Gemini, וכל ה-AI בעולם — רצים על שבבים שלהם!\n⚠️ סיכון: אם ה-AI יאט — המניה תרד בחדות.',
+    descEn:'Makes chips powering AI. ChatGPT, Gemini — all run on their hardware!\n⚠️ Risk: If AI slows down, stock could drop sharply.' },
+  'TSLA':{ nameHe:'טסלה', nameEn:'Tesla', emoji:'🚗', cat:'us-stocks',
+    descHe:'מייצרת מכוניות חשמליות ומשנה את עולם הרכב. אילון מאסק הוא המנכ"ל — גם של SpaceX!\n⚠️ סיכון: תנודות חדות, תלות בסנטימנט סביב מאסק.',
+    descEn:'Electric cars changing the auto world. Elon Musk leads this and SpaceX!\n⚠️ Risk: Very volatile, tied to Elon Musk\'s image.' },
+  'META':{ nameHe:'מטא', nameEn:'Meta', emoji:'👾', cat:'us-stocks',
+    descHe:'הבעלים של פייסבוק, אינסטגרם ו-WhatsApp! 3 מיליארד משתמשים בכל יום.\n⚠️ סיכון: חשיפה לפרטיות וביקורת ממשלתית.',
+    descEn:'Owns Facebook, Instagram & WhatsApp. 3 billion daily users.\n⚠️ Risk: Privacy concerns and government scrutiny.' },
+  'AMZN':{ nameHe:'אמזון', nameEn:'Amazon', emoji:'📦', cat:'us-stocks',
+    descHe:'חנות האינטרנט הגדולה בעולם + ענן (AWS) + פריים + אלקסה. עסקים בכל הכיוונים!\n⚠️ סיכון: שולי רווח נמוכים בקמעונאות.',
+    descEn:'World\'s biggest store + cloud (AWS) + Prime + Alexa. Business in every direction!\n⚠️ Risk: Thin retail profit margins.' },
+  'GOOGL':{ nameHe:'גוגל', nameEn:'Google', emoji:'🔍', cat:'us-stocks',
+    descHe:'YouTube, Gmail, מפות, Android ו-Gemini AI — הכל שלהם. מכניסים כסף מפרסום בעיקר.\n⚠️ סיכון: ChatGPT מאיים על הפרסום בחיפוש.',
+    descEn:'YouTube, Gmail, Maps, Android & Gemini AI — all theirs. Revenue mostly from ads.\n⚠️ Risk: ChatGPT threatening search ad revenue.' },
+  'NFLX':{ nameHe:'נטפליקס', nameEn:'Netflix', emoji:'🎬', cat:'us-stocks',
+    descHe:'ספריית הסרטים והסדרות הגדולה בעולם. 270 מיליון מנויים ב-190 מדינות!\n⚠️ סיכון: תחרות עזה מ-Disney+, Apple TV ו-HBO.',
+    descEn:'World\'s biggest streaming service. 270M subscribers in 190 countries!\n⚠️ Risk: Heavy competition from Disney+, Apple TV, HBO.' },
+  'DIS':{ nameHe:'דיסני', nameEn:'Disney', emoji:'🏰', cat:'us-stocks',
+    descHe:'Marvel, Star Wars, Pixar, פארקי שעשועים ו-Disney+. חברת בידור שלמה!\n⚠️ סיכון: Disney+ הפסדי, פארקים תלויים בתיירות.',
+    descEn:'Marvel, Star Wars, Pixar, theme parks & Disney+. A complete entertainment empire!\n⚠️ Risk: Disney+ still losing money, parks need tourism.' },
+  'AMD':{ nameHe:'AMD', nameEn:'AMD', emoji:'⚡', cat:'us-stocks',
+    descHe:'מתחרה של אינטל ואנבידיה. מייצרת מעבדים שנמצאים ב-PlayStation 5, Xbox ומחשבים רבים.\n⚠️ סיכון: תחרות עזה מאנבידיה ואינטל.',
+    descEn:'Competes with Intel and Nvidia. Their chips are in PlayStation 5, Xbox and many PCs.\n⚠️ Risk: Intense competition from Nvidia and Intel.' },
+  'KO':{ nameHe:'קוקה-קולה', nameEn:'Coca-Cola', emoji:'🥤', cat:'us-stocks',
+    descHe:'המשקה הכי מפורסם בעולם! 200 מדינות, 2 מיליארד מנות ביום. מניה "יציבה" קלאסית לשינה בשקט.\n⚠️ סיכון: מגמת הבריאות פוגעת בביקוש.',
+    descEn:'World\'s most famous drink. 200 countries, 2B servings daily. Classic "sleep well" stock.\n⚠️ Risk: Health trends reducing demand.' },
+  'NKE':{ nameHe:'נייקי', nameEn:'Nike', emoji:'👟', cat:'us-stocks',
+    descHe:'"Just Do It!" מותג הספורט הגדול בעולם. כל נעל נייקי שנמכרת — כסף לבעלי המניה!\n⚠️ סיכון: תחרות מ-Adidas ומותגים סיניים.',
+    descEn:'"Just Do It!" World\'s biggest sports brand. Every Nike sold = money to shareholders!\n⚠️ Risk: Adidas and Chinese brand competition.' },
+  'JPM':{ nameHe:'JP מורגן', nameEn:'JP Morgan', emoji:'🏦', cat:'us-stocks',
+    descHe:'הבנק הגדול ביותר בארה"ב. מנהל כסף של מיליוני אנשים וחברות. נהנה מריבית גבוהה!\n⚠️ סיכון: משברים פיננסיים פוגעים בבנקים קשות.',
+    descEn:'Largest US bank. Manages money for millions. Benefits from high interest rates!\n⚠️ Risk: Financial crises hit banks hard.' },
+
+  // ══ תעודות סל ══
+  'SPY':{ nameHe:'S&P 500 — 500 חברות', nameEn:'S&P 500 ETF', emoji:'📊', cat:'etf',
+    descHe:'קרן שמכילה את 500 החברות הגדולות בארה"ב. במקום לבחור מניה אחת — קונים חתיכה מכולן! ההשקעה הפופולרית ביותר בעולם.\n✅ מתאים למי שרוצה פיזור רחב ובטיחות יחסית.',
+    descEn:'Holds 500 largest US companies. Own a piece of all of them! Most popular investment ever.\n✅ Good for those wanting broad diversification.' },
+  'QQQ':{ nameHe:'נאסד"ק — טכנולוגיה', nameEn:'Nasdaq 100 ETF', emoji:'💻', cat:'etf',
+    descHe:'מכיל את 100 חברות הטכנולוגיה הגדולות — אפל, מיקרוסופט, אנבידיה ועוד. יותר "ממונף" על AI.\n⚠️ יותר תנודתי מה-S&P — עולה יותר, יורד יותר.',
+    descEn:'Holds top 100 tech companies — Apple, Microsoft, Nvidia. More leveraged on AI.\n⚠️ More volatile than S&P — bigger ups and downs.' },
+  'VTI':{ nameHe:'כל השוק האמריקאי', nameEn:'Total US Market ETF', emoji:'🌐', cat:'etf',
+    descHe:'מכיל את כל החברות הנסחרות בארה"ב — גדולות, בינוניות וקטנות. פיזור מקסימלי!\n✅ הפיזור הכי רחב שאפשר בשוק האמריקאי.',
+    descEn:'Holds ALL US companies — large, mid and small cap. Maximum diversification!\n✅ Broadest possible US market exposure.' },
+  'GLD':{ nameHe:'זהב', nameEn:'Gold ETF', emoji:'🥇', cat:'etf',
+    descHe:'קרן שעוקבת אחרי מחיר הזהב. כשהעולם מפחד — הזהב עולה! נחשב "מקלט בטוח" בזמן משברים.\n✅ הגנה טובה בזמן ירידות בשוק המניות.',
+    descEn:'Tracks gold price. When the world panics — gold rises! Safe haven in crises.\n✅ Good hedge when stock market falls.' },
+  'XLK':{ nameHe:'סקטור טכנולוגיה', nameEn:'Tech Sector ETF', emoji:'💡', cat:'etf',
+    descHe:'מכיל רק חברות טכנולוגיה מה-S&P 500. ממוקד בטק — יותר מ-QQQ אפילו.\n⚠️ ריכוזי מאוד — אם הטק יורד, זה יורד חזק.',
+    descEn:'Only tech companies from S&P 500. Even more tech-focused than QQQ.\n⚠️ Concentrated — if tech drops, this drops hard.' },
+  'XLE':{ nameHe:'סקטור אנרגיה', nameEn:'Energy Sector ETF', emoji:'⛽', cat:'etf',
+    descHe:'מכיל חברות נפט, גז ואנרגיה כמו ExxonMobil ו-Chevron. עולה כשמחיר הנפט עולה.\n⚠️ תלות במחיר הנפט הגלובלי.',
+    descEn:'Holds oil, gas and energy companies like ExxonMobil. Rises with oil prices.\n⚠️ Depends on global oil price.' },
+
+  // ══ אג"ח ══
+  'TLT':{ nameHe:'אג"ח ארה"ב — 20 שנה', nameEn:'US 20-Year Treasury ETF', emoji:'🏛️', cat:'bonds',
+    descHe:'הלוואה למדינת ארה"ב ל-20 שנה. המדינה מבטיחה להחזיר — הכי בטוח שיש! אבל תשואה נמוכה.\n✅ כשהשוק קורס — אג"ח לרוב עולה.',
+    descEn:'Loan to the US government for 20 years. The safest investment possible — low but guaranteed return.\n✅ When market crashes — bonds usually rise.' },
+  'AGG':{ nameHe:'אג"ח מגוון', nameEn:'Aggregate Bond ETF', emoji:'📜', cat:'bonds',
+    descHe:'מכיל אלפי אג"ח שונים — ממשלות, חברות ועיריות. שילוב של בטיחות ותשואה סבירה.\n✅ הגנה על התיק בירידות שוק.',
+    descEn:'Thousands of bonds — governments, companies, municipalities. Safety + decent returns.\n✅ Portfolio protection in market downturns.' },
+  'HYG':{ nameHe:'אג"ח בסיכון גבוה', nameEn:'High Yield Bond ETF', emoji:'🎯', cat:'bonds',
+    descHe:'אג"ח של חברות פחות יציבות — אבל ריבית גבוהה יותר! "אג"ח זבל" הוא הכינוי שלהם.\n⚠️ יותר סיכון מאג"ח רגיל — ייתכן שחברה לא תחזיר.',
+    descEn:'"Junk bonds" — higher interest from less stable companies.\n⚠️ More risk — companies might default.' },
+
+  // ══ נדל"ן ══
+  'VNQ':{ nameHe:'נדל"ן אמריקאי', nameEn:'US Real Estate ETF', emoji:'🏠', cat:'reit',
+    descHe:'השקעה בנדל"ן בלי לקנות דירה! מכיל מאות בניינים, קניונים ומחסנים ברחבי ארה"ב. מקבלים דמי שכירות!\n⚠️ ריבית גבוהה = פחות משתלם לנדל"ן.',
+    descEn:'Real estate without buying property! Holds hundreds of buildings across the US. Collect rent!\n⚠️ High interest rates = less attractive for real estate.' },
+
+  // ══ סחורות ══
+  'USO':{ nameHe:'נפט גולמי', nameEn:'Crude Oil ETF', emoji:'🛢️', cat:'commodity',
+    descHe:'עוקב אחרי מחיר הנפט הגולמי. כשמחיר הדלק עולה — זה עולה. כשיש מלחמה במזרח התיכון — לרוב עולה.\n⚠️ תנודתי מאוד! יכול לעלות ולרדת 10% בשבוע.',
+    descEn:'Tracks crude oil price. War in the Middle East? Usually goes up.\n⚠️ Very volatile! Can move 10% in a week.' },
+  'SLV':{ nameHe:'כסף (מתכת)', nameEn:'Silver ETF', emoji:'🥈', cat:'commodity',
+    descHe:'כסף — המתכת. משמשת לתכשיטים, אלקטרוניקה ופאנלים סולאריים! זולה יותר מזהב אבל גם תנודתית יותר.\n⚠️ מושפעת מביקוש תעשייתי בנוסף לביקוש כמקלט בטוח.',
+    descEn:'Silver metal used in jewelry, electronics and solar panels! Cheaper than gold but more volatile.\n⚠️ Affected by industrial demand too, not just safe-haven demand.' },
 };
 
 // ══════════════════════════════════════════════════
@@ -831,7 +902,7 @@ function buildTicker() {
     const up = p.changePercent >= 0;
     return `<span class="ticker-item">
       <span class="sym">${sym}</span>
-      <span class="${up?'up':'dn'}">$${p.price.toFixed(2)} ${up?'▲':'▼'}${Math.abs(p.changePercent).toFixed(1)}%</span>
+      <span class="${up?'up':'dn'}">${Math.round(p.price).toLocaleString('he-IL')}₪ ${up?'▲':'▼'}${Math.abs(p.changePercent).toFixed(1)}%</span>
     </span>`;
   }).join('');
   track.innerHTML = items;
@@ -929,6 +1000,15 @@ function renderPortfolio() {
 // ══════════════════════════════════════════════════
 // MARKET
 // ══════════════════════════════════════════════════
+const CAT_LABELS = {
+  'israeli':   '🇮🇱 ישראלי',
+  'us-stocks': '🇺🇸 מניה',
+  'etf':       '📊 תעודת סל',
+  'bonds':     '🏛️ אג"ח',
+  'reit':      '🏠 נדל"ן',
+  'commodity': '🥇 סחורה',
+};
+
 let currentFilter = 'all';
 
 function setFilter(f) {
@@ -941,18 +1021,17 @@ function renderStocks() {
   const list = document.getElementById('stocksList');
   const symbols = Object.keys(STOCK_INFO).filter(sym => {
     if (currentFilter === 'all') return true;
-    return STOCK_INFO[sym].market === currentFilter;
+    return STOCK_INFO[sym].cat === currentFilter;
   });
   if (!Object.keys(S.prices).length) {
     list.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
     return;
   }
   list.innerHTML = symbols.map(sym => {
-    const info = STOCK_INFO[sym];
-    const p    = S.prices[sym];
-    const name = S.lang === 'he' ? info.nameHe : info.nameEn;
-    const isLocal = info.market === 'local';
-    const owned   = S.player?.portfolio?.[sym];
+    const info  = STOCK_INFO[sym];
+    const p     = S.prices[sym];
+    const name  = S.lang === 'he' ? info.nameHe : info.nameEn;
+    const owned = S.player?.portfolio?.[sym];
     if (!p) return '';
     const up = p.changePercent >= 0;
     return `<div class="stock-card" onclick="openModal('${sym}')">
@@ -960,7 +1039,7 @@ function renderStocks() {
       <div class="stock-info">
         <div class="stock-name">${name}</div>
         <div class="stock-sym">${sym}</div>
-        <span class="stock-market-tag ${isLocal?'tag-local':'tag-intl'}">${isLocal?'🇮🇱 ישראלי':'🌍 בינלאומי'}</span>
+        <span class="stock-market-tag tag-${info.cat}">${CAT_LABELS[info.cat]||''}</span>
         ${owned ? `<br><span class="owned-badge">⭐ ${owned.shares} ${t('shares')}</span>` : ''}
       </div>
       <div class="stock-right">
@@ -970,7 +1049,7 @@ function renderStocks() {
         </div>
       </div>
     </div>`;
-  }).join('');
+  }).join('') || '<div class="empty-state">אין נכסים בקטגוריה זו</div>';
 }
 
 // ══════════════════════════════════════════════════

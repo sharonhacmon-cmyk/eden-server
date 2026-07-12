@@ -153,9 +153,19 @@ app.get('/admin/funds-status', adminAuth, (req, res) => {
 // ── מחירי מניות — מדומים ריאליסטיים, מתעדכנים יומית ──
 // מחירי בסיס בשקלים — שע"ח 3.70 ₪ לדולר (עדכון ידני אחת לחודש)
 const BASE_PRICES = {
-  'CHKP': 521, 'WIX': 659, 'MNDY': 955, 'TEVA': 68, 'GLBE': 200,
-  'SPY': 1983, 'QQQ': 1706, 'AAPL': 773, 'MSFT': 1576, 'NVDA': 503,
-  'TSLA': 1029, 'META': 2042, 'AMZN': 722, 'GOOGL': 677
+  // ישראלי
+  'CHKP':521,'WIX':659,'MNDY':955,'TEVA':68,'GLBE':200,'NICE':740,'CYBR':1036,
+  // מניות ארה"ב
+  'AAPL':773,'MSFT':1576,'NVDA':503,'TSLA':1029,'META':2042,'AMZN':722,'GOOGL':677,
+  'NFLX':2331,'DIS':389,'AMD':592,'KO':241,'NKE':278,'JPM':833,
+  // תעודות סל
+  'SPY':1983,'QQQ':1706,'VTI':999,'GLD':888,'XLK':814,'XLE':299,
+  // אג"ח
+  'TLT':333,'AGG':359,'HYG':277,
+  // נדל"ן
+  'VNQ':333,
+  // סחורות
+  'USO':74,'SLV':82
 };
 const STOCK_NAMES = {
   'CHKP':'Check Point Software','WIX':'Wix.com','MNDY':'Monday.com',
@@ -200,10 +210,18 @@ const TRADING_FILE  = path.join(__dirname, 'trading_data.json');
 const STARTING_CASH = 50000;
 
 const TRADEABLE_STOCKS = [
-  // ישראלי (נסחר בארה"ב)
-  'CHKP','WIX','MNDY','TEVA','GLBE',
-  // בינלאומי
-  'SPY','QQQ','AAPL','MSFT','NVDA','TSLA','META','AMZN','GOOGL'
+  // ישראלי
+  'CHKP','WIX','MNDY','TEVA','GLBE','NICE','CYBR',
+  // מניות ארה"ב
+  'AAPL','MSFT','NVDA','TSLA','META','AMZN','GOOGL','NFLX','DIS','AMD','KO','NKE','JPM',
+  // תעודות סל
+  'SPY','QQQ','VTI','GLD','XLK','XLE',
+  // אג"ח
+  'TLT','AGG','HYG',
+  // נדל"ן
+  'VNQ',
+  // סחורות
+  'USO','SLV'
 ];
 
 function loadTradingData() {
