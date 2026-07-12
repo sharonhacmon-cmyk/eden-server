@@ -151,11 +151,11 @@ app.get('/admin/funds-status', adminAuth, (req, res) => {
 // ══════════════════════════════════════════════════
 
 // ── מחירי מניות — מדומים ריאליסטיים, מתעדכנים יומית ──
-// מחירי בסיס (עדכון ידני אחת לחודש בקובץ זה)
+// מחירי בסיס בשקלים — שע"ח 3.70 ₪ לדולר (עדכון ידני אחת לחודש)
 const BASE_PRICES = {
-  'CHKP': 141, 'WIX': 178, 'MNDY': 258, 'TEVA': 18.5, 'GLBE': 54,
-  'SPY': 536, 'QQQ': 461, 'AAPL': 209, 'MSFT': 426, 'NVDA': 136,
-  'TSLA': 278, 'META': 552, 'AMZN': 195, 'GOOGL': 183
+  'CHKP': 521, 'WIX': 659, 'MNDY': 955, 'TEVA': 68, 'GLBE': 200,
+  'SPY': 1983, 'QQQ': 1706, 'AAPL': 773, 'MSFT': 1576, 'NVDA': 503,
+  'TSLA': 1029, 'META': 2042, 'AMZN': 722, 'GOOGL': 677
 };
 const STOCK_NAMES = {
   'CHKP':'Check Point Software','WIX':'Wix.com','MNDY':'Monday.com',

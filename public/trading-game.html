@@ -443,9 +443,9 @@ body {
   <!-- Hero -->
   <div class="portfolio-hero" id="heroCard">
     <div class="portfolio-label" id="txt-portfolio-label">שווי תיק כולל</div>
-    <div class="portfolio-total" id="heroTotal"><span class="dollar">$</span><span id="heroTotalNum">50,000</span></div>
-    <div class="portfolio-sub" id="heroSub">מזומן: <span id="heroCash">$50,000</span> &nbsp;|&nbsp; מניות: <span id="heroStocks">$0</span></div>
-    <div class="portfolio-profit" id="heroProfit">+$0 (0%)</div>
+    <div class="portfolio-total" id="heroTotal"><span id="heroTotalNum">50,000</span><span class="dollar"> ₪</span></div>
+    <div class="portfolio-sub" id="heroSub">מזומן: <span id="heroCash">50,000 ₪</span> &nbsp;|&nbsp; מניות: <span id="heroStocks">0 ₪</span></div>
+    <div class="portfolio-profit" id="heroProfit">+0 ₪ (0%)</div>
   </div>
 
   <!-- Holdings -->
@@ -473,7 +473,7 @@ body {
     </div>
     <div style="text-align:left">
       <div style="font-size:12px;color:var(--dim)" id="txt-cash-avail">מזומן זמין</div>
-      <div style="font-size:18px;font-weight:900;direction:ltr" id="marketCash">$50,000</div>
+      <div style="font-size:18px;font-weight:900" id="marketCash">50,000 ₪</div>
     </div>
   </div>
 
@@ -514,6 +514,7 @@ body {
       </div>
     </div>
     <div class="modal-owned" id="modalOwned"></div>
+    <div id="modalDesc" style="background:rgba(124,92,252,0.1);border:1px solid rgba(124,92,252,0.3);border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:14px;color:rgba(238,238,255,0.8);line-height:1.6;display:none"></div>
     <div class="modal-tabs">
       <button class="modal-tab buy-active" id="tabBuy"  onclick="setModalTab('buy')"  id="txt-tab-buy">קנייה</button>
       <button class="modal-tab"            id="tabSell" onclick="setModalTab('sell')" id="txt-tab-sell">מכירה</button>
@@ -563,21 +564,49 @@ const S = {
 
 const STOCK_INFO = {
   // ישראלי
-  'CHKP': { nameHe:'צ׳ק פוינט', nameEn:'Check Point',  emoji:'🛡️', market:'local' },
-  'WIX':  { nameHe:'ויקס',       nameEn:'Wix.com',      emoji:'🌐', market:'local' },
-  'MNDY': { nameHe:'מאנדיי',     nameEn:'Monday.com',   emoji:'📅', market:'local' },
-  'TEVA': { nameHe:'טבע',        nameEn:'Teva',         emoji:'💊', market:'local' },
-  'GLBE': { nameHe:'גלובל-אי',   nameEn:'Global-E',    emoji:'🌍', market:'local' },
+  'CHKP': { nameHe:'צ׳ק פוינט', nameEn:'Check Point', emoji:'🛡️', market:'local',
+    descHe:'חברה ישראלית שמגנה על מחשבים ורשתות מפני מתקפות סייבר. אחת מחברות האבטחה הגדולות בעולם!',
+    descEn:'Israeli cybersecurity giant protecting networks worldwide from hackers and cyber attacks.' },
+  'WIX':  { nameHe:'ויקס', nameEn:'Wix.com', emoji:'🌐', market:'local',
+    descHe:'חברה ישראלית שמאפשרת לכל אחד לבנות אתר אינטרנט בקלות, ללא ידע בתכנות. מיליוני משתמשים ברחבי העולם!',
+    descEn:'Israeli company letting anyone build a website easily. Used by millions worldwide.' },
+  'MNDY': { nameHe:'מאנדיי', nameEn:'Monday.com', emoji:'📅', market:'local',
+    descHe:'חברה ישראלית שבנתה פלטפורמה לניהול עבודה לצוותים. חברות ענק בכל העולם משתמשות בה מדי יום!',
+    descEn:'Israeli work management platform used by teams worldwide to organize projects.' },
+  'TEVA': { nameHe:'טבע', nameEn:'Teva', emoji:'💊', market:'local',
+    descHe:'חברת התרופות הגנריות הגדולה בעולם — ישראלית! מייצרת תרופות זולות שמגיעות לאנשים ברחבי העולם.',
+    descEn:'World\'s largest generic drug maker — Israeli! Provides affordable medicines globally.' },
+  'GLBE': { nameHe:'גלובל-אי', nameEn:'Global-E', emoji:'🌍', market:'local',
+    descHe:'חברה ישראלית שעוזרת לחנויות מקוונות למכור ללקוחות מכל העולם בשפה ובמטבע המקומי שלהם.',
+    descEn:'Israeli company helping online stores sell globally in local languages and currencies.' },
   // בינלאומי
-  'SPY':  { nameHe:'מדד S&P 500', nameEn:'S&P 500 ETF', emoji:'📊', market:'intl' },
-  'QQQ':  { nameHe:'נאסד"ק',      nameEn:'Nasdaq ETF',  emoji:'💻', market:'intl' },
-  'AAPL': { nameHe:'אפל',          nameEn:'Apple',       emoji:'🍎', market:'intl' },
-  'MSFT': { nameHe:'מיקרוסופט',   nameEn:'Microsoft',   emoji:'🪟', market:'intl' },
-  'NVDA': { nameHe:'אנבידיה',      nameEn:'Nvidia',      emoji:'🎮', market:'intl' },
-  'TSLA': { nameHe:'טסלה',         nameEn:'Tesla',       emoji:'🚗', market:'intl' },
-  'META': { nameHe:'מטא',          nameEn:'Meta',        emoji:'👾', market:'intl' },
-  'AMZN': { nameHe:'אמזון',        nameEn:'Amazon',      emoji:'📦', market:'intl' },
-  'GOOGL':{ nameHe:'גוגל',         nameEn:'Google',      emoji:'🔍', market:'intl' },
+  'SPY':  { nameHe:'מדד S&P 500', nameEn:'S&P 500 ETF', emoji:'📊', market:'intl',
+    descHe:'קרן שמכילה את 500 החברות הגדולות בארה"ב יחד. במקום לבחור מניה אחת — קונים "חתיכה" מכולן!',
+    descEn:'A fund holding the 500 largest US companies. Buy one share = own a piece of 500 companies!' },
+  'QQQ':  { nameHe:'נאסד"ק', nameEn:'Nasdaq ETF', emoji:'💻', market:'intl',
+    descHe:'קרן שמכילה את חברות הטכנולוגיה הגדולות בעולם — אפל, מיקרוסופט, אנבידיה ועוד.',
+    descEn:'ETF holding the biggest tech companies — Apple, Microsoft, Nvidia and more.' },
+  'AAPL': { nameHe:'אפל', nameEn:'Apple', emoji:'🍎', market:'intl',
+    descHe:'יצרנית האייפון, המק ו-AirPods. אחת החברות השוות ביותר בהיסטוריה. הטלפון שבכיסך = שלהם!',
+    descEn:'Makes the iPhone, Mac & AirPods. One of the most valuable companies ever. Check your pocket!' },
+  'MSFT': { nameHe:'מיקרוסופט', nameEn:'Microsoft', emoji:'🪟', market:'intl',
+    descHe:'יצרנית Windows, Office ו-Xbox. גם השקיעה מיליארדים ב-ChatGPT. מחשבים בכל בית = שלהם!',
+    descEn:'Makes Windows, Office & Xbox. Invested billions in ChatGPT. Computers everywhere = theirs!' },
+  'NVDA': { nameHe:'אנבידיה', nameEn:'Nvidia', emoji:'🎮', market:'intl',
+    descHe:'מייצרת שבבים רבי עוצמה שמפעילים את ה-AI (בינה מלאכותית). כל מי שמשתמש ב-ChatGPT — תלוי בהם!',
+    descEn:'Makes the powerful chips running AI. Every ChatGPT query runs on their hardware!' },
+  'TSLA': { nameHe:'טסלה', nameEn:'Tesla', emoji:'🚗', market:'intl',
+    descHe:'מייצרת מכוניות חשמליות ומשנה את עולם הרכב. אילון מאסק הוא המנכ"ל — גם של SpaceX!',
+    descEn:'Makes electric cars changing the auto industry. Elon Musk is CEO — also of SpaceX!' },
+  'META': { nameHe:'מטא', nameEn:'Meta', emoji:'👾', market:'intl',
+    descHe:'הבעלים של פייסבוק, אינסטגרם ו-WhatsApp! מיליארדי אנשים משתמשים באפליקציות שלהם כל יום.',
+    descEn:'Owns Facebook, Instagram & WhatsApp! Billions of people use their apps daily.' },
+  'AMZN': { nameHe:'אמזון', nameEn:'Amazon', emoji:'📦', market:'intl',
+    descHe:'חנות האינטרנט הגדולה בעולם. גם מספקת שרתים ענן לאתרים ברחבי העולם (AWS).',
+    descEn:'World\'s biggest online store. Also powers the internet with cloud servers (AWS).' },
+  'GOOGL':{ nameHe:'גוגל', nameEn:'Google', emoji:'🔍', market:'intl',
+    descHe:'מנוע החיפוש שכולם מכירים! גם YouTube, Gmail, מפות גוגל ו-Android — הכל שלהם.',
+    descEn:'The search engine everyone knows! YouTube, Gmail, Maps & Android — all theirs.' },
 };
 
 // ══════════════════════════════════════════════════
@@ -765,7 +794,7 @@ async function doSetup() {
   S.player = r.player;
   S.lang   = selectedLangPref;
   localStorage.setItem('tg_lang', S.lang);
-  afterLogin();
+  afterLogin();  // ישיר לתיק
 }
 
 // ══════════════════════════════════════════════════
@@ -813,8 +842,10 @@ function buildTicker() {
 // PORTFOLIO
 // ══════════════════════════════════════════════════
 function fmt(n) {
-  if (n >= 1000) return '$' + n.toLocaleString('en',{maximumFractionDigits:0});
-  return '$' + n.toFixed(2);
+  const sign = n < 0 ? '-' : '';
+  const abs  = Math.abs(n);
+  if (abs >= 100) return sign + Math.round(abs).toLocaleString('he-IL') + ' ₪';
+  return sign + abs.toFixed(2) + ' ₪';
 }
 
 function renderPortfolio() {
@@ -831,7 +862,7 @@ function renderPortfolio() {
   const profit = total - 50000;
   const pct    = (profit / 50000 * 100).toFixed(1);
 
-  document.getElementById('heroTotalNum').textContent = total.toLocaleString('en',{maximumFractionDigits:0});
+  document.getElementById('heroTotalNum').textContent = Math.round(total).toLocaleString('he-IL');
   document.getElementById('heroCash').textContent     = fmt(p.cash);
   document.getElementById('heroStocks').textContent   = fmt(stocksVal);
   document.getElementById('marketCash').textContent   = fmt(p.cash);
@@ -933,7 +964,7 @@ function renderStocks() {
         ${owned ? `<br><span class="owned-badge">⭐ ${owned.shares} ${t('shares')}</span>` : ''}
       </div>
       <div class="stock-right">
-        <div class="stock-price">$${p.price.toFixed(2)}</div>
+        <div class="stock-price">${Math.round(p.price).toLocaleString('he-IL')} ₪</div>
         <div class="stock-change" style="color:${up?'var(--green)':'var(--red)'}">
           ${up?'▲':'▼'} ${Math.abs(p.changePercent).toFixed(2)}%
         </div>
@@ -956,10 +987,14 @@ function openModal(sym) {
   document.getElementById('modalEmoji').textContent = info.emoji;
   document.getElementById('modalName').textContent  = name;
   document.getElementById('modalSym').textContent   = sym;
-  document.getElementById('modalPrice').textContent = '$' + (p?.price||0).toFixed(2);
+  document.getElementById('modalPrice').textContent = Math.round(p?.price||0).toLocaleString('he-IL') + ' ₪';
   document.getElementById('modalOwned').textContent = owned
-    ? `${t('owned')}: ${owned.shares} ${t('shares')} (avg $${owned.avgPrice.toFixed(2)})`
+    ? `${t('owned')}: ${owned.shares} ${t('shares')} (ממוצע ${Math.round(owned.avgPrice).toLocaleString('he-IL')} ₪)`
     : '';
+  const descEl = document.getElementById('modalDesc');
+  const desc = S.lang === 'he' ? info.descHe : info.descEn;
+  if (desc) { descEl.textContent = '💡 ' + desc; descEl.style.display='block'; }
+  else { descEl.style.display='none'; }
   document.getElementById('sharesInput').value = 1;
   setModalTab('buy');
   updateTotal();
