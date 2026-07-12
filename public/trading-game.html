@@ -923,8 +923,8 @@ function showScreen(name) {
   document.querySelectorAll('.nav-tab').forEach(t => {
     t.classList.toggle('active', t.dataset.screen === name);
   });
-  // Scroll to top only when switching main screens (not login/setup)
-  if (['portfolio','market','leaderboard','learn','article'].includes(name)) {
+  // Scroll to top only when switching main screens (not login/setup/article)
+  if (['portfolio','market','leaderboard','learn'].includes(name)) {
     window.scrollTo(0, 0);
   }
 }
@@ -1457,7 +1457,7 @@ async function loadLeaderboard() {
       return `<div class="leader-card ${i<3?'rank-'+(i+1):''}" style="${isMe?'outline:2px solid var(--purple);':''}">
         <div class="rank-medal">${rank}${isMe?' 👈':''}</div>
         <div class="leader-info">
-          <div class="leader-name">${p.name}${isMe?' (את/ה)':''}</div>
+          <div class="leader-name">${p.name}${isMe?' ${gHe('את','אתה')}':''}</div>
           <div class="leader-meta">${p.trades} עסקאות</div>
         </div>
         <div class="leader-right">
@@ -1477,7 +1477,7 @@ async function loadLeaderboard() {
       <div class="leader-card" style="outline:2px solid var(--purple)">
         <div class="rank-medal">#${myRankIdx+1} 👈</div>
         <div class="leader-info">
-          <div class="leader-name">${me.name} (את/ה)</div>
+          <div class="leader-name">${me.name} ${gHe('את','אתה')}</div>
           <div class="leader-meta">${me.trades} עסקאות</div>
         </div>
         <div class="leader-right">
