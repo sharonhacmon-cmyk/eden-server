@@ -150,41 +150,50 @@ app.get('/admin/funds-status', adminAuth, (req, res) => {
 // ── TRADING GAME ──────────────────────────────────
 // ══════════════════════════════════════════════════
 
-// ── Yahoo Finance — chart endpoint (עובד ללא crumb/cookie) ──
-async function yahooQuote(symbol) {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 8000);
-  try {
-    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=2d`;
-    const r = await fetch(url, {
-      signal: controller.signal,
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-        'Accept': '*/*',
-        'Accept-Language': 'en-US,en;q=0.9',
-        'Origin': 'https://finance.yahoo.com',
-        'Referer': 'https://finance.yahoo.com/',
-      }
-    });
-    const data = await r.json();
-    const result = data?.chart?.result?.[0];
-    if (!result) throw new Error('No data for ' + symbol);
-    const meta     = result.meta;
-    const price    = meta.regularMarketPrice;
-    const prevClose= meta.chartPreviousClose || meta.previousClose || price;
-    const change   = price - prevClose;
-    const changePct= prevClose ? (change / prevClose * 100) : 0;
-    return { symbol, regularMarketPrice: price, regularMarketChange: change,
-             regularMarketChangePercent: changePct,
-             longName: meta.longName || meta.shortName || symbol };
-  } finally {
-    clearTimeout(timeout);
-  }
+// ── מחירי מניות — מדומים ריאליסטיים, מתעדכנים יומית ──
+// מחירי בסיס (עדכון ידני אחת לחודש בקובץ זה)
+const BASE_PRICES = {
+  'CHKP': 141, 'WIX': 178, 'MNDY': 258, 'TEVA': 18.5, 'GLBE': 54,
+  'SPY': 536, 'QQQ': 461, 'AAPL': 209, 'MSFT': 426, 'NVDA': 136,
+  'TSLA': 278, 'META': 552, 'AMZN': 195, 'GOOGL': 183
+};
+const STOCK_NAMES = {
+  'CHKP':'Check Point Software','WIX':'Wix.com','MNDY':'Monday.com',
+  'TEVA':'Teva Pharmaceutical','GLBE':'Global-E Online',
+  'SPY':'SPDR S&P 500 ETF','QQQ':'Invesco QQQ Trust',
+  'AAPL':'Apple Inc.','MSFT':'Microsoft Corp.','NVDA':'NVIDIA Corp.',
+  'TSLA':'Tesla Inc.','META':'Meta Platforms','AMZN':'Amazon.com','GOOGL':'Alphabet Inc.'
+};
+
+// מספר אקראי דטרמיניסטי לפי seed (אותם מחירים לכולם ביום נתון)
+function seededRand(n) { let x = Math.sin(n+1)*10000; return x - Math.floor(x); }
+
+function getSimPrices() {
+  const d = new Date();
+  const seed = d.getFullYear()*10000 + (d.getMonth()+1)*100 + d.getDate();
+  const out  = {};
+  Object.entries(BASE_PRICES).forEach(([sym, base], i) => {
+    const pct   = (seededRand(seed*100 + i) - 0.45) * 4.2; // -1.9% עד +2.3%
+    const price = Math.round(base * (1 + pct/100) * 100) / 100;
+    const chg   = Math.round((price - base) * 100) / 100;
+    out[sym] = { price, change: chg, changePercent: Math.round(pct*100)/100,
+                 name: STOCK_NAMES[sym] || sym };
+  });
+  return out;
 }
 
-async function yahooQuoteBulk(symbols) {
-  const results = await Promise.all(symbols.map(s => yahooQuote(s).catch(() => null)));
-  return results.filter(Boolean);
+function yahooQuote(symbol) {
+  const p = getSimPrices()[symbol];
+  if (!p) throw new Error('Unknown symbol: ' + symbol);
+  return Promise.resolve({
+    regularMarketPrice:         p.price,
+    regularMarketChange:        p.change,
+    regularMarketChangePercent: p.changePercent,
+    longName: p.name,
+  });
+}
+function yahooQuoteBulk(symbols) {
+  return Promise.resolve(symbols.map(s => ({ symbol:s, ...getSimPrices()[s] })).filter(q=>q.price));
 }
 
 const TRADING_FILE  = path.join(__dirname, 'trading_data.json');
