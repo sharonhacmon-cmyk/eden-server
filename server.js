@@ -244,14 +244,14 @@ function tradingAuth(req, res, next) {
 
 // Setup profile (first time after login)
 app.post('/api/trading/setup', tradingAuth, (req, res) => {
-  const { name, gender, age, language } = req.body;
-  if (!name || !gender || !age) return res.status(400).json({ error: 'חסרים פרטים' });
+  const { name, gender, language } = req.body;
+  if (!name || !gender) return res.status(400).json({ error: 'חסרים פרטים' });
   const data = loadTradingData();
   const code = req.playerCode;
   if (!data[code]) {
     data[code] = {
       name: name.trim(), gender,
-      age: parseInt(age), language: language || 'he',
+      language: language || 'he',
       cash: STARTING_CASH, portfolio: {}, trades: [],
       setupAt: new Date().toISOString()
     };
