@@ -375,6 +375,17 @@ body {
 .loading-dots span:nth-child(3){animation-delay:.4s}
 @keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
 
+/* ── CHART ───────────────────────────── */
+.chart-range-btn {
+  padding:3px 8px; border-radius:8px; border:1px solid var(--border);
+  background:transparent; color:var(--dim); font-size:11px; font-weight:700;
+  cursor:pointer; font-family:'Heebo',sans-serif;
+}
+.chart-range-btn.active { background:var(--purple); border-color:var(--purple); color:#fff; }
+.chart-stat { flex:1; background:var(--card2); border-radius:10px; padding:6px 10px; text-align:center; }
+.chart-stat-label { font-size:10px; color:var(--dim); margin-bottom:2px; }
+.chart-stat-val { font-size:13px; font-weight:800; }
+
 /* ── ARTICLE ─────────────────────────── */
 #articleBody h3 { font-size:18px; font-weight:900; color:var(--gold); margin-bottom:10px; }
 #articleBody p  { margin-bottom:12px; }
@@ -569,6 +580,19 @@ body {
     <div class="modal-owned" id="modalOwned"></div>
     <div id="modalFx" style="display:none;background:rgba(64,196,255,0.08);border:1px solid rgba(64,196,255,0.25);border-radius:10px;padding:9px 14px;margin-bottom:10px;font-size:13px;color:rgba(64,196,255,0.9)"></div>
     <div id="modalDesc" style="background:rgba(124,92,252,0.1);border:1px solid rgba(124,92,252,0.3);border-radius:12px;padding:12px 14px;margin-bottom:10px;font-size:14px;color:rgba(238,238,255,0.8);line-height:1.6;display:none"></div>
+
+    <!-- מיני גרף היסטוריה -->
+    <div id="chartSection" style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <div style="font-size:12px;color:var(--dim);font-weight:600">📈 היסטוריית מחירים</div>
+        <div style="display:flex;gap:4px">
+          <button type="button" onclick="loadChart(7)"  class="chart-range-btn" data-days="7">7י</button>
+          <button type="button" onclick="loadChart(30)" class="chart-range-btn active" data-days="30">30י</button>
+        </div>
+      </div>
+      <canvas id="priceChart" height="90" style="width:100%;border-radius:8px;display:block"></canvas>
+      <div id="chartStats" style="display:flex;gap:8px;margin-top:6px"></div>
+    </div>
 
     <!-- Eden explains why it moved -->
     <div id="edenBox" style="display:none;margin-bottom:12px">
@@ -1342,6 +1366,8 @@ function openModal(sym) {
   setModalTab('buy');
   updateTotal();
   document.getElementById('modalOverlay').classList.add('open');
+  // load chart after modal is visible so canvas has width
+  setTimeout(() => loadChart(chartDays), 80);
 }
 
 function closeModal(e) {
@@ -1465,6 +1491,102 @@ async function loadLeaderboard() {
   } catch {
     document.getElementById('leaderboardList').innerHTML = '<div class="empty-state">שגיאה בטעינה</div>';
   }
+}
+
+// ══════════════════════════════════════════════════
+// PRICE HISTORY CHART
+// ══════════════════════════════════════════════════
+let chartDays = 30;
+
+async function loadChart(days) {
+  chartDays = days || chartDays;
+  document.querySelectorAll('.chart-range-btn').forEach(b => {
+    b.classList.toggle('active', parseInt(b.dataset.days) === chartDays);
+  });
+  const sym = S.modalSym;
+  if (!sym) return;
+  try {
+    const data = await api(`/api/history/${sym}?days=${chartDays}`);
+    if (!Array.isArray(data) || !data.length) return;
+    drawChart(data, sym);
+    drawChartStats(data, sym);
+  } catch {}
+}
+
+function drawChart(data, sym) {
+  const canvas = document.getElementById('priceChart');
+  const ctx    = canvas.getContext('2d');
+  const W      = canvas.offsetWidth || 340;
+  const H      = 90;
+  canvas.width  = W * devicePixelRatio;
+  canvas.height = H * devicePixelRatio;
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+
+  const prices = data.map(d => d.price);
+  const min    = Math.min(...prices);
+  const max    = Math.max(...prices);
+  const range  = max - min || 1;
+  const pad    = 6;
+
+  const x = i => pad + (i / (data.length - 1)) * (W - pad * 2);
+  const y = p => H - pad - ((p - min) / range) * (H - pad * 2);
+
+  // gradient fill
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  const isUp = prices[prices.length - 1] >= prices[0];
+  const color = isUp ? '#00E676' : '#FF5252';
+  grad.addColorStop(0, isUp ? 'rgba(0,230,118,0.25)' : 'rgba(255,82,82,0.25)');
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+
+  ctx.beginPath();
+  ctx.moveTo(x(0), y(prices[0]));
+  data.forEach((d, i) => { if (i > 0) ctx.lineTo(x(i), y(d.price)); });
+  ctx.lineTo(x(data.length - 1), H);
+  ctx.lineTo(x(0), H);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // line
+  ctx.beginPath();
+  ctx.moveTo(x(0), y(prices[0]));
+  data.forEach((d, i) => { if (i > 0) ctx.lineTo(x(i), y(d.price)); });
+  ctx.strokeStyle = color;
+  ctx.lineWidth   = 2;
+  ctx.stroke();
+
+  // current dot
+  const last = data.length - 1;
+  ctx.beginPath();
+  ctx.arc(x(last), y(prices[last]), 4, 0, Math.PI * 2);
+  ctx.fillStyle = color;
+  ctx.fill();
+}
+
+function drawChartStats(data, sym) {
+  const prices  = data.map(d => d.price);
+  const first   = prices[0];
+  const last    = prices[prices.length - 1];
+  const high    = Math.max(...prices);
+  const low     = Math.min(...prices);
+  const change  = ((last - first) / first * 100).toFixed(1);
+  const up      = last >= first;
+
+  const he = S.lang === 'he';
+  document.getElementById('chartStats').innerHTML = `
+    <div class="chart-stat">
+      <div class="chart-stat-label">${he ? 'שינוי' : 'Change'}</div>
+      <div class="chart-stat-val" style="color:${up?'var(--green)':'var(--red)'}">${up?'+':''}${change}%</div>
+    </div>
+    <div class="chart-stat">
+      <div class="chart-stat-label">${he ? 'גבוה' : 'High'}</div>
+      <div class="chart-stat-val">${fmtPrice(sym, high)}</div>
+    </div>
+    <div class="chart-stat">
+      <div class="chart-stat-label">${he ? 'נמוך' : 'Low'}</div>
+      <div class="chart-stat-val">${fmtPrice(sym, low)}</div>
+    </div>
+  `;
 }
 
 // ══════════════════════════════════════════════════

@@ -178,6 +178,19 @@ const STOCK_NAMES = {
 // מספר אקראי דטרמיניסטי לפי seed (אותם מחירים לכולם ביום נתון)
 function seededRand(n) { let x = Math.sin(n+1)*10000; return x - Math.floor(x); }
 
+function getSimPricesForDate(dateObj) {
+  const seed = dateObj.getFullYear()*10000 + (dateObj.getMonth()+1)*100 + dateObj.getDate();
+  const out  = {};
+  Object.entries(BASE_PRICES).forEach(([sym, base], i) => {
+    const pct   = (seededRand(seed*100 + i) - 0.45) * 4.2;
+    const price = Math.round(base * (1 + pct/100) * 100) / 100;
+    const chg   = Math.round((price - base) * 100) / 100;
+    out[sym] = { price, change: chg, changePercent: Math.round(pct*100)/100,
+                 name: STOCK_NAMES[sym] || sym };
+  });
+  return out;
+}
+
 function getSimPrices() {
   const d = new Date();
   const seed = d.getFullYear()*10000 + (d.getMonth()+1)*100 + d.getDate();
@@ -291,6 +304,26 @@ app.get('/api/fxrate', async (req, res) => {
   } catch(e) {
     res.json({ rate: fxCache.rate, date: fxCache.date || today, source: 'fallback' });
   }
+});
+
+// היסטוריית מחירים — 30 יום אחורה (מחושב מה-seed, ללא שמירה)
+app.get('/api/history/:symbol', (req, res) => {
+  const sym  = req.params.symbol.toUpperCase();
+  if (!BASE_PRICES[sym]) return res.status(404).json({ error: 'לא נמצא' });
+  const days = parseInt(req.query.days) || 30;
+  const history = [];
+  const today = new Date();
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    // skip weekends
+    if (d.getDay() === 0 || d.getDay() === 6) continue;
+    const prices = getSimPricesForDate(d);
+    const p = prices[sym];
+    const label = d.toLocaleDateString('he-IL', { month:'short', day:'numeric' });
+    history.push({ date: label, price: p.price, changePercent: p.changePercent });
+  }
+  res.json(history);
 });
 
 // All stock prices
