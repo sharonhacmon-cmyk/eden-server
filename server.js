@@ -243,6 +243,36 @@ function loadTradingData() {
 }
 function saveTradingData(data) {
   fs.writeFileSync(TRADING_FILE, JSON.stringify(data, null, 2), 'utf8');
+  syncTradingDataToGitHub(data); // persist across deploys (non-blocking)
+}
+
+// ── GitHub persistence (trading_data.json survives Render deploys) ──────────
+const GH_TOKEN = process.env.GITHUB_TOKEN;
+const GH_OWNER = 'sharonhacmon-cmyk';
+const GH_REPO  = 'eden-server';
+const GH_PATH  = 'trading_data.json';
+
+async function syncTradingDataToGitHub(data) {
+  if (!GH_TOKEN) return; // skip if token not configured
+  try {
+    const headers = {
+      'Authorization': `token ${GH_TOKEN}`,
+      'Accept': 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json',
+      'User-Agent': 'EdenServer/1.0'
+    };
+    const url = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_PATH}`;
+    const getRes = await fetch(url, { headers });
+    const current = await getRes.json();
+    const sha = current.sha;
+    const content = Buffer.from(JSON.stringify(data, null, 2)).toString('base64');
+    await fetch(url, {
+      method: 'PUT', headers,
+      body: JSON.stringify({ message: 'sync: update trading data', content, sha })
+    });
+  } catch(e) {
+    console.error('GitHub sync error:', e.message);
+  }
 }
 
 // Middleware: auth by bearer token (uses existing sessions map)
