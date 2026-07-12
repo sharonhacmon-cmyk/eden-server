@@ -1020,15 +1020,21 @@ async function doSetup() {
   if (!selectedGender) { showToast(S.lang==='he' ? 'בחרי/בחר מין' : 'Select gender', 'error'); return; }
   const btn = document.getElementById('txt-setup-btn');
   btn.textContent = '...'; btn.disabled = true;
-  const r = await api('/api/trading/setup','POST',{ name, gender:selectedGender, language:selectedLangPref });
-  btn.textContent = t('setup-btn'); btn.disabled=false;
-  if (r.error) { showToast(r.error,'error'); return; }
-  S.player = r.player;
-  S.lang   = selectedLangPref;
-  localStorage.setItem('tg_lang', S.lang);
-  applyLang();
-  loadPrices();
-  showScreen('intro');  // מדריך המשחק לפני כניסה לתיק
+  try {
+    const r = await api('/api/trading/setup','POST',{ name, gender:selectedGender, language:selectedLangPref });
+    btn.textContent = t('setup-btn'); btn.disabled = false;
+    if (r.error) { showToast(r.error,'error'); return; }
+    S.player = r.player;
+    S.lang   = selectedLangPref;
+    localStorage.setItem('tg_lang', S.lang);
+    applyLang();
+    loadFxRate().then(() => loadPrices());
+    renderIntro();
+    showScreen('intro');
+  } catch(e) {
+    btn.textContent = t('setup-btn'); btn.disabled = false;
+    showToast(S.lang==='he' ? 'שגיאת חיבור — נסה/י שוב' : 'Connection error — try again', 'error');
+  }
 }
 
 // ══════════════════════════════════════════════════
