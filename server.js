@@ -247,7 +247,7 @@ function saveTradingData(data) {
 }
 
 // ── GitHub persistence (trading_data.json survives Render deploys) ──────────
-const GH_TOKEN = process.env.GITHUB_TOKEN || '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';
+const GH_TOKEN = process.env.GITHUB_TOKEN; // set in Render dashboard → Environment
 const GH_OWNER = 'sharonhacmon-cmyk';
 const GH_REPO  = 'eden-server';
 const GH_PATH  = 'trading_data.json';
