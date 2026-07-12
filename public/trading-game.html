@@ -526,7 +526,19 @@ body {
       </div>
     </div>
     <div class="modal-owned" id="modalOwned"></div>
-    <div id="modalDesc" style="background:rgba(124,92,252,0.1);border:1px solid rgba(124,92,252,0.3);border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:14px;color:rgba(238,238,255,0.8);line-height:1.6;display:none"></div>
+    <div id="modalDesc" style="background:rgba(124,92,252,0.1);border:1px solid rgba(124,92,252,0.3);border-radius:12px;padding:12px 14px;margin-bottom:10px;font-size:14px;color:rgba(238,238,255,0.8);line-height:1.6;display:none"></div>
+
+    <!-- Eden explains why it moved -->
+    <div id="edenBox" style="display:none;margin-bottom:12px">
+      <div style="background:rgba(0,230,118,0.07);border:1px solid rgba(0,230,118,0.25);border-radius:12px;padding:12px 14px">
+        <div style="font-size:12px;color:var(--green);font-weight:700;margin-bottom:6px">🤖 עדן מסבירה</div>
+        <div id="edenAnswer" style="font-size:14px;color:rgba(238,238,255,0.85);line-height:1.65"></div>
+      </div>
+    </div>
+    <button id="edenBtn" onclick="askEden()" style="width:100%;padding:10px;border-radius:12px;border:1px solid rgba(0,230,118,0.35);background:rgba(0,230,118,0.08);color:var(--green);font-family:'Heebo',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:12px">
+      🤔 למה המניה זזה היום?
+    </button>
+
     <div class="modal-tabs">
       <button class="modal-tab buy-active" id="tabBuy"  onclick="setModalTab('buy')"  id="txt-tab-buy">קנייה</button>
       <button class="modal-tab"            id="tabSell" onclick="setModalTab('sell')" id="txt-tab-sell">מכירה</button>
@@ -1086,6 +1098,9 @@ function openModal(sym) {
   if (desc) { descEl.textContent = '💡 ' + desc; descEl.style.display='block'; }
   else { descEl.style.display='none'; }
   document.getElementById('sharesInput').value = 1;
+  document.getElementById('edenBox').style.display = 'none';
+  document.getElementById('edenBtn').textContent = '🤔 למה המניה זזה היום?';
+  document.getElementById('edenBtn').disabled = false;
   setModalTab('buy');
   updateTotal();
   document.getElementById('modalOverlay').classList.add('open');
@@ -1173,6 +1188,60 @@ async function loadLeaderboard() {
   } catch {
     document.getElementById('leaderboardList').innerHTML = '<div class="empty-state">שגיאה בטעינה</div>';
   }
+}
+
+// ══════════════════════════════════════════════════
+// EDEN AI — למה המניה זזה?
+// ══════════════════════════════════════════════════
+async function askEden() {
+  const sym  = S.modalSym;
+  const info = STOCK_INFO[sym];
+  const p    = S.prices[sym];
+  if (!sym || !p) return;
+
+  const btn = document.getElementById('edenBtn');
+  btn.textContent = '⏳ עדן חושבת...';
+  btn.disabled = true;
+
+  const name    = S.lang === 'he' ? info.nameHe : info.nameEn;
+  const dir     = p.changePercent >= 0 ? 'עלתה' : 'ירדה';
+  const pct     = Math.abs(p.changePercent).toFixed(1);
+  const age     = S.player?.age || 14;
+  const langHe  = S.lang === 'he';
+
+  const prompt = langHe
+    ? `אתה עדן, מדריכה פיננסית לילדים. הסבר לילד/ה בגיל ${age} בשפה פשוטה, קצרה וכיפית (3 משפטים בלבד):
+מניית ${name} (${sym}) ${dir} ב-${pct}% היום.
+מה יכול לגרום לתנועה כזו? השתמש בדוגמאות מהחיים שילד מכיר.
+סיים עם משפט קצר על מה כדאי לשים לב בחברה הזו.`
+    : `You are Eden, a financial guide for kids. Explain in simple, fun language (3 sentences only) to a ${age}-year-old:
+${name} (${sym}) ${p.changePercent >= 0 ? 'went up' : 'went down'} ${pct}% today.
+What could cause this? Use examples kids relate to.
+End with one thing to watch for with this company.`;
+
+  try {
+    const r = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+S.token },
+      body: JSON.stringify({
+        messages: [{ role:'user', content: prompt }],
+        system: langHe
+          ? 'את עדן — מדריכה פיננסית לילדים. תענה בעברית פשוטה, קצרה ומעניינת. אין כוכביות, אין כותרות — רק טקסט רגיל.'
+          : 'You are Eden — a financial guide for kids. Answer in simple, short, engaging English. No bullet points, no headers — plain text only.'
+      })
+    });
+    const data = await r.json();
+    if (data.content) {
+      document.getElementById('edenAnswer').textContent = data.content;
+      document.getElementById('edenBox').style.display = 'block';
+      btn.textContent = '🔄 שאלי שוב';
+    } else {
+      btn.textContent = '🤔 למה המניה זזה היום?';
+    }
+  } catch {
+    btn.textContent = '🤔 למה המניה זזה היום?';
+  }
+  btn.disabled = false;
 }
 
 // ══════════════════════════════════════════════════
