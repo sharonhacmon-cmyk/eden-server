@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>שוק ההון הווירטואלי 🚀</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --bg:      #07071A;
+  --card:    #0F0F2E;
+  --card2:   #12123A;
+  --purple:  #7C5CFC;
+  --purple2: #A78BFA;
+  --gold:    #FFD700;
+  --gold2:   #FFF3B0;
+  --green:   #00E676;
+  --green2:  #69F0AE;
+  --red:     #FF5252;
+  --red2:    #FF8A80;
+  --blue:    #40C4FF;
+  --cyan:    #00BCD4;
+  --text:    #EEEEFF;
+  --dim:     rgba(238,238,255,0.5);
+  --border:  rgba(124,92,252,0.3);
+  --glow:    rgba(124,92,252,0.2);
+  --nav-h:   64px;
+}
+
+body {
+  font-family:'Heebo',sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── TICKER ──────────────────────────── */
+.ticker-wrap {
+  width:100%; overflow:hidden;
+  background:rgba(124,92,252,0.12);
+  border-bottom:1px solid var(--border);
+  height:34px; display:flex; align-items:center;
+}
+.ticker-track {
+  display:flex; gap:32px; white-space:nowrap;
+  animation: ticker 35s linear infinite;
+}
+.ticker-item { font-size:13px; font-weight:600; display:flex; gap:6px; align-items:center; }
+.ticker-item .sym { color:var(--purple2); }
+.ticker-item .up  { color:var(--green); }
+.ticker-item .dn  { color:var(--red); }
+@keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* ── SCREENS ─────────────────────────── */
+.screen { display:none; min-height:100vh; padding-bottom:calc(var(--nav-h)+16px); }
+.screen.active { display:block; }
+
+/* ── BOTTOM NAV ──────────────────────── */
+.bottom-nav {
+  display:none; position:fixed; bottom:0; left:0; right:0;
+  height:var(--nav-h);
+  background:rgba(12,12,40,0.97);
+  border-top:1px solid var(--border);
+  backdrop-filter:blur(12px);
+  z-index:100;
+}
+.bottom-nav.visible { display:flex; }
+.nav-tabs { display:flex; width:100%; }
+.nav-tab {
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:3px; cursor:pointer; border:none; background:transparent;
+  color:var(--dim); font-family:'Heebo',sans-serif; font-size:12px; font-weight:500;
+  transition:all .2s; padding:6px 0;
+}
+.nav-tab .icon { font-size:22px; }
+.nav-tab.active { color:var(--purple2); }
+.nav-tab.active .icon { filter:drop-shadow(0 0 6px var(--purple)); }
+
+/* ── CARDS ───────────────────────────── */
+.card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:18px; padding:20px;
+  box-shadow:0 4px 24px var(--glow);
+}
+.card-green { background:rgba(0,230,118,0.06); border-color:rgba(0,230,118,0.3); }
+.card-red   { background:rgba(255,82,82,0.06); border-color:rgba(255,82,82,0.3); }
+.card-gold  { background:rgba(255,215,0,0.06); border-color:rgba(255,215,0,0.3); }
+.card-purple{ background:rgba(124,92,252,0.1); border-color:var(--border); }
+
+/* ── FORMS ───────────────────────────── */
+.form-group { margin-bottom:16px; }
+.form-label { font-size:14px; color:var(--dim); margin-bottom:8px; display:block; }
+.form-input {
+  width:100%; padding:12px 16px; border-radius:12px;
+  background:rgba(255,255,255,0.06); border:1.5px solid var(--border);
+  color:var(--text); font-family:'Heebo',sans-serif; font-size:16px;
+  outline:none; transition:border-color .2s;
+}
+.form-input:focus { border-color:var(--purple); }
+.form-input::placeholder { color:var(--dim); }
+
+.seg-group { display:flex; gap:0; border:1.5px solid var(--border); border-radius:12px; overflow:hidden; }
+.seg-btn {
+  flex:1; padding:11px; border:none; cursor:pointer;
+  font-family:'Heebo',sans-serif; font-size:15px; font-weight:600;
+  background:transparent; color:var(--purple2); transition:all .2s;
+}
+.seg-btn.active { background:var(--purple); color:#fff; }
+
+/* ── BUTTONS ─────────────────────────── */
+.btn {
+  width:100%; padding:14px; border-radius:14px; border:none; cursor:pointer;
+  font-family:'Heebo',sans-serif; font-size:17px; font-weight:700;
+  transition:all .2s; letter-spacing:0.02em;
+}
+.btn-primary {
+  background:linear-gradient(135deg,var(--purple) 0%,#9C6FFC 100%);
+  color:#fff; box-shadow:0 4px 20px rgba(124,92,252,0.4);
+}
+.btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 28px rgba(124,92,252,0.5); }
+.btn-green {
+  background:linear-gradient(135deg,#00C853 0%,var(--green) 100%);
+  color:#000; box-shadow:0 4px 16px rgba(0,200,83,0.35);
+}
+.btn-red {
+  background:linear-gradient(135deg,#D50000 0%,var(--red) 100%);
+  color:#fff; box-shadow:0 4px 16px rgba(213,0,0,0.35);
+}
+.btn-outline {
+  background:transparent; border:1.5px solid var(--border);
+  color:var(--purple2);
+}
+.btn-sm { padding:8px 18px; font-size:14px; border-radius:10px; width:auto; }
+
+/* ── HEADER / HERO ───────────────────── */
+.page-header {
+  padding:20px 20px 0;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.page-title { font-size:22px; font-weight:900; }
+.page-sub   { font-size:13px; color:var(--dim); }
+
+/* ── LOGIN SCREEN ────────────────────── */
+#screen-login {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  min-height:100vh; padding:32px 24px;
+}
+.login-logo { font-size:64px; margin-bottom:12px; text-align:center; }
+.login-title { font-size:30px; font-weight:900; text-align:center; margin-bottom:6px; }
+.login-subtitle { font-size:16px; color:var(--dim); text-align:center; margin-bottom:32px; }
+.login-box { width:100%; max-width:400px; }
+
+/* ── SETUP SCREEN ────────────────────── */
+#screen-setup {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  min-height:100vh; padding:32px 24px;
+}
+.setup-box { width:100%; max-width:420px; }
+.setup-title { font-size:26px; font-weight:900; margin-bottom:6px; text-align:center; }
+.setup-sub   { font-size:15px; color:var(--dim); margin-bottom:28px; text-align:center; }
+
+/* ── PORTFOLIO SCREEN ────────────────── */
+.portfolio-hero {
+  margin:16px; border-radius:22px; padding:28px 22px;
+  background:linear-gradient(135deg,#1A0F4A 0%,#0A1A3A 100%);
+  border:1px solid rgba(124,92,252,0.4);
+  position:relative; overflow:hidden;
+}
+.portfolio-hero::before {
+  content:''; position:absolute; top:-40px; left:-40px;
+  width:200px; height:200px; border-radius:50%;
+  background:radial-gradient(circle,rgba(124,92,252,0.25) 0%,transparent 70%);
+  pointer-events:none;
+}
+.portfolio-label { font-size:13px; color:var(--dim); margin-bottom:6px; }
+.portfolio-total { font-size:46px; font-weight:900; line-height:1; }
+.portfolio-total .dollar { font-size:28px; }
+.portfolio-sub { font-size:14px; color:var(--dim); margin-top:6px; }
+.portfolio-profit {
+  display:inline-block; margin-top:12px; padding:6px 16px;
+  border-radius:20px; font-size:16px; font-weight:700;
+}
+.profit-pos { background:rgba(0,230,118,0.15); color:var(--green); border:1px solid rgba(0,230,118,0.3); }
+.profit-neg { background:rgba(255,82,82,0.15);  color:var(--red);   border:1px solid rgba(255,82,82,0.3); }
+
+.section-title {
+  font-size:15px; font-weight:700; color:var(--dim);
+  padding:16px 20px 8px; text-transform:uppercase; letter-spacing:0.08em;
+}
+
+/* ── HOLDINGS ────────────────────────── */
+.holding-card {
+  margin:0 16px 10px; background:var(--card);
+  border:1px solid var(--border); border-radius:16px; padding:16px;
+  display:flex; align-items:center; gap:14px;
+}
+.holding-emoji { font-size:30px; flex-shrink:0; }
+.holding-info { flex:1; min-width:0; }
+.holding-name { font-size:16px; font-weight:700; }
+.holding-sym  { font-size:12px; color:var(--dim); }
+.holding-right { text-align:left; flex-shrink:0; }
+.holding-val  { font-size:18px; font-weight:900; }
+.holding-pl   { font-size:13px; font-weight:600; }
+
+.empty-state {
+  text-align:center; padding:48px 24px;
+  color:var(--dim); font-size:16px;
+}
+.empty-state .icon { font-size:52px; margin-bottom:12px; }
+
+/* ── MARKET SCREEN ───────────────────── */
+.market-filter {
+  padding:12px 16px; display:flex; gap:8px; overflow-x:auto;
+  -webkit-overflow-scrolling:touch; scrollbar-width:none;
+}
+.market-filter::-webkit-scrollbar { display:none; }
+.filter-btn {
+  padding:7px 16px; border-radius:20px; border:1.5px solid var(--border);
+  background:transparent; color:var(--dim); font-family:'Heebo',sans-serif;
+  font-size:14px; font-weight:600; cursor:pointer; white-space:nowrap;
+  transition:all .2s;
+}
+.filter-btn.active { background:var(--purple); border-color:var(--purple); color:#fff; }
+
+.stock-card {
+  margin:0 16px 10px; background:var(--card);
+  border:1px solid var(--border); border-radius:16px; padding:16px;
+  display:flex; align-items:center; gap:14px; cursor:pointer;
+  transition:all .2s; -webkit-tap-highlight-color:transparent;
+}
+.stock-card:active { transform:scale(0.98); background:var(--card2); }
+.stock-emoji { font-size:32px; flex-shrink:0; }
+.stock-info { flex:1; min-width:0; }
+.stock-name { font-size:15px; font-weight:700; }
+.stock-sym  { font-size:12px; color:var(--dim); }
+.stock-market-tag {
+  display:inline-block; font-size:10px; padding:2px 7px;
+  border-radius:8px; margin-top:3px; font-weight:600;
+}
+.tag-local { background:rgba(0,188,212,0.15); color:var(--cyan); border:1px solid rgba(0,188,212,0.3); }
+.tag-intl  { background:rgba(124,92,252,0.15); color:var(--purple2); border:1px solid rgba(124,92,252,0.3); }
+.stock-right { text-align:left; flex-shrink:0; }
+.stock-price  { font-size:18px; font-weight:900; direction:ltr; }
+.stock-change { font-size:13px; font-weight:600; }
+.owned-badge {
+  font-size:11px; background:rgba(255,215,0,0.15);
+  border:1px solid rgba(255,215,0,0.3); color:var(--gold);
+  border-radius:8px; padding:2px 8px; margin-top:3px;
+  display:inline-block;
+}
+
+/* ── LEADERBOARD ─────────────────────── */
+.leader-card {
+  margin:0 16px 10px; border-radius:16px; padding:16px;
+  display:flex; align-items:center; gap:14px;
+  border:1px solid var(--border); background:var(--card);
+}
+.leader-card.rank-1 { background:rgba(255,215,0,0.08); border-color:rgba(255,215,0,0.4); }
+.leader-card.rank-2 { background:rgba(192,192,192,0.06); border-color:rgba(192,192,192,0.3); }
+.leader-card.rank-3 { background:rgba(205,127,50,0.08); border-color:rgba(205,127,50,0.3); }
+.rank-medal { font-size:28px; flex-shrink:0; min-width:36px; text-align:center; }
+.leader-info { flex:1; }
+.leader-name { font-size:16px; font-weight:700; }
+.leader-meta { font-size:12px; color:var(--dim); }
+.leader-right { text-align:left; }
+.leader-val   { font-size:18px; font-weight:900; }
+.leader-prof  { font-size:13px; font-weight:600; }
+
+/* ── MODAL ───────────────────────────── */
+.modal-overlay {
+  display:none; position:fixed; inset:0; z-index:200;
+  background:rgba(0,0,0,0.7); backdrop-filter:blur(4px);
+  align-items:flex-end; justify-content:center;
+}
+.modal-overlay.open { display:flex; }
+.modal-box {
+  width:100%; max-width:480px;
+  background:#0F0F30; border-radius:24px 24px 0 0;
+  padding:24px 20px 36px;
+  border-top:2px solid var(--border);
+  animation: slideUp .25s ease;
+}
+@keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+.modal-handle {
+  width:40px; height:4px; border-radius:2px;
+  background:rgba(255,255,255,0.2); margin:0 auto 20px;
+}
+.modal-stock-header { display:flex; align-items:center; gap:14px; margin-bottom:20px; }
+.modal-emoji  { font-size:44px; }
+.modal-sname  { font-size:20px; font-weight:900; }
+.modal-ssym   { font-size:14px; color:var(--dim); }
+.modal-price  { font-size:26px; font-weight:900; margin-bottom:4px; direction:ltr; }
+.modal-owned  { font-size:14px; color:var(--gold); margin-bottom:16px; }
+.modal-tabs   { display:flex; gap:0; margin-bottom:16px; border-radius:12px; overflow:hidden; border:1.5px solid var(--border); }
+.modal-tab    { flex:1; padding:10px; border:none; cursor:pointer; font-family:'Heebo',sans-serif; font-size:16px; font-weight:700; transition:all .2s; background:transparent; }
+.modal-tab.buy-active  { background:var(--green); color:#000; }
+.modal-tab.sell-active { background:var(--red);   color:#fff; }
+.modal-tab:not(.buy-active):not(.sell-active) { color:var(--purple2); }
+.shares-row { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+.shares-input {
+  flex:1; padding:14px; border-radius:12px; border:1.5px solid var(--border);
+  background:rgba(255,255,255,0.06); color:var(--text);
+  font-size:24px; font-weight:700; text-align:center; direction:ltr;
+  font-family:'Inter',sans-serif; outline:none;
+}
+.shares-input:focus { border-color:var(--purple); }
+.shares-stepper { display:flex; flex-direction:column; gap:4px; }
+.step-btn {
+  width:40px; height:36px; border-radius:8px; border:1px solid var(--border);
+  background:var(--card2); color:var(--text); font-size:20px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+}
+.total-preview { text-align:center; color:var(--dim); font-size:15px; margin-bottom:16px; }
+.total-preview strong { color:var(--text); font-size:18px; }
+
+/* ── TOAST ───────────────────────────── */
+.toast {
+  position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-100px);
+  background:#1A1A4A; border:1.5px solid var(--border);
+  border-radius:14px; padding:12px 22px;
+  font-size:15px; font-weight:600; z-index:500;
+  transition:transform .3s ease; white-space:nowrap;
+  max-width:90vw; text-align:center;
+}
+.toast.show { transform:translateX(-50%) translateY(0); }
+.toast.success { border-color:var(--green); color:var(--green); }
+.toast.error   { border-color:var(--red);   color:var(--red); }
+
+/* ── TRADES HISTORY ──────────────────── */
+.trade-row {
+  padding:12px 20px; display:flex; align-items:center; gap:12px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.trade-icon { font-size:20px; flex-shrink:0; }
+.trade-info { flex:1; }
+.trade-desc { font-size:14px; font-weight:600; }
+.trade-date { font-size:12px; color:var(--dim); }
+.trade-amount { font-size:15px; font-weight:700; }
+
+/* ── LANG TOGGLE ─────────────────────── */
+.lang-btn {
+  position:fixed; top:42px; left:14px; z-index:50;
+  background:rgba(124,92,252,0.2); border:1px solid var(--border);
+  border-radius:20px; padding:5px 12px; font-size:13px; font-weight:600;
+  color:var(--purple2); cursor:pointer; backdrop-filter:blur(8px);
+}
+
+/* ── CASH ROW ────────────────────────── */
+.cash-row {
+  display:flex; gap:10px; margin:0 16px 6px;
+}
+.cash-pill {
+  flex:1; background:var(--card); border:1px solid var(--border);
+  border-radius:14px; padding:12px 16px;
+}
+.cash-pill-label { font-size:12px; color:var(--dim); margin-bottom:3px; }
+.cash-pill-val   { font-size:20px; font-weight:900; direction:ltr; }
+
+/* ── LOADING ─────────────────────────── */
+.loading-dots { display:flex; gap:6px; justify-content:center; padding:32px; }
+.loading-dots span {
+  width:8px; height:8px; border-radius:50%; background:var(--purple2);
+  animation:blink 1.2s ease infinite;
+}
+.loading-dots span:nth-child(2){animation-delay:.2s}
+.loading-dots span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+
+/* ── RESPONSIVE ──────────────────────── */
+@media(min-width:480px){
+  .portfolio-hero, .cash-row, .holding-card, .stock-card, .leader-card { margin-left:auto; margin-right:auto; max-width:480px; }
+  .market-filter, .section-title { max-width:480px; margin-left:auto; margin-right:auto; }
+  .modal-box { border-radius:24px; margin-bottom:20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TICKER (hidden until loaded) -->
+<div class="ticker-wrap" id="tickerWrap" style="display:none">
+  <div class="ticker-track" id="tickerTrack"></div>
+</div>
+
+<!-- LANG TOGGLE -->
+<button class="lang-btn" id="langBtn" onclick="toggleLang()" style="display:none">EN</button>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ══ SCREEN: LOGIN ══════════════════════════════ -->
+<div class="screen active" id="screen-login">
+  <div class="login-logo">🚀</div>
+  <div class="login-title" id="txt-login-title">שוק ההון הווירטואלי</div>
+  <div class="login-subtitle" id="txt-login-sub">סוחרים, מרוויחים, לומדים</div>
+  <div class="login-box">
+    <div class="form-group">
+      <label class="form-label" id="txt-code-label">קוד גישה</label>
+      <input class="form-input" id="inputCode" type="text" placeholder="הכנס קוד" autocomplete="off" style="text-align:center;font-size:20px;letter-spacing:0.1em;text-transform:uppercase">
+    </div>
+    <button class="btn btn-primary" onclick="doLogin()" id="txt-login-btn">כניסה לשוק 🚀</button>
+    <p style="text-align:center;margin-top:16px;font-size:13px;color:var(--dim)" id="txt-login-hint">קוד הגישה מתקבל ממורה/מנחה</p>
+  </div>
+</div>
+
+<!-- ══ SCREEN: SETUP ══════════════════════════════ -->
+<div class="screen" id="screen-setup">
+  <div class="setup-box">
+    <div style="font-size:56px;text-align:center;margin-bottom:8px">👤</div>
+    <div class="setup-title" id="txt-setup-title">ספר/י לנו עליך</div>
+    <div class="setup-sub" id="txt-setup-sub">רק פעם אחת — השיא שלך ישמר!</div>
+    <div class="form-group">
+      <label class="form-label" id="txt-name-label">שם (כינוי)</label>
+      <input class="form-input" id="setupName" type="text" placeholder="איך קוראים לך?" maxlength="20">
+    </div>
+    <div class="form-group">
+      <label class="form-label" id="txt-gender-label">אני</label>
+      <div class="seg-group">
+        <button class="seg-btn" id="g-female" onclick="setGender('female')" id="txt-g-female">בת</button>
+        <button class="seg-btn" id="g-male"   onclick="setGender('male')" id="txt-g-male">בן</button>
+        <button class="seg-btn" id="g-other"  onclick="setGender('other')" id="txt-g-other">אחר</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" id="txt-age-label">גיל</label>
+      <div class="seg-group" id="ageGroup"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" id="txt-lang-label">שפה</label>
+      <div class="seg-group">
+        <button class="seg-btn active" id="l-he" onclick="setLangPref('he')">עברית</button>
+        <button class="seg-btn"        id="l-en" onclick="setLangPref('en')">English</button>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="doSetup()" id="txt-setup-btn">יאללה, מתחילים! 🎯</button>
+  </div>
+</div>
+
+<!-- ══ SCREEN: PORTFOLIO ══════════════════════════ -->
+<div class="screen" id="screen-portfolio">
+  <!-- Hero -->
+  <div class="portfolio-hero" id="heroCard">
+    <div class="portfolio-label" id="txt-portfolio-label">שווי תיק כולל</div>
+    <div class="portfolio-total" id="heroTotal"><span class="dollar">$</span><span id="heroTotalNum">50,000</span></div>
+    <div class="portfolio-sub" id="heroSub">מזומן: <span id="heroCash">$50,000</span> &nbsp;|&nbsp; מניות: <span id="heroStocks">$0</span></div>
+    <div class="portfolio-profit" id="heroProfit">+$0 (0%)</div>
+  </div>
+
+  <!-- Holdings -->
+  <div class="section-title" id="txt-holdings-title">המניות שלי</div>
+  <div id="holdingsList"></div>
+
+  <!-- Trades -->
+  <div class="section-title" id="txt-trades-title">עסקאות אחרונות</div>
+  <div id="tradesList"></div>
+
+  <!-- Admin link -->
+  <div style="text-align:center;padding:24px 0 8px">
+    <button class="btn btn-outline btn-sm" onclick="openAdmin()" id="adminBtn" style="display:none">
+      🔧 פאנל ניהול
+    </button>
+  </div>
+</div>
+
+<!-- ══ SCREEN: MARKET ═════════════════════════════ -->
+<div class="screen" id="screen-market">
+  <div class="page-header" style="padding-top:16px">
+    <div>
+      <div class="page-title" id="txt-market-title">שוק המניות</div>
+      <div class="page-sub" id="txt-market-sub">לחץ על מניה לקנייה/מכירה</div>
+    </div>
+    <div style="text-align:left">
+      <div style="font-size:12px;color:var(--dim)" id="txt-cash-avail">מזומן זמין</div>
+      <div style="font-size:18px;font-weight:900;direction:ltr" id="marketCash">$50,000</div>
+    </div>
+  </div>
+
+  <div class="market-filter">
+    <button class="filter-btn active" data-filter="all" onclick="setFilter('all')" id="txt-filter-all">הכל</button>
+    <button class="filter-btn" data-filter="local" onclick="setFilter('local')" id="txt-filter-local">🇮🇱 ישראלי</button>
+    <button class="filter-btn" data-filter="intl"  onclick="setFilter('intl')"  id="txt-filter-intl">🌍 בינלאומי</button>
+  </div>
+
+  <div id="stocksList">
+    <div class="loading-dots"><span></span><span></span><span></span></div>
+  </div>
+</div>
+
+<!-- ══ SCREEN: LEADERBOARD ════════════════════════ -->
+<div class="screen" id="screen-leaderboard">
+  <div class="page-header" style="padding-top:16px;margin-bottom:12px">
+    <div class="page-title" id="txt-leader-title">🏆 לוח שיא</div>
+    <button class="btn btn-outline btn-sm" onclick="loadLeaderboard()" id="txt-refresh-btn">רענן</button>
+  </div>
+  <div id="leaderboardList">
+    <div class="loading-dots"><span></span><span></span><span></span></div>
+  </div>
+</div>
+
+<!-- ══ BUY/SELL MODAL ═════════════════════════════ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal-box">
+    <div class="modal-handle"></div>
+    <div class="modal-stock-header">
+      <div class="modal-emoji" id="modalEmoji">🍎</div>
+      <div>
+        <div class="modal-sname" id="modalName">אפל</div>
+        <div class="modal-ssym"  id="modalSym">AAPL</div>
+      </div>
+      <div style="margin-right:auto;text-align:left">
+        <div class="modal-price" id="modalPrice">$189.50</div>
+      </div>
+    </div>
+    <div class="modal-owned" id="modalOwned"></div>
+    <div class="modal-tabs">
+      <button class="modal-tab buy-active" id="tabBuy"  onclick="setModalTab('buy')"  id="txt-tab-buy">קנייה</button>
+      <button class="modal-tab"            id="tabSell" onclick="setModalTab('sell')" id="txt-tab-sell">מכירה</button>
+    </div>
+    <div class="shares-row">
+      <button class="step-btn" onclick="stepShares(-1)">−</button>
+      <input class="shares-input" id="sharesInput" type="number" value="1" min="1" step="1" oninput="updateTotal()">
+      <button class="step-btn" onclick="stepShares(1)">+</button>
+    </div>
+    <div class="total-preview" id="totalPreview">סה"כ: <strong id="totalVal">$189.50</strong></div>
+    <button class="btn" id="confirmBtn" onclick="confirmTrade()">אשר קנייה</button>
+  </div>
+</div>
+
+<!-- ══ BOTTOM NAV ══════════════════════════════════ -->
+<div class="bottom-nav" id="bottomNav">
+  <div class="nav-tabs">
+    <button class="nav-tab active" data-screen="portfolio" onclick="navigate('portfolio')">
+      <span class="icon">💼</span>
+      <span id="txt-nav-portfolio">תיק</span>
+    </button>
+    <button class="nav-tab" data-screen="market" onclick="navigate('market')">
+      <span class="icon">📈</span>
+      <span id="txt-nav-market">שוק</span>
+    </button>
+    <button class="nav-tab" data-screen="leaderboard" onclick="navigate('leaderboard')">
+      <span class="icon">🏆</span>
+      <span id="txt-nav-leader">דירוג</span>
+    </button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════
+const S = {
+  token:    localStorage.getItem('tg_token'),
+  lang:     localStorage.getItem('tg_lang') || 'he',
+  player:   null,
+  prices:   {},
+  filter:   'all',
+  modalSym: null,
+  modalTab: 'buy',
+  adminPw:  null,
+};
+
+const STOCK_INFO = {
+  // ישראלי
+  'CHKP': { nameHe:'צ׳ק פוינט', nameEn:'Check Point',  emoji:'🛡️', market:'local' },
+  'WIX':  { nameHe:'ויקס',       nameEn:'Wix.com',      emoji:'🌐', market:'local' },
+  'MNDY': { nameHe:'מאנדיי',     nameEn:'Monday.com',   emoji:'📅', market:'local' },
+  'TEVA': { nameHe:'טבע',        nameEn:'Teva',         emoji:'💊', market:'local' },
+  'GLBE': { nameHe:'גלובל-אי',   nameEn:'Global-E',    emoji:'🌍', market:'local' },
+  // בינלאומי
+  'SPY':  { nameHe:'מדד S&P 500', nameEn:'S&P 500 ETF', emoji:'📊', market:'intl' },
+  'QQQ':  { nameHe:'נאסד"ק',      nameEn:'Nasdaq ETF',  emoji:'💻', market:'intl' },
+  'AAPL': { nameHe:'אפל',          nameEn:'Apple',       emoji:'🍎', market:'intl' },
+  'MSFT': { nameHe:'מיקרוסופט',   nameEn:'Microsoft',   emoji:'🪟', market:'intl' },
+  'NVDA': { nameHe:'אנבידיה',      nameEn:'Nvidia',      emoji:'🎮', market:'intl' },
+  'TSLA': { nameHe:'טסלה',         nameEn:'Tesla',       emoji:'🚗', market:'intl' },
+  'META': { nameHe:'מטא',          nameEn:'Meta',        emoji:'👾', market:'intl' },
+  'AMZN': { nameHe:'אמזון',        nameEn:'Amazon',      emoji:'📦', market:'intl' },
+  'GOOGL':{ nameHe:'גוגל',         nameEn:'Google',      emoji:'🔍', market:'intl' },
+};
+
+// ══════════════════════════════════════════════════
+// TRANSLATIONS
+// ══════════════════════════════════════════════════
+const T = {
+  he: {
+    'login-title':'שוק ההון הווירטואלי','login-sub':'סוחרים, מרוויחים, לומדים',
+    'code-label':'קוד גישה','login-btn':'כניסה לשוק 🚀','login-hint':'קוד הגישה מתקבל ממורה/מנחה',
+    'setup-title':'ספר/י לנו עליך','setup-sub':'רק פעם אחת — השיא שלך ישמר!',
+    'name-label':'שם (כינוי)','gender-label':'אני','age-label':'גיל','lang-label':'שפה',
+    'setup-btn':'יאללה, מתחילים! 🎯',
+    'portfolio-label':'שווי תיק כולל','holdings-title':'המניות שלי','trades-title':'עסקאות אחרונות',
+    'market-title':'שוק המניות','market-sub':'לחץ על מניה לקנייה/מכירה','cash-avail':'מזומן זמין',
+    'filter-all':'הכל','filter-local':'🇮🇱 ישראלי','filter-intl':'🌍 בינלאומי',
+    'leader-title':'🏆 לוח שיא','refresh-btn':'רענן',
+    'nav-portfolio':'תיק','nav-market':'שוק','nav-leader':'דירוג',
+    'tab-buy':'קנייה','tab-sell':'מכירה',
+    'no-holdings':'עדיין אין מניות בתיק\nקנה את הראשונה! 🎯',
+    'no-trades':'עדיין לא בוצעו עסקאות',
+    'bought':'מניות ✅','sold':'מניות נמכרו ✅',
+    'g-female':'בת','g-male':'בן','g-other':'אחר',
+    'owned':'יש ברשותך','shares':'מניות',
+    'confirm-buy':'אשר קנייה','confirm-sell':'אשר מכירה',
+    'total':'סה"כ',
+  },
+  en: {
+    'login-title':'Virtual Stock Market','login-sub':'Trade, Earn, Learn',
+    'code-label':'Access Code','login-btn':'Enter Market 🚀','login-hint':'Code provided by teacher/instructor',
+    'setup-title':'Tell us about you','setup-sub':'Just once — your progress will be saved!',
+    'name-label':'Nickname','gender-label':'I am','age-label':'Age','lang-label':'Language',
+    'setup-btn':'Let\'s go! 🎯',
+    'portfolio-label':'Total Portfolio Value','holdings-title':'My Stocks','trades-title':'Recent Trades',
+    'market-title':'Stock Market','market-sub':'Tap a stock to buy/sell','cash-avail':'Available Cash',
+    'filter-all':'All','filter-local':'🇮🇱 Israeli','filter-intl':'🌍 International',
+    'leader-title':'🏆 Leaderboard','refresh-btn':'Refresh',
+    'nav-portfolio':'Portfolio','nav-market':'Market','nav-leader':'Ranking',
+    'tab-buy':'Buy','tab-sell':'Sell',
+    'no-holdings':'No stocks yet\nBuy your first one! 🎯',
+    'no-trades':'No trades yet',
+    'bought':'shares bought ✅','sold':'shares sold ✅',
+    'g-female':'Girl','g-male':'Boy','g-other':'Other',
+    'owned':'You own','shares':'shares',
+    'confirm-buy':'Confirm Buy','confirm-sell':'Confirm Sell',
+    'total':'Total',
+  }
+};
+
+function t(k) { return T[S.lang][k] || k; }
+
+function applyLang() {
+  document.documentElement.lang = S.lang;
+  document.documentElement.dir  = S.lang === 'he' ? 'rtl' : 'ltr';
+  const ids = ['login-title','login-sub','code-label','login-btn','login-hint',
+    'setup-title','setup-sub','name-label','gender-label','age-label','lang-label','setup-btn',
+    'portfolio-label','holdings-title','trades-title','market-title','market-sub','cash-avail',
+    'filter-all','filter-local','filter-intl','leader-title','refresh-btn',
+    'nav-portfolio','nav-market','nav-leader','tab-buy','tab-sell'];
+  ids.forEach(id => {
+    const el = document.getElementById('txt-'+id);
+    if (el) el.textContent = t(id);
+  });
+  document.getElementById('g-female').textContent = t('g-female');
+  document.getElementById('g-male').textContent   = t('g-male');
+  document.getElementById('g-other').textContent  = t('g-other');
+  document.getElementById('langBtn').textContent  = S.lang === 'he' ? 'EN' : 'עב';
+  // refresh current screen content
+  if (S.player) { renderPortfolio(); renderStocks(); }
+}
+
+function toggleLang() {
+  S.lang = S.lang === 'he' ? 'en' : 'he';
+  localStorage.setItem('tg_lang', S.lang);
+  if (S.player) { S.player.language = S.lang; }
+  applyLang();
+}
+
+// ══════════════════════════════════════════════════
+// API
+// ══════════════════════════════════════════════════
+async function api(path, method='GET', body=null) {
+  const opts = { method, headers: { 'Content-Type':'application/json' } };
+  if (S.token) opts.headers['Authorization'] = 'Bearer ' + S.token;
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(path, opts);
+  return r.json();
+}
+
+// ══════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  const nav = document.getElementById('bottomNav');
+  const showNav = ['portfolio','market','leaderboard'].includes(name);
+  nav.classList.toggle('visible', showNav);
+  document.getElementById('langBtn').style.display = showNav ? 'block' : 'none';
+  document.getElementById('tickerWrap').style.display = showNav ? 'flex' : 'none';
+  document.querySelectorAll('.nav-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.screen === name);
+  });
+}
+
+function navigate(screen) {
+  showScreen(screen);
+  if (screen === 'market')      renderStocks();
+  if (screen === 'leaderboard') loadLeaderboard();
+  if (screen === 'portfolio')   renderPortfolio();
+}
+
+// ══════════════════════════════════════════════════
+// LOGIN
+// ══════════════════════════════════════════════════
+async function doLogin() {
+  const code = document.getElementById('inputCode').value.trim();
+  if (!code) { showToast(S.lang==='he' ? 'הכנס קוד גישה' : 'Enter access code', 'error'); return; }
+  const btn = document.getElementById('txt-login-btn');
+  btn.textContent = '...';
+  btn.disabled = true;
+  try {
+    const r = await api('/api/login', 'POST', { password: code });
+    if (r.error) { showToast(r.error, 'error'); btn.textContent = t('login-btn'); btn.disabled=false; return; }
+    S.token = r.token;
+    localStorage.setItem('tg_token', r.token);
+    // check if player has trading profile
+    const me = await api('/api/trading/me');
+    if (me.needsSetup) {
+      showScreen('setup');
+    } else {
+      S.player = me;
+      S.lang   = me.language || S.lang;
+      localStorage.setItem('tg_lang', S.lang);
+      afterLogin();
+    }
+  } catch { showToast(S.lang==='he' ? 'שגיאת חיבור' : 'Connection error', 'error'); }
+  btn.textContent = t('login-btn'); btn.disabled = false;
+}
+
+// allow Enter key on code input
+document.getElementById('inputCode').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+// ══════════════════════════════════════════════════
+// SETUP
+// ══════════════════════════════════════════════════
+let selectedGender = '';
+let selectedAge    = '';
+let selectedLangPref = 'he';
+
+function setGender(g) {
+  selectedGender = g;
+  ['female','male','other'].forEach(x => document.getElementById('g-'+x).classList.toggle('active', x===g));
+}
+
+function setLangPref(l) {
+  selectedLangPref = l;
+  ['he','en'].forEach(x => document.getElementById('l-'+x).classList.toggle('active', x===l));
+}
+
+// Build age buttons 10–18
+(function buildAge() {
+  const grp = document.getElementById('ageGroup');
+  [10,11,12,13,14,15,16,17,18].forEach(age => {
+    const b = document.createElement('button');
+    b.className = 'seg-btn'; b.textContent = age;
+    b.onclick = () => {
+      selectedAge = age;
+      grp.querySelectorAll('.seg-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+    };
+    grp.appendChild(b);
+  });
+})();
+
+async function doSetup() {
+  const name = document.getElementById('setupName').value.trim();
+  if (!name)           { showToast(S.lang==='he' ? 'מה השם שלך?' : 'Enter a nickname', 'error'); return; }
+  if (!selectedGender) { showToast(S.lang==='he' ? 'בחר/י מין' : 'Select gender', 'error'); return; }
+  if (!selectedAge)    { showToast(S.lang==='he' ? 'בחר/י גיל' : 'Select age', 'error'); return; }
+  const btn = document.getElementById('txt-setup-btn');
+  btn.textContent = '...'; btn.disabled = true;
+  const r = await api('/api/trading/setup','POST',{ name, gender:selectedGender, age:selectedAge, language:selectedLangPref });
+  btn.textContent = t('setup-btn'); btn.disabled=false;
+  if (r.error) { showToast(r.error,'error'); return; }
+  S.player = r.player;
+  S.lang   = selectedLangPref;
+  localStorage.setItem('tg_lang', S.lang);
+  afterLogin();
+}
+
+// ══════════════════════════════════════════════════
+// AFTER LOGIN
+// ══════════════════════════════════════════════════
+async function afterLogin() {
+  applyLang();
+  showScreen('portfolio');
+  renderPortfolio();
+  loadPrices();
+  // show admin button if admin pw known
+  if (S.adminPw) document.getElementById('adminBtn').style.display='inline-block';
+}
+
+// ══════════════════════════════════════════════════
+// PRICES
+// ══════════════════════════════════════════════════
+async function loadPrices() {
+  try {
+    const data = await api('/api/stocks');
+    S.prices = data;
+    renderPortfolio();
+    renderStocks();
+    buildTicker();
+  } catch {}
+}
+
+function buildTicker() {
+  const track = document.getElementById('tickerTrack');
+  const symbols = Object.keys(S.prices);
+  const items = [...symbols, ...symbols].map(sym => {
+    const p = S.prices[sym];
+    if (!p) return '';
+    const up = p.changePercent >= 0;
+    return `<span class="ticker-item">
+      <span class="sym">${sym}</span>
+      <span class="${up?'up':'dn'}">$${p.price.toFixed(2)} ${up?'▲':'▼'}${Math.abs(p.changePercent).toFixed(1)}%</span>
+    </span>`;
+  }).join('');
+  track.innerHTML = items;
+  document.getElementById('tickerWrap').style.display='flex';
+}
+
+// ══════════════════════════════════════════════════
+// PORTFOLIO
+// ══════════════════════════════════════════════════
+function fmt(n) {
+  if (n >= 1000) return '$' + n.toLocaleString('en',{maximumFractionDigits:0});
+  return '$' + n.toFixed(2);
+}
+
+function renderPortfolio() {
+  if (!S.player) return;
+  const p = S.player;
+
+  // Calc portfolio value
+  let stocksVal = 0;
+  Object.entries(p.portfolio || {}).forEach(([sym, h]) => {
+    const price = S.prices[sym]?.price || h.avgPrice;
+    stocksVal += price * h.shares;
+  });
+  const total  = p.cash + stocksVal;
+  const profit = total - 50000;
+  const pct    = (profit / 50000 * 100).toFixed(1);
+
+  document.getElementById('heroTotalNum').textContent = total.toLocaleString('en',{maximumFractionDigits:0});
+  document.getElementById('heroCash').textContent     = fmt(p.cash);
+  document.getElementById('heroStocks').textContent   = fmt(stocksVal);
+  document.getElementById('marketCash').textContent   = fmt(p.cash);
+
+  const profitEl = document.getElementById('heroProfit');
+  const sign     = profit >= 0 ? '+' : '';
+  profitEl.textContent  = `${sign}${fmt(profit)} (${sign}${pct}%)`;
+  profitEl.className    = 'portfolio-profit ' + (profit >= 0 ? 'profit-pos' : 'profit-neg');
+
+  // Holdings
+  const list = document.getElementById('holdingsList');
+  const holdings = Object.entries(p.portfolio || {});
+  if (!holdings.length) {
+    list.innerHTML = `<div class="empty-state"><div class="icon">📭</div>${t('no-holdings').replace('\n','<br>')}</div>`;
+  } else {
+    list.innerHTML = holdings.map(([sym, h]) => {
+      const info  = STOCK_INFO[sym] || { emoji:'📈', nameHe:sym, nameEn:sym };
+      const price = S.prices[sym]?.price || h.avgPrice;
+      const val   = price * h.shares;
+      const pl    = val - h.avgPrice * h.shares;
+      const up    = pl >= 0;
+      const name  = S.lang === 'he' ? info.nameHe : info.nameEn;
+      return `<div class="holding-card">
+        <div class="holding-emoji">${info.emoji}</div>
+        <div class="holding-info">
+          <div class="holding-name">${name}</div>
+          <div class="holding-sym">${sym} · ${h.shares} ${t('shares')}</div>
+        </div>
+        <div class="holding-right">
+          <div class="holding-val">${fmt(val)}</div>
+          <div class="holding-pl" style="color:${up?'var(--green)':'var(--red)'}">
+            ${up?'+':''}${fmt(pl)}
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Trades
+  const tradesList = document.getElementById('tradesList');
+  const trades = (p.trades || []).slice(0,10);
+  if (!trades.length) {
+    tradesList.innerHTML = `<div class="empty-state" style="padding:20px 24px"><div style="font-size:36px">📋</div>${t('no-trades')}</div>`;
+  } else {
+    tradesList.innerHTML = trades.map(tr => {
+      const isBuy = tr.type === 'buy';
+      const d = new Date(tr.date);
+      const dateStr = d.toLocaleDateString(S.lang==='he'?'he-IL':'en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+      const info = STOCK_INFO[tr.symbol] || { emoji:'📈' };
+      return `<div class="trade-row">
+        <div class="trade-icon">${isBuy ? '🟢' : '🔴'}</div>
+        <div class="trade-info">
+          <div class="trade-desc">${info.emoji} ${tr.symbol} × ${tr.shares}</div>
+          <div class="trade-date">${dateStr}</div>
+        </div>
+        <div class="trade-amount" style="color:${isBuy?'var(--red)':'var(--green)'}">
+          ${isBuy?'-':'+'}${fmt(tr.total)}
+        </div>
+      </div>`;
+    }).join('');
+  }
+}
+
+// ══════════════════════════════════════════════════
+// MARKET
+// ══════════════════════════════════════════════════
+let currentFilter = 'all';
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter===f));
+  renderStocks();
+}
+
+function renderStocks() {
+  const list = document.getElementById('stocksList');
+  const symbols = Object.keys(STOCK_INFO).filter(sym => {
+    if (currentFilter === 'all') return true;
+    return STOCK_INFO[sym].market === currentFilter;
+  });
+  if (!Object.keys(S.prices).length) {
+    list.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+    return;
+  }
+  list.innerHTML = symbols.map(sym => {
+    const info = STOCK_INFO[sym];
+    const p    = S.prices[sym];
+    const name = S.lang === 'he' ? info.nameHe : info.nameEn;
+    const isLocal = info.market === 'local';
+    const owned   = S.player?.portfolio?.[sym];
+    if (!p) return '';
+    const up = p.changePercent >= 0;
+    return `<div class="stock-card" onclick="openModal('${sym}')">
+      <div class="stock-emoji">${info.emoji}</div>
+      <div class="stock-info">
+        <div class="stock-name">${name}</div>
+        <div class="stock-sym">${sym}</div>
+        <span class="stock-market-tag ${isLocal?'tag-local':'tag-intl'}">${isLocal?'🇮🇱 ישראלי':'🌍 בינלאומי'}</span>
+        ${owned ? `<br><span class="owned-badge">⭐ ${owned.shares} ${t('shares')}</span>` : ''}
+      </div>
+      <div class="stock-right">
+        <div class="stock-price">$${p.price.toFixed(2)}</div>
+        <div class="stock-change" style="color:${up?'var(--green)':'var(--red)'}">
+          ${up?'▲':'▼'} ${Math.abs(p.changePercent).toFixed(2)}%
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════
+// MODAL
+// ══════════════════════════════════════════════════
+function openModal(sym) {
+  S.modalSym = sym;
+  S.modalTab = 'buy';
+  const info = STOCK_INFO[sym];
+  const p    = S.prices[sym];
+  const name = S.lang === 'he' ? info.nameHe : info.nameEn;
+  const owned = S.player?.portfolio?.[sym];
+
+  document.getElementById('modalEmoji').textContent = info.emoji;
+  document.getElementById('modalName').textContent  = name;
+  document.getElementById('modalSym').textContent   = sym;
+  document.getElementById('modalPrice').textContent = '$' + (p?.price||0).toFixed(2);
+  document.getElementById('modalOwned').textContent = owned
+    ? `${t('owned')}: ${owned.shares} ${t('shares')} (avg $${owned.avgPrice.toFixed(2)})`
+    : '';
+  document.getElementById('sharesInput').value = 1;
+  setModalTab('buy');
+  updateTotal();
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e.target.id === 'modalOverlay') document.getElementById('modalOverlay').classList.remove('open');
+}
+
+function setModalTab(tab) {
+  S.modalTab = tab;
+  document.getElementById('tabBuy').className  = 'modal-tab' + (tab==='buy'  ? ' buy-active'  : '');
+  document.getElementById('tabSell').className = 'modal-tab' + (tab==='sell' ? ' sell-active' : '');
+  document.getElementById('confirmBtn').textContent = t(tab==='buy'?'confirm-buy':'confirm-sell');
+  document.getElementById('confirmBtn').className   = 'btn ' + (tab==='buy'?'btn-green':'btn-red');
+  updateTotal();
+}
+
+function stepShares(d) {
+  const inp = document.getElementById('sharesInput');
+  inp.value = Math.max(1, (parseFloat(inp.value)||1) + d);
+  updateTotal();
+}
+
+function updateTotal() {
+  const shares = parseFloat(document.getElementById('sharesInput').value)||1;
+  const price  = S.prices[S.modalSym]?.price || 0;
+  const total  = shares * price;
+  document.getElementById('totalVal').textContent = fmt(total);
+  document.getElementById('totalPreview').innerHTML = `${t('total')}: <strong id="totalVal">${fmt(total)}</strong>`;
+}
+
+async function confirmTrade() {
+  const shares = parseFloat(document.getElementById('sharesInput').value)||0;
+  if (shares <= 0) return;
+  const btn = document.getElementById('confirmBtn');
+  btn.textContent = '...'; btn.disabled = true;
+  const endpoint = S.modalTab === 'buy' ? '/api/trading/buy' : '/api/trading/sell';
+  const r = await api(endpoint, 'POST', { symbol: S.modalSym, shares });
+  btn.disabled = false; setModalTab(S.modalTab);
+  if (r.error) { showToast(r.error, 'error'); return; }
+  document.getElementById('modalOverlay').classList.remove('open');
+  S.player.cash      = r.cash;
+  S.player.portfolio = r.portfolio;
+  // refresh trades
+  const me = await api('/api/trading/me');
+  if (!me.error) S.player = me;
+  renderPortfolio();
+  renderStocks();
+  const sym  = S.modalSym;
+  const info = STOCK_INFO[sym] || { emoji:'📈' };
+  showToast(`${info.emoji} ${sym} ×${shares} ${t(S.modalTab==='buy'?'bought':'sold')}`, 'success');
+}
+
+// ══════════════════════════════════════════════════
+// LEADERBOARD
+// ══════════════════════════════════════════════════
+async function loadLeaderboard() {
+  document.getElementById('leaderboardList').innerHTML =
+    '<div class="loading-dots"><span></span><span></span><span></span></div>';
+  try {
+    const data = await api('/api/trading/leaderboard');
+    if (data.error || !Array.isArray(data)) {
+      document.getElementById('leaderboardList').innerHTML = '<div class="empty-state">אין נתונים עדיין</div>';
+      return;
+    }
+    const medals = ['🥇','🥈','🥉'];
+    document.getElementById('leaderboardList').innerHTML = data.map((p,i) => {
+      const up = p.profit >= 0;
+      const rank = i < 3 ? medals[i] : `#${i+1}`;
+      return `<div class="leader-card ${i<3?'rank-'+(i+1):''}">
+        <div class="rank-medal">${rank}</div>
+        <div class="leader-info">
+          <div class="leader-name">${p.name}</div>
+          <div class="leader-meta">${p.trades} עסקאות</div>
+        </div>
+        <div class="leader-right">
+          <div class="leader-val">${fmt(p.total)}</div>
+          <div class="leader-prof" style="color:${up?'var(--green)':'var(--red)'}">
+            ${up?'+':''}${fmt(p.profit)} (${up?'+':''}${p.profitPct}%)
+          </div>
+        </div>
+      </div>`;
+    }).join('') || '<div class="empty-state">אין שחקנים עדיין</div>';
+  } catch {
+    document.getElementById('leaderboardList').innerHTML = '<div class="empty-state">שגיאה בטעינה</div>';
+  }
+}
+
+// ══════════════════════════════════════════════════
+// ADMIN
+// ══════════════════════════════════════════════════
+function openAdmin() {
+  const pw = prompt('סיסמת ניהול:');
+  if (!pw) return;
+  S.adminPw = pw;
+  window.open(`/trading-admin.html?pw=${encodeURIComponent(pw)}`, '_blank');
+}
+
+// ══════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════
+let toastTimer;
+function showToast(msg, type='success') {
+  const el = document.getElementById('toast');
+  el.textContent  = msg;
+  el.className    = `toast ${type} show`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
+}
+
+// ══════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════
+async function init() {
+  applyLang();
+  if (S.token) {
+    try {
+      const me = await api('/api/trading/me');
+      if (me.needsSetup) { showScreen('setup'); return; }
+      if (me.error)      { localStorage.removeItem('tg_token'); showScreen('login'); return; }
+      S.player = me;
+      S.lang   = me.language || S.lang;
+      localStorage.setItem('tg_lang', S.lang);
+      applyLang();
+      showScreen('portfolio');
+      renderPortfolio();
+      loadPrices();
+    } catch { showScreen('login'); }
+  } else {
+    showScreen('login');
+  }
+}
+
+init();
+
+// Refresh prices every 60 seconds
+setInterval(() => { if (S.player) loadPrices(); }, 60000);
+</script>
+</body>
+</html>

@@ -146,6 +146,191 @@ app.get('/admin/funds-status', adminAuth, (req, res) => {
   }
 });
 
+// ══════════════════════════════════════════════════
+// ── TRADING GAME ──────────────────────────────────
+// ══════════════════════════════════════════════════
+const yahooFinance = require('yahoo-finance2').default;
+
+const TRADING_FILE  = path.join(__dirname, 'trading_data.json');
+const STARTING_CASH = 50000;
+
+const TRADEABLE_STOCKS = [
+  // ישראלי (נסחר בארה"ב)
+  'CHKP','WIX','MNDY','TEVA','GLBE',
+  // בינלאומי
+  'SPY','QQQ','AAPL','MSFT','NVDA','TSLA','META','AMZN','GOOGL'
+];
+
+function loadTradingData() {
+  try { return JSON.parse(fs.readFileSync(TRADING_FILE, 'utf8')); }
+  catch { return {}; }
+}
+function saveTradingData(data) {
+  fs.writeFileSync(TRADING_FILE, JSON.stringify(data, null, 2), 'utf8');
+}
+
+// Middleware: auth by bearer token (uses existing sessions map)
+function tradingAuth(req, res, next) {
+  const token = (req.headers.authorization || '').replace('Bearer ', '');
+  const session = sessions.get(token);
+  if (!session) return res.status(401).json({ error: 'לא מחובר — נכנס מחדש' });
+  req.session = session;
+  req.playerCode = session.code.toUpperCase();
+  next();
+}
+
+// Setup profile (first time after login)
+app.post('/api/trading/setup', tradingAuth, (req, res) => {
+  const { name, gender, age, language } = req.body;
+  if (!name || !gender || !age) return res.status(400).json({ error: 'חסרים פרטים' });
+  const data = loadTradingData();
+  const code = req.playerCode;
+  if (!data[code]) {
+    data[code] = {
+      name: name.trim(), gender,
+      age: parseInt(age), language: language || 'he',
+      cash: STARTING_CASH, portfolio: {}, trades: [],
+      setupAt: new Date().toISOString()
+    };
+    saveTradingData(data);
+  }
+  res.json({ ok: true, player: data[code] });
+});
+
+// Get my profile
+app.get('/api/trading/me', tradingAuth, (req, res) => {
+  const data = loadTradingData();
+  const player = data[req.playerCode];
+  if (!player) return res.json({ needsSetup: true });
+  res.json(player);
+});
+
+// All stock prices
+app.get('/api/stocks', async (req, res) => {
+  try {
+    const results = await Promise.all(
+      TRADEABLE_STOCKS.map(sym => yahooFinance.quote(sym).catch(() => null))
+    );
+    const prices = {};
+    results.forEach((q, i) => {
+      if (q) prices[TRADEABLE_STOCKS[i]] = {
+        price: q.regularMarketPrice,
+        change: q.regularMarketChange,
+        changePercent: q.regularMarketChangePercent,
+        name: q.longName || q.shortName || TRADEABLE_STOCKS[i],
+      };
+    });
+    res.json(prices);
+  } catch {
+    res.status(500).json({ error: 'שגיאה בטעינת מחירים' });
+  }
+});
+
+// Buy
+app.post('/api/trading/buy', tradingAuth, async (req, res) => {
+  const { symbol, shares } = req.body;
+  const numShares = parseFloat(shares);
+  const sym = (symbol || '').toUpperCase();
+  if (!sym || !numShares || numShares <= 0 || !TRADEABLE_STOCKS.includes(sym)) {
+    return res.status(400).json({ error: 'נתונים לא תקינים' });
+  }
+  try {
+    const q    = await yahooFinance.quote(sym);
+    const price = q.regularMarketPrice;
+    const total = price * numShares;
+    const data  = loadTradingData();
+    const player = data[req.playerCode];
+    if (!player) return res.status(404).json({ error: 'פרופיל לא נמצא' });
+    if (player.cash < total) {
+      return res.status(400).json({ error: `אין מספיק כסף. נדרש: $${total.toFixed(0)}, יש: $${player.cash.toFixed(0)}` });
+    }
+    player.cash -= total;
+    if (!player.portfolio[sym]) player.portfolio[sym] = { shares: 0, avgPrice: 0 };
+    const h = player.portfolio[sym];
+    h.avgPrice = (h.avgPrice * h.shares + price * numShares) / (h.shares + numShares);
+    h.shares   = Math.round((h.shares + numShares) * 10000) / 10000;
+    player.trades.unshift({ type:'buy', symbol:sym, shares:numShares, price, total, date: new Date().toISOString() });
+    saveTradingData(data);
+    res.json({ ok: true, cash: player.cash, portfolio: player.portfolio });
+  } catch {
+    res.status(500).json({ error: 'שגיאה — נסה שוב' });
+  }
+});
+
+// Sell
+app.post('/api/trading/sell', tradingAuth, async (req, res) => {
+  const { symbol, shares } = req.body;
+  const numShares = parseFloat(shares);
+  const sym = (symbol || '').toUpperCase();
+  const data = loadTradingData();
+  const player = data[req.playerCode];
+  if (!player) return res.status(404).json({ error: 'פרופיל לא נמצא' });
+  const h = player.portfolio[sym];
+  if (!h || h.shares < numShares - 0.0001) {
+    return res.status(400).json({ error: 'אין מספיק מניות' });
+  }
+  try {
+    const q    = await yahooFinance.quote(sym);
+    const price = q.regularMarketPrice;
+    const total = price * numShares;
+    player.cash += total;
+    h.shares = Math.round((h.shares - numShares) * 10000) / 10000;
+    if (h.shares < 0.001) delete player.portfolio[sym];
+    player.trades.unshift({ type:'sell', symbol:sym, shares:numShares, price, total, date: new Date().toISOString() });
+    saveTradingData(data);
+    res.json({ ok: true, cash: player.cash, portfolio: player.portfolio });
+  } catch {
+    res.status(500).json({ error: 'שגיאה — נסה שוב' });
+  }
+});
+
+// Leaderboard
+app.get('/api/trading/leaderboard', async (req, res) => {
+  try {
+    const data = loadTradingData();
+    const allSymbols = new Set();
+    Object.values(data).forEach(p => Object.keys(p.portfolio || {}).forEach(s => allSymbols.add(s)));
+    const prices = {};
+    await Promise.all([...allSymbols].map(async sym => {
+      try { const q = await yahooFinance.quote(sym); prices[sym] = q.regularMarketPrice; } catch {}
+    }));
+    const ranked = Object.values(data).map(p => {
+      let pv = 0;
+      Object.entries(p.portfolio || {}).forEach(([sym, h]) => { pv += (prices[sym] || h.avgPrice) * h.shares; });
+      const total = p.cash + pv;
+      const profit = total - STARTING_CASH;
+      return { name:p.name, gender:p.gender, total, cash:p.cash, portfolioValue:pv,
+               profit, profitPct: (profit/STARTING_CASH*100).toFixed(1), trades:(p.trades||[]).length };
+    }).sort((a,b) => b.total - a.total);
+    res.json(ranked);
+  } catch { res.status(500).json({ error: 'שגיאה' }); }
+});
+
+// Admin: all players
+app.get('/admin/trading/all', adminAuth, (req, res) => {
+  res.json(loadTradingData());
+});
+
+// Admin: reset player
+app.post('/admin/trading/reset/:code', adminAuth, (req, res) => {
+  const data = loadTradingData();
+  const code = req.params.code.toUpperCase();
+  if (!data[code]) return res.status(404).json({ error: 'לא נמצא' });
+  data[code].cash = STARTING_CASH;
+  data[code].portfolio = {};
+  data[code].trades = [];
+  saveTradingData(data);
+  res.json({ ok: true });
+});
+
+// Admin: delete player
+app.delete('/admin/trading/players/:code', adminAuth, (req, res) => {
+  const data = loadTradingData();
+  delete data[req.params.code.toUpperCase()];
+  saveTradingData(data);
+  res.json({ ok: true });
+});
+
 // ── בריאות ────────────────────────────────────────
 app.get('/health', (_, res) => res.json({ ok: true }));
 

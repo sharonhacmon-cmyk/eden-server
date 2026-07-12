@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>פאנל ניהול — שוק הווירטואלי</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#07071A;--card:#0F0F2E;--purple:#7C5CFC;--gold:#FFD700;--green:#00E676;--red:#FF5252;--text:#EEEEFF;--dim:rgba(238,238,255,0.5);--border:rgba(124,92,252,0.3)}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:24px 16px}
+.title{font-size:24px;font-weight:900;margin-bottom:4px}
+.sub{font-size:14px;color:var(--dim);margin-bottom:24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:14px}
+.stat-row{display:flex;gap:12px;margin-bottom:20px}
+.stat{flex:1;background:rgba(124,92,252,0.1);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center}
+.stat-val{font-size:28px;font-weight:900}
+.stat-lbl{font-size:13px;color:var(--dim);margin-top:4px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:right;padding:10px 8px;color:var(--dim);font-weight:600;border-bottom:1px solid var(--border)}
+td{padding:10px 8px;border-bottom:1px solid rgba(255,255,255,0.05)}
+.up{color:var(--green)}.dn{color:var(--red)}
+.btn-sm{padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600}
+.btn-red{background:rgba(255,82,82,0.2);color:var(--red);border:1px solid rgba(255,82,82,0.4)}
+.btn-blue{background:rgba(64,196,255,0.15);color:#40C4FF;border:1px solid rgba(64,196,255,0.3)}
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-80px);background:#1A1A4A;border:1px solid var(--border);border-radius:12px;padding:10px 20px;font-size:14px;font-weight:600;z-index:500;transition:transform .3s}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.ok{color:var(--green)}.toast.err{color:var(--red)}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+  <div style="font-size:36px">🔧</div>
+  <div>
+    <div class="title">פאנל ניהול — שוק הווירטואלי</div>
+    <div class="sub">מבט כולל על כל המשתתפים</div>
+  </div>
+  <button onclick="loadData()" style="margin-right:auto;padding:8px 18px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--purple);font-family:'Heebo',sans-serif;font-size:14px;cursor:pointer">רענן ↺</button>
+</div>
+
+<div class="stat-row" id="statsRow">
+  <div class="stat"><div class="stat-val" id="s-players">—</div><div class="stat-lbl">משתתפים</div></div>
+  <div class="stat"><div class="stat-val" id="s-trades">—</div><div class="stat-lbl">עסקאות</div></div>
+  <div class="stat"><div class="stat-val" id="s-avg">—</div><div class="stat-lbl">ממוצע תיק</div></div>
+</div>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>שם</th>
+        <th>גיל</th>
+        <th>מזומן</th>
+        <th>תיק</th>
+        <th>רווח/הפסד</th>
+        <th>עסקאות</th>
+        <th>פעולות</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+      <tr><td colspan="8" style="text-align:center;padding:32px;color:var(--dim)">טוען...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const PW = params.get('pw') || prompt('סיסמת אדמין:');
+if (!PW) { document.body.innerHTML = '<div style="padding:40px;color:#ff5252;font-size:20px">גישה נדחתה</div>'; }
+
+async function adminApi(path, method='GET', body=null) {
+  const opts = { method, headers: { 'Content-Type':'application/json','x-admin-password': PW } };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(path, opts);
+  return r.json();
+}
+
+let leaderData = [];
+
+async function loadData() {
+  const [allPlayers, leaderboard] = await Promise.all([
+    adminApi('/admin/trading/all'),
+    fetch('/api/trading/leaderboard').then(r=>r.json()).catch(()=>[])
+  ]);
+  leaderData = Array.isArray(leaderboard) ? leaderboard : [];
+
+  if (allPlayers.error) {
+    showToast('שגיאת גישה — בדוק סיסמה', 'err');
+    return;
+  }
+
+  const codes = Object.keys(allPlayers);
+  const players = Object.entries(allPlayers).map(([code, p]) => ({ code, ...p }));
+
+  // Stats
+  document.getElementById('s-players').textContent = players.length;
+  const totalTrades = players.reduce((s,p) => s + (p.trades||[]).length, 0);
+  document.getElementById('s-trades').textContent = totalTrades;
+
+  // Avg from leaderboard
+  if (leaderData.length) {
+    const avg = leaderData.reduce((s,p) => s+p.total, 0) / leaderData.length;
+    document.getElementById('s-avg').textContent = '$' + avg.toLocaleString('en',{maximumFractionDigits:0});
+  }
+
+  // Map leaderboard to players
+  const lbMap = {};
+  leaderData.forEach(p => { lbMap[p.name] = p; });
+
+  const body = document.getElementById('tableBody');
+  body.innerHTML = players.map((p, i) => {
+    const lb = lbMap[p.name] || {};
+    const profit = lb.profit ?? 0;
+    const total  = lb.total  ?? p.cash;
+    const up = profit >= 0;
+    return `<tr>
+      <td>${i+1}</td>
+      <td><strong>${p.name}</strong></td>
+      <td>${p.age}</td>
+      <td>$${Math.round(p.cash).toLocaleString('en')}</td>
+      <td>$${Math.round(total).toLocaleString('en')}</td>
+      <td class="${up?'up':'dn'}">${up?'+':''}$${Math.round(profit).toLocaleString('en')}</td>
+      <td>${(p.trades||[]).length}</td>
+      <td>
+        <button class="btn-sm btn-blue" onclick="resetPlayer('${p.code}','${p.name}')">איפוס</button>
+        &nbsp;
+        <button class="btn-sm btn-red" onclick="deletePlayer('${p.code}','${p.name}')">מחק</button>
+      </td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--dim)">אין משתתפים עדיין</td></tr>';
+}
+
+async function resetPlayer(code, name) {
+  if (!confirm(`לאפס את ${name}? כל הנתונים יימחקו!`)) return;
+  const r = await adminApi(`/admin/trading/reset/${code}`, 'POST');
+  if (r.ok) { showToast(`${name} אופס ✅`, 'ok'); loadData(); }
+  else showToast(r.error || 'שגיאה', 'err');
+}
+
+async function deletePlayer(code, name) {
+  if (!confirm(`למחוק את ${name} לצמיתות?`)) return;
+  const r = await adminApi(`/admin/trading/players/${code}`, 'DELETE');
+  if (r.ok) { showToast(`${name} נמחק ✅`, 'ok'); loadData(); }
+  else showToast(r.error || 'שגיאה', 'err');
+}
+
+let toastTimer;
+function showToast(msg, type) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.className = `toast ${type} show`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+if (PW) loadData();
+</script>
+</body>
+</html>
