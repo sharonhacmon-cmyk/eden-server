@@ -526,13 +526,13 @@ body {
   </div>
 
   <div class="market-filter">
-    <button class="filter-btn active" data-filter="all"       onclick="setFilter('all')">הכל</button>
-    <button class="filter-btn"        data-filter="israeli"   onclick="setFilter('israeli')">🇮🇱 ישראלי</button>
-    <button class="filter-btn"        data-filter="us-stocks" onclick="setFilter('us-stocks')">🇺🇸 מניות</button>
-    <button class="filter-btn"        data-filter="etf"       onclick="setFilter('etf')">📊 תעודות סל</button>
-    <button class="filter-btn"        data-filter="bonds"     onclick="setFilter('bonds')">🏛️ אג"ח</button>
-    <button class="filter-btn"        data-filter="reit"      onclick="setFilter('reit')">🏠 נדל"ן</button>
-    <button class="filter-btn"        data-filter="commodity" onclick="setFilter('commodity')">🥇 סחורות</button>
+    <button id="f-all"       class="filter-btn active" data-filter="all"       onclick="setFilter('all')">הכל</button>
+    <button id="f-israeli"   class="filter-btn"        data-filter="israeli"   onclick="setFilter('israeli')">🇮🇱 ישראלי</button>
+    <button id="f-us-stocks" class="filter-btn"        data-filter="us-stocks" onclick="setFilter('us-stocks')">🇺🇸 מניות</button>
+    <button id="f-etf"       class="filter-btn"        data-filter="etf"       onclick="setFilter('etf')">📊 תעודות סל</button>
+    <button id="f-bonds"     class="filter-btn"        data-filter="bonds"     onclick="setFilter('bonds')">🏛️ אג"ח</button>
+    <button id="f-reit"      class="filter-btn"        data-filter="reit"      onclick="setFilter('reit')">🏠 נדל"ן</button>
+    <button id="f-commodity" class="filter-btn"        data-filter="commodity" onclick="setFilter('commodity')">🥇 סחורות</button>
   </div>
 
   <!-- הסבר קטגוריה -->
@@ -807,6 +807,7 @@ const T = {
     'portfolio-label':'שווי תיק כולל','holdings-title':'המניות שלי','trades-title':'עסקאות אחרונות',
     'market-title':'שוק המניות','market-sub':'לחץ על מניה לקנייה/מכירה','cash-avail':'מזומן זמין',
     'filter-all':'הכל','filter-local':'🇮🇱 ישראלי','filter-intl':'🌍 בינלאומי',
+    'f-all':'הכל','f-israeli':'🇮🇱 ישראלי','f-us-stocks':'🇺🇸 מניות','f-etf':'📊 תעודות סל','f-bonds':'🏛️ אג"ח','f-reit':'🏠 נדל"ן','f-commodity':'🥇 סחורות',
     'leader-title':'🏆 לוח שיא','refresh-btn':'רענן',
     'nav-portfolio':'תיק','nav-market':'שוק','nav-leader':'דירוג','nav-learn':'למידה',
     'tab-buy':'קנייה','tab-sell':'מכירה',
@@ -832,6 +833,7 @@ const T = {
     'portfolio-label':'Total Portfolio Value','holdings-title':'My Holdings','trades-title':'Recent Trades',
     'market-title':'Stock Market','market-sub':'Tap a stock to buy/sell','cash-avail':'Available Cash',
     'filter-all':'All','filter-local':'🇮🇱 Israeli','filter-intl':'🌍 International',
+    'f-all':'All','f-israeli':'🇮🇱 Israeli','f-us-stocks':'🇺🇸 Stocks','f-etf':'📊 ETFs','f-bonds':'🏛️ Bonds','f-reit':'🏠 Real Estate','f-commodity':'🥇 Commodities',
     'leader-title':'🏆 Leaderboard','refresh-btn':'Refresh',
     'nav-portfolio':'Portfolio','nav-market':'Market','nav-leader':'Rankings','nav-learn':'Learn',
     'tab-buy':'Buy','tab-sell':'Sell',
@@ -859,6 +861,7 @@ function applyLang() {
     'setup-title','setup-sub','name-label','gender-label','lang-label','setup-btn',
     'portfolio-label','holdings-title','trades-title','market-title','market-sub','cash-avail',
     'filter-all','filter-local','filter-intl','leader-title','refresh-btn',
+    'f-all','f-israeli','f-us-stocks','f-etf','f-bonds','f-reit','f-commodity',
     'nav-portfolio','nav-market','nav-leader','tab-buy','tab-sell',
     'learn-title','learn-sub'];
   ids.forEach(id => {
@@ -1743,11 +1746,14 @@ const LEARN_TOPICS = [
 
 function showIntroModal() {
   renderIntro();
-  document.getElementById('introModal').style.display = 'block';
-  document.getElementById('introModal').scrollTop = 0;
+  const modal = document.getElementById('introModal');
+  modal.style.display = 'block';
+  modal.scrollTop = 0;
+  document.body.style.overflow = 'hidden'; // lock background scroll
 }
 function closeIntroModal() {
   document.getElementById('introModal').style.display = 'none';
+  document.body.style.overflow = ''; // unlock
 }
 
 function renderIntro() {
