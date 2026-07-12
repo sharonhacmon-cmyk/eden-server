@@ -41,8 +41,9 @@ body {
 
 /* ── TICKER ──────────────────────────── */
 .ticker-wrap {
+  position:sticky; top:0; z-index:90;
   width:100%; overflow:hidden;
-  background:rgba(124,92,252,0.12);
+  background:rgba(7,7,26,0.97);
   border-bottom:1px solid var(--border);
   height:34px; display:flex; align-items:center;
 }
@@ -426,7 +427,7 @@ body {
 </div>
 
 <!-- LANG TOGGLE -->
-<button class="lang-btn" id="langBtn" onclick="toggleLang()" style="display:none">EN</button>
+<button type="button" class="lang-btn" id="langBtn" onclick="toggleLang()" style="display:none">EN</button>
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
@@ -449,7 +450,7 @@ body {
 <!-- ══ SCREEN: SETUP ══════════════════════════════ -->
 <div class="screen" id="screen-setup">
   <div class="setup-box">
-    <button onclick="backToLogin()" id="setupBackBtn" style="background:none;border:none;color:var(--dim);font-size:15px;cursor:pointer;padding:0 0 12px;font-family:'Heebo',sans-serif">← חזרה לכניסה</button>
+    <button type="button" onclick="backToLogin()" id="setupBackBtn" style="background:none;border:none;color:var(--dim);font-size:15px;cursor:pointer;padding:0 0 12px;font-family:'Heebo',sans-serif">← חזרה לכניסה</button>
     <div style="font-size:56px;text-align:center;margin-bottom:8px">👤</div>
     <div class="setup-title" id="txt-setup-title">ספר/י לנו עליך</div>
     <div class="setup-sub" id="txt-setup-sub">רק פעם אחת — השם שלך ישמר!</div>
@@ -475,7 +476,7 @@ body {
         <button type="button" class="seg-btn" id="g-other"  onclick="setGender('other')">אחר/ת</button>
       </div>
     </div>
-    <button class="btn btn-primary" onclick="doSetup()" id="txt-setup-btn">יאללה, מתחילים! 🎯</button>
+    <button type="button" class="btn btn-primary" onclick="doSetup()" id="txt-setup-btn">יאללה, מתחילים! 🎯</button>
   </div>
 </div>
 
@@ -491,7 +492,7 @@ body {
 
   <!-- Guide button -->
   <div style="text-align:center;margin:-4px 16px 8px">
-    <button onclick="showIntroModal()" style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);border-radius:20px;padding:6px 18px;color:var(--gold);font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;cursor:pointer" id="guideBtnEl">
+    <button type="button" onclick="showIntroModal()" style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);border-radius:20px;padding:6px 18px;color:var(--gold);font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;cursor:pointer" id="guideBtnEl">
       📖 מדריך המשחק
     </button>
   </div>
@@ -506,7 +507,7 @@ body {
 
   <!-- Admin link -->
   <div style="text-align:center;padding:24px 0 8px">
-    <button class="btn btn-outline btn-sm" onclick="openAdmin()" id="adminBtn" style="display:none">
+    <button type="button" class="btn btn-outline btn-sm" onclick="openAdmin()" id="adminBtn" style="display:none">
       🔧 פאנל ניהול
     </button>
   </div>
@@ -526,20 +527,20 @@ body {
   </div>
 
   <div class="market-filter">
-    <button id="f-all"       class="filter-btn active" data-filter="all"       onclick="setFilter('all')">הכל</button>
-    <button id="f-israeli"   class="filter-btn"        data-filter="israeli"   onclick="setFilter('israeli')">🇮🇱 ישראלי</button>
-    <button id="f-us-stocks" class="filter-btn"        data-filter="us-stocks" onclick="setFilter('us-stocks')">🇺🇸 מניות</button>
-    <button id="f-etf"       class="filter-btn"        data-filter="etf"       onclick="setFilter('etf')">📊 תעודות סל</button>
-    <button id="f-bonds"     class="filter-btn"        data-filter="bonds"     onclick="setFilter('bonds')">🏛️ אג"ח</button>
-    <button id="f-reit"      class="filter-btn"        data-filter="reit"      onclick="setFilter('reit')">🏠 נדל"ן</button>
-    <button id="f-commodity" class="filter-btn"        data-filter="commodity" onclick="setFilter('commodity')">🥇 סחורות</button>
+    <button type="button" id="f-all"       class="filter-btn active" data-filter="all"       onclick="setFilter('all')">הכל</button>
+    <button type="button" id="f-israeli"   class="filter-btn"        data-filter="israeli"   onclick="setFilter('israeli')">🇮🇱 ישראלי</button>
+    <button type="button" id="f-us-stocks" class="filter-btn"        data-filter="us-stocks" onclick="setFilter('us-stocks')">🇺🇸 מניות</button>
+    <button type="button" id="f-etf"       class="filter-btn"        data-filter="etf"       onclick="setFilter('etf')">📊 תעודות סל</button>
+    <button type="button" id="f-bonds"     class="filter-btn"        data-filter="bonds"     onclick="setFilter('bonds')">🏛️ אג"ח</button>
+    <button type="button" id="f-reit"      class="filter-btn"        data-filter="reit"      onclick="setFilter('reit')">🏠 נדל"ן</button>
+    <button type="button" id="f-commodity" class="filter-btn"        data-filter="commodity" onclick="setFilter('commodity')">🥇 סחורות</button>
   </div>
 
   <!-- הסבר קטגוריה -->
   <div id="catExplainer" style="display:none;margin:0 16px 12px;background:rgba(255,215,0,0.07);border:1px solid rgba(255,215,0,0.28);border-radius:16px;padding:14px 16px">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
       <div id="catExplainerTitle" style="font-size:15px;font-weight:900;margin-bottom:6px"></div>
-      <button onclick="document.getElementById('catExplainer').style.display='none'" style="background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:26px;height:26px;font-size:14px;cursor:pointer;color:var(--dim);flex-shrink:0;display:flex;align-items:center;justify-content:center">✕</button>
+      <button type="button" onclick="document.getElementById('catExplainer').style.display='none'" style="background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:26px;height:26px;font-size:14px;cursor:pointer;color:var(--dim);flex-shrink:0;display:flex;align-items:center;justify-content:center">✕</button>
     </div>
     <div id="catExplainerText" style="font-size:13px;color:rgba(238,238,255,0.8);line-height:1.7"></div>
   </div>
@@ -553,7 +554,7 @@ body {
 <div class="screen" id="screen-leaderboard">
   <div class="page-header" style="padding-top:16px;margin-bottom:12px">
     <div class="page-title" id="txt-leader-title">🏆 לוח שיא</div>
-    <button class="btn btn-outline btn-sm" onclick="loadLeaderboard()" id="txt-refresh-btn">רענן</button>
+    <button type="button" class="btn btn-outline btn-sm" onclick="loadLeaderboard()" id="txt-refresh-btn">רענן</button>
   </div>
   <div id="leaderboardList">
     <div class="loading-dots"><span></span><span></span><span></span></div>
@@ -565,7 +566,7 @@ body {
   <div class="modal-box">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
       <div class="modal-handle" style="margin:0"></div>
-      <button onclick="document.getElementById('modalOverlay').classList.remove('open')" style="background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;color:var(--dim);display:flex;align-items:center;justify-content:center">✕</button>
+      <button type="button" onclick="document.getElementById('modalOverlay').classList.remove('open')" style="background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;color:var(--dim);display:flex;align-items:center;justify-content:center">✕</button>
     </div>
     <div class="modal-stock-header">
       <div class="modal-emoji" id="modalEmoji">🍎</div>
@@ -599,26 +600,26 @@ body {
       <div style="background:rgba(0,230,118,0.07);border:1px solid rgba(0,230,118,0.25);border-radius:12px;padding:12px 14px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
           <div id="edenBoxLabel" style="font-size:12px;color:var(--green);font-weight:700">🤖 הסבר AI</div>
-          <button onclick="document.getElementById('edenBox').style.display='none'" style="background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer;color:var(--dim);display:flex;align-items:center;justify-content:center">✕</button>
+          <button type="button" onclick="document.getElementById('edenBox').style.display='none'" style="background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer;color:var(--dim);display:flex;align-items:center;justify-content:center">✕</button>
         </div>
         <div id="edenAnswer" style="font-size:14px;color:rgba(238,238,255,0.85);line-height:1.65"></div>
       </div>
     </div>
-    <button id="edenBtn" onclick="askEden()" style="width:100%;padding:10px;border-radius:12px;border:1px solid rgba(0,230,118,0.35);background:rgba(0,230,118,0.08);color:var(--green);font-family:'Heebo',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:12px">
+    <button type="button" id="edenBtn" onclick="askEden()" style="width:100%;padding:10px;border-radius:12px;border:1px solid rgba(0,230,118,0.35);background:rgba(0,230,118,0.08);color:var(--green);font-family:'Heebo',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:12px">
       🤔 למה המניה זזה היום?
     </button>
 
     <div class="modal-tabs">
-      <button class="modal-tab buy-active" id="tabBuy"  onclick="setModalTab('buy')"  id="txt-tab-buy">קנייה</button>
-      <button class="modal-tab"            id="tabSell" onclick="setModalTab('sell')" id="txt-tab-sell">מכירה</button>
+      <button type="button" class="modal-tab buy-active" id="tabBuy"  onclick="setModalTab('buy')"  id="txt-tab-buy">קנייה</button>
+      <button type="button" class="modal-tab"            id="tabSell" onclick="setModalTab('sell')" id="txt-tab-sell">מכירה</button>
     </div>
     <div class="shares-row">
-      <button class="step-btn" onclick="stepShares(-1)">−</button>
+      <button type="button" class="step-btn" onclick="stepShares(-1)">−</button>
       <input class="shares-input" id="sharesInput" type="number" value="1" min="1" step="1" oninput="updateTotal()">
-      <button class="step-btn" onclick="stepShares(1)">+</button>
+      <button type="button" class="step-btn" onclick="stepShares(1)">+</button>
     </div>
     <div class="total-preview" id="totalPreview">סה"כ: <strong id="totalVal">$189.50</strong></div>
-    <button class="btn" id="confirmBtn" onclick="confirmTrade()">אשר קנייה</button>
+    <button type="button" class="btn" id="confirmBtn" onclick="confirmTrade()">אשר קנייה</button>
   </div>
 </div>
 
@@ -634,7 +635,7 @@ body {
 <!-- ══ SCREEN: LEARN ARTICLE ═════════════════════ -->
 <div class="screen" id="screen-article">
   <div style="padding:16px 16px 0;display:flex;align-items:center;gap:10px">
-    <button onclick="navigate('learn')" style="background:rgba(255,255,255,0.08);border:none;border-radius:50%;width:36px;height:36px;font-size:18px;cursor:pointer;color:var(--text);display:flex;align-items:center;justify-content:center">←</button>
+    <button type="button" onclick="navigate('learn')" style="background:rgba(255,255,255,0.08);border:none;border-radius:50%;width:36px;height:36px;font-size:18px;cursor:pointer;color:var(--text);display:flex;align-items:center;justify-content:center">←</button>
     <div class="page-title" id="articleTitle" style="font-size:20px"></div>
   </div>
   <div id="articleBody" style="padding:16px;font-size:15px;line-height:1.8;color:rgba(238,238,255,0.88)"></div>
@@ -650,19 +651,19 @@ body {
 <!-- ══ BOTTOM NAV ══════════════════════════════════ -->
 <div class="bottom-nav" id="bottomNav">
   <div class="nav-tabs">
-    <button class="nav-tab active" data-screen="portfolio" onclick="navigate('portfolio')">
+    <button type="button" class="nav-tab active" data-screen="portfolio" onclick="navigate('portfolio')">
       <span class="icon">💼</span>
       <span id="txt-nav-portfolio">תיק</span>
     </button>
-    <button class="nav-tab" data-screen="market" onclick="navigate('market')">
+    <button type="button" class="nav-tab" data-screen="market" onclick="navigate('market')">
       <span class="icon">📈</span>
       <span id="txt-nav-market">שוק</span>
     </button>
-    <button class="nav-tab" data-screen="leaderboard" onclick="navigate('leaderboard')">
+    <button type="button" class="nav-tab" data-screen="leaderboard" onclick="navigate('leaderboard')">
       <span class="icon">🏆</span>
       <span id="txt-nav-leader">דירוג</span>
     </button>
-    <button class="nav-tab" data-screen="learn" onclick="navigate('learn')">
+    <button type="button" class="nav-tab" data-screen="learn" onclick="navigate('learn')">
       <span class="icon">📚</span>
       <span>למידה</span>
     </button>
@@ -923,9 +924,9 @@ function showScreen(name, opts) {
   document.querySelectorAll('.nav-tab').forEach(t => {
     t.classList.toggle('active', t.dataset.screen === name);
   });
-  // Scroll to top of the screen element (below ticker), unless noScroll
+  // Scroll to top when switching main screens, unless noScroll
   if (!opts?.noScroll && ['portfolio','market','leaderboard','learn'].includes(name)) {
-    document.getElementById('screen-'+name).scrollIntoView({ behavior:'instant' });
+    window.scrollTo(0, 0);
   }
 }
 
@@ -1843,8 +1844,13 @@ function renderIntro() {
   </button>`;
 }
 
+function topicTitle(topic) {
+  return (topic[S.lang]?.title) || topic.he?.title || topic.title || '';
+}
+
 function renderLearn() {
   const container = document.getElementById('learnTopics');
+  const readLabel = S.lang === 'en' ? 'Tap to read →' : 'לחץ לקריאה ←';
   container.innerHTML = LEARN_TOPICS.map((topic, i) => `
     <div onclick="openArticle(${i})" style="
       margin-bottom:12px; border-radius:16px; padding:16px 18px;
@@ -1853,8 +1859,8 @@ function renderLearn() {
       transition:transform .15s;" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform=''">
       <div style="font-size:34px;flex-shrink:0">${topic.emoji}</div>
       <div>
-        <div style="font-size:16px;font-weight:800">${topic.title}</div>
-        <div style="font-size:12px;color:var(--dim);margin-top:3px">לחץ לקריאה ←</div>
+        <div style="font-size:16px;font-weight:800">${topicTitle(topic)}</div>
+        <div style="font-size:12px;color:var(--dim);margin-top:3px">${readLabel}</div>
       </div>
     </div>
   `).join('');
@@ -1862,8 +1868,8 @@ function renderLearn() {
 
 function openArticle(i) {
   const topic = LEARN_TOPICS[i];
-  document.getElementById('articleTitle').textContent = topic.emoji + ' ' + topic.title;
-  document.getElementById('articleBody').innerHTML = topic.body;
+  document.getElementById('articleTitle').textContent = topic.emoji + ' ' + topicTitle(topic);
+  document.getElementById('articleBody').innerHTML = topic[S.lang]?.body || topic.he?.body || topic.body || '';
   showScreen('article');
 }
 
