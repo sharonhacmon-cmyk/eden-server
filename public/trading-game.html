@@ -969,7 +969,13 @@ async function doLogin() {
       return;
     }
     if (me.needsSetup) {
-      // פעם ראשונה — מלא פרטים
+      // פעם ראשונה — נקה טופס ומלא פרטים
+      document.getElementById('setupName').value = '';
+      selectedGender = '';
+      selectedLangPref = 'he';
+      ['female','male','other'].forEach(x => document.getElementById('g-'+x).classList.remove('active'));
+      document.getElementById('l-he').classList.add('active');
+      document.getElementById('l-en').classList.remove('active');
       showScreen('setup');
     } else {
       S.player = me;
