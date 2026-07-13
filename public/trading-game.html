@@ -1956,27 +1956,10 @@ function showToast(msg, type='success') {
 // ══════════════════════════════════════════════════
 async function init() {
   applyLang();
-  if (S.token) {
-    try {
-      const me = await api('/api/trading/me');
-      if (me.needsSetup) { showScreen('setup'); return; }
-      if (me.error)      { localStorage.removeItem('tg_token'); showScreen('login'); return; }
-      S.player = me;
-      S.lang   = me.language || S.lang;
-      localStorage.setItem('tg_lang', S.lang);
-      applyLang();
-      loadFxRate().then(() => loadPrices());
-      showScreen('market');   // טעינה ישירה → שוק המניות
-      renderStocks();
-      // הוראות — רק אם לא נראו עדיין במכשיר הזה
-      if (!localStorage.getItem('tg_intro_shown')) {
-        localStorage.setItem('tg_intro_shown', '1');
-        showIntroModal();
-      }
-    } catch { showScreen('login'); }
-  } else {
-    showScreen('login');
-  }
+  // תמיד מתחילים ממסך הכניסה — לא שומרים auto-login (מכשיר משותף)
+  localStorage.removeItem('tg_token');
+  S.token = null;
+  showScreen('login');
 }
 
 init();
