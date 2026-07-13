@@ -951,16 +951,25 @@ async function doLogin() {
   const code = document.getElementById('inputCode').value.trim();
   if (!code) { showToast(S.lang==='he' ? 'הכנס קוד גישה' : 'Enter access code', 'error'); return; }
   const btn = document.getElementById('txt-login-btn');
-  btn.textContent = '...';
+  btn.textContent = '⏳ ...';
   btn.disabled = true;
   try {
     const r = await api('/api/login', 'POST', { password: code });
-    if (r.error) { showToast(r.error, 'error'); btn.textContent = t('login-btn'); btn.disabled=false; return; }
+    if (r.error) {
+      showToast(r.error, 'error');
+      btn.textContent = t('login-btn'); btn.disabled = false;
+      return;
+    }
     S.token = r.token;
     localStorage.setItem('tg_token', r.token);
-    // check if player has trading profile
     const me = await api('/api/trading/me');
+    if (me.error) {
+      showToast(S.lang==='he' ? 'שגיאה בטעינת פרופיל' : 'Profile load error', 'error');
+      btn.textContent = t('login-btn'); btn.disabled = false;
+      return;
+    }
     if (me.needsSetup) {
+      // פעם ראשונה — מלא פרטים
       showScreen('setup');
     } else {
       S.player = me;
@@ -968,7 +977,10 @@ async function doLogin() {
       localStorage.setItem('tg_lang', S.lang);
       afterLogin();
     }
-  } catch { showToast(S.lang==='he' ? 'שגיאת חיבור' : 'Connection error', 'error'); }
+  } catch(e) {
+    showToast(S.lang==='he' ? 'שגיאת חיבור — נסה שוב' : 'Connection error — try again', 'error');
+    console.error('Login error:', e);
+  }
   btn.textContent = t('login-btn'); btn.disabled = false;
 }
 
@@ -1079,11 +1091,15 @@ async function doSetup() {
 // ══════════════════════════════════════════════════
 async function afterLogin() {
   applyLang();
-  showScreen('portfolio');
-  renderPortfolio();
   loadFxRate().then(() => loadPrices());
-  // show admin button if admin pw known
+  showScreen('market');   // כניסה חוזרת → ישר לשוק המניות
+  renderStocks();
   if (S.adminPw) document.getElementById('adminBtn').style.display='inline-block';
+  // הוראות — רק אם לא נראו עדיין
+  if (!localStorage.getItem('tg_intro_shown')) {
+    localStorage.setItem('tg_intro_shown', '1');
+    showIntroModal();
+  }
 }
 
 // ══════════════════════════════════════════════════
@@ -1943,9 +1959,9 @@ async function init() {
       S.lang   = me.language || S.lang;
       localStorage.setItem('tg_lang', S.lang);
       applyLang();
-      showScreen('portfolio');
-      renderPortfolio();
       loadFxRate().then(() => loadPrices());
+      showScreen('market');   // טעינה ישירה → שוק המניות
+      renderStocks();
       // הוראות — רק אם לא נראו עדיין במכשיר הזה
       if (!localStorage.getItem('tg_intro_shown')) {
         localStorage.setItem('tg_intro_shown', '1');
