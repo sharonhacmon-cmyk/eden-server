@@ -912,8 +912,15 @@ async function api(path, method='GET', body=null) {
 // NAVIGATION
 // ══════════════════════════════════════════════════
 function showScreen(name, opts) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-'+name).classList.add('active');
+  // Force-hide כל המסכים via inline style — מנצח על display:flex ברמת ID
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.remove('active');
+    s.style.display = 'none';
+  });
+  const active = document.getElementById('screen-'+name);
+  active.classList.add('active');
+  active.style.display = ['login','setup'].includes(name) ? 'flex' : 'block';
+
   const nav = document.getElementById('bottomNav');
   const showNav    = ['portfolio','market','leaderboard','learn','article'].includes(name);
   const showTicker = ['portfolio','market','leaderboard'].includes(name);
@@ -923,9 +930,9 @@ function showScreen(name, opts) {
   document.querySelectorAll('.nav-tab').forEach(t => {
     t.classList.toggle('active', t.dataset.screen === name);
   });
-  // Scroll to top of active screen (below sticky ticker)
+  // גלול לתחילת הדף (לא scrollIntoView שיכול להראות מסכים נסתרים)
   if (!opts?.noScroll && ['portfolio','market','leaderboard','learn'].includes(name)) {
-    document.getElementById('screen-'+name).scrollIntoView({ behavior:'instant', block:'start' });
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }
 }
 
@@ -1059,7 +1066,8 @@ async function doSetup() {
     loadFxRate().then(() => loadPrices());
     showScreen('portfolio');
     renderPortfolio();
-    showIntroModal();
+    localStorage.setItem('tg_intro_shown', '1');
+    showIntroModal(); // פעם ראשונה — אוטומטי
   } catch(e) {
     btn.textContent = t('setup-btn'); btn.disabled = false;
     showToast(S.lang==='he' ? 'שגיאת חיבור — נסה/י שוב' : 'Connection error — try again', 'error');
@@ -1758,6 +1766,14 @@ function closeIntroModal() {
   document.body.style.overflow = ''; // unlock
 }
 
+function searchIntro(query) {
+  const q = query.trim().toLowerCase();
+  document.querySelectorAll('#introContent .intro-section').forEach(section => {
+    if (!q) { section.style.display = ''; return; }
+    section.style.display = section.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
 function renderIntro() {
   const el = document.getElementById('introContent');
   if (!el) return;
@@ -1768,6 +1784,11 @@ function renderIntro() {
     <h1>${he ? 'ברוכים לשוק ההון הווירטואלי!' : 'Welcome to the Virtual Stock Market!'}</h1>
     <p>${he ? 'לפני שמתחילים — כמה דקות כדאי לקרוא' : 'Before you start — take a minute to read this'}</p>
   </div>
+
+  <input type="search" id="introSearch"
+    placeholder="${he ? '🔍 חיפוש בהוראות...' : '🔍 Search instructions...'}"
+    oninput="searchIntro(this.value)"
+    style="width:100%;padding:12px 16px;border-radius:12px;background:rgba(255,255,255,0.06);border:1.5px solid rgba(124,92,252,0.3);color:#EEEEFF;font-family:'Heebo',sans-serif;font-size:16px;outline:none;margin-bottom:20px;direction:${he?'rtl':'ltr'}">
 
   <div class="intro-section">
     <h3>${he ? '🎮 מה יש כאן?' : '🎮 What is this?'}</h3>
@@ -1925,6 +1946,11 @@ async function init() {
       showScreen('portfolio');
       renderPortfolio();
       loadFxRate().then(() => loadPrices());
+      // הוראות — רק אם לא נראו עדיין במכשיר הזה
+      if (!localStorage.getItem('tg_intro_shown')) {
+        localStorage.setItem('tg_intro_shown', '1');
+        showIntroModal();
+      }
     } catch { showScreen('login'); }
   } else {
     showScreen('login');
