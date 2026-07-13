@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>פניות — שוק ההון בכיס</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Heebo', sans-serif; background: #07071A; color: #EEEEFF; min-height: 100vh; padding: 32px 16px; }
+h1 { font-size: 24px; margin-bottom: 24px; color: #A78BFA; }
+#login-box { max-width: 360px; margin: 80px auto; background: #0F0F2E; border-radius: 16px; padding: 32px; }
+#login-box input { width: 100%; padding: 12px 16px; border-radius: 10px; border: 1.5px solid rgba(124,92,252,0.4); background: #07071A; color: #EEEEFF; font-family: inherit; font-size: 16px; margin-bottom: 14px; text-align: right; }
+#login-box button { width: 100%; padding: 14px; border-radius: 10px; background: #7C5CFC; color: #fff; font-family: inherit; font-size: 16px; font-weight: 700; border: none; cursor: pointer; }
+#err { color: #FF5252; font-size: 14px; margin-top: 10px; text-align: center; }
+table { width: 100%; border-collapse: collapse; background: #0F0F2E; border-radius: 12px; overflow: hidden; }
+th { background: #13133A; padding: 14px 16px; font-size: 14px; color: #A78BFA; font-weight: 600; }
+td { padding: 13px 16px; font-size: 14px; border-bottom: 1px solid rgba(124,92,252,0.12); }
+tr:last-child td { border-bottom: none; }
+.del-btn { background: none; border: 1px solid #FF5252; color: #FF5252; border-radius: 6px; padding: 4px 10px; cursor: pointer; font-size: 12px; font-family: inherit; }
+.del-btn:hover { background: #FF5252; color: #fff; }
+.count { color: rgba(238,238,255,0.5); font-size: 14px; margin-bottom: 16px; }
+.empty { text-align: center; padding: 40px; color: rgba(238,238,255,0.4); }
+</style>
+</head>
+<body>
+
+<div id="login-box">
+  <h1 style="text-align:center; margin-bottom:20px;">🔐 כניסת מנהל</h1>
+  <input type="password" id="pass" placeholder="סיסמת מנהל" onkeydown="if(event.key==='Enter')login()">
+  <button onclick="login()">כניסה</button>
+  <p id="err"></p>
+</div>
+
+<div id="app" style="display:none; max-width:900px; margin:0 auto;">
+  <h1>📋 פניות — שוק ההון בכיס</h1>
+  <p class="count" id="count"></p>
+  <div id="table-wrap"></div>
+</div>
+
+<script>
+let adminPass = '';
+
+async function login() {
+  const p = document.getElementById('pass').value;
+  const r = await fetch('/admin/contacts', { headers: { 'x-admin-password': p } });
+  if (!r.ok) { document.getElementById('err').textContent = 'סיסמה שגויה'; return; }
+  adminPass = p;
+  document.getElementById('login-box').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  const data = await r.json();
+  renderTable(data);
+}
+
+function renderTable(data) {
+  document.getElementById('count').textContent = `סה"כ ${data.length} פניות`;
+  if (!data.length) {
+    document.getElementById('table-wrap').innerHTML = '<p class="empty">אין פניות עדיין</p>';
+    return;
+  }
+  document.getElementById('table-wrap').innerHTML = `
+    <table>
+      <thead><tr><th>שם</th><th>אימייל</th><th>טלפון</th><th>תאריך</th><th></th></tr></thead>
+      <tbody>
+        ${data.map(c => `
+          <tr>
+            <td>${c.name}</td>
+            <td>${c.email || '—'}</td>
+            <td>${c.phone || '—'}</td>
+            <td>${new Date(c.createdAt).toLocaleString('he-IL')}</td>
+            <td><button class="del-btn" onclick="del(${c.id})">מחק</button></td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>`;
+}
+
+async function del(id) {
+  if (!confirm('למחוק פנייה זו?')) return;
+  await fetch('/admin/contacts/' + id, { method: 'DELETE', headers: { 'x-admin-password': adminPass } });
+  const r = await fetch('/admin/contacts', { headers: { 'x-admin-password': adminPass } });
+  renderTable(await r.json());
+}
+</script>
+</body>
+</html>

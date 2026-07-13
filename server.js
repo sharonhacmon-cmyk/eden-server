@@ -481,6 +481,69 @@ app.delete('/admin/trading/players/:code', adminAuth, (req, res) => {
   res.json({ ok: true });
 });
 
+// ══════════════════════════════════════════════════
+// ── CONTACT LEADS ─────────────────────────────────
+// ══════════════════════════════════════════════════
+
+const CONTACTS_FILE = path.join(__dirname, 'contacts.json');
+
+function loadContacts() {
+  try { return JSON.parse(fs.readFileSync(CONTACTS_FILE, 'utf8')); }
+  catch { return []; }
+}
+function saveContacts(data) {
+  fs.writeFileSync(CONTACTS_FILE, JSON.stringify(data, null, 2), 'utf8');
+  syncContactsToGitHub(data);
+}
+
+async function syncContactsToGitHub(data) {
+  if (!GH_TOKEN) return;
+  try {
+    const headers = {
+      'Authorization': `token ${GH_TOKEN}`,
+      'Accept': 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json',
+      'User-Agent': 'EdenServer/1.0'
+    };
+    const url = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/contacts.json`;
+    const getRes = await fetch(url, { headers });
+    const current = await getRes.json();
+    const sha = current.sha;
+    const content = Buffer.from(JSON.stringify(data, null, 2)).toString('base64');
+    await fetch(url, {
+      method: 'PUT', headers,
+      body: JSON.stringify({ message: 'sync: update contacts', content, sha })
+    });
+  } catch(e) {
+    console.error('GitHub contacts sync error:', e.message);
+  }
+}
+
+// שמירת פנייה חדשה (ציבורי)
+app.post('/api/contact', (req, res) => {
+  const { name, email, phone } = req.body;
+  if (!name || (!email && !phone)) {
+    return res.status(400).json({ error: 'נא למלא שם ולפחות אחד מאמצעי הקשר' });
+  }
+  const contacts = loadContacts();
+  contacts.push({ id: Date.now(), name, email: email || '', phone: phone || '', createdAt: new Date().toISOString() });
+  saveContacts(contacts);
+  res.json({ ok: true });
+});
+
+// צפייה בפניות (מוגן)
+app.get('/admin/contacts', adminAuth, (req, res) => {
+  res.json(loadContacts());
+});
+
+// מחיקת פנייה
+app.delete('/admin/contacts/:id', adminAuth, (req, res) => {
+  const id = parseInt(req.params.id);
+  const contacts = loadContacts().filter(c => c.id !== id);
+  saveContacts(contacts);
+  res.json({ ok: true });
+});
+
 // ── בריאות ────────────────────────────────────────
 app.get('/health', (_, res) => res.json({ ok: true }));
 
