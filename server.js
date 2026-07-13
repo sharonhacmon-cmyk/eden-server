@@ -433,10 +433,26 @@ app.post('/api/trading/sell', tradingAuth, async (req, res) => {
   }
 });
 
-// Leaderboard
+// ── ותק וקטגוריה ──────────────────────────────────
+function getVetek(setupAt) {
+  const days = Math.floor((Date.now() - new Date(setupAt).getTime()) / 86400000);
+  if (days <= 30)  return { days, tier: 'junior',  label: '🌱 משקיע צעיר' };
+  if (days <= 90)  return { days, tier: 'active',  label: '📊 משקיע פעיל' };
+  return             { days, tier: 'veteran', label: '🏦 משקיע ותיק' };
+}
+
+// Leaderboard — מחזיר רק את הקטגוריה של השחקן המחובר
 app.get('/api/trading/leaderboard', async (req, res) => {
+  const token = (req.headers.authorization || '').replace('Bearer ', '');
+  const session = sessions.get(token);
+  if (!session) return res.status(401).json({ error: 'לא מחובר' });
+  const myCode = session.code.toUpperCase();
+
   try {
     const data = loadTradingData();
+    const myPlayer = data[myCode];
+    const myTier = myPlayer ? getVetek(myPlayer.setupAt).tier : 'junior';
+
     const allSymbols = new Set();
     Object.values(data).forEach(p => Object.keys(p.portfolio || {}).forEach(s => allSymbols.add(s)));
     const prices = {};
@@ -444,15 +460,27 @@ app.get('/api/trading/leaderboard', async (req, res) => {
       const bulk = await yahooQuoteBulk([...allSymbols]).catch(() => []);
       bulk.forEach(q => { prices[q.symbol] = q.regularMarketPrice; });
     }
-    const ranked = Object.values(data).map(p => {
-      let pv = 0;
-      Object.entries(p.portfolio || {}).forEach(([sym, h]) => { pv += (prices[sym] || h.avgPrice) * h.shares; });
-      const total = p.cash + pv;
-      const profit = total - STARTING_CASH;
-      return { name:p.name, gender:p.gender, total, cash:p.cash, portfolioValue:pv,
-               profit, profitPct: (profit/STARTING_CASH*100).toFixed(1), trades:(p.trades||[]).length };
-    }).sort((a,b) => b.total - a.total);
-    res.json(ranked);
+
+    const ranked = Object.entries(data)
+      .filter(([, p]) => p.setupAt && getVetek(p.setupAt).tier === myTier)
+      .map(([code, p]) => {
+        let pv = 0;
+        Object.entries(p.portfolio || {}).forEach(([sym, h]) => { pv += (prices[sym] || h.avgPrice) * h.shares; });
+        const total = p.cash + pv;
+        const profit = total - STARTING_CASH;
+        const vetek = getVetek(p.setupAt);
+        return {
+          name: p.name, gender: p.gender, total, cash: p.cash, portfolioValue: pv,
+          profit, profitPct: (profit/STARTING_CASH*100).toFixed(1),
+          trades: (p.trades||[]).length,
+          tier: vetek.tier, tierLabel: vetek.label, days: vetek.days,
+          isMe: code === myCode
+        };
+      })
+      .sort((a, b) => parseFloat(b.profitPct) - parseFloat(a.profitPct));
+
+    const tierLabel = myPlayer ? getVetek(myPlayer.setupAt).label : '🌱 משקיע צעיר';
+    res.json({ players: ranked, tierLabel });
   } catch { res.status(500).json({ error: 'שגיאה' }); }
 });
 
