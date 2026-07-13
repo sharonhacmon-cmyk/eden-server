@@ -251,9 +251,10 @@ const GH_TOKEN = process.env.GITHUB_TOKEN; // set in Render dashboard → Enviro
 const GH_OWNER = 'sharonhacmon-cmyk';
 const GH_REPO  = 'eden-server';
 const GH_PATH  = 'trading_data.json';
+const GH_CONTACTS_PATH = 'contacts.json';
 
-async function syncTradingDataToGitHub(data) {
-  if (!GH_TOKEN) return; // skip if token not configured
+async function ghSyncFile(filePath, data, commitMsg) {
+  if (!GH_TOKEN) { console.warn('GitHub sync skipped — GITHUB_TOKEN not set'); return; }
   try {
     const headers = {
       'Authorization': `token ${GH_TOKEN}`,
@@ -261,17 +262,73 @@ async function syncTradingDataToGitHub(data) {
       'Content-Type': 'application/json',
       'User-Agent': 'EdenServer/1.0'
     };
-    const url = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_PATH}`;
+    const url = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${filePath}`;
     const getRes = await fetch(url, { headers });
-    const current = await getRes.json();
-    const sha = current.sha;
+    const current = getRes.ok ? await getRes.json() : {};
+    const sha = current.sha; // undefined → creates new file
     const content = Buffer.from(JSON.stringify(data, null, 2)).toString('base64');
-    await fetch(url, {
-      method: 'PUT', headers,
-      body: JSON.stringify({ message: 'sync: update trading data', content, sha })
-    });
+    const body = { message: commitMsg, content };
+    if (sha) body.sha = sha;
+    const putRes = await fetch(url, { method: 'PUT', headers, body: JSON.stringify(body) });
+    if (!putRes.ok) {
+      const err = await putRes.text();
+      console.error(`GitHub sync failed [${filePath}]:`, err.slice(0, 200));
+    } else {
+      console.log(`GitHub sync OK [${filePath}]`);
+    }
   } catch(e) {
-    console.error('GitHub sync error:', e.message);
+    console.error(`GitHub sync error [${filePath}]:`, e.message);
+  }
+}
+
+async function syncTradingDataToGitHub(data) {
+  await ghSyncFile(GH_PATH, data, 'sync: update trading data');
+}
+
+// טעינת נתונים מ-GitHub בהפעלת השרת (Render מוחק את הקבצים בכל deploy)
+async function loadTradingDataFromGitHub() {
+  if (!GH_TOKEN) return;
+  try {
+    const headers = {
+      'Authorization': `token ${GH_TOKEN}`,
+      'Accept': 'application/vnd.github.v3+json',
+      'User-Agent': 'EdenServer/1.0'
+    };
+    const url = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_PATH}`;
+    const res = await fetch(url, { headers });
+    if (!res.ok) { console.log('No trading data on GitHub yet'); return; }
+    const json = await res.json();
+    const decoded = Buffer.from(json.content, 'base64').toString('utf8');
+    const data = JSON.parse(decoded);
+    if (Object.keys(data).length > 0) {
+      fs.writeFileSync(TRADING_FILE, JSON.stringify(data, null, 2), 'utf8');
+      console.log(`Loaded trading data from GitHub: ${Object.keys(data).length} players`);
+    }
+  } catch(e) {
+    console.error('Failed to load trading data from GitHub:', e.message);
+  }
+}
+
+async function loadContactsFromGitHub() {
+  if (!GH_TOKEN) return;
+  try {
+    const headers = {
+      'Authorization': `token ${GH_TOKEN}`,
+      'Accept': 'application/vnd.github.v3+json',
+      'User-Agent': 'EdenServer/1.0'
+    };
+    const url = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_CONTACTS_PATH}`;
+    const res = await fetch(url, { headers });
+    if (!res.ok) return;
+    const json = await res.json();
+    const decoded = Buffer.from(json.content, 'base64').toString('utf8');
+    const data = JSON.parse(decoded);
+    if (data.length > 0) {
+      fs.writeFileSync(CONTACTS_FILE, JSON.stringify(data, null, 2), 'utf8');
+      console.log(`Loaded contacts from GitHub: ${data.length} contacts`);
+    }
+  } catch(e) {
+    console.error('Failed to load contacts from GitHub:', e.message);
   }
 }
 
@@ -525,26 +582,7 @@ function saveContacts(data) {
 }
 
 async function syncContactsToGitHub(data) {
-  if (!GH_TOKEN) return;
-  try {
-    const headers = {
-      'Authorization': `token ${GH_TOKEN}`,
-      'Accept': 'application/vnd.github.v3+json',
-      'Content-Type': 'application/json',
-      'User-Agent': 'EdenServer/1.0'
-    };
-    const url = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/contacts.json`;
-    const getRes = await fetch(url, { headers });
-    const current = await getRes.json();
-    const sha = current.sha;
-    const content = Buffer.from(JSON.stringify(data, null, 2)).toString('base64');
-    await fetch(url, {
-      method: 'PUT', headers,
-      body: JSON.stringify({ message: 'sync: update contacts', content, sha })
-    });
-  } catch(e) {
-    console.error('GitHub contacts sync error:', e.message);
-  }
+  await ghSyncFile(GH_CONTACTS_PATH, data, 'sync: update contacts');
 }
 
 // שמירת פנייה חדשה (ציבורי)
@@ -575,5 +613,12 @@ app.delete('/admin/contacts/:id', adminAuth, (req, res) => {
 // ── בריאות ────────────────────────────────────────
 app.get('/health', (_, res) => res.json({ ok: true }));
 
+// ── הפעלת השרת — טעינה מ-GitHub לפני ה-listen ──────
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Eden server on port ${PORT}`));
+Promise.all([loadTradingDataFromGitHub(), loadContactsFromGitHub()])
+  .then(() => {
+    app.listen(PORT, () => console.log(`Eden server on port ${PORT}`));
+  })
+  .catch(() => {
+    app.listen(PORT, () => console.log(`Eden server on port ${PORT}`));
+  });
