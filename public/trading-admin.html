@@ -11,14 +11,14 @@
 body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:24px 16px}
 .title{font-size:24px;font-weight:900;margin-bottom:4px}
 .sub{font-size:14px;color:var(--dim);margin-bottom:24px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:14px}
-.stat-row{display:flex;gap:12px;margin-bottom:20px}
-.stat{flex:1;background:rgba(124,92,252,0.1);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:14px;overflow-x:auto}
+.stat-row{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.stat{flex:1;min-width:100px;background:rgba(124,92,252,0.1);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center}
 .stat-val{font-size:28px;font-weight:900}
 .stat-lbl{font-size:13px;color:var(--dim);margin-top:4px}
 table{width:100%;border-collapse:collapse;font-size:14px}
-th{text-align:right;padding:10px 8px;color:var(--dim);font-weight:600;border-bottom:1px solid var(--border)}
-td{padding:10px 8px;border-bottom:1px solid rgba(255,255,255,0.05)}
+th{text-align:right;padding:10px 8px;color:var(--dim);font-weight:600;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:10px 8px;border-bottom:1px solid rgba(255,255,255,0.05);white-space:nowrap}
 .up{color:var(--green)}.dn{color:var(--red)}
 .btn-sm{padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600}
 .btn-red{background:rgba(255,82,82,0.2);color:var(--red);border:1px solid rgba(255,82,82,0.4)}
@@ -45,6 +45,7 @@ td{padding:10px 8px;border-bottom:1px solid rgba(255,255,255,0.05)}
   <div class="stat"><div class="stat-val" id="s-players">—</div><div class="stat-lbl">משתתפים</div></div>
   <div class="stat"><div class="stat-val" id="s-trades">—</div><div class="stat-lbl">עסקאות</div></div>
   <div class="stat"><div class="stat-val" id="s-avg">—</div><div class="stat-lbl">ממוצע תיק</div></div>
+  <div class="stat"><div class="stat-val" id="s-profit">—</div><div class="stat-lbl">מרוויחים</div></div>
 </div>
 
 <div class="card">
@@ -53,16 +54,17 @@ td{padding:10px 8px;border-bottom:1px solid rgba(255,255,255,0.05)}
       <tr>
         <th>#</th>
         <th>שם</th>
-        <th>גיל</th>
+        <th>מגדר</th>
         <th>מזומן</th>
-        <th>תיק</th>
+        <th>שווי תיק</th>
+        <th>סה"כ</th>
         <th>רווח/הפסד</th>
         <th>עסקאות</th>
         <th>פעולות</th>
       </tr>
     </thead>
     <tbody id="tableBody">
-      <tr><td colspan="8" style="text-align:center;padding:32px;color:var(--dim)">טוען...</td></tr>
+      <tr><td colspan="9" style="text-align:center;padding:32px;color:var(--dim)">טוען...</td></tr>
     </tbody>
   </table>
 </div>
@@ -72,6 +74,15 @@ const params = new URLSearchParams(location.search);
 const PW = params.get('pw') || prompt('סיסמת אדמין:');
 if (!PW) { document.body.innerHTML = '<div style="padding:40px;color:#ff5252;font-size:20px">גישה נדחתה</div>'; }
 
+const STARTING_CASH = 50000;
+
+function fmt(n) {
+  const sign = n < 0 ? '-' : '';
+  return sign + '₪' + Math.abs(Math.round(n)).toLocaleString('he-IL');
+}
+
+const GENDER_LABEL = { female:'בת', male:'בן', other:'אחר' };
+
 async function adminApi(path, method='GET', body=null) {
   const opts = { method, headers: { 'Content-Type':'application/json','x-admin-password': PW } };
   if (body) opts.body = JSON.stringify(body);
@@ -79,51 +90,56 @@ async function adminApi(path, method='GET', body=null) {
   return r.json();
 }
 
-let leaderData = [];
-
 async function loadData() {
-  const [allPlayers, leaderboard] = await Promise.all([
+  const [allPlayers, prices] = await Promise.all([
     adminApi('/admin/trading/all'),
-    fetch('/api/trading/leaderboard').then(r=>r.json()).catch(()=>[])
+    fetch('/api/stocks').then(r=>r.json()).catch(()=>({}))
   ]);
-  leaderData = Array.isArray(leaderboard) ? leaderboard : [];
 
   if (allPlayers.error) {
     showToast('שגיאת גישה — בדוק סיסמה', 'err');
     return;
   }
 
-  const codes = Object.keys(allPlayers);
-  const players = Object.entries(allPlayers).map(([code, p]) => ({ code, ...p }));
+  const players = Object.entries(allPlayers).map(([code, p]) => {
+    // חישוב שווי תיק לפי מחירים עדכניים (או avgPrice אם אין)
+    let portfolioVal = 0;
+    Object.entries(p.portfolio || {}).forEach(([sym, h]) => {
+      const price = prices[sym]?.price || h.avgPrice;
+      portfolioVal += price * h.shares;
+    });
+    const total  = p.cash + portfolioVal;
+    const profit = total - STARTING_CASH;
+    return { code, ...p, portfolioVal, total, profit };
+  });
 
-  // Stats
+  // סטטיסטיקות
   document.getElementById('s-players').textContent = players.length;
   const totalTrades = players.reduce((s,p) => s + (p.trades||[]).length, 0);
   document.getElementById('s-trades').textContent = totalTrades;
 
-  // Avg from leaderboard
-  if (leaderData.length) {
-    const avg = leaderData.reduce((s,p) => s+p.total, 0) / leaderData.length;
-    document.getElementById('s-avg').textContent = '$' + avg.toLocaleString('en',{maximumFractionDigits:0});
+  if (players.length) {
+    const avg = players.reduce((s,p) => s + p.total, 0) / players.length;
+    document.getElementById('s-avg').textContent = fmt(avg);
+    const profiting = players.filter(p => p.profit > 0).length;
+    document.getElementById('s-profit').textContent = profiting + '/' + players.length;
   }
 
-  // Map leaderboard to players
-  const lbMap = {};
-  leaderData.forEach(p => { lbMap[p.name] = p; });
+  // מיון לפי תשואה
+  players.sort((a,b) => b.profit - a.profit);
 
   const body = document.getElementById('tableBody');
   body.innerHTML = players.map((p, i) => {
-    const lb = lbMap[p.name] || {};
-    const profit = lb.profit ?? 0;
-    const total  = lb.total  ?? p.cash;
-    const up = profit >= 0;
+    const up = p.profit >= 0;
+    const pct = ((p.profit / STARTING_CASH) * 100).toFixed(1);
     return `<tr>
       <td>${i+1}</td>
       <td><strong>${p.name}</strong></td>
-      <td>${p.age}</td>
-      <td>$${Math.round(p.cash).toLocaleString('en')}</td>
-      <td>$${Math.round(total).toLocaleString('en')}</td>
-      <td class="${up?'up':'dn'}">${up?'+':''}$${Math.round(profit).toLocaleString('en')}</td>
+      <td>${GENDER_LABEL[p.gender] || '—'}</td>
+      <td>${fmt(p.cash)}</td>
+      <td>${fmt(p.portfolioVal)}</td>
+      <td><strong>${fmt(p.total)}</strong></td>
+      <td class="${up?'up':'dn'}">${up?'+':''}${fmt(p.profit)} (${up?'+':''}${pct}%)</td>
       <td>${(p.trades||[]).length}</td>
       <td>
         <button class="btn-sm btn-blue" onclick="resetPlayer('${p.code}','${p.name}')">איפוס</button>
@@ -131,7 +147,7 @@ async function loadData() {
         <button class="btn-sm btn-red" onclick="deletePlayer('${p.code}','${p.name}')">מחק</button>
       </td>
     </tr>`;
-  }).join('') || '<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--dim)">אין משתתפים עדיין</td></tr>';
+  }).join('') || '<tr><td colspan="9" style="text-align:center;padding:24px;color:var(--dim)">אין משתתפים עדיין</td></tr>';
 }
 
 async function resetPlayer(code, name) {
