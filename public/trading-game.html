@@ -335,6 +335,20 @@ body {
 .toast.success { border-color:var(--green); color:var(--green); }
 .toast.error   { border-color:var(--red);   color:var(--red); }
 
+/* ── MILESTONE TOAST ────────────────── */
+#milestoneToast {
+  position:fixed; bottom:calc(var(--nav-h) + 16px); left:50%;
+  transform:translateX(-50%) translateY(120px);
+  background:linear-gradient(135deg,#1A1050 0%,#0A1A3A 100%);
+  border:1.5px solid rgba(124,92,252,0.5);
+  border-radius:18px; padding:18px 24px;
+  font-size:15px; font-weight:600; z-index:500;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  max-width:min(90vw,360px); text-align:center;
+  box-shadow:0 8px 32px rgba(124,92,252,0.3);
+}
+#milestoneToast.show { transform:translateX(-50%) translateY(0); }
+
 /* ── TRADES HISTORY ──────────────────── */
 .trade-row {
   padding:12px 20px; display:flex; align-items:center; gap:12px;
@@ -453,6 +467,8 @@ body {
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
+<!-- MILESTONE TOAST -->
+<div id="milestoneToast"></div>
 
 <!-- ══ SCREEN: LOGIN ══════════════════════════════ -->
 <div class="screen active" id="screen-login">
@@ -569,6 +585,9 @@ body {
     <div id="catExplainerText" style="font-size:13px;color:rgba(238,238,255,0.8);line-height:1.7"></div>
   </div>
 
+  <!-- רמז מתחלף — מתעדכן בכל renderStocks -->
+  <div id="marketHint" style="display:none;margin:0 16px 10px;padding:10px 14px;border-radius:12px;background:rgba(124,92,252,0.08);border:1px solid rgba(124,92,252,0.2);font-size:13px;color:rgba(238,238,255,0.75);line-height:1.5"></div>
+
   <div id="stocksList">
     <div class="loading-dots"><span></span><span></span><span></span></div>
   </div>
@@ -606,6 +625,8 @@ body {
       </div>
     </div>
     <div class="modal-owned" id="modalOwned"></div>
+    <!-- הנחיה לקנייה ראשונה — מוצגת רק אם עדיין אין עסקאות -->
+    <div id="firstBuyGuide" style="display:none"></div>
     <div id="modalFx" style="display:none;background:rgba(64,196,255,0.08);border:1px solid rgba(64,196,255,0.25);border-radius:10px;padding:9px 14px;margin-bottom:10px;font-size:13px;color:rgba(64,196,255,0.9)"></div>
     <div id="modalDesc" style="background:rgba(124,92,252,0.1);border:1px solid rgba(124,92,252,0.3);border-radius:12px;padding:12px 14px;margin-bottom:10px;font-size:14px;color:rgba(238,238,255,0.8);line-height:1.6;display:none"></div>
 
@@ -646,6 +667,10 @@ body {
       <button type="button" class="step-btn" onclick="stepShares(1)">+</button>
     </div>
     <div class="total-preview" id="totalPreview">סה"כ: <strong id="totalVal">$189.50</strong></div>
+    <!-- אחוז ריכוז מהתיק — אזהרה אם קונים יותר מדי ממניה אחת -->
+    <div id="concentrationWarning" style="display:none;font-size:12px;text-align:center;margin-bottom:6px;padding:5px 10px;border-radius:8px;background:rgba(255,255,255,0.04)"></div>
+    <!-- תצוגת רווח/הפסד בעת מכירה -->
+    <div id="sellPLPreview" style="display:none"></div>
     <button type="button" class="btn" id="confirmBtn" onclick="confirmTrade()">אשר קנייה</button>
   </div>
 </div>
@@ -1217,7 +1242,18 @@ function renderPortfolio() {
   const list = document.getElementById('holdingsList');
   const holdings = Object.entries(p.portfolio || {});
   if (!holdings.length) {
-    list.innerHTML = `<div class="empty-state"><div class="icon">📭</div>${t('no-holdings').replace('\n','<br>')}</div>`;
+    const he = S.lang !== 'en';
+    list.innerHTML = `<div class="empty-state" style="padding:32px 24px">
+      <div style="font-size:56px;margin-bottom:12px">📭</div>
+      <div style="font-size:18px;font-weight:800;margin-bottom:8px">${he ? 'התיק שלך ריק — בוא נתחיל!' : "Your portfolio is empty — let's go!"}</div>
+      <div style="font-size:14px;color:var(--dim);margin-bottom:20px;line-height:1.7">${he
+        ? '💰 קיבלת <strong style="color:var(--gold)">50,000 ₪</strong> וירטואלי.<br>💡 טיפ: אל תשקיע הכל במניה אחת — התחל עם 2-3 מניות שונות.'
+        : '💰 You got <strong style="color:var(--gold)">₪50,000</strong> virtual money.<br>💡 Tip: Don\'t put it all in one stock — start with 2-3 different ones.'
+      }</div>
+      <button onclick="navigate('market')" class="btn btn-primary" style="max-width:260px;margin:0 auto;display:block;font-size:15px">
+        ${he ? '🛒 עבור לשוק וקנה את הראשונה' : '🛒 Go to Market & buy your first stock'}
+      </button>
+    </div>`;
   } else {
     list.innerHTML = holdings.map(([sym, h]) => {
       const info  = STOCK_INFO[sym] || { emoji:'📈', nameHe:sym, nameEn:sym };
@@ -1361,8 +1397,39 @@ function setFilter(f) {
   renderStocks();
 }
 
+const MARKET_HINTS = {
+  he: [
+    '💡 מניה שירדה הרבה לא בהכרח זולה — חשוב להבין <strong>למה</strong> היא ירדה',
+    '💡 ETF = סל של מניות. במקום לבחור אחת — אתה קונה הרבה בבת אחת ומפחית סיכון',
+    '💡 שים לב לקטגוריות: ישראלי, מניות, אג"ח, סחורות — כל אחד מתנהג אחרת בשוק',
+    '💡 אחוז השינוי מראה כמה המניה זזה <strong>היום</strong>. שינוי גדול = תנודתיות גבוהה',
+    '💡 אגרת חוב (אג"ח) בדרך כלל יציבה יותר ממניה — פחות רווח, אבל גם פחות סיכון',
+    '💡 לחץ על כל מניה ← "למה המניה זזה?" לקבל הסבר AI על תנועת המחיר',
+    '💡 פיזור חכם: אל תשים יותר מ-30% מהכסף במניה אחת',
+    '💡 זהב ונפט מושפעים מאירועים גיאופוליטיים — מלחמה, בחירות, עסקאות נפט',
+  ],
+  en: [
+    '💡 A stock that dropped a lot isn\'t necessarily cheap — understand <strong>why</strong> it fell',
+    '💡 ETF = a basket of stocks. Instead of picking one, you buy many at once — less risk',
+    '💡 Notice the categories: Israeli, US, Bonds, Commodities — each behaves differently',
+    '💡 The % change shows how much the stock moved <strong>today</strong>. Big moves = high volatility',
+    '💡 Bonds are usually more stable than stocks — lower upside, but lower risk too',
+    '💡 Tap any stock → "Why did it move?" for an AI explanation of the price change',
+    '💡 Smart diversification: don\'t put more than 30% of your money in one stock',
+    '💡 Gold and oil are affected by geopolitical events — wars, elections, oil deals',
+  ]
+};
+let _hintIdx = -1;
+
 function renderStocks() {
   const list = document.getElementById('stocksList');
+  // רמז מתחלף — מציג רמז אחד אקראי שונה מהקודם
+  const hints = MARKET_HINTS[S.lang] || MARKET_HINTS.he;
+  let next = _hintIdx;
+  while (next === _hintIdx) next = Math.floor(Math.random() * hints.length);
+  _hintIdx = next;
+  const hintEl = document.getElementById('marketHint');
+  if (hintEl) { hintEl.innerHTML = hints[_hintIdx]; hintEl.style.display = 'block'; }
   const symbols = Object.keys(STOCK_INFO).filter(sym => {
     if (currentFilter === 'all') return true;
     return STOCK_INFO[sym].cat === currentFilter;
@@ -1438,6 +1505,24 @@ function openModal(sym) {
   document.getElementById('edenBtn').textContent = '🤔 למה המניה זזה היום?';
   document.getElementById('edenBtn').disabled = false;
   document.getElementById('edenBtn').style.display = 'block';
+
+  // הנחיה לקנייה ראשונה — מוצגת רק אם עדיין אין עסקאות כלל
+  const guideEl = document.getElementById('firstBuyGuide');
+  const isFirstEver = !S.player?.trades?.length;
+  if (isFirstEver && guideEl) {
+    const he = S.lang !== 'en';
+    guideEl.innerHTML = `<div style="background:rgba(255,215,0,0.07);border:1px solid rgba(255,215,0,0.3);border-radius:12px;padding:11px 14px;margin-bottom:10px;font-size:13px;line-height:1.7">
+      <strong style="color:var(--gold)">🎓 ${he ? 'הקנייה הראשונה שלך!' : 'Your first purchase!'}</strong><br>
+      ${he
+        ? '• המחיר שאתה רואה הוא <strong>ליחידה אחת</strong> של המניה<br>• אפשר להתחיל עם מניה אחת בלבד — אין מינימום!<br>• השאר מזומן בצד לקניות נוספות'
+        : '• The price shown is <strong>per single share</strong><br>• You can start with just 1 share — no minimum!<br>• Keep some cash for future purchases'
+      }
+    </div>`;
+    guideEl.style.display = 'block';
+  } else if (guideEl) {
+    guideEl.style.display = 'none';
+  }
+
   setModalTab('buy');
   updateTotal();
   document.getElementById('modalOverlay').classList.add('open');
@@ -1465,10 +1550,11 @@ function stepShares(d) {
 }
 
 function updateTotal() {
-  const shares  = parseFloat(document.getElementById('sharesInput').value)||1;
+  const shares   = parseFloat(document.getElementById('sharesInput').value)||1;
   const nisPrice = S.prices[S.modalSym]?.price || 0;
-  const nisTot  = shares * nisPrice;
-  const sym     = S.modalSym;
+  const nisTot   = shares * nisPrice;
+  const sym      = S.modalSym;
+  const he       = S.lang !== 'en';
   let display;
   if (isUSD(sym)) {
     const usdTot = (nisTot / FX_RATE).toFixed(2);
@@ -1477,7 +1563,61 @@ function updateTotal() {
   } else {
     display = fmt(nisTot);
   }
-  document.getElementById('totalPreview').innerHTML = `${t('total')}: <strong>${display}</strong>`;
+
+  // חישוב יתרת מזומן אחרי קנייה
+  const afterCash = (S.player?.cash || 0) - nisTot;
+  const afterStr = afterCash >= 0
+    ? `<span style="color:var(--dim);font-size:12px"> · ${he ? 'יישאר' : 'remaining'}: ${fmt(afterCash)}</span>`
+    : `<span style="color:var(--red);font-size:12px"> · ${he ? '⚠️ אין מספיק מזומן' : '⚠️ Not enough cash'}</span>`;
+
+  document.getElementById('totalPreview').innerHTML = `${t('total')}: <strong>${display}</strong>${S.modalTab === 'buy' ? afterStr : ''}`;
+
+  // אזהרת ריכוז (קנייה בלבד)
+  const concEl = document.getElementById('concentrationWarning');
+  if (concEl) {
+    if (S.modalTab === 'buy' && S.player && nisTot > 0) {
+      const totalPortfolio = (S.player.cash || 0) + Object.entries(S.player.portfolio || {}).reduce((s,[k,h]) => {
+        return s + (S.prices[k]?.price || h.avgPrice) * h.shares;
+      }, 0);
+      const pct = totalPortfolio > 0 ? Math.round((nisTot / totalPortfolio) * 100) : 0;
+      if (pct >= 50) {
+        concEl.innerHTML = `🔴 ${he ? `זה <strong>${pct}% מהתיק</strong> במניה אחת — מסוכן מאוד! פזר יותר.` : `This is <strong>${pct}% of your portfolio</strong> in one stock — very risky! Diversify.`}`;
+        concEl.style.color = 'var(--red)'; concEl.style.background = 'rgba(255,82,82,0.08)'; concEl.style.border = '1px solid rgba(255,82,82,0.3)'; concEl.style.display = 'block';
+      } else if (pct >= 30) {
+        concEl.innerHTML = `🟡 ${he ? `זה <strong>${pct}% מהתיק</strong> — מומלץ לפזר לכמה מניות.` : `This is <strong>${pct}% of your portfolio</strong> — consider spreading across more stocks.`}`;
+        concEl.style.color = 'var(--gold)'; concEl.style.background = 'rgba(255,215,0,0.07)'; concEl.style.border = '1px solid rgba(255,215,0,0.25)'; concEl.style.display = 'block';
+      } else if (pct > 0) {
+        concEl.innerHTML = `✅ ${he ? `${pct}% מהתיק — פיזור טוב!` : `${pct}% of portfolio — good diversification!`}`;
+        concEl.style.color = 'var(--green)'; concEl.style.background = 'rgba(0,230,118,0.06)'; concEl.style.border = '1px solid rgba(0,230,118,0.2)'; concEl.style.display = 'block';
+      } else {
+        concEl.style.display = 'none';
+      }
+    } else {
+      concEl.style.display = 'none';
+    }
+  }
+
+  // תצוגת רווח/הפסד במכירה
+  const plEl = document.getElementById('sellPLPreview');
+  if (plEl) {
+    if (S.modalTab === 'sell' && S.player?.portfolio?.[sym]) {
+      const h = S.player.portfolio[sym];
+      const avgNis = h.avgPrice;
+      const currentNis = nisPrice;
+      const plPerShare = currentNis - avgNis;
+      const totalPL = plPerShare * shares;
+      const up = totalPL >= 0;
+      const sign = up ? '+' : '';
+      plEl.innerHTML = `<div style="background:${up?'rgba(0,230,118,0.06)':'rgba(255,82,82,0.06)'};border:1px solid ${up?'rgba(0,230,118,0.25)':'rgba(255,82,82,0.25)'};border-radius:10px;padding:9px 14px;margin-bottom:8px;font-size:13px">
+        <span style="color:var(--dim)">${he ? 'קנית ב:' : 'Avg cost:'} ${fmtPrice(sym, avgNis)}</span> &nbsp;|&nbsp;
+        <span style="color:var(--dim)">${he ? 'עכשיו:' : 'Now:'} ${fmtPrice(sym, currentNis)}</span><br>
+        <span style="color:${up?'var(--green)':'var(--red)'};font-weight:700">${he ? 'רווח/הפסד:' : 'P&L:'} ${sign}${fmt(totalPL)}</span>
+      </div>`;
+      plEl.style.display = 'block';
+    } else {
+      plEl.style.display = 'none';
+    }
+  }
 }
 
 async function confirmTrade() {
@@ -1485,21 +1625,134 @@ async function confirmTrade() {
   if (shares <= 0) return;
   const btn = document.getElementById('confirmBtn');
   btn.textContent = '...'; btn.disabled = true;
-  const endpoint = S.modalTab === 'buy' ? '/api/trading/buy' : '/api/trading/sell';
+  const isBuy = S.modalTab === 'buy';
+  const endpoint = isBuy ? '/api/trading/buy' : '/api/trading/sell';
+
+  // שמור מצב לפני העסקה לצורך בדיקת מיילסטונים
+  const tradesBefore = (S.player?.trades || []).length;
+  const portfolioBefore = Object.keys(S.player?.portfolio || {}).length;
+
   const r = await api(endpoint, 'POST', { symbol: S.modalSym, shares });
   btn.disabled = false; setModalTab(S.modalTab);
   if (r.error) { showToast(r.error, 'error'); return; }
   document.getElementById('modalOverlay').classList.remove('open');
   S.player.cash      = r.cash;
   S.player.portfolio = r.portfolio;
-  // refresh trades
   const me = await api('/api/trading/me');
   if (!me.error) S.player = me;
   renderPortfolio();
   renderStocks();
   const sym  = S.modalSym;
   const info = STOCK_INFO[sym] || { emoji:'📈' };
-  showToast(`${info.emoji} ${sym} ×${shares} ${t(S.modalTab==='buy'?'bought':'sold')}`, 'success');
+  const he   = S.lang !== 'en';
+
+  // טוסט בסיסי
+  if (tradesBefore === 0 && isBuy) {
+    // קנייה ראשונה — הודעה מיוחדת
+    setTimeout(() => showMilestone(
+      '🎉',
+      he ? 'ביצעת את הקנייה הראשונה שלך!' : 'You made your first purchase!',
+      he ? 'המניה עכשיו בתיק — בדוק אותה שוב בעוד שבוע!' : 'The stock is in your portfolio — check it again in a week!'
+    ), 600);
+  } else {
+    showToast(`${info.emoji} ${sym} ×${shares} ${t(isBuy?'bought':'sold')}`, 'success');
+  }
+
+  // בדיקת אבני דרך
+  checkMilestones(portfolioBefore, tradesBefore, isBuy);
+}
+
+// ══════════════════════════════════════════════════
+// MILESTONES
+// ══════════════════════════════════════════════════
+function showMilestone(icon, title, body) {
+  const el = document.getElementById('milestoneToast');
+  if (!el) return;
+  el.innerHTML = `<div style="font-size:36px;margin-bottom:6px">${icon}</div>
+    <div style="font-weight:800;font-size:16px;margin-bottom:4px">${title}</div>
+    <div style="font-size:13px;color:rgba(238,238,255,0.75);line-height:1.5">${body}</div>`;
+  el.classList.add('show');
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.remove('show'), 4500);
+}
+
+function checkMilestones(portfolioBefore, tradesBefore, isBuy) {
+  const he = S.lang !== 'en';
+  const portfolio = S.player?.portfolio || {};
+  const trades    = S.player?.trades    || [];
+  const symbols   = Object.keys(portfolio);
+  const numSymbols = symbols.length;
+
+  // 3 מניות שונות
+  if (portfolioBefore < 3 && numSymbols >= 3 && !localStorage.getItem('ms_3stocks')) {
+    localStorage.setItem('ms_3stocks', '1');
+    setTimeout(() => showMilestone('🌟',
+      he ? 'פיזור!' : 'Diversified!',
+      he ? `יש לך ${numSymbols} מניות שונות בתיק. פיזור מפחית סיכון — מושג בסיסי בהשקעות!`
+         : `You have ${numSymbols} different stocks. Diversification reduces risk — a key investing principle!`
+    ), 700);
+    return;
+  }
+
+  // רווח ראשון על נייר
+  if (!localStorage.getItem('ms_first_profit')) {
+    const hasProfit = symbols.some(sym => {
+      const h = portfolio[sym];
+      const cur = S.prices[sym]?.price || h.avgPrice;
+      return cur > h.avgPrice;
+    });
+    if (hasProfit) {
+      localStorage.setItem('ms_first_profit', '1');
+      setTimeout(() => showMilestone('📈',
+        he ? 'יש לך רווח על הנייר!' : 'You have a paper profit!',
+        he ? 'זכור — הרווח נספר רק כשמוכרים. כל עוד לא מכרת — זה "רווח על הנייר".'
+           : 'Remember — profit counts only when you sell. Until then it\'s a "paper gain".'
+      ), 700);
+      return;
+    }
+  }
+
+  // הפסד ראשון על נייר
+  if (!localStorage.getItem('ms_first_loss')) {
+    const hasLoss = symbols.some(sym => {
+      const h = portfolio[sym];
+      const cur = S.prices[sym]?.price || h.avgPrice;
+      return cur < h.avgPrice * 0.98;
+    });
+    if (hasLoss) {
+      localStorage.setItem('ms_first_loss', '1');
+      setTimeout(() => showMilestone('📉',
+        he ? 'יש לך הפסד? בלי דאגה!' : 'A loss? No worries!',
+        he ? 'ירידות הן חלק רגיל מהשוק. אל תמכור בפאניקה — שוק עולה בטווח הארוך.'
+           : 'Dips are a normal part of the market. Don\'t panic sell — the market rises long-term.'
+      ), 700);
+      return;
+    }
+  }
+
+  // מכירה ראשונה
+  if (!isBuy && !localStorage.getItem('ms_first_sell')) {
+    localStorage.setItem('ms_first_sell', '1');
+    setTimeout(() => showMilestone('💰',
+      he ? 'ביצעת את המכירה הראשונה!' : 'You made your first sale!',
+      he ? 'שים לב — מכרת ברווח או בהפסד? בדוק בהיסטוריית העסקאות!'
+         : 'Check — did you sell at a profit or loss? See your trade history!'
+    ), 700);
+    return;
+  }
+
+  // קטגוריות מגוונות (3+ סוגים שונים)
+  if (!localStorage.getItem('ms_diverse_cats')) {
+    const cats = new Set(symbols.map(s => STOCK_INFO[s]?.cat).filter(Boolean));
+    if (cats.size >= 3) {
+      localStorage.setItem('ms_diverse_cats', '1');
+      setTimeout(() => showMilestone('🏆',
+        he ? 'משקיע מגוון!' : 'Diversified investor!',
+        he ? `יש לך נכסים מ-${cats.size} קטגוריות שונות. ככה נראה תיק מאוזן אמיתי!`
+           : `You hold assets from ${cats.size} different categories. That\'s a truly balanced portfolio!`
+      ), 700);
+    }
+  }
 }
 
 // ══════════════════════════════════════════════════
