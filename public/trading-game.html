@@ -338,7 +338,7 @@ body {
 /* ── MILESTONE TOAST ────────────────── */
 #milestoneToast {
   position:fixed; bottom:calc(var(--nav-h) + 16px); left:50%;
-  transform:translateX(-50%) translateY(200px);
+  transform:translateX(-50%) translateY(calc(100% + var(--nav-h) + 40px));
   background:linear-gradient(135deg,#1A1050 0%,#0A1A3A 100%);
   border:1.5px solid rgba(124,92,252,0.5);
   border-radius:18px; padding:18px 24px 14px;
@@ -347,8 +347,9 @@ body {
   max-width:min(90vw,360px); text-align:center;
   box-shadow:0 8px 32px rgba(124,92,252,0.3);
   cursor:pointer; touch-action:manipulation;
+  pointer-events:none;
 }
-#milestoneToast.show { transform:translateX(-50%) translateY(0); }
+#milestoneToast.show { transform:translateX(-50%) translateY(0); pointer-events:auto; }
 
 /* ── TRADES HISTORY ──────────────────── */
 .trade-row {
