@@ -3,7 +3,7 @@
     "name": "שרון",
     "gender": "female",
     "language": "he",
-    "cash": 37605.97,
+    "cash": 27844.97,
     "portfolio": {
       "CHKP": {
         "shares": 9,
@@ -12,9 +12,21 @@
       "MNDY": {
         "shares": 8,
         "avgPrice": 954.77
+      },
+      "SPY": {
+        "shares": 5,
+        "avgPrice": 1952.2
       }
     },
     "trades": [
+      {
+        "type": "buy",
+        "symbol": "SPY",
+        "shares": 5,
+        "price": 1952.2,
+        "total": 9761,
+        "date": "2026-07-14T15:13:55.402Z"
+      },
       {
         "type": "buy",
         "symbol": "MNDY",
