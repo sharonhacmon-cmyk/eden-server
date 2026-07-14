@@ -120,9 +120,24 @@
     "name": "Test3",
     "gender": "female",
     "language": "he",
-    "cash": 50000,
-    "portfolio": {},
-    "trades": [],
+    "cash": 16196.630000000005,
+    "portfolio": {
+      "QQQ": {
+        "shares": 20,
+        "avgPrice": 1688.48
+      }
+    },
+    "trades": [
+      {
+        "type": "buy",
+        "symbol": "QQQ",
+        "shares": 20,
+        "price": 1688.48,
+        "total": 33769.6,
+        "fee": 33.77,
+        "date": "2026-07-14T16:05:26.225Z"
+      }
+    ],
     "setupAt": "2026-07-14T16:04:50.241Z"
   }
 }
