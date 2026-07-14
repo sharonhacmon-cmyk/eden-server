@@ -980,11 +980,27 @@ function toggleLang() {
 // ══════════════════════════════════════════════════
 // API
 // ══════════════════════════════════════════════════
-async function api(path, method='GET', body=null) {
+async function api(path, method='GET', body=null, _retry=false) {
   const opts = { method, headers: { 'Content-Type':'application/json' } };
   if (S.token) opts.headers['Authorization'] = 'Bearer ' + S.token;
   if (body) opts.body = JSON.stringify(body);
   const r = await fetch(path, opts);
+  // אם קיבלנו 401 ויש קוד שמור — ננסה להתחבר מחדש אוטומטית (פעם אחת בלבד)
+  if (r.status === 401 && !_retry) {
+    const savedCode = localStorage.getItem('tg_code');
+    if (savedCode) {
+      const re = await fetch('/api/login', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ password: savedCode })
+      });
+      const rd = await re.json();
+      if (rd.token) {
+        S.token = rd.token;
+        localStorage.setItem('tg_token', rd.token);
+        return api(path, method, body, true); // retry once with new token
+      }
+    }
+  }
   return r.json();
 }
 
@@ -1042,6 +1058,7 @@ async function doLogin() {
     }
     S.token = r.token;
     localStorage.setItem('tg_token', r.token);
+    localStorage.setItem('tg_code', code); // שמור קוד לחיבור מחדש אוטומטי
     const me = await api('/api/trading/me');
     if (me.error) {
       showToast(S.lang==='he' ? 'שגיאה בטעינת פרופיל' : 'Profile load error', 'error');
@@ -2052,15 +2069,26 @@ End with one thing to watch for with this company.`;
     });
     const data = await r.json();
     if (data.content) {
-      document.getElementById('edenAnswer').textContent = data.content;
+      document.getElementById('edenAnswer').innerHTML = data.content;
       document.getElementById('edenBox').style.display = 'block';
       document.getElementById('edenBox').scrollIntoView({ behavior:'smooth', block:'nearest' });
-      btn.style.display = 'none';  // hide button after answer — close ✕ exists on the box
+      btn.style.display = 'none';
     } else {
-      btn.textContent = '🤔 למה המניה זזה היום?';
+      // שגיאת שרת — הצג הודעה ידידותית
+      const msg = r.status === 401
+        ? (langHe ? '⚠️ הסשן פג — רענן את הדף ונסה שוב.' : '⚠️ Session expired — refresh the page and try again.')
+        : (langHe ? '⚠️ לא הצלחתי להתחבר לעדן כרגע — נסה שוב בעוד שנייה.' : '⚠️ Could not reach Eden AI right now — try again in a moment.');
+      document.getElementById('edenAnswer').textContent = msg;
+      document.getElementById('edenBox').style.display = 'block';
+      btn.textContent = langHe ? '🔄 נסה שוב' : '🔄 Try again';
     }
   } catch {
-    btn.textContent = '🤔 למה המניה זזה היום?';
+    const langHe = S.lang !== 'en';
+    document.getElementById('edenAnswer').textContent = langHe
+      ? '⚠️ אין חיבור לשרת — בדוק אינטרנט ונסה שוב.'
+      : '⚠️ No server connection — check your internet and try again.';
+    document.getElementById('edenBox').style.display = 'block';
+    btn.textContent = langHe ? '🔄 נסה שוב' : '🔄 Try again';
   }
   btn.disabled = false;
 }
