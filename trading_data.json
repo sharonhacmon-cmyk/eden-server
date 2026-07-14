@@ -409,5 +409,14 @@
       }
     ],
     "setupAt": "2026-07-14T20:38:33.394Z"
+  },
+  "TEST-9": {
+    "name": "test9",
+    "gender": "male",
+    "language": "he",
+    "cash": 50000,
+    "portfolio": {},
+    "trades": [],
+    "setupAt": "2026-07-14T21:39:39.171Z"
   }
 }
