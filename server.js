@@ -500,6 +500,26 @@ function getVetek(setupAt) {
   return             { days, tier: 'veteran', label: '🏦 משקיע ותיק' };
 }
 
+// Quiz bonus
+app.post('/api/trading/quiz', tradingAuth, (req, res) => {
+  const { period, week, correct } = req.body;
+  if (!correct) return res.json({ ok: true, bonus: 0 });
+  const data = loadTradingData();
+  const player = data[req.playerCode];
+  if (!player) return res.status(404).json({ error: 'לא נמצא' });
+  const year = new Date().getFullYear();
+  const key = `quiz_${year}_w${week}_${period}`;
+  if (!player.quizAnswered) player.quizAnswered = {};
+  if (player.quizAnswered[key]) return res.json({ ok: true, alreadyAnswered: true, cash: player.cash });
+  player.quizAnswered[key] = true;
+  player.cash += 500;
+  player.trades.unshift({ type:'bonus', symbol:'QUIZ', shares:0, price:0, total:500,
+    note:`בונוס שאלת ${period === 'start' ? 'תחילת' : 'סוף'} שבוע`, date: new Date().toISOString() });
+  saveTradingData(data);
+  syncToGitHub(data).catch(() => {});
+  res.json({ ok: true, bonus: 500, cash: player.cash });
+});
+
 // Leaderboard — מחזיר רק את הקטגוריה של השחקן המחובר
 app.get('/api/trading/leaderboard', async (req, res) => {
   const token = (req.headers.authorization || '').replace('Bearer ', '');

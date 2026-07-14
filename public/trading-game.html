@@ -538,6 +538,9 @@ body {
     <button type="button" class="help-q-btn" onclick="showHelpTip('portfolio')">?</button>
   </div>
 
+  <!-- Quiz Card -->
+  <div id="quizCard" style="margin:0 16px 14px"></div>
+
   <!-- Holdings -->
   <div class="section-title" id="txt-holdings-title">המניות שלי</div>
   <div id="holdingsList"></div>
@@ -665,10 +668,15 @@ body {
       <button type="button" class="modal-tab buy-active" id="tabBuy"  onclick="setModalTab('buy')"  id="txt-tab-buy">קנייה</button>
       <button type="button" class="modal-tab"            id="tabSell" onclick="setModalTab('sell')" id="txt-tab-sell">מכירה</button>
     </div>
+    <!-- טוגל: לפי כמות מניות או לפי סכום כסף -->
+    <div style="display:flex;gap:6px;margin-bottom:8px;background:rgba(255,255,255,0.05);border-radius:10px;padding:3px">
+      <button type="button" id="modeShares" onclick="setInputMode('shares')" style="flex:1;padding:6px;border-radius:8px;border:none;font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;background:var(--purple);color:#fff">כמות מניות</button>
+      <button type="button" id="modeAmount" onclick="setInputMode('amount')" style="flex:1;padding:6px;border-radius:8px;border:none;font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;background:transparent;color:var(--dim)">סכום בש"ח ₪</button>
+    </div>
     <div class="shares-row">
-      <button type="button" class="step-btn" onclick="stepShares(-1)">−</button>
+      <button type="button" class="step-btn" id="stepMinus" onclick="stepShares(-1)">−</button>
       <input class="shares-input" id="sharesInput" type="number" value="1" min="1" step="1" oninput="updateTotal()">
-      <button type="button" class="step-btn" onclick="stepShares(1)">+</button>
+      <button type="button" class="step-btn" id="stepPlus" onclick="stepShares(1)">+</button>
     </div>
     <div class="total-preview" id="totalPreview">סה"כ: <strong id="totalVal">$189.50</strong></div>
     <!-- אחוז ריכוז מהתיק — אזהרה אם קונים יותר מדי ממניה אחת -->
@@ -1220,6 +1228,7 @@ function fmt(n) {
 
 function renderPortfolio() {
   if (!S.player) return;
+  renderQuizCard();
   const p = S.player;
 
   // Calc portfolio value
@@ -1504,6 +1513,8 @@ function openModal(sym) {
   const desc = S.lang === 'he' ? info.descHe : info.descEn;
   if (desc) { descEl.textContent = '💡 ' + desc; descEl.style.display='block'; }
   else { descEl.style.display='none'; }
+  _inputMode = 'shares';
+  setInputMode('shares');
   document.getElementById('sharesInput').value = 1;
   document.getElementById('edenBox').style.display = 'none';
   document.getElementById('edenBtn').textContent = '🤔 למה המניה זזה היום?';
@@ -1547,6 +1558,32 @@ function setModalTab(tab) {
   updateTotal();
 }
 
+let _inputMode = 'shares'; // 'shares' | 'amount'
+
+function setInputMode(mode) {
+  _inputMode = mode;
+  const inp = document.getElementById('sharesInput');
+  const btnShares = document.getElementById('modeShares');
+  const btnAmount = document.getElementById('modeAmount');
+  const stepMinus = document.getElementById('stepMinus');
+  const stepPlus  = document.getElementById('stepPlus');
+  if (mode === 'shares') {
+    inp.step = '1'; inp.min = '1'; inp.placeholder = 'כמות מניות';
+    inp.value = Math.max(1, Math.floor(parseFloat(inp.value)||1));
+    btnShares.style.background = 'var(--purple)'; btnShares.style.color = '#fff';
+    btnAmount.style.background = 'transparent'; btnAmount.style.color = 'var(--dim)';
+    stepMinus.style.display = ''; stepPlus.style.display = '';
+  } else {
+    inp.step = '100'; inp.min = '100'; inp.placeholder = 'סכום בש"ח';
+    const nisPrice = S.prices[S.modalSym]?.price || 1;
+    inp.value = Math.round(nisPrice); // ברירת מחדל: מחיר מניה אחת
+    btnAmount.style.background = 'var(--purple)'; btnAmount.style.color = '#fff';
+    btnShares.style.background = 'transparent'; btnShares.style.color = 'var(--dim)';
+    stepMinus.style.display = 'none'; stepPlus.style.display = 'none';
+  }
+  updateTotal();
+}
+
 function stepShares(d) {
   const inp = document.getElementById('sharesInput');
   inp.value = Math.max(1, (parseFloat(inp.value)||1) + d);
@@ -1554,8 +1591,14 @@ function stepShares(d) {
 }
 
 function updateTotal() {
-  const shares   = parseFloat(document.getElementById('sharesInput').value)||1;
   const nisPrice = S.prices[S.modalSym]?.price || 0;
+  let shares;
+  if (_inputMode === 'amount') {
+    const amount = parseFloat(document.getElementById('sharesInput').value) || 0;
+    shares = nisPrice > 0 ? amount / nisPrice : 0;
+  } else {
+    shares = parseFloat(document.getElementById('sharesInput').value)||1;
+  }
   const nisTot   = shares * nisPrice;
   const sym      = S.modalSym;
   const he       = S.lang !== 'en';
@@ -1635,7 +1678,11 @@ function updateTotal() {
 }
 
 async function confirmTrade() {
-  const shares = parseFloat(document.getElementById('sharesInput').value)||0;
+  const rawVal = parseFloat(document.getElementById('sharesInput').value)||0;
+  const nisPrice = S.prices[S.modalSym]?.price || 0;
+  const shares = _inputMode === 'amount'
+    ? (nisPrice > 0 ? Math.floor((rawVal / nisPrice) * 10000) / 10000 : 0)
+    : rawVal;
   if (shares <= 0) return;
   const btn = document.getElementById('confirmBtn');
   btn.textContent = '...'; btn.disabled = true;
@@ -2297,6 +2344,113 @@ function closeHelpTip(e) {
 
 function topicTitle(topic) {
   return (topic[S.lang]?.title) || topic.he?.title || topic.title || '';
+}
+
+// ══════════════════════════════════════════════════
+// WEEKLY QUIZ — שאלת ראשון/שני + חמישי/שישי
+// ══════════════════════════════════════════════════
+const WEEKLY_QUIZ = {
+  start: [ // ראשון–שני
+    { q:'מה קורה למחיר מניה כשהרבה אנשים רוצים לקנות אותה?', opts:['יורד','עולה','לא משתנה'], ans:1, exp:'ביקוש גבוה → מחיר עולה. בדיוק כמו בשוק של ירקות — כשכולם רוצים תות, הוא מתייקר!' },
+    { q:'מה זה ETF (תעודת סל)?', opts:['מניה של חברה אחת','סל של מניות רבות','הלוואה לממשלה'], ans:1, exp:'ETF מכיל עשרות ואפילו מאות מניות — קנייה אחת נותנת פיזור רחב!' },
+    { q:'מה ההבדל בין מניה לאגרת חוב?', opts:['אין הבדל','מניה = בעלות בחברה, אג"ח = הלוואה לחברה/ממשלה','אג"ח יותר מסוכנת'], ans:1, exp:'מניה = שותפות בחברה. אג"ח = אתה המלווה — מקבל ריבית קבועה.' },
+    { q:'מהו S&P 500?', opts:['מניה בודדת של חברה אמריקאית','מדד 500 החברות הגדולות בארה"ב','סוג של אג"ח'], ans:1, exp:'S&P 500 הוא מדד שמכיל את 500 החברות הגדולות בארה"ב — כולל אפל, מיקרוסופט, אמזון ועוד.' },
+    { q:'מה זה דיבידנד?', opts:['סוג של עמלה','תשלום שחברה מחלקת לבעלי המניות מתוך רווחיה','מחיר הקנייה של מניה'], ans:1, exp:'חברות רווחיות לפעמים מחלקות חלק מהרווח לבעלי המניות — זה דיבידנד!' },
+    { q:'מהי מניית AAPL?', opts:['אמזון','אפל','אלפבית (גוגל)'], ans:1, exp:'AAPL היא הסימול של Apple בבורסה. יצרנית האייפון, המק, ועוד.' },
+    { q:'מה נחשב בטוח יותר בתקופת אי-ודאות — זהב או מניית טסלה?', opts:['מניית טסלה','זהב','שניהם שווים'], ans:1, exp:'זהב נחשב "נכס מקלט" — משקיעים בורחים אליו בזמן משבר. טסלה תנודתית ומסוכנת.' },
+    { q:'מה פירוש "קנה בנמוך, מכור בגבוה"?', opts:['לקנות מניות זולות ולמכור יקרות','לקנות ביום שני ולמכור ביום שישי','לקנות הרבה מניות'], ans:0, exp:'העיקרון הבסיסי של השקעה — לזהות נכסים שמחירם נמוך וכשהם עולים, למכור ברווח.' },
+    { q:'מה ה-SPY מייצג?', opts:['מניות ישראל','מדד S&P 500 של 500 חברות אמריקאיות','מדד נפט'], ans:1, exp:'SPY היא תעודת הסל הגדולה בעולם — עוקבת אחרי 500 החברות הגדולות בארה"ב.' },
+    { q:'מה גורם לשקל להיחלש מול הדולר?', opts:['עלייה בצמיחה הכלכלית','חוסר יציבות ביטחונית או פוליטית','ריבית גבוהה בישראל'], ans:1, exp:'בזמן חוסר יציבות, משקיעים בורחים ממטבעות חלשים. זה מחליש את השקל.' },
+  ],
+  end: [ // חמישי–שישי
+    { q:'אם ריבית בנק ישראל עולה — מה קורה בד"כ למחיר אגרות החוב הישנות?', opts:['עולה','יורד','לא משתנה'], ans:1, exp:'אג"ח ישנות עם ריבית נמוכה פחות אטרקטיביות כשיש חדשות עם ריבית גבוהה יותר — מחירן יורד.' },
+    { q:'מה זה "פיזור" (Diversification)?', opts:['לקנות הרבה מאותה מניה','לחלק את ההשקעה בין נכסים שונים','למכור מהר'], ans:1, exp:'פיזור = לא לשים הכל בסל אחד. אם מניה אחת צונחת, האחרות מאזנות.' },
+    { q:'מה זה P/E נמוך?', opts:['המניה יקרה מדי','המניה זולה יחסית לרווחי החברה','הריבית גבוהה'], ans:1, exp:'P/E = מחיר מניה חלקי רווח למניה. P/E נמוך אומר שהמניה אולי זולה יחסית.' },
+    { q:'מה זה "אפקט העדר" בשוק ההון?', opts:['כולם קונים יחד כשמחיר עולה ומוכרים כשיורד','שמשקיעים חכמים תמיד מרוויחים','שמניות עולות בסוף כל שבוע'], ans:0, exp:'אפקט העדר גורם לאנשים לקנות בשיא ולמכור בתחתית — בדיוק הפוך ממה שצריך!' },
+    { q:'QQQ מחזיקה בעיקר מניות של:', opts:['חברות נפט','חברות טכנולוגיה כמו אפל, גוגל, אנבידיה','בנקים אמריקאים'], ans:1, exp:'QQQ עוקבת אחרי Nasdaq 100 — הכוללת את ענקיות הטכנולוגיה האמריקאיות.' },
+    { q:'נניח שקנית מניה ב-₪100 ועכשיו היא שווה ₪80. מה עדיף לעשות?', opts:['למכור מיד','לחקור אם הסיבה לירידה זמנית או קבועה','לקנות עוד מניות של אותה חברה בכל מקרה'], ans:1, exp:'הטעות הכי גדולה היא מכירה בפאניקה. חקרו — אם הירידה זמנית, ייתכן שזה הזמן לקנות!' },
+    { q:'מה זה עמלת מסחר ולמה היא חשובה?', opts:['מחיר המניה','עלות על כל עסקת קנייה/מכירה שמפחיתה את הרווח','מס על דיבידנד'], ans:1, exp:'עמלות "אוכלות" את הרווח — מי שסוחר הרבה משלם הרבה עמלות. לפעמים עדיף לסחור פחות!' },
+    { q:'מה נחשב אסטרטגיית "Buy & Hold"?', opts:['לקנות ולמכור כל יום','לקנות ולהחזיק לטווח ארוך','לקנות רק בירידות'], ans:1, exp:'Buy & Hold = קונים ומחזיקים שנים. ורן באפט בנה את עושרו כך — הסבלנות משתלמת.' },
+    { q:'בנק הפועלים (POLI) שייך לאיזה ענף?', opts:['טכנולוגיה','פיננסים ובנקאות','אנרגיה'], ans:1, exp:'בנק הפועלים הוא אחד הבנקים הגדולים בישראל — שייך לסקטור הפיננסי.' },
+    { q:'מה קורה לרוב להשקעה ב-S&P 500 לאורך 10 שנים?', opts:['בד"כ מפסידה','בד"כ מרוויחה','תלוי במזל'], ans:1, exp:'היסטורית, S&P 500 עלה בממוצע כ-10% בשנה לאורך עשורים. הסבלנות משתלמת!' },
+  ]
+};
+
+function getWeekNumber(d) {
+  const jan1 = new Date(d.getFullYear(), 0, 1);
+  return Math.ceil(((d - jan1) / 86400000 + jan1.getDay() + 1) / 7);
+}
+
+function getActiveQuiz() {
+  const now = new Date();
+  const day = now.getDay(); // 0=Sun,1=Mon,...,6=Sat
+  let period = null;
+  if (day === 0 || day === 1) period = 'start';
+  if (day === 4 || day === 5) period = 'end';
+  if (!period) return null;
+  const week = getWeekNumber(now);
+  const key = `quiz_${now.getFullYear()}_w${week}_${period}`;
+  if (localStorage.getItem(key + '_done')) return null;
+  const pool = WEEKLY_QUIZ[period];
+  const q = pool[week % pool.length];
+  return { ...q, period, key, week };
+}
+
+const PERIOD_LABEL = { start:'שאלת תחילת השבוע 📝', end:'שאלת סוף השבוע 📝' };
+
+function renderQuizCard() {
+  const el = document.getElementById('quizCard');
+  if (!el || !S.player) return;
+  const quiz = getActiveQuiz();
+  if (!quiz) { el.innerHTML = ''; return; }
+  el.innerHTML = `
+    <div style="background:linear-gradient(135deg,rgba(124,92,252,0.18),rgba(0,188,212,0.1));border:1.5px solid rgba(124,92,252,0.45);border-radius:18px;padding:16px 18px;box-sizing:border-box">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <span style="font-size:13px;font-weight:800;color:var(--purple)">${PERIOD_LABEL[quiz.period]}</span>
+        <span style="font-size:12px;background:rgba(255,215,0,0.2);color:var(--gold);border-radius:8px;padding:2px 10px;font-weight:700">🎁 ₪500 בונוס</span>
+      </div>
+      <div style="font-size:15px;font-weight:700;margin-bottom:14px;line-height:1.4">${quiz.q}</div>
+      <div style="display:flex;flex-direction:column;gap:8px" id="quizOpts">
+        ${quiz.opts.map((o,i)=>`
+          <button onclick="answerQuiz(${i})" style="width:100%;text-align:right;padding:10px 14px;border-radius:12px;border:1px solid rgba(124,92,252,0.35);background:rgba(124,92,252,0.08);color:var(--text);font-family:'Heebo',sans-serif;font-size:14px;cursor:pointer;font-weight:600">
+            ${['א','ב','ג'][i]}. ${o}
+          </button>`).join('')}
+      </div>
+    </div>`;
+}
+
+async function answerQuiz(chosen) {
+  const quiz = getActiveQuiz();
+  if (!quiz) return;
+  const correct = chosen === quiz.ans;
+  const opts = document.getElementById('quizOpts');
+  if (!opts) return;
+
+  // סמן נכון/שגוי
+  opts.querySelectorAll('button').forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === quiz.ans) btn.style.background = 'rgba(0,230,118,0.2)', btn.style.borderColor = 'var(--green)';
+    else if (i === chosen && !correct) btn.style.background = 'rgba(255,82,82,0.15)', btn.style.borderColor = 'var(--red)';
+  });
+
+  // שלח לשרת לקבל בונוס
+  if (correct) {
+    const r = await api('/api/trading/quiz', 'POST', { period: quiz.period, week: quiz.week, correct: true });
+    if (r.ok) {
+      S.player.cash = r.cash;
+      renderPortfolio();
+    }
+  }
+
+  // שמור מקומית שנענתה
+  localStorage.setItem(quiz.key + '_done', '1');
+
+  // הצג הסבר
+  const el = document.getElementById('quizCard');
+  const resultDiv = document.createElement('div');
+  resultDiv.style.cssText = `margin-top:12px;padding:12px 14px;border-radius:12px;background:${correct?'rgba(0,230,118,0.1)':'rgba(255,82,82,0.08)'};border:1px solid ${correct?'rgba(0,230,118,0.3)':'rgba(255,82,82,0.25)'};font-size:13px;line-height:1.5`;
+  resultDiv.innerHTML = `<strong style="color:${correct?'var(--green)':'var(--red)'}">${correct?'✅ נכון!':'❌ לא בדיוק...'}</strong><br>${quiz.exp}${correct?'<br><strong style="color:var(--gold)">+₪500 נוספו לתיק! 🎉</strong>':''}`;
+  el.querySelector('div').appendChild(resultDiv);
 }
 
 function renderLearn() {
