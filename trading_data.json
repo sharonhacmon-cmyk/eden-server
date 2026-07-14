@@ -205,9 +205,24 @@
     "name": "יעל",
     "gender": "female",
     "language": "he",
-    "cash": 50000,
-    "portfolio": {},
-    "trades": [],
+    "cash": 9960.007660000003,
+    "portfolio": {
+      "SPY": {
+        "shares": 20.4897,
+        "avgPrice": 1952.2
+      }
+    },
+    "trades": [
+      {
+        "type": "buy",
+        "symbol": "SPY",
+        "shares": 20.4897,
+        "price": 1952.2,
+        "total": 39999.99234,
+        "fee": 40,
+        "date": "2026-07-14T16:27:25.173Z"
+      }
+    ],
     "setupAt": "2026-07-14T16:24:51.140Z"
   }
 }
