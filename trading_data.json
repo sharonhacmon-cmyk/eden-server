@@ -1,1 +1,11 @@
-{}
+{
+  "EDEN-SHARON": {
+    "name": "שרון",
+    "gender": "female",
+    "language": "he",
+    "cash": 50000,
+    "portfolio": {},
+    "trades": [],
+    "setupAt": "2026-07-14T15:13:25.808Z"
+  }
+}
