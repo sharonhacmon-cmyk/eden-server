@@ -144,9 +144,24 @@
     "name": "Test 5",
     "gender": "other",
     "language": "he",
-    "cash": 50000,
-    "portfolio": {},
-    "trades": [],
+    "cash": 46349.3,
+    "portfolio": {
+      "VNQ": {
+        "shares": 11,
+        "avgPrice": 331.55
+      }
+    },
+    "trades": [
+      {
+        "type": "buy",
+        "symbol": "VNQ",
+        "shares": 11,
+        "price": 331.55,
+        "total": 3647.05,
+        "fee": 3.65,
+        "date": "2026-07-14T16:07:37.163Z"
+      }
+    ],
     "setupAt": "2026-07-14T16:07:07.997Z"
   }
 }
