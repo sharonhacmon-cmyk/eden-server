@@ -369,7 +369,7 @@ app.get('/api/trading/me', tradingAuth, (req, res) => {
 });
 
 // ── שער חליפין דולר/שקל (בנק ישראל) ─────────────────
-let fxCache = { rate: 3.70, date: null };
+let fxCache = { rate: 3.03, date: null }; // עודכן יולי 2026
 
 app.get('/api/fxrate', async (req, res) => {
   const today = new Date().toISOString().slice(0,10);
