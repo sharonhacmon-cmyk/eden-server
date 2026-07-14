@@ -1722,7 +1722,7 @@ async function confirmTrade() {
     setTimeout(() => showMilestone(
       '🎉',
       he ? 'ביצעת את הקנייה הראשונה שלך!' : 'You made your first purchase!',
-      he ? 'המניה עכשיו בתיק — בדוק אותה שוב בעוד שבוע!' : 'The stock is in your portfolio — check it again in a week!'
+      he ? 'המניה עכשיו בתיק! לחץ "למה המניה זזה?" לקבל הסבר AI על תנועת המחיר 🤔' : 'Stock is in your portfolio! Tap "Why did this stock move?" for an AI explanation 🤔'
     ), 600);
   } else {
     showToast(`${info.emoji} ${sym} ×${shares} ${t(isBuy?'bought':'sold')}`, 'success');
@@ -2146,6 +2146,27 @@ const LEARN_TOPICS = [
 <p><strong>5. מי המתחרים?</strong><br>האם יש לחברה יתרון תחרותי ("חפיר")? פטנטים, מותג חזק, עלויות מעבר גבוהות ללקוח.</p>`
   },
   {
+    emoji:'⏰', color:'rgba(0,230,118,0.08)', border:'rgba(0,230,118,0.3)',
+    he:{ title:'מתי לקנות ומתי למכור?' }, en:{ title:'When to buy & when to sell?' },
+    body:`<h3>מתי לקנות — ומתי למכור?</h3>
+<p>אין תשובה מושלמת, אבל יש עקרונות חכמים שמשתמשים בהם משקיעים מנוסים:</p>
+<p><strong>🟢 מתי לקנות?</strong></p>
+<ul>
+<li>📉 <strong>אחרי ירידה חדה</strong> — אם חברה טובה ירדה 20% בגלל פאניקה כללית בשוק (לא בגלל בעיה אמיתית שלה) — זה לעיתים הזדמנות.</li>
+<li>📊 <strong>כשהחברה צומחת</strong> — הכנסות עולות, לקוחות חדשים, מוצר חדש — מניה עשויה להמשיך לעלות.</li>
+<li>📅 <strong>השקעה קבועה</strong> — קנה כל שבוע/חודש ללא קשר למחיר (DCA). לאורך זמן זה עובד.</li>
+<li>🤔 <strong>שאל את ה-AI</strong> — לחץ "למה המניה זזה?" כדי להבין מה גרם לתנועה לפני שאתה מחליט.</li>
+</ul>
+<p><strong>🔴 מתי למכור?</strong></p>
+<ul>
+<li>🎯 <strong>הגעת ליעד</strong> — קבעת מראש "אמכור ב-+20%"? עמוד בזה.</li>
+<li>⛔ <strong>עצור הפסד</strong> — קבע מראש מקסימום הפסד (למשל -15%). אם הגעת לשם — מכור ועבור הלאה.</li>
+<li>📰 <strong>משהו השתנה בחברה</strong> — מנכ"ל עזב, רווחים ירדו, תחרות חדשה — שחשבת שלא תהיה? שקול מכירה.</li>
+<li>🚫 <strong>מה שלא לעשות:</strong> אל תמכור בפאניקה אחרי ירידה חדה. זה בדרך כלל הרגע הכי גרוע למכור.</li>
+</ul>
+<p><strong>💡 כלל הזהב:</strong><br>קבע את האסטרטגיה <em>לפני</em> שאתה קונה. "אקנה כי אני מאמין בחברה לטווח של שנה. אמכור אם ירד מעל 20% או אם עלה מעל 40%." כשיש כלל — קל יותר לפעול ברגשות.</p>`
+  },
+  {
     emoji:'🧠', title:'פסיכולוגיה של השקעות', color:'rgba(0,188,212,0.08)', border:'rgba(0,188,212,0.3)',
     body:`<h3>המוח שלנו הוא האויב הכי גדול שלנו בשוק</h3>
 <p><strong>הטיות שגורמות להפסדים:</strong></p>
@@ -2211,13 +2232,13 @@ const INTRO_SLIDES = [
       { ti:'1️⃣', t:'לחץ על <strong>שוק המניות</strong> בתפריט למטה.' },
       { ti:'2️⃣', t:'בחר מניה שמעניינת אותך ולחץ עליה לפרטים ולגרף המחירים.' },
       { ti:'3️⃣', t:'לחץ <strong>קנה / מכור</strong>, הזן כמות — ואשר. זהו!' },
-      { ti:'💡', t:'לחץ <strong>"למה המניה זזה?"</strong> בכל מניה לקבל הסבר פשוט.' },
+      { ti:'🤖', t:'<span style="background:rgba(0,230,118,0.15);border:1px solid rgba(0,230,118,0.4);border-radius:8px;padding:2px 8px;display:inline-block">לחץ <strong>"למה המניה זזה?"</strong></span> — ה-AI יסביר לך בשפה פשוטה!' },
     ],
     tipsEn:[
       { ti:'1️⃣', t:'Tap <strong>Stock Market</strong> in the bottom menu.' },
       { ti:'2️⃣', t:'Pick a stock, tap it to see details and price chart.' },
       { ti:'3️⃣', t:'Tap <strong>Buy / Sell</strong>, enter quantity — confirm. Done!' },
-      { ti:'💡', t:'Tap <strong>"Why did this stock move?"</strong> for a simple explanation.' },
+      { ti:'🤖', t:'<span style="background:rgba(0,230,118,0.15);border:1px solid rgba(0,230,118,0.4);border-radius:8px;padding:2px 8px;display:inline-block">Tap <strong>"Why did this stock move?"</strong></span> — AI explains it in plain language!' },
     ],
   },
   {
