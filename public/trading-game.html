@@ -1747,7 +1747,7 @@ function showMilestone(icon, title, body) {
     <div style="font-size:36px;margin-bottom:6px">${icon}</div>
     <div style="font-weight:800;font-size:16px;margin-bottom:4px">${title}</div>
     <div style="font-size:13px;color:rgba(238,238,255,0.75);line-height:1.5;margin-bottom:10px">${body}</div>
-    <button onclick="closeMilestone()" style="background:rgba(124,92,252,0.3);border:1px solid rgba(124,92,252,0.5);border-radius:10px;color:#fff;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;padding:7px 28px;cursor:pointer;touch-action:manipulation">סגור</button>`;
+    <button onclick="closeMilestone()" style="background:rgba(124,92,252,0.3);border:1px solid rgba(124,92,252,0.5);border-radius:10px;color:#fff;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;padding:7px 28px;cursor:pointer;touch-action:manipulation">${S.lang==='en'?'Close':'סגור'}</button>`;
   el.classList.add('show');
   clearTimeout(el._timer);
   el._timer = setTimeout(closeMilestone, 6000);
@@ -2412,24 +2412,31 @@ function getActiveQuiz() {
   return { ...q, period, key, week };
 }
 
-const PERIOD_LABEL = { start:'שאלת תחילת השבוע 📝', end:'שאלת סוף השבוע 📝' };
+const PERIOD_LABEL = {
+  he: { start:'שאלת תחילת השבוע 📝', end:'שאלת סוף השבוע 📝' },
+  en: { start:'Start-of-Week Question 📝', end:'End-of-Week Question 📝' }
+};
 
 function renderQuizCard() {
   const el = document.getElementById('quizCard');
   if (!el || !S.player) return;
   const quiz = getActiveQuiz();
   if (!quiz) { el.innerHTML = ''; return; }
+  const he = S.lang !== 'en';
+  const label = (PERIOD_LABEL[he ? 'he' : 'en'] || PERIOD_LABEL.he)[quiz.period];
+  const letters = he ? ['א','ב','ג'] : ['A','B','C'];
+  const align = he ? 'right' : 'left';
   el.innerHTML = `
     <div style="background:linear-gradient(135deg,rgba(124,92,252,0.18),rgba(0,188,212,0.1));border:1.5px solid rgba(124,92,252,0.45);border-radius:18px;padding:16px 18px;box-sizing:border-box">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-        <span style="font-size:13px;font-weight:800;color:var(--purple)">${PERIOD_LABEL[quiz.period]}</span>
-        <span style="font-size:12px;background:rgba(255,215,0,0.2);color:var(--gold);border-radius:8px;padding:2px 10px;font-weight:700">🎁 ₪500 בונוס</span>
+        <span style="font-size:13px;font-weight:800;color:var(--purple)">${label}</span>
+        <span style="font-size:12px;background:rgba(255,215,0,0.2);color:var(--gold);border-radius:8px;padding:2px 10px;font-weight:700">🎁 ₪500 ${he?'בונוס':'bonus'}</span>
       </div>
       <div style="font-size:15px;font-weight:700;margin-bottom:14px;line-height:1.4">${quiz.q}</div>
       <div style="display:flex;flex-direction:column;gap:8px" id="quizOpts">
         ${quiz.opts.map((o,i)=>`
-          <button onclick="answerQuiz(${i})" style="width:100%;text-align:right;padding:10px 14px;border-radius:12px;border:1px solid rgba(124,92,252,0.35);background:rgba(124,92,252,0.08);color:var(--text);font-family:'Heebo',sans-serif;font-size:14px;cursor:pointer;font-weight:600">
-            ${['א','ב','ג'][i]}. ${o}
+          <button onclick="answerQuiz(${i})" style="width:100%;text-align:${align};padding:10px 14px;border-radius:12px;border:1px solid rgba(124,92,252,0.35);background:rgba(124,92,252,0.08);color:var(--text);font-family:'Heebo',sans-serif;font-size:14px;cursor:pointer;font-weight:600">
+            ${letters[i]}. ${o}
           </button>`).join('')}
       </div>
     </div>`;
@@ -2465,7 +2472,9 @@ async function answerQuiz(chosen) {
   const el = document.getElementById('quizCard');
   const resultDiv = document.createElement('div');
   resultDiv.style.cssText = `margin-top:12px;padding:12px 14px;border-radius:12px;background:${correct?'rgba(0,230,118,0.1)':'rgba(255,82,82,0.08)'};border:1px solid ${correct?'rgba(0,230,118,0.3)':'rgba(255,82,82,0.25)'};font-size:13px;line-height:1.5`;
-  resultDiv.innerHTML = `<strong style="color:${correct?'var(--green)':'var(--red)'}">${correct?'✅ נכון!':'❌ לא בדיוק...'}</strong><br>${quiz.exp}${correct?'<br><strong style="color:var(--gold)">+₪500 נוספו לתיק! 🎉</strong>':''}`;
+  const he2 = S.lang !== 'en';
+  const bonusMsg = correct ? '<br><strong style="color:var(--gold)">+₪500 ' + (he2?'נוספו לתיק':'added to portfolio') + '! 🎉</strong>' : '';
+  resultDiv.innerHTML = '<strong style="color:' + (correct?'var(--green)':'var(--red)') + '">' + (correct?(he2?'✅ נכון!':'✅ Correct!'):(he2?'❌ לא בדיוק...':'❌ Not quite...')) + '</strong><br>' + quiz.exp + bonusMsg;
   el.querySelector('div').appendChild(resultDiv);
 }
 
