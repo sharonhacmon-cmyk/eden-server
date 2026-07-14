@@ -444,20 +444,21 @@ app.post('/api/trading/buy', tradingAuth, async (req, res) => {
     const q    = await yahooQuote(sym);
     const price = q.regularMarketPrice;
     const total = price * numShares;
+    const fee   = Math.round(total * 0.001 * 100) / 100; // עמלה 0.1%
     const data  = loadTradingData();
     const player = data[req.playerCode];
     if (!player) return res.status(404).json({ error: 'פרופיל לא נמצא' });
-    if (player.cash < total) {
-      return res.status(400).json({ error: `אין מספיק כסף. נדרש: $${total.toFixed(0)}, יש: $${player.cash.toFixed(0)}` });
+    if (player.cash < total + fee) {
+      return res.status(400).json({ error: `אין מספיק כסף. נדרש: ₪${(total+fee).toFixed(0)}, יש: ₪${player.cash.toFixed(0)}` });
     }
-    player.cash -= total;
+    player.cash -= (total + fee);
     if (!player.portfolio[sym]) player.portfolio[sym] = { shares: 0, avgPrice: 0 };
     const h = player.portfolio[sym];
     h.avgPrice = (h.avgPrice * h.shares + price * numShares) / (h.shares + numShares);
     h.shares   = Math.round((h.shares + numShares) * 10000) / 10000;
-    player.trades.unshift({ type:'buy', symbol:sym, shares:numShares, price, total, date: new Date().toISOString() });
+    player.trades.unshift({ type:'buy', symbol:sym, shares:numShares, price, total, fee, date: new Date().toISOString() });
     saveTradingData(data);
-    res.json({ ok: true, cash: player.cash, portfolio: player.portfolio });
+    res.json({ ok: true, cash: player.cash, portfolio: player.portfolio, fee });
   } catch {
     res.status(500).json({ error: 'שגיאה — נסה שוב' });
   }
@@ -479,12 +480,13 @@ app.post('/api/trading/sell', tradingAuth, async (req, res) => {
     const q    = await yahooQuote(sym);
     const price = q.regularMarketPrice;
     const total = price * numShares;
-    player.cash += total;
+    const fee   = Math.round(total * 0.001 * 100) / 100; // עמלה 0.1%
+    player.cash += (total - fee);
     h.shares = Math.round((h.shares - numShares) * 10000) / 10000;
     if (h.shares < 0.001) delete player.portfolio[sym];
-    player.trades.unshift({ type:'sell', symbol:sym, shares:numShares, price, total, date: new Date().toISOString() });
+    player.trades.unshift({ type:'sell', symbol:sym, shares:numShares, price, total, fee, date: new Date().toISOString() });
     saveTradingData(data);
-    res.json({ ok: true, cash: player.cash, portfolio: player.portfolio });
+    res.json({ ok: true, cash: player.cash, portfolio: player.portfolio, fee });
   } catch {
     res.status(500).json({ error: 'שגיאה — נסה שוב' });
   }
@@ -518,6 +520,7 @@ app.get('/api/trading/leaderboard', async (req, res) => {
       bulk.forEach(q => { prices[q.symbol] = q.regularMarketPrice; });
     }
 
+    const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
     const ranked = Object.entries(data)
       .filter(([, p]) => p.setupAt && getVetek(p.setupAt).tier === myTier)
       .map(([code, p]) => {
@@ -526,10 +529,11 @@ app.get('/api/trading/leaderboard', async (req, res) => {
         const total = p.cash + pv;
         const profit = total - STARTING_CASH;
         const vetek = getVetek(p.setupAt);
+        const weeklyTrades = (p.trades||[]).filter(t => new Date(t.date).getTime() > oneWeekAgo).length;
         return {
           name: p.name, gender: p.gender, total, cash: p.cash, portfolioValue: pv,
           profit, profitPct: (profit/STARTING_CASH*100).toFixed(1),
-          trades: (p.trades||[]).length,
+          trades: (p.trades||[]).length, weeklyTrades,
           tier: vetek.tier, tierLabel: vetek.label, days: vetek.days,
           isMe: code === myCode
         };

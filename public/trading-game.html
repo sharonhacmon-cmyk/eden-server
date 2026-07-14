@@ -1568,13 +1568,20 @@ function updateTotal() {
     display = fmt(nisTot);
   }
 
-  // חישוב יתרת מזומן אחרי קנייה
-  const afterCash = (S.player?.cash || 0) - nisTot;
-  const afterStr = afterCash >= 0
-    ? `<span style="color:var(--dim);font-size:12px"> · ${he ? 'יישאר' : 'remaining'}: ${fmt(afterCash)}</span>`
-    : `<span style="color:var(--red);font-size:12px"> · ${he ? '⚠️ אין מספיק מזומן' : '⚠️ Not enough cash'}</span>`;
+  // עמלה 0.1%
+  const fee = Math.round(nisTot * 0.001 * 100) / 100;
+  const feeStr = fee > 0 ? `<span style="color:var(--dim);font-size:12px"> + ${he?'עמלה':'fee'}: ${fmt(fee)}</span>` : '';
 
-  document.getElementById('totalPreview').innerHTML = `${t('total')}: <strong>${display}</strong>${S.modalTab === 'buy' ? afterStr : ''}`;
+  // חישוב יתרת מזומן אחרי קנייה (כולל עמלה)
+  const totalWithFee = nisTot + (S.modalTab === 'buy' ? fee : -fee);
+  const afterCash = (S.player?.cash || 0) - (S.modalTab === 'buy' ? nisTot + fee : 0);
+  const afterStr = S.modalTab === 'buy'
+    ? (afterCash >= 0
+        ? `<span style="color:var(--dim);font-size:12px"> · ${he ? 'יישאר' : 'remaining'}: ${fmt(afterCash)}</span>`
+        : `<span style="color:var(--red);font-size:12px"> · ${he ? '⚠️ אין מספיק מזומן' : '⚠️ Not enough cash'}</span>`)
+    : '';
+
+  document.getElementById('totalPreview').innerHTML = `${t('total')}: <strong>${display}</strong>${feeStr}${afterStr}`;
 
   // אזהרת ריכוז (קנייה בלבד)
   const concEl = document.getElementById('concentrationWarning');
@@ -1609,13 +1616,16 @@ function updateTotal() {
       const avgNis = h.avgPrice;
       const currentNis = nisPrice;
       const plPerShare = currentNis - avgNis;
-      const totalPL = plPerShare * shares;
+      const grossPL = plPerShare * shares;
+      const sellFee = Math.round(nisPrice * shares * 0.001 * 100) / 100;
+      const totalPL = grossPL - sellFee;
       const up = totalPL >= 0;
       const sign = up ? '+' : '';
       plEl.innerHTML = `<div style="background:${up?'rgba(0,230,118,0.06)':'rgba(255,82,82,0.06)'};border:1px solid ${up?'rgba(0,230,118,0.25)':'rgba(255,82,82,0.25)'};border-radius:10px;padding:9px 14px;margin-bottom:8px;font-size:13px">
         <span style="color:var(--dim)">${he ? 'קנית ב:' : 'Avg cost:'} ${fmtPrice(sym, avgNis)}</span> &nbsp;|&nbsp;
         <span style="color:var(--dim)">${he ? 'עכשיו:' : 'Now:'} ${fmtPrice(sym, currentNis)}</span><br>
-        <span style="color:${up?'var(--green)':'var(--red)'};font-weight:700">${he ? 'רווח/הפסד:' : 'P&L:'} ${sign}${fmt(totalPL)}</span>
+        <span style="color:${up?'var(--green)':'var(--red)'};font-weight:700">${he ? 'רווח/הפסד (אחרי עמלה):' : 'P&L (after fee):'} ${sign}${fmt(totalPL)}</span>
+        <span style="color:var(--dim);font-size:11px"> · ${he?'עמלת מכירה':'sell fee'}: ${fmt(sellFee)}</span>
       </div>`;
       plEl.style.display = 'block';
     } else {
@@ -1777,16 +1787,27 @@ async function loadLeaderboard() {
     const myRankIdx = players.findIndex(p => p.isMe);
     const showTop = players.slice(0, 20);
 
+    // אתגר שבועי — מי עשה הכי הרבה עסקאות השבוע
+    const weeklyChamp = [...players].sort((a,b) => b.weeklyTrades - a.weeklyTrades)[0];
+    const weeklyBanner = weeklyChamp && weeklyChamp.weeklyTrades > 0
+      ? `<div style="background:linear-gradient(135deg,rgba(255,165,0,0.15),rgba(255,100,0,0.1));border:1px solid rgba(255,165,0,0.4);border-radius:12px;padding:10px 16px;margin-bottom:14px;font-size:13px">
+          🔥 <strong>אתגר שבועי:</strong> ${weeklyChamp.name} ${weeklyChamp.isMe ? gHe('(את)','(אתה)') : ''} — הכי פעיל/ה השבוע עם <strong>${weeklyChamp.weeklyTrades} עסקאות</strong>!
+         </div>`
+      : '';
+
     let html = `<div style="text-align:center;margin-bottom:14px;padding:8px 16px;background:rgba(124,92,252,0.15);border-radius:10px;font-size:14px;color:var(--purple2);">${tierLabel}</div>`;
+    html += weeklyBanner;
 
     html += showTop.map((p, i) => {
       const up   = parseFloat(p.profitPct) >= 0;
       const rank = i < 3 ? medals[i] : `#${i+1}`;
+      const crown = i === 0 ? ' 👑' : '';
+      const weekBadge = p.weeklyTrades > 0 ? `<span style="font-size:11px;background:rgba(255,165,0,0.2);color:#FFA500;border-radius:6px;padding:1px 6px;margin-right:4px">🔥 ×${p.weeklyTrades} השבוע</span>` : '';
       return `<div class="leader-card ${i<3?'rank-'+(i+1):''}" style="${p.isMe?'outline:2px solid var(--purple);':''}">
         <div class="rank-medal">${rank}${p.isMe?' 👈':''}</div>
         <div class="leader-info">
-          <div class="leader-name">${p.name}${p.isMe?' ('+gHe('את','אתה')+')':''}</div>
-          <div class="leader-meta">${p.trades} עסקאות · ${p.days} ימים</div>
+          <div class="leader-name">${p.name}${crown}${p.isMe?' ('+gHe('את','אתה')+')':''}</div>
+          <div class="leader-meta">${weekBadge}${p.trades} עסקאות · ${p.days} ימים</div>
         </div>
         <div class="leader-right">
           <div class="leader-val" style="color:${up?'var(--green)':'var(--red)'}">
@@ -2233,6 +2254,7 @@ const HELP_TIPS = {
       { ti:'👆', text:'לחץ על כל מניה כדי לראות פרטים, גרף ולקנות או למכור.' },
       { ti:'🏷️', text:'סנן לפי קטגוריה: ישראלי, מניות, תעודות סל, אג"ח, נדל"ן, סחורות.' },
       { ti:'💡', text:'כחול = ירדה, ירוק = עלתה. לחץ "למה המניה זזה?" להסבר.' },
+      { ti:'💸', text:'בכל קנייה או מכירה יש <strong>עמלה של 0.1%</strong> — בדיוק כמו בשוק האמיתי! עמלות גבוהות יכולות לאכול את הרווח.' },
       { ti:'⚠️', text:'אל תשים את כל הכסף במניה אחת — פזר בין כמה!' },
     ]
   },
@@ -2240,8 +2262,9 @@ const HELP_TIPS = {
     title: '🏆 לוח שיא',
     items: [
       { ti:'🥇', text:'הדירוג לפי אחוז רווח — מי הרוויח הכי הרבה יחסית להתחלה.' },
+      { ti:'🔥', text:'<strong>אתגר שבועי</strong>: מי הכי פעיל השבוע? עשה יותר עסקאות ותקבל את תג ה-🔥!' },
+      { ti:'👑', text:'ה-<strong>מוביל</strong> מקבל כתר 👑 — תנסה לחטוף אותו?' },
       { ti:'🌱', text:'תתחרה רק מול שחקנים מאותה רמת ותק כמוך — זה הוגן!' },
-      { ti:'🌱', text:'משקיע צעיר = עד חודש. 📊 פעיל = 1–3 חודשים. 🏦 ותיק = מעל 3 חודשים.' },
       { ti:'💡', text:'לחץ "רענן" לעדכון הדירוג.' },
     ]
   },
