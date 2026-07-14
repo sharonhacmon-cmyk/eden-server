@@ -224,5 +224,14 @@
       }
     ],
     "setupAt": "2026-07-14T16:24:51.140Z"
+  },
+  "EDEN-TEST2": {
+    "name": "עדן",
+    "gender": "female",
+    "language": "he",
+    "cash": 50000,
+    "portfolio": {},
+    "trades": [],
+    "setupAt": "2026-07-14T16:29:04.826Z"
   }
 }
