@@ -3,9 +3,23 @@
     "name": "שרון",
     "gender": "female",
     "language": "he",
-    "cash": 50000,
-    "portfolio": {},
-    "trades": [],
+    "cash": 45244.13,
+    "portfolio": {
+      "CHKP": {
+        "shares": 9,
+        "avgPrice": 528.43
+      }
+    },
+    "trades": [
+      {
+        "type": "buy",
+        "symbol": "CHKP",
+        "shares": 9,
+        "price": 528.43,
+        "total": 4755.87,
+        "date": "2026-07-14T15:13:38.733Z"
+      }
+    ],
     "setupAt": "2026-07-14T15:13:25.808Z"
   }
 }
