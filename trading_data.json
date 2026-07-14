@@ -325,7 +325,7 @@
     "name": "Test8",
     "gender": "female",
     "language": "he",
-    "cash": 28439.279368,
+    "cash": 24481.129367999998,
     "portfolio": {
       "WIX": {
         "shares": 10.0023,
@@ -342,9 +342,22 @@
       "AMD": {
         "shares": 10,
         "avgPrice": 594.1
+      },
+      "DIS": {
+        "shares": 10,
+        "avgPrice": 395.42
       }
     },
     "trades": [
+      {
+        "type": "buy",
+        "symbol": "DIS",
+        "shares": 10,
+        "price": 395.42,
+        "total": 3954.2000000000003,
+        "fee": 3.95,
+        "date": "2026-07-14T20:40:20.620Z"
+      },
       {
         "type": "buy",
         "symbol": "AMD",
