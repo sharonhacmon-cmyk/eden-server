@@ -83,9 +83,24 @@
     "name": "Test4",
     "gender": "female",
     "language": "he",
-    "cash": 50000,
-    "portfolio": {},
-    "trades": [],
+    "cash": 25843.3,
+    "portfolio": {
+      "AAPL": {
+        "shares": 31,
+        "avgPrice": 778.47
+      }
+    },
+    "trades": [
+      {
+        "type": "buy",
+        "symbol": "AAPL",
+        "shares": 31,
+        "price": 778.47,
+        "total": 24132.57,
+        "fee": 24.13,
+        "date": "2026-07-14T16:01:52.959Z"
+      }
+    ],
     "setupAt": "2026-07-14T16:01:32.240Z"
   }
 }
