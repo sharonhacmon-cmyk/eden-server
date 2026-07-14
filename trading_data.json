@@ -233,5 +233,14 @@
     "portfolio": {},
     "trades": [],
     "setupAt": "2026-07-14T16:29:04.826Z"
+  },
+  "TRADE-RUTI": {
+    "name": "רותי",
+    "gender": "female",
+    "language": "he",
+    "cash": 50000,
+    "portfolio": {},
+    "trades": [],
+    "setupAt": "2026-07-14T17:05:48.637Z"
   }
 }
