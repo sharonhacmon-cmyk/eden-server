@@ -414,9 +414,24 @@
     "name": "test9",
     "gender": "male",
     "language": "he",
-    "cash": 50000,
-    "portfolio": {},
-    "trades": [],
+    "cash": 4955.033020000003,
+    "portfolio": {
+      "SPY": {
+        "shares": 23.0509,
+        "avgPrice": 1952.2
+      }
+    },
+    "trades": [
+      {
+        "type": "buy",
+        "symbol": "SPY",
+        "shares": 23.0509,
+        "price": 1952.2,
+        "total": 44999.96698,
+        "fee": 45,
+        "date": "2026-07-14T21:40:38.449Z"
+      }
+    ],
     "setupAt": "2026-07-14T21:39:39.171Z"
   }
 }
