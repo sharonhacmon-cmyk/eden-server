@@ -325,7 +325,7 @@
     "name": "Test8",
     "gender": "female",
     "language": "he",
-    "cash": 24481.129367999998,
+    "cash": 714.0893679999972,
     "portfolio": {
       "WIX": {
         "shares": 10.0023,
@@ -346,9 +346,22 @@
       "DIS": {
         "shares": 10,
         "avgPrice": 395.42
+      },
+      "NFLX": {
+        "shares": 10,
+        "avgPrice": 2374.33
       }
     },
     "trades": [
+      {
+        "type": "buy",
+        "symbol": "NFLX",
+        "shares": 10,
+        "price": 2374.33,
+        "total": 23743.3,
+        "fee": 23.74,
+        "date": "2026-07-14T20:40:30.747Z"
+      },
       {
         "type": "buy",
         "symbol": "DIS",
