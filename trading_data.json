@@ -283,5 +283,14 @@
       }
     ],
     "setupAt": "2026-07-14T17:05:48.637Z"
+  },
+  "TEST-6": {
+    "name": "Test6",
+    "gender": "female",
+    "language": "he",
+    "cash": 50000,
+    "portfolio": {},
+    "trades": [],
+    "setupAt": "2026-07-14T18:59:00.367Z"
   }
 }
