@@ -83,14 +83,27 @@
     "name": "Test4",
     "gender": "female",
     "language": "he",
-    "cash": 25843.3,
+    "cash": 20900.56,
     "portfolio": {
       "AAPL": {
         "shares": 31,
         "avgPrice": 778.47
+      },
+      "NVDA": {
+        "shares": 10,
+        "avgPrice": 493.7799999999999
       }
     },
     "trades": [
+      {
+        "type": "buy",
+        "symbol": "NVDA",
+        "shares": 10,
+        "price": 493.78,
+        "total": 4937.799999999999,
+        "fee": 4.94,
+        "date": "2026-07-14T16:02:04.725Z"
+      },
       {
         "type": "buy",
         "symbol": "AAPL",
