@@ -54,5 +54,14 @@
     "portfolio": {},
     "trades": [],
     "setupAt": "2026-07-14T15:30:45.180Z"
+  },
+  "TEST-2": {
+    "name": "Test2",
+    "gender": "male",
+    "language": "he",
+    "cash": 50000,
+    "portfolio": {},
+    "trades": [],
+    "setupAt": "2026-07-14T15:57:34.655Z"
   }
 }
