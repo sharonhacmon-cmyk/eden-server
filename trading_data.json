@@ -238,9 +238,24 @@
     "name": "רותי",
     "gender": "female",
     "language": "he",
-    "cash": 50000,
-    "portfolio": {},
-    "trades": [],
+    "cash": 40440.458552000004,
+    "portfolio": {
+      "MNDY": {
+        "shares": 10.0024,
+        "avgPrice": 954.7699999999999
+      }
+    },
+    "trades": [
+      {
+        "type": "buy",
+        "symbol": "MNDY",
+        "shares": 10.0024,
+        "price": 954.77,
+        "total": 9549.991447999999,
+        "fee": 9.55,
+        "date": "2026-07-14T17:06:24.928Z"
+      }
+    ],
     "setupAt": "2026-07-14T17:05:48.637Z"
   }
 }
