@@ -288,14 +288,27 @@
     "name": "Test6",
     "gender": "female",
     "language": "he",
-    "cash": 43493.506608,
+    "cash": 35983.906608000005,
     "portfolio": {
       "WIX": {
         "shares": 9.7038,
         "avgPrice": 669.84
+      },
+      "NICE": {
+        "shares": 10,
+        "avgPrice": 750.21
       }
     },
     "trades": [
+      {
+        "type": "buy",
+        "symbol": "NICE",
+        "shares": 10,
+        "price": 750.21,
+        "total": 7502.1,
+        "fee": 7.5,
+        "date": "2026-07-14T19:06:10.928Z"
+      },
       {
         "type": "buy",
         "symbol": "WIX",
