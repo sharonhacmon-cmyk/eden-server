@@ -50,9 +50,24 @@
     "name": "test1",
     "gender": "female",
     "language": "he",
-    "cash": 50000,
-    "portfolio": {},
-    "trades": [],
+    "cash": 40991.02976,
+    "portfolio": {
+      "WIX": {
+        "shares": 13.436,
+        "avgPrice": 669.84
+      }
+    },
+    "trades": [
+      {
+        "type": "buy",
+        "symbol": "WIX",
+        "shares": 13.436,
+        "price": 669.84,
+        "total": 8999.97024,
+        "fee": 9,
+        "date": "2026-07-14T16:16:20.834Z"
+      }
+    ],
     "setupAt": "2026-07-14T15:30:45.180Z"
   },
   "TEST-2": {
