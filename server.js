@@ -516,7 +516,7 @@ app.post('/api/trading/quiz', tradingAuth, (req, res) => {
   player.trades.unshift({ type:'bonus', symbol:'QUIZ', shares:0, price:0, total:500,
     note:`בונוס שאלת ${period === 'start' ? 'תחילת' : 'סוף'} שבוע`, date: new Date().toISOString() });
   saveTradingData(data);
-  syncToGitHub(data).catch(() => {});
+  syncTradingDataToGitHub(data).catch(() => {});
   res.json({ ok: true, bonus: 500, cash: player.cash });
 });
 
