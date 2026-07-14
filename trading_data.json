@@ -325,14 +325,27 @@
     "name": "Test8",
     "gender": "female",
     "language": "he",
-    "cash": 43293.359368,
+    "cash": 38003.779367999996,
     "portfolio": {
       "WIX": {
         "shares": 10.0023,
         "avgPrice": 669.84
+      },
+      "CHKP": {
+        "shares": 10,
+        "avgPrice": 528.43
       }
     },
     "trades": [
+      {
+        "type": "buy",
+        "symbol": "CHKP",
+        "shares": 10,
+        "price": 528.43,
+        "total": 5284.299999999999,
+        "fee": 5.28,
+        "date": "2026-07-14T20:39:39.435Z"
+      },
       {
         "type": "buy",
         "symbol": "WIX",
