@@ -407,20 +407,24 @@ body {
 #articleBody li { margin-bottom:6px; }
 #articleBody strong { color:var(--text); }
 
-/* ── INTRO SCREEN ────────────────────── */
-#screen-intro {
-  padding:24px 20px 48px;
-  min-height:auto;
-  overflow-y:visible;
-}
-.intro-hero { text-align:center; padding:24px 0 20px; }
-.intro-hero .icon { font-size:60px; }
-.intro-hero h1 { font-size:26px; font-weight:900; margin-top:8px; }
-.intro-hero p  { font-size:15px; color:var(--dim); margin-top:4px; }
-.intro-section { margin-bottom:18px; background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px 18px; }
-.intro-section h3 { font-size:15px; font-weight:900; color:var(--gold); margin-bottom:10px; }
-.intro-tip { display:flex; gap:10px; align-items:flex-start; margin-bottom:7px; font-size:14px; color:rgba(238,238,255,0.85); line-height:1.6; }
-.intro-tip .ti { flex-shrink:0; font-size:16px; }
+/* ── INTRO CAROUSEL ──────────────────── */
+.intro-wrap { display:flex; flex-direction:column; min-height:100vh; padding:28px 20px 40px; max-width:480px; margin:0 auto; }
+.intro-dots { display:flex; gap:8px; justify-content:center; margin-bottom:32px; }
+.intro-dot { width:8px; height:8px; border-radius:50%; background:rgba(124,92,252,0.3); transition:all .3s; }
+.intro-dot.active { width:28px; border-radius:4px; background:var(--purple); }
+.intro-slide { flex:1; display:flex; flex-direction:column; justify-content:center; animation:slideIn .3s ease; }
+@keyframes slideIn { from{opacity:0;transform:translateX(-16px)} to{opacity:1;transform:translateX(0)} }
+.intro-emoji { font-size:76px; text-align:center; margin-bottom:18px; line-height:1; }
+.intro-title { font-size:26px; font-weight:900; text-align:center; margin-bottom:10px; line-height:1.3; }
+.intro-sub { font-size:15px; color:var(--dim); text-align:center; margin-bottom:24px; line-height:1.75; }
+.intro-card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px 18px; margin-bottom:10px; display:flex; gap:14px; align-items:flex-start; }
+.intro-card .ti { font-size:22px; flex-shrink:0; margin-top:2px; }
+.intro-card-text { font-size:14px; color:rgba(238,238,255,0.88); line-height:1.65; }
+.intro-card-text strong { color:var(--text); }
+.intro-nav { display:flex; gap:10px; margin-top:22px; }
+.intro-back-btn { flex-shrink:0; background:rgba(255,255,255,0.07); border:1.5px solid var(--border); border-radius:14px; padding:13px 16px; font-size:18px; cursor:pointer; color:var(--dim); transition:all .2s; }
+.intro-back-btn:hover { background:rgba(255,255,255,0.1); }
+.intro-skip { text-align:center; margin-top:14px; font-size:13px; color:var(--dim); cursor:pointer; }
 
 /* ── HELP TIP ────────────────────────── */
 .help-tip-overlay {
@@ -2083,112 +2087,132 @@ function closeIntroModal() {
   document.body.style.overflow = ''; // unlock
 }
 
+let _introSlide = 0;
+const INTRO_SLIDES = [
+  {
+    icon:'🚀',
+    titleHe:'ברוכים לשוק ההון הווירטואלי!',
+    titleEn:'Welcome to the Virtual Stock Market!',
+    tipsHe:[
+      { ti:'💰', t:'מתחילים עם <strong>50,000 ₪ וירטואלי</strong> — כסף לא אמיתי, החלטות אמיתיות!' },
+      { ti:'📊', t:'<strong>30 נכסים</strong> לבחירה: מניות ישראליות, אמריקאיות, תעודות סל ועוד.' },
+      { ti:'🏆', t:'מתחרים ב<strong>לוח השיא</strong> — מי יגדיל הכי הרבה את התיק שלו?' },
+    ],
+    tipsEn:[
+      { ti:'💰', t:'Start with <strong>₪50,000 virtual money</strong> — not real, but real decisions!' },
+      { ti:'📊', t:'<strong>30 assets</strong>: Israeli & US stocks, ETFs, bonds, real estate, commodities.' },
+      { ti:'🏆', t:'Compete on the <strong>leaderboard</strong> — who grows their portfolio the most?' },
+    ],
+  },
+  {
+    icon:'📊',
+    titleHe:'מה זה מניה?',
+    titleEn:'What is a stock?',
+    tipsHe:[
+      { ti:'🏢', t:'מניה = <strong>חתיכה קטנה של חברה</strong>. קנית מניה של Apple? אתה שותף בחברה!' },
+      { ti:'📈', t:'אם החברה מצליחה — המניה <strong>עולה</strong> ואתה מרוויח. אם לא — היא יורדת.' },
+      { ti:'🌍', t:'בשוק שלנו יש חברות כמו <strong>טסלה, נטפליקס, בנק הפועלים</strong> ועוד.' },
+    ],
+    tipsEn:[
+      { ti:'🏢', t:'A stock = <strong>a tiny piece of a company</strong>. Buy Apple? You own part of it!' },
+      { ti:'📈', t:'If the company does well — stock <strong>goes up</strong> and you profit. Otherwise it drops.' },
+      { ti:'🌍', t:'Our market has companies like <strong>Tesla, Netflix, Bank Hapoalim</strong> and more.' },
+    ],
+  },
+  {
+    icon:'🛒',
+    titleHe:'איך קונים ומוכרים?',
+    titleEn:'How to buy & sell?',
+    tipsHe:[
+      { ti:'1️⃣', t:'לחץ על <strong>שוק המניות</strong> בתפריט למטה.' },
+      { ti:'2️⃣', t:'בחר מניה שמעניינת אותך ולחץ עליה לפרטים ולגרף המחירים.' },
+      { ti:'3️⃣', t:'לחץ <strong>קנה / מכור</strong>, הזן כמות — ואשר. זהו!' },
+      { ti:'💡', t:'לחץ <strong>"למה המניה זזה?"</strong> בכל מניה לקבל הסבר פשוט.' },
+    ],
+    tipsEn:[
+      { ti:'1️⃣', t:'Tap <strong>Stock Market</strong> in the bottom menu.' },
+      { ti:'2️⃣', t:'Pick a stock, tap it to see details and price chart.' },
+      { ti:'3️⃣', t:'Tap <strong>Buy / Sell</strong>, enter quantity — confirm. Done!' },
+      { ti:'💡', t:'Tap <strong>"Why did this stock move?"</strong> for a simple explanation.' },
+    ],
+  },
+  {
+    icon:'🏆',
+    titleHe:'איך מנצחים?',
+    titleEn:'How to win?',
+    tipsHe:[
+      { ti:'💡', t:'<strong>קנה בנמוך, מכור בגבוה</strong> — העיקרון הבסיסי.' },
+      { ti:'🎯', t:'<strong>פיזור חכם</strong>: אל תשים את כל הכסף במניה אחת — כמה נכסים שונים = פחות סיכון.' },
+      { ti:'📅', t:'היכנס לפחות <strong>פעם בשבוע</strong> — המחירים משתנים כל יום!' },
+      { ti:'👀', t:'עקוב אחרי <strong>לוח השיא</strong> וראה מה עושים המובילים.' },
+    ],
+    tipsEn:[
+      { ti:'💡', t:'<strong>Buy low, sell high</strong> — the golden rule.' },
+      { ti:'🎯', t:'<strong>Diversify</strong>: don\'t put all money in one stock — multiple assets = less risk.' },
+      { ti:'📅', t:'Check in at least <strong>once a week</strong> — prices change every day!' },
+      { ti:'👀', t:'Watch the <strong>leaderboard</strong> and see what the leaders are doing.' },
+    ],
+  },
+  {
+    icon:'⚠️',
+    titleHe:'טיפים אחרונים לפני שמתחילים',
+    titleEn:'Final tips before you start',
+    tipsHe:[
+      { ti:'⚠️', t:'מניות יכולות לרדת מהר — <strong>לעולם אל תשקיע הכל במקום אחד.</strong>' },
+      { ti:'📖', t:'לפני שקונים — <strong>קרא את ההסבר</strong> על הנכס.' },
+      { ti:'🌱', t:'ככל שתסחור יותר כך תעלה ברמות — <strong>משקיע צעיר ← פעיל ← ותיק</strong>.' },
+      { ti:'🎉', t:'הכסף וירטואלי — אפשר לטעות, ללמוד ולנסות שוב. <strong>תהנו!</strong>' },
+    ],
+    tipsEn:[
+      { ti:'⚠️', t:'Stocks can drop fast — <strong>never put everything in one place.</strong>' },
+      { ti:'📖', t:'Before buying — <strong>read the description</strong> of each asset.' },
+      { ti:'🌱', t:'Trade more to level up — <strong>Junior ← Active ← Veteran Investor</strong>.' },
+      { ti:'🎉', t:'It\'s virtual money — make mistakes, learn, try again. <strong>Have fun!</strong>' },
+    ],
+  },
+];
+
+function renderIntroSlide(el, he) {
+  const s = INTRO_SLIDES[_introSlide];
+  const tips = he ? s.tipsHe : s.tipsEn;
+  const isLast = _introSlide === INTRO_SLIDES.length - 1;
+  const dots = INTRO_SLIDES.map((_,i) =>
+    `<div class="intro-dot${i===_introSlide?' active':''}"></div>`).join('');
+  el.innerHTML = `
+  <div class="intro-wrap">
+    <div class="intro-dots">${dots}</div>
+    <div class="intro-slide">
+      <div style="font-size:56px;text-align:center;margin-bottom:12px">${s.icon}</div>
+      <h2 style="text-align:center;font-size:22px;font-weight:900;margin-bottom:20px">${he ? s.titleHe : s.titleEn}</h2>
+      ${tips.map(t=>`<div class="intro-tip"><span class="ti">${t.ti}</span><span>${t.t}</span></div>`).join('')}
+    </div>
+    <div style="margin-top:auto;padding-top:24px">
+      ${isLast
+        ? `<button type="button" class="btn btn-primary" onclick="closeIntroModal();showScreen('market',{noScroll:true});renderStocks()" style="margin-bottom:10px">
+            ${he ? 'לשוק המניות! 🚀' : "Let's trade! 🚀"}
+           </button>
+           <button type="button" class="btn btn-outline" onclick="closeIntroModal();showScreen('portfolio',{noScroll:true});renderPortfolio()" style="font-size:14px">
+            ${he ? 'לתיק שלי ←' : '← My Portfolio'}
+           </button>`
+        : `<button type="button" class="btn btn-primary" onclick="_introSlide++;renderIntroSlide(document.getElementById('introContent'),S.lang!=='en')">
+            ${he ? 'הבא ←' : 'Next →'}
+           </button>
+           <button type="button" class="btn btn-outline" onclick="closeIntroModal();showScreen('market',{noScroll:true});renderStocks()" style="font-size:13px;margin-top:8px">
+            ${he ? 'דלג לשוק ←' : 'Skip →'}
+           </button>`
+      }
+    </div>
+  </div>`;
+}
+
 function renderIntro() {
   const el = document.getElementById('introContent');
   if (!el) return;
+  _introSlide = 0;
   const he = S.lang !== 'en';
-  el.innerHTML = `
-  <div class="intro-hero">
-    <div class="icon">🚀</div>
-    <h1>${he ? 'ברוכים לשוק ההון הווירטואלי!' : 'Welcome to the Virtual Stock Market!'}</h1>
-    <p>${he ? 'לפני שמתחילים — כמה דקות כדאי לקרוא' : 'Before you start — take a minute to read this'}</p>
-  </div>
-
-  <div class="intro-section">
-    <h3>${he ? '🎮 מה יש כאן?' : '🎮 What is this?'}</h3>
-    <div class="intro-tip"><span class="ti">💰</span><span>${he
-      ? 'כל שחקן מתחיל עם <strong>50,000 ₪ וירטואלי</strong> — כסף שלא קיים באמת, אבל ההחלטות הן אמיתיות!'
-      : 'Every player starts with <strong>₪50,000 virtual money</strong> — not real cash, but real decisions!'
-    }</span></div>
-    <div class="intro-tip"><span class="ti">📊</span><span>${he
-      ? '<strong>30 נכסים לבחירה</strong>: מניות ישראליות, מניות אמריקאיות, תעודות סל, אגרות חוב, נדל"ן וסחורות.'
-      : '<strong>30 assets to choose from</strong>: Israeli stocks, US stocks, ETFs, bonds, real estate and commodities.'
-    }</span></div>
-    <div class="intro-tip"><span class="ti">🏆</span><span>${he
-      ? 'עקבו אחרי הביצועים שלכם ב<strong>לוח השיא</strong> — ומי שרוצה לנצח יצטרך לחשוב חכם!'
-      : 'Track your performance on the <strong>leaderboard</strong> — smart thinking wins!'
-    }</span></div>
-  </div>
-
-  <div class="intro-section">
-    <h3>${he ? '📅 מתי להיכנס?' : '📅 When to check in?'}</h3>
-    <div class="intro-tip"><span class="ti">✅</span><span>${he
-      ? 'לפחות <strong>פעם בשבוע</strong> — המחירים משתנים כל יום!'
-      : 'At least <strong>once a week</strong> — prices change every day!'
-    }</span></div>
-    <div class="intro-tip"><span class="ti">✅</span><span>${he
-      ? 'בכל כניסה בדקו: האם המניות עלו? ירדו? האם כדאי לקנות עוד או למכור?'
-      : 'Each visit: did your stocks go up? Down? Should you buy more or sell?'
-    }</span></div>
-    <div class="intro-tip"><span class="ti">✅</span><span>${he
-      ? 'לחצו על כל מניה ובחרו <strong>"למה המניה זזה היום?"</strong> לקבל הסבר'
-      : 'Tap any stock and tap <strong>"Why did this stock move?"</strong> for an explanation'
-    }</span></div>
-    <div class="intro-tip"><span class="ti">📈</span><span>${he
-      ? 'לחצו על כל מניה לצפייה ב<strong>גרף היסטוריה</strong> — ראו מה קרה בשבוע האחרון ובחודש האחרון'
-      : 'Tap any stock to see its <strong>price history chart</strong> — view the last 7 or 30 days'
-    }</span></div>
-  </div>
-
-  <div class="intro-section">
-    <h3>${he ? '🤖 רוצים להבין יותר?' : '🤖 Want to learn more?'}</h3>
-    <div class="intro-tip"><span class="ti">👆</span><span>${he
-      ? '<strong>לחצו על כל מניה</strong> בשוק — תקבלו כרטיס עם פרטים על החברה, גרף מחירים ושאלה: <strong>"למה המניה זזה היום?"</strong>'
-      : '<strong>Tap any stock</strong> in the market — you\'ll see company details, a price chart, and a button: <strong>"Why did this stock move today?"</strong>'
-    }</span></div>
-    <div class="intro-tip"><span class="ti">💬</span><span>${he
-      ? 'לחיצה על הכפתור תיתן לכם <strong>הסבר קצר ומותאם</strong> לגיל שלכם — בלי מילים מסובכות!'
-      : 'Tap the button for a <strong>short, simple explanation</strong> of why the price changed — no complicated words!'
-    }</span></div>
-  </div>
-
-  <div class="intro-section">
-    <h3>${he ? '🏆 איך ליצור הובלה?' : '🏆 How to take the lead?'}</h3>
-    <div class="intro-tip"><span class="ti">💡</span><span>${he
-      ? '<strong>קנה בנמוך, מכור בגבוה</strong> — זה העיקרון הבסיסי.'
-      : '<strong>Buy low, sell high</strong> — the golden rule.'
-    }</span></div>
-    <div class="intro-tip"><span class="ti">💡</span><span>${he
-      ? '<strong>פיזור חכם</strong>: אל תשים את כל הכסף במניה אחת. כמה נכסים שונים = פחות סיכון.'
-      : '<strong>Diversify</strong>: don\'t put all your money in one stock. Multiple assets = less risk.'
-    }</span></div>
-    <div class="intro-tip"><span class="ti">💡</span><span>${he
-      ? 'בדוק את <strong>לוח השיא</strong> ותראה מה עושים המובילים.'
-      : 'Check the <strong>leaderboard</strong> and see what the leaders are doing.'
-    }</span></div>
-  </div>
-
-  <div class="intro-section">
-    <h3>${he ? '⚠️ ממה להיזהר?' : '⚠️ Watch out for...'}</h3>
-    <div class="intro-tip"><span class="ti">⚠️</span><span>${he
-      ? 'מניות יכולות לרדת מהר. <strong>אל תשקיע את כל הכסף במקום אחד.</strong>'
-      : 'Stocks can drop fast. <strong>Never put all your money in one place.</strong>'
-    }</span></div>
-    <div class="intro-tip"><span class="ti">⚠️</span><span>${he
-      ? 'מניות תנודתיות (טסלה, נפט) עולות ויורדות הרבה — מסוכנות אבל גם מרגשות!'
-      : 'Volatile stocks (Tesla, Oil) swing a lot — exciting but risky!'
-    }</span></div>
-    <div class="intro-tip"><span class="ti">⚠️</span><span>${he
-      ? 'לפני שקונים — <strong>קרא/י את ההסבר</strong> על הנכס.'
-      : 'Before buying — <strong>read the description</strong> of each asset.'
-    }</span></div>
-  </div>
-
-  <div class="intro-section">
-    <h3>${he ? '🌱 רמות המשקיע' : '🌱 Investor Levels'}</h3>
-    <div class="intro-tip"><span class="ti">🌱</span><span>${he ? '<strong>משקיע צעיר</strong> — השבועות הראשונים. עדיין לומד ומתנסה.' : '<strong>Junior Investor</strong> — First weeks. Still learning and experimenting.'}</span></div>
-    <div class="intro-tip"><span class="ti">📊</span><span>${he ? '<strong>משקיע פעיל</strong> — אחרי חודש של מסחר. כבר מכיר את השוק.' : '<strong>Active Investor</strong> — After a month of trading. Already knows the market.'}</span></div>
-    <div class="intro-tip"><span class="ti">🏦</span><span>${he ? '<strong>משקיע ותיק</strong> — אחרי 3 חודשים. מנוסה ואסטרטגי.' : '<strong>Veteran Investor</strong> — After 3 months. Experienced and strategic.'}</span></div>
-    <div class="intro-tip"><span class="ti">💡</span><span>${he ? 'בלוח השיא תתחרה רק מול שחקנים <strong>מאותה רמה</strong> כמוך — תחרות הוגנת!' : 'In the leaderboard you compete only against players at <strong>the same level</strong> — fair competition!'}</span></div>
-  </div>
-
-  <button type="button" class="btn btn-primary" onclick="closeIntroModal();showScreen('market',{noScroll:true});renderStocks()" style="margin-bottom:12px">
-    ${he ? 'לשוק המניות! 🚀' : "Let's trade! 🚀"}
-  </button>
-  <button type="button" class="btn btn-outline" onclick="closeIntroModal();showScreen('portfolio',{noScroll:true});renderPortfolio()" style="font-size:14px;margin-top:6px">
-    ${he ? 'לתיק שלי ←' : '← My Portfolio'}
-  </button>`;
+  renderIntroSlide(el, he);
 }
+
 
 // ══════════════════════════════════════════════════
 // HELP TIPS — כפתור ? בכל מסך
