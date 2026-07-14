@@ -238,7 +238,7 @@
     "name": "רותי",
     "gender": "female",
     "language": "he",
-    "cash": 35150.878552,
+    "cash": 27358.398552000002,
     "portfolio": {
       "MNDY": {
         "shares": 10.0024,
@@ -247,9 +247,22 @@
       "CHKP": {
         "shares": 10,
         "avgPrice": 528.43
+      },
+      "AAPL": {
+        "shares": 10,
+        "avgPrice": 778.47
       }
     },
     "trades": [
+      {
+        "type": "buy",
+        "symbol": "AAPL",
+        "shares": 10,
+        "price": 778.47,
+        "total": 7784.700000000001,
+        "fee": 7.78,
+        "date": "2026-07-14T18:01:43.728Z"
+      },
       {
         "type": "buy",
         "symbol": "CHKP",
