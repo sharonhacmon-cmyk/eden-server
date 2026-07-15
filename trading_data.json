@@ -438,9 +438,24 @@
     "name": "איתי",
     "gender": "male",
     "language": "he",
-    "cash": 50000,
-    "portfolio": {},
-    "trades": [],
+    "cash": 46416.1,
+    "portfolio": {
+      "GLD": {
+        "shares": 4,
+        "avgPrice": 895.08
+      }
+    },
+    "trades": [
+      {
+        "type": "buy",
+        "symbol": "GLD",
+        "shares": 4,
+        "price": 895.08,
+        "total": 3580.32,
+        "fee": 3.58,
+        "date": "2026-07-15T14:32:47.575Z"
+      }
+    ],
     "setupAt": "2026-07-15T14:31:05.431Z"
   }
 }
