@@ -438,7 +438,7 @@
     "name": "איתי",
     "gender": "male",
     "language": "he",
-    "cash": 42364.369999999995,
+    "cash": 41854.92999999999,
     "portfolio": {
       "GLD": {
         "shares": 4,
@@ -447,9 +447,22 @@
       "SPY": {
         "shares": 2,
         "avgPrice": 2023.84
+      },
+      "NVDA": {
+        "shares": 1,
+        "avgPrice": 508.93
       }
     },
     "trades": [
+      {
+        "type": "buy",
+        "symbol": "NVDA",
+        "shares": 1,
+        "price": 508.93,
+        "total": 508.93,
+        "fee": 0.51,
+        "date": "2026-07-15T14:33:43.924Z"
+      },
       {
         "type": "buy",
         "symbol": "SPY",
