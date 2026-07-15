@@ -438,14 +438,27 @@
     "name": "איתי",
     "gender": "male",
     "language": "he",
-    "cash": 46416.1,
+    "cash": 42364.369999999995,
     "portfolio": {
       "GLD": {
         "shares": 4,
         "avgPrice": 895.08
+      },
+      "SPY": {
+        "shares": 2,
+        "avgPrice": 2023.84
       }
     },
     "trades": [
+      {
+        "type": "buy",
+        "symbol": "SPY",
+        "shares": 2,
+        "price": 2023.84,
+        "total": 4047.68,
+        "fee": 4.05,
+        "date": "2026-07-15T14:33:36.078Z"
+      },
       {
         "type": "buy",
         "symbol": "GLD",
