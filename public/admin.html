@@ -36,6 +36,20 @@ body{font-family:'Heebo',sans-serif;background:#f5f5f0;color:#1a1a18;direction:r
 .badge.expired{background:#fdecea;color:#c62828;}
 .btn-del{background:none;border:1px solid #ffcdd2;color:#c62828;border-radius:8px;padding:5px 12px;font-family:'Heebo',sans-serif;font-size:12px;cursor:pointer;}
 .btn-del:hover{background:#fdecea;}
+.btn-ext{background:none;border:1px solid #c8e8d8;color:#085041;border-radius:8px;padding:5px 12px;font-family:'Heebo',sans-serif;font-size:12px;cursor:pointer;margin-left:6px;}
+.btn-ext:hover{background:#e8f5e9;}
+.extend-popup{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;align-items:center;justify-content:center;}
+.extend-popup.open{display:flex;}
+.extend-box{background:white;border-radius:18px;padding:28px;max-width:340px;width:90%;text-align:center;}
+.extend-box h3{font-size:16px;font-weight:900;color:#085041;margin-bottom:18px;}
+.period-btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:16px;}
+.period-btn{border:1.5px solid #1D9E75;background:white;color:#085041;border-radius:10px;padding:8px 16px;font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;}
+.period-btn:hover,.period-btn.sel{background:#1D9E75;color:white;}
+.extend-box input[type=date]{width:100%;border:1.5px solid #e0e0dc;border-radius:10px;padding:10px;font-family:'Heebo',sans-serif;font-size:14px;outline:none;margin-bottom:14px;text-align:center;}
+.extend-box input[type=date]:focus{border-color:#1D9E75;}
+.ext-actions{display:flex;gap:10px;}
+.btn-ext-confirm{flex:1;background:linear-gradient(135deg,#085041,#1D9E75);color:white;border:none;border-radius:10px;padding:11px;font-family:'Heebo',sans-serif;font-size:14px;font-weight:800;cursor:pointer;}
+.btn-ext-cancel{flex:1;background:none;border:1.5px solid #e0e0dc;color:#666;border-radius:10px;padding:11px;font-family:'Heebo',sans-serif;font-size:14px;cursor:pointer;}
 .empty{text-align:center;padding:40px;color:#bbb;font-size:14px;}
 
 /* מסך כניסה */
@@ -135,13 +149,34 @@ body{font-family:'Heebo',sans-serif;background:#f5f5f0;color:#1a1a18;direction:r
       <div class="msg" id="add-msg"></div>
     </div>
 
+    <!-- פופ-אפ הארכה -->
+    <div class="extend-popup" id="extend-popup">
+      <div class="extend-box">
+        <h3>⏳ הארכת גישה</h3>
+        <div id="extend-user-name" style="font-size:13px;color:#555;margin-bottom:16px;"></div>
+        <div class="period-btns">
+          <button class="period-btn" onclick="setPeriod(7)">שבוע</button>
+          <button class="period-btn" onclick="setPeriod(30)">חודש</button>
+          <button class="period-btn" onclick="setPeriod(90)">3 חודשים</button>
+          <button class="period-btn" onclick="setPeriod(180)">6 חודשים</button>
+          <button class="period-btn" onclick="setPeriod(365)">שנה</button>
+        </div>
+        <input type="date" id="extend-date">
+        <div class="ext-actions">
+          <button class="btn-ext-cancel" onclick="closeExtend()">ביטול</button>
+          <button class="btn-ext-confirm" onclick="confirmExtend()">הארכי ✓</button>
+        </div>
+        <div class="msg" id="extend-msg" style="margin-top:10px;"></div>
+      </div>
+    </div>
+
     <div class="table-card">
       <div class="table-head">
         <span>שם</span>
         <span>קוד גישה</span>
         <span>תפוגה</span>
         <span>סטטוס</span>
-        <span>פעולה</span>
+        <span>פעולות</span>
       </div>
       <div id="users-list"><div class="empty">טוענת...</div></div>
     </div>
@@ -232,7 +267,10 @@ function renderUsers(users){
       <span><strong>${u.code}</strong></span>
       <span>${u.expires} ${active ? '('+daysLeft+' ימים)' : ''}</span>
       <span><span class="badge ${active?'active':'expired'}">${active?'פעילה':'פגה'}</span></span>
-      <span><button class="btn-del" onclick="deleteUser('${u.code}')">מחקי</button></span>
+      <span>
+        <button class="btn-ext" onclick="openExtend('${u.code}','${u.name}','${u.expires}')">הארכי</button>
+        <button class="btn-del" onclick="deleteUser('${u.code}')">מחקי</button>
+      </span>
     </div>`;
   }).join('');
 }
@@ -321,6 +359,47 @@ async function quickAdd(){
   msg.className='msg ok'; msg.textContent='✓ '+name+' נוספה! קוד: '+code;
   document.getElementById('quick-name').value='';
   loadUsers();
+}
+
+// ─── הארכת גישה ───
+let extendCode = '';
+
+function openExtend(code, name, currentExpires){
+  extendCode = code;
+  document.getElementById('extend-user-name').textContent = 'משתמשת: ' + name + ' | תפוגה נוכחית: ' + currentExpires;
+  // ברירת מחדל: חודש מהיום (או מהתפוגה הנוכחית אם עדיין בתוקף)
+  const base = new Date(currentExpires) > new Date() ? new Date(currentExpires) : new Date();
+  base.setMonth(base.getMonth() + 1);
+  document.getElementById('extend-date').value = base.toISOString().split('T')[0];
+  document.getElementById('extend-msg').textContent = '';
+  document.getElementById('extend-popup').classList.add('open');
+}
+
+function closeExtend(){
+  document.getElementById('extend-popup').classList.remove('open');
+}
+
+function setPeriod(days){
+  const base = new Date();
+  base.setDate(base.getDate() + days);
+  document.getElementById('extend-date').value = base.toISOString().split('T')[0];
+  document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('sel'));
+  event.target.classList.add('sel');
+}
+
+async function confirmExtend(){
+  const expires = document.getElementById('extend-date').value;
+  const msg = document.getElementById('extend-msg');
+  if (!expires){ msg.className='msg err'; msg.textContent='יש לבחור תאריך'; return; }
+  const res = await fetch('/admin/users/' + extendCode, {
+    method: 'PATCH',
+    headers: {'Content-Type':'application/json','x-admin-password': adminPassword},
+    body: JSON.stringify({ expires })
+  });
+  const data = await res.json();
+  if (!res.ok){ msg.className='msg err'; msg.textContent=data.error; return; }
+  msg.className='msg ok'; msg.textContent='✓ הוארכה עד ' + expires;
+  setTimeout(() => { closeExtend(); loadUsers(); }, 1200);
 }
 
 function copyQuick(){

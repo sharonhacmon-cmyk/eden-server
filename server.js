@@ -103,6 +103,19 @@ app.post('/admin/users', adminAuth, (req, res) => {
   res.json({ ok: true });
 });
 
+// עדכון תפוגה
+app.patch('/admin/users/:code', adminAuth, (req, res) => {
+  const { expires } = req.body;
+  if (!expires) return res.status(400).json({ error: 'חסר תאריך' });
+  const list = loadPasswords();
+  const entry = list.find(p => p.code.toUpperCase() === req.params.code.toUpperCase());
+  if (!entry) return res.status(404).json({ error: 'לא נמצא' });
+  entry.expires = expires;
+  entry.active = true;
+  savePasswords(list);
+  res.json({ ok: true });
+});
+
 // מחיקת קוד
 app.delete('/admin/users/:code', adminAuth, (req, res) => {
   const list = loadPasswords().filter(p => p.code.toUpperCase() !== req.params.code.toUpperCase());
