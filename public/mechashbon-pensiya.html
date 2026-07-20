@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מחשבון דמי ניהול פנסיה | המעגל הפיננסי</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg1: #0D1A14;
+  --bg2: #1A100A;
+  --amber: #E8A830;
+  --amber2: #F5D078;
+  --terra: #C9573A;
+  --sage: #4E8A67;
+  --sage2: #7AB896;
+  --rose: #C06878;
+  --cream: #F0E8D4;
+  --white: #FFFFFF;
+  --soft: rgba(240,232,212,0.88);
+  --dim: rgba(240,232,212,0.42);
+  --card: rgba(255,255,255,0.05);
+  --border: rgba(232,168,48,0.30);
+  --glow: rgba(232,168,48,0.12);
+}
+
+body {
+  font-family: 'Heebo', sans-serif;
+  background: linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 100%);
+  min-height: 100vh;
+  color: var(--white);
+  direction: rtl;
+  padding: 0 0 40px;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--amber) 0%, var(--terra) 50%, var(--sage) 100%);
+  z-index: 100;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 10% 20%, rgba(232,168,48,0.10) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 45% at 90% 80%, rgba(201,87,58,0.08) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wrapper {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px 20px;
+}
+
+/* ══ HEADER ══ */
+.page-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.page-header .label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: var(--amber);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.page-header h1 {
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1.2;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+.page-header p {
+  font-size: 15px;
+  color: var(--dim);
+}
+
+/* ══ INPUTS SECTION ══ */
+.inputs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 20px;
+  align-items: end;
+}
+
+@media (max-width: 680px) {
+  .inputs-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.field label {
+  font-size: 12px;
+  color: var(--dim);
+  display: block;
+  margin-bottom: 5px;
+}
+
+.field input[type=number] {
+  width: 100%;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 9px 12px;
+  color: var(--white);
+  font-size: 18px;
+  font-family: 'Heebo', sans-serif;
+  font-weight: 700;
+  transition: border-color 0.2s;
+}
+.field input[type=number]:focus {
+  outline: none;
+  border-color: var(--amber);
+}
+
+.years-box {
+  text-align: center;
+  padding: 8px 16px;
+  background: rgba(78,138,103,0.12);
+  border: 1px solid rgba(78,138,103,0.3);
+  border-radius: 10px;
+}
+.years-box .y-label { font-size: 11px; color: var(--dim); margin-bottom: 1px; }
+.years-box .y-num  { font-size: 28px; font-weight: 900; color: var(--sage2); line-height: 1.1; }
+.years-box .y-sub  { font-size: 11px; color: var(--dim); }
+
+/* ══ ALTERNATIVES ══ */
+.alts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 500px) {
+  .alts-grid { grid-template-columns: 1fr; }
+}
+
+.alt-card {
+  border-radius: 18px;
+  padding: 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.alt-a { background: rgba(232,168,48,0.08); border: 2px solid rgba(232,168,48,0.40); }
+.alt-b { background: rgba(78,138,103,0.10); border: 2px solid rgba(78,138,103,0.45); }
+
+.alt-card .alt-title-label { font-size: 12px; color: var(--dim); margin-bottom: 3px; }
+.alt-card .alt-title       { font-size: 17px; font-weight: 700; }
+.alt-a .alt-title { color: var(--amber2); }
+.alt-b .alt-title { color: var(--sage2); }
+
+.alt-card .fee-field label {
+  font-size: 13px;
+  color: var(--dim);
+  display: block;
+  margin-bottom: 5px;
+}
+.alt-card .fee-field input {
+  width: 100%;
+  background: rgba(255,255,255,0.07);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: var(--white);
+  font-size: 20px;
+  font-family: 'Heebo', sans-serif;
+  font-weight: 700;
+  transition: border-color 0.2s;
+}
+.alt-card .fee-field input:focus { outline: none; }
+.alt-a .fee-field input { border: 1px solid rgba(232,168,48,0.4); }
+.alt-b .fee-field input { border: 1px solid rgba(78,138,103,0.4); }
+
+.alt-result {
+  border-top: 1px solid;
+  padding-top: 14px;
+}
+.alt-a .alt-result { border-color: rgba(232,168,48,0.25); }
+.alt-b .alt-result { border-color: rgba(78,138,103,0.30); }
+
+.alt-result .result-label { font-size: 13px; color: var(--dim); margin-bottom: 4px; text-align: center; }
+.alt-result .result-big   { font-size: 34px; font-weight: 900; text-align: center; margin-bottom: 10px; }
+.alt-a .result-big { color: var(--amber2); }
+.alt-b .result-big { color: var(--sage2); }
+
+.fees-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 13px;
+}
+.alt-a .fees-row { background: rgba(201,87,58,0.10); }
+.alt-b .fees-row { background: rgba(78,138,103,0.12); }
+.fees-row .fees-label { color: var(--dim); }
+.fees-row .fees-val { font-size: 16px; font-weight: 700; }
+.alt-a .fees-val { color: var(--terra); }
+.alt-b .fees-val { color: var(--sage2); }
+
+/* ══ SUMMARY ROW ══ */
+.summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 500px) {
+  .summary-grid { grid-template-columns: 1fr; }
+}
+
+.summary-box {
+  border-radius: 14px;
+  padding: 16px 20px;
+  text-align: center;
+}
+.summary-box .s-label { font-size: 12px; color: var(--dim); margin-bottom: 4px; }
+.summary-box .s-val   { font-size: 26px; font-weight: 900; }
+
+.summary-diff {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+}
+.summary-diff .s-val { color: var(--amber2); }
+
+.summary-save {
+  background: rgba(78,138,103,0.10);
+  border: 1px solid rgba(78,138,103,0.35);
+}
+.summary-save .s-label-sub { font-size: 11px; color: var(--dim); margin-top: 2px; }
+.summary-save .s-val { color: var(--sage2); }
+
+/* ══ TIP ══ */
+.tip {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 22px;
+  font-size: 14px;
+  color: var(--soft);
+  text-align: center;
+  line-height: 1.6;
+}
+.tip strong { color: var(--amber2); }
+
+/* ══ FOOTER ══ */
+.page-footer {
+  text-align: center;
+  margin-top: 32px;
+  font-size: 13px;
+  color: var(--dim);
+}
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <div class="page-header">
+    <div class="label">המעגל הפיננסי</div>
+    <h1>מחשבון דמי ניהול — קרן פנסיה</h1>
+    <p>הכניסי את הנתונים שלך וראי מה ההבדל בין שתי חלופות</p>
+  </div>
+
+  <!-- קלטים משותפים -->
+  <div class="inputs-grid">
+    <div class="field">
+      <label>הפקדה חודשית (₪)</label>
+      <input id="fc_dep" type="number" value="2500" min="100" max="50000" step="100" oninput="calcFees()">
+    </div>
+    <div class="field">
+      <label>צבירה נוכחית (₪)</label>
+      <input id="fc_acc" type="number" value="200000" min="0" max="10000000" step="10000" oninput="calcFees()">
+    </div>
+    <div class="field">
+      <label>גיל נוכחי</label>
+      <input id="fc_age" type="number" value="42" min="20" max="66" step="1" oninput="calcFees()">
+    </div>
+    <div class="field">
+      <label>תשואה שנתית (%)</label>
+      <input id="fc_ret" type="number" value="6" min="1" max="15" step="0.5" oninput="calcFees()">
+    </div>
+  </div>
+
+  <!-- חלופות -->
+  <div class="alts-grid">
+
+    <!-- חלופה א -->
+    <div class="alt-card alt-a">
+      <div style="text-align:center;">
+        <div class="alt-title-label">המצב הקיים</div>
+        <div class="alt-title">חלופה א׳</div>
+      </div>
+      <div class="fee-field">
+        <label>דמי ניהול מפרמיה (%)</label>
+        <input id="fc_a_dep" type="number" value="1.49" min="0" max="6" step="0.01" oninput="calcFees()">
+      </div>
+      <div class="fee-field">
+        <label>דמי ניהול מצבירה (%)</label>
+        <input id="fc_a_acc" type="number" value="0.21" min="0" max="2" step="0.01" oninput="calcFees()">
+      </div>
+      <div class="alt-result">
+        <div class="result-label">צבירה בגיל 67</div>
+        <div class="result-big" id="fc_v1">—</div>
+        <div class="fees-row">
+          <span class="fees-label">דמי ניהול שישולמו</span>
+          <span class="fees-val" id="fc_f1">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- חלופה ב -->
+    <div class="alt-card alt-b">
+      <div style="text-align:center;">
+        <div class="alt-title-label">לאחר הפחתה / בדיקה</div>
+        <div class="alt-title">חלופה ב׳</div>
+      </div>
+      <div class="fee-field">
+        <label>דמי ניהול מפרמיה (%)</label>
+        <input id="fc_b_dep" type="number" value="1.5" min="0" max="6" step="0.01" oninput="calcFees()">
+      </div>
+      <div class="fee-field">
+        <label>דמי ניהול מצבירה (%)</label>
+        <input id="fc_b_acc" type="number" value="0.1" min="0" max="2" step="0.01" oninput="calcFees()">
+      </div>
+      <div class="alt-result">
+        <div class="result-label">צבירה בגיל 67</div>
+        <div class="result-big" id="fc_v2">—</div>
+        <div class="fees-row">
+          <span class="fees-label">דמי ניהול שישולמו</span>
+          <span class="fees-val" id="fc_f2">—</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- סיכום -->
+  <div class="summary-grid">
+    <div class="summary-box summary-diff">
+      <div class="s-label">פער בצבירה בין החלופות</div>
+      <div class="s-val" id="fc_diff">—</div>
+    </div>
+    <div class="summary-box summary-save">
+      <div class="s-label">חיסכון בדמי ניהול (א׳ פחות ב׳)</div>
+      <div class="s-val" id="fc_fdiff">—</div>
+      <div class="s-label-sub" id="fc_winner"></div>
+    </div>
+  </div>
+
+  <div class="tip">
+    💡 <strong>כלל אצבע:</strong> 0.1% על מיליון ₪ צבירה = 1,000 ₪ לשנה שהולכים לקרן — לא לך
+  </div>
+
+  <div class="page-footer">
+    שרון חכמון | המעגל הפיננסי<br>
+    <span style="font-size:11px;color:rgba(240,232,212,0.25);">החישוב מבוסס על תשואה קבועה ונועד להמחשה בלבד. אינו מהווה ייעוץ פנסיוני.</span>
+  </div>
+
+</div>
+
+<script>
+function calcFees() {
+  const dep = parseFloat(document.getElementById('fc_dep').value) || 2500;
+  const acc = parseFloat(document.getElementById('fc_acc').value) || 0;
+  const age = parseFloat(document.getElementById('fc_age').value) || 42;
+  const ret = parseFloat(document.getElementById('fc_ret').value) || 6;
+
+  const yrs = Math.max(1, 67 - age);
+  const n   = yrs * 12;
+  const mr  = (ret / 100) / 12;
+
+  function calc(depFeeP, accFeeP) {
+    const depFee  = depFeeP / 100;
+    const mAccFee = (accFeeP / 100) / 12;
+    let total = acc;
+    for (let i = 0; i < n; i++) {
+      total = total * (1 + mr - mAccFee) + dep * (1 - depFee);
+    }
+    return Math.round(total);
+  }
+
+  const aDepF = parseFloat(document.getElementById('fc_a_dep').value) || 0;
+  const aAccF = parseFloat(document.getElementById('fc_a_acc').value) || 0;
+  const bDepF = parseFloat(document.getElementById('fc_b_dep').value) || 0;
+  const bAccF = parseFloat(document.getElementById('fc_b_acc').value) || 0;
+
+  const noFees = calc(0, 0);
+  const v1 = calc(aDepF, aAccF);
+  const v2 = calc(bDepF, bAccF);
+  const f1 = noFees - v1;
+  const f2 = noFees - v2;
+
+  const fmt = v => '₪' + Math.abs(v).toLocaleString('he-IL');
+
+  document.getElementById('fc_v1').textContent = fmt(v1);
+  document.getElementById('fc_v2').textContent = fmt(v2);
+  document.getElementById('fc_f1').textContent = fmt(f1);
+  document.getElementById('fc_f2').textContent = fmt(f2);
+  document.getElementById('fc_diff').textContent  = fmt(Math.abs(v2 - v1));
+  document.getElementById('fc_fdiff').textContent = fmt(Math.abs(f1 - f2));
+
+  const winner = v2 > v1 ? 'חלופה ב׳ עדיפה' : v1 > v2 ? 'חלופה א׳ עדיפה' : 'שתי החלופות זהות';
+  document.getElementById('fc_winner').textContent = winner;
+}
+
+calcFees();
+</script>
+</body>
+</html>
