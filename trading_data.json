@@ -496,5 +496,14 @@
       }
     ],
     "setupAt": "2026-07-15T14:31:05.431Z"
+  },
+  "TRADE-RONIT": {
+    "name": "AB",
+    "gender": "female",
+    "language": "he",
+    "cash": 50000,
+    "portfolio": {},
+    "trades": [],
+    "setupAt": "2026-07-21T15:02:11.658Z"
   }
 }
