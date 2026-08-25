@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מפת הפרישה — שרון חכמון</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #FEFAF4;
+  color: #333;
+  line-height: 1.7;
+}
+
+/* HERO */
+.hero {
+  background: linear-gradient(135deg, #1a1a2e 0%, #2d2d4e 50%, #C49A2A 100%);
+  padding: 80px 40px 60px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(ellipse at center, rgba(196,154,42,0.15) 0%, transparent 60%);
+  animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+.hero-badge {
+  display: inline-block;
+  background: rgba(196,154,42,0.2);
+  border: 1px solid #C49A2A;
+  color: #C49A2A;
+  padding: 6px 20px;
+  border-radius: 20px;
+  font-size: 13px;
+  letter-spacing: 1px;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.hero h1 {
+  color: white;
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 800;
+  margin-bottom: 16px;
+  position: relative;
+  line-height: 1.2;
+}
+
+.hero h1 span { color: #C49A2A; }
+
+.hero-sub {
+  color: rgba(255,255,255,0.75);
+  font-size: 20px;
+  max-width: 640px;
+  margin: 0 auto 40px;
+  position: relative;
+}
+
+.hero-cta {
+  display: inline-block;
+  background: linear-gradient(135deg, #C49A2A, #e8c96a);
+  color: white;
+  padding: 16px 48px;
+  border-radius: 50px;
+  font-size: 18px;
+  font-weight: 700;
+  text-decoration: none;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(196,154,42,0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.hero-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(196,154,42,0.5);
+}
+
+/* PROBLEM */
+.problem {
+  background: #fff;
+  padding: 80px 40px;
+  text-align: center;
+}
+
+.problem h2 {
+  font-size: 32px;
+  color: #1a1a2e;
+  margin-bottom: 16px;
+}
+
+.problem p {
+  font-size: 18px;
+  color: #666;
+  max-width: 680px;
+  margin: 0 auto 48px;
+}
+
+.pain-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.pain-card {
+  background: #fdf8f0;
+  border: 1px solid #f0e8d0;
+  border-radius: 16px;
+  padding: 28px 24px;
+  text-align: right;
+}
+
+.pain-icon { font-size: 32px; margin-bottom: 12px; }
+.pain-card h3 { font-size: 17px; color: #1a1a2e; margin-bottom: 8px; }
+.pain-card p { font-size: 14px; color: #888; }
+
+/* WHAT IS */
+.what-is {
+  background: linear-gradient(135deg, #1a1a2e, #2d2d4e);
+  padding: 80px 40px;
+  text-align: center;
+}
+
+.what-is h2 {
+  color: white;
+  font-size: 36px;
+  margin-bottom: 16px;
+}
+
+.what-is .subtitle {
+  color: rgba(255,255,255,0.7);
+  font-size: 18px;
+  max-width: 600px;
+  margin: 0 auto 56px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(196,154,42,0.3);
+  border-radius: 20px;
+  padding: 32px 28px;
+  text-align: right;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.feature-card:hover {
+  background: rgba(196,154,42,0.1);
+  transform: translateY(-4px);
+}
+
+.feature-icon { font-size: 36px; margin-bottom: 16px; }
+.feature-card h3 { color: #C49A2A; font-size: 18px; margin-bottom: 10px; }
+.feature-card p { color: rgba(255,255,255,0.7); font-size: 14px; line-height: 1.6; }
+
+/* PROCESS */
+.process {
+  background: #FEFAF4;
+  padding: 80px 40px;
+}
+
+.process h2 {
+  text-align: center;
+  font-size: 36px;
+  color: #1a1a2e;
+  margin-bottom: 56px;
+}
+
+.steps {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.step {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  position: relative;
+}
+
+.step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 28px;
+  top: 64px;
+  width: 2px;
+  height: calc(100% - 20px);
+  background: linear-gradient(to bottom, #C49A2A, transparent);
+}
+
+.step-num {
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  background: linear-gradient(135deg, #C49A2A, #e8c96a);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 22px;
+  font-weight: 800;
+  box-shadow: 0 4px 16px rgba(196,154,42,0.35);
+}
+
+.step-content {
+  padding-bottom: 48px;
+}
+
+.step-content h3 {
+  font-size: 20px;
+  color: #1a1a2e;
+  margin-bottom: 8px;
+}
+
+.step-content p {
+  color: #666;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.step-tag {
+  display: inline-block;
+  background: #f5edd8;
+  color: #C49A2A;
+  font-size: 12px;
+  padding: 3px 12px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+/* REPORT SECTIONS */
+.report-sections {
+  background: white;
+  padding: 80px 40px;
+}
+
+.report-sections h2 {
+  text-align: center;
+  font-size: 36px;
+  color: #1a1a2e;
+  margin-bottom: 12px;
+}
+
+.report-sections .subtitle {
+  text-align: center;
+  color: #888;
+  margin-bottom: 48px;
+  font-size: 17px;
+}
+
+.sections-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.section-pill {
+  background: #fdf8f0;
+  border: 1px solid #f0e8d0;
+  border-right: 4px solid #C49A2A;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-pill .icon { font-size: 24px; min-width: 30px; }
+.section-pill h4 { font-size: 14px; color: #1a1a2e; font-weight: 700; margin-bottom: 2px; }
+.section-pill p { font-size: 12px; color: #999; }
+
+/* FOR WHO */
+.for-who {
+  background: linear-gradient(135deg, #7CAF52 0%, #5a9035 100%);
+  padding: 80px 40px;
+  text-align: center;
+}
+
+.for-who h2 {
+  color: white;
+  font-size: 36px;
+  margin-bottom: 48px;
+}
+
+.profiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.profile-card {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 20px;
+  padding: 28px 20px;
+  color: white;
+  text-align: center;
+}
+
+.profile-card .icon { font-size: 40px; margin-bottom: 12px; display: block; }
+.profile-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+.profile-card p { font-size: 13px; opacity: 0.85; line-height: 1.5; }
+
+/* TESTIMONIALS */
+.testimonials {
+  background: #FEFAF4;
+  padding: 80px 40px;
+  text-align: center;
+}
+
+.testimonials h2 {
+  font-size: 36px;
+  color: #1a1a2e;
+  margin-bottom: 48px;
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.testimonial {
+  background: white;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  text-align: right;
+  position: relative;
+}
+
+.testimonial::before {
+  content: '"';
+  font-size: 80px;
+  color: #f5edd8;
+  position: absolute;
+  top: 8px;
+  left: 20px;
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+
+.testimonial p {
+  font-size: 15px;
+  color: #555;
+  line-height: 1.7;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.testimonial-name {
+  font-weight: 700;
+  color: #1a1a2e;
+  font-size: 14px;
+}
+
+.testimonial-role {
+  font-size: 12px;
+  color: #C49A2A;
+}
+
+/* CTA */
+.final-cta {
+  background: linear-gradient(135deg, #1a1a2e, #C49A2A);
+  padding: 80px 40px;
+  text-align: center;
+}
+
+.final-cta h2 {
+  color: white;
+  font-size: 40px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.final-cta p {
+  color: rgba(255,255,255,0.8);
+  font-size: 18px;
+  margin-bottom: 40px;
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  background: white;
+  color: #1a1a2e;
+  padding: 16px 48px;
+  border-radius: 50px;
+  font-size: 18px;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  transition: transform 0.2s;
+}
+
+.btn-primary:hover { transform: translateY(-2px); }
+
+.btn-secondary {
+  background: transparent;
+  color: white;
+  padding: 16px 48px;
+  border-radius: 50px;
+  font-size: 18px;
+  font-weight: 700;
+  text-decoration: none;
+  border: 2px solid rgba(255,255,255,0.5);
+  transition: border-color 0.2s;
+}
+
+.btn-secondary:hover { border-color: white; }
+
+/* FOOTER */
+footer {
+  background: #1a1a2e;
+  padding: 32px 40px;
+  text-align: center;
+  color: rgba(255,255,255,0.4);
+  font-size: 13px;
+}
+
+footer span { color: #C49A2A; }
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .hero { padding: 60px 24px 48px; }
+  .problem, .what-is, .process, .report-sections, .for-who, .testimonials, .final-cta { padding: 60px 24px; }
+  .step-num { width: 44px; height: 44px; min-width: 44px; font-size: 18px; }
+  .step:not(:last-child)::after { right: 21px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">✦ ניתוח פרישה אישי ומקצועי</div>
+  <h1>מפת הפרישה<br><span>שלך</span></h1>
+  <p class="hero-sub">שרון חכמון עוברת על כל הדוחות הפנסיוניים שלך ומחזירה לך תמונה ברורה — כמה תקבלי, מה כדאי לעשות, ומה יקרה לכל בן משפחה בכל תרחיש</p>
+  <a href="#contact" class="hero-cta">רוצה לדעת מה יש לי? →</a>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem">
+  <h2>את לא לבד עם הבלבול הזה</h2>
+  <p>רוב הנשים מגיעות לגיל פרישה עם שלל מוצרים פנסיוניים — ולא יודעות מה בעצם יש להן, כמה יקבלו, ומה הן מפסידות</p>
+
+  <div class="pain-grid">
+    <div class="pain-card">
+      <div class="pain-icon">📄</div>
+      <h3>מוצרים שפוזרים בין חברות</h3>
+      <p>קרן פנסיה פה, ביטוח מנהלים שם, קופת גמל שנשכחה — ואף אחד לא מסתכל על התמונה הכוללת</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">🔢</div>
+      <h3>מספרים שלא מדברים אליך</h3>
+      <p>הדוחות מגיעים למייל, קוראים בחצי עין — ולא ברור מה בדיוק כתוב שם ומה לעשות איתם</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">⏰</div>
+      <h3>החלטות בלתי הפיכות ממתינות</h3>
+      <p>קיבוע זכויות, בחירת מסלול שאירים, היוון — טעות אחת עולה עשרות אלפי שקלים</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">💭</div>
+      <h3>"שלחתי לבדוק" — וחכית שנה</h3>
+      <p>קיבלת הסברים שלא הבנת, ויצאת יותר מבולבלת ממה שנכנסת</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT IS -->
+<section class="what-is">
+  <h2>מפת הפרישה — מה זה בדיוק?</h2>
+  <p class="subtitle">תהליך ניתוח מעמיק שמביא את כל הדוחות שלך לתמונה אחת ברורה, עם המלצות קונקרטיות ומספרים אמיתיים</p>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🔍</div>
+      <h3>ניתוח כל המוצרים שלך</h3>
+      <p>קרן פנסיה, ביטוח מנהלים, קופת גמל, קרן השתלמות — נבחן כל אחד בנפרד ואת כולם ביחד</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💰</div>
+      <h3>כמה תקבלי בפועל</h3>
+      <p>חישוב קצבה חודשית לפי כל גיל פרישה — לפני מס ואחרי מס, עם כל הפטורים שמגיעים לך</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚖️</h3>
+      <h3>השוואת תרחישים</h3>
+      <p>פרישה בגיל 60? 65? 67? מה ההבדל בשקלים? איפה נקודת האיזון שבה כדאי לך לחכות?</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">👨‍👩‍👧</div>
+      <h3>תכנון משפחתי</h3>
+      <p>מה יקבל בן הזוג, מה יקבלו הילדים? איך לוודא שהמשפחה מוגנת בכל תרחיש</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏦</div>
+      <h3>אסטרטגיית מיסוי</h3>
+      <p>היוון, נוסחת שילוב, קיבוע זכויות, מקסום הפטורים — מה לעשות ובאיזה סדר</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📋</div>
+      <h3>דוח מסודר ומובן</h3>
+      <p>לא מסמך אקדמי — דוח שתוכלי לקרוא, להבין, ולפעול לפיו מיד</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process">
+  <h2>איך זה עובד?</h2>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-tag">5 דקות</div>
+        <h3>ממלאים פרטים בסיסיים</h3>
+        <p>גיל, מצב משפחתי, גיל פרישה מתוכנן, היסטוריית פיצויים — שאלון קצר ופשוט שנותן את הקונטקסט לניתוח</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-tag">מה שיש</div>
+        <h3>מעלים את הדוחות הפנסיוניים</h3>
+        <p>קרן פנסיה, ביטוח מנהלים, קופת גמל, דוחות מיסוי — כל דוח שיש, עם סימון מה הוא. אין דוחות? עדיין אפשר — נעבוד עם מה שיש</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-tag">~3 דקות עיבוד</div>
+        <h3>שרון מנתחת ומפיקה את הדוח</h3>
+        <p>שרון עוברת על הדוחות שלך, מחשבת, משווה בין התרחישים — ומפיקה דוח מקצועי ומותאם אישית</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-tag">מסמך מלא</div>
+        <h3>מקבלים דוח מפורט</h3>
+        <p>16 סעיפים של ניתוח — מסיכום התיק ועד המלצה מקצועית אישית. ניתן לייצוא, לשמירה ולהדפסה</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REPORT SECTIONS -->
+<section class="report-sections">
+  <h2>מה כולל הדוח?</h2>
+  <p class="subtitle">16 סעיפים של ניתוח מקצועי — הכל, בלי לדלג על כלום</p>
+
+  <div class="sections-grid">
+    <div class="section-pill">
+      <span class="icon">📊</span>
+      <div>
+        <h4>סיכום תיק החיסכון</h4>
+        <p>כל המוצרים, יתרות, דמי ניהול</p>
+      </div>
+    </div>
+    <div class="section-pill">
+      <span class="icon">💰</span>
+      <div>
+        <h4>קצבה חודשית צפויה</h4>
+        <p>ערך עתידי + חישוב נטו אחרי מס</p>
+      </div>
+    </div>
+    <div class="section-pill">
+      <span class="icon">✅</span>
+      <div>
+        <h4>קצבה מוכרת</h4>
+        <p>הפטורה 100% — כמה יש לך?</p>
+      </div>
+    </div>
+    <div class="section-pill">
+      <span class="icon">📅</span>
+      <div>
+        <h4>השוואת גילאי פרישה</h4>
+        <p>60 / 62 / 65 / 67 / 70 — מה עדיף?</p>
+      </div>
+    </div>
+    <div class="section-pill">
+      <span class="icon">🔒</span>
+      <div>
+        <h4>קיבוע זכויות</h4>
+        <p>מתי ואיך — ולמה זה לא הפיך</p>
+      </div>
+    </div>
+    <div class="section-pill">
+      <span class="icon">🏦</span>
+      <div>
+        <h4>היוון קצבה</h4>
+        <p>כמה ניתן, איזה מס, האם כדאי</p>
+      </div>
+    </div>
+    <div class="section-pill">
+      <span class="icon">💼</span>
+      <div>
+        <h4>נוסחת השילוב</h4>
+        <p>פיצויים שנמשכו — כמה עלה לך?</p>
+      </div>
+    </div>
+    <div class="section-pill">
+      <span class="icon">🏢</span>
+      <div>
+        <h4>ניתוח קרן הפנסיה</h4>
+        <p>מסלול, דמי ניהול, כיסויים, שאירים</p>
+      </div>
+    </div>
+    <div class="section-pill">
+      <span class="icon">📋</span>
+      <div>
+        <h4>ניתוח ביטוח מנהלים</h4>
+        <p>דור הפוליסה, מקדם, מסלולי שאירים</p>
+      </div>
+    </div>
+    <div class="section-pill">
+      <span class="icon">💎</span>
+      <div>
+        <h4>קופות גמל</h4>
+        <p>לפני/אחרי 2008, 4 אפשרויות, מיסוי</p>
+      </div>
+    </div>
+    <div class="section-pill">
+      <span class="icon">👨‍👩‍👧</span>
+      <div>
+        <h4>תכנון משפחתי</h4>
+        <p>מפת זכויות לכל בן/בת משפחה</p>
+      </div>
+    </div>
+    <div class="section-pill">
+      <span class="icon">🏦</span>
+      <div>
+        <h4>ירושה ומוטבים</h4>
+        <p>מה יקבלו היורשים, איך ובאיזה מס</p>
+      </div>
+    </div>
+    <div class="section-pill">
+      <span class="icon">🛤️</span>
+      <div>
+        <h4>מסלולי פרישה</h4>
+        <p>5 נתיבים — מוקדמת עד דחויה</p>
+      </div>
+    </div>
+    <div class="section-pill">
+      <span class="icon">🎯</span>
+      <div>
+        <h4>מקסימום הון</h4>
+        <p>מה ניתן למשוך ובאיזה מס</p>
+      </div>
+    </div>
+    <div class="section-pill">
+      <span class="icon">⚠️</span>
+      <div>
+        <h4>נקודות קריטיות</h4>
+        <p>מה חייבים לעשות לפני הפרישה</p>
+      </div>
+    </div>
+    <div class="section-pill">
+      <span class="icon">💡</span>
+      <div>
+        <h4>המלצה מקצועית אישית</h4>
+        <p>מה לעשות, מתי ובאיזה סדר</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOR WHO -->
+<section class="for-who">
+  <h2>למי מתאים?</h2>
+  <div class="profiles-grid">
+    <div class="profile-card">
+      <span class="icon">⏰</span>
+      <h3>5–10 שנים לפרישה</h3>
+      <p>יש עוד זמן לתקן, לשנות מסלול, לבנות אסטרטגיה — ולמקסם את מה שייצבר</p>
+    </div>
+    <div class="profile-card">
+      <span class="icon">🚪</span>
+      <h3>לקראת פרישה</h3>
+      <p>שנה-שנתיים לפני — הרגע הקריטי שבו כל החלטה חשובה ויש עוד זמן לפעול נכון</p>
+    </div>
+    <div class="profile-card">
+      <span class="icon">💑</span>
+      <h3>עם בן/בת זוג</h3>
+      <p>כשיש שניים — יש הרבה יותר שאלות. מי פורש קודם? מה קורה לשניה אם הראשון הולך?</p>
+    </div>
+    <div class="profile-card">
+      <span class="icon">🔄</span>
+      <h3>אחרי שינוי בחיים</h3>
+      <p>גירושים, פטירת בן זוג, שינוי עבודה — זמן לבדוק מחדש מה יש ומה הכיוון</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="final-cta" id="contact">
+  <h2>מוכנה לראות את המפה שלך?</h2>
+  <p>צרי קשר לתיאום פגישת ניתוח — נעבור על הדוחות שלך ביחד ותצאי עם תמונה ברורה</p>
+
+  <div class="cta-buttons">
+    <a href="https://wa.me/972XXXXXXXXX" class="btn-primary">📱 שלחי הודעה בוואטסאפ</a>
+    <a href="mailto:sharon@nativ-finance.co.il" class="btn-secondary">✉️ שלחי מייל</a>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 <span>נתיב פיננסי</span> — שרון חכמון, כלכלנית | כל הזכויות שמורות</p>
+  <p style="margin-top:8px">המידע בדוח מבוסס על חוקי 2024 ומיועד להכוונה בלבד — אינו מהווה ייעוץ משפטי או פיננסי מחייב</p>
+</footer>
+
+</body>
+</html>
