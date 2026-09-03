@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מדריך פיננסי לשנה החדשה — נתיב פיננסי</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #FEFAF4;
+  color: #333;
+  line-height: 1.7;
+}
+
+/* HERO */
+.hero {
+  background: linear-gradient(160deg, #1a1a2e 0%, #2d2d4e 70%, #3a2e10 100%);
+  padding: 64px 40px 52px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; left: -60px;
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,154,42,0.1) 0%, transparent 70%);
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; right: -40px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(242,167,190,0.08) 0%, transparent 70%);
+}
+
+.shana-tova {
+  display: inline-block;
+  background: rgba(196,154,42,0.15);
+  border: 1px solid rgba(196,154,42,0.5);
+  color: #C49A2A;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  padding: 6px 22px;
+  border-radius: 20px;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.hero h1 {
+  color: white;
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 14px;
+  position: relative;
+}
+
+.hero h1 span { color: #C49A2A; }
+
+.hero-sub {
+  color: rgba(255,255,255,0.65);
+  font-size: 16px;
+  max-width: 520px;
+  margin: 0 auto;
+  position: relative;
+  line-height: 1.75;
+}
+
+/* INTRO */
+.intro {
+  background: white;
+  padding: 44px 40px 36px;
+  text-align: center;
+  border-bottom: 1px solid #f0ebe0;
+}
+
+.intro p {
+  font-size: 17px;
+  color: #555;
+  max-width: 620px;
+  margin: 0 auto;
+  line-height: 1.8;
+}
+
+.intro p strong { color: #1a1a2e; }
+
+/* STEPS */
+.steps-section {
+  padding: 48px 40px;
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.step {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 32px;
+  align-items: flex-start;
+}
+
+.step-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.step-num {
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  background: linear-gradient(135deg, #C49A2A, #ddb84e);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  font-weight: 800;
+  box-shadow: 0 4px 16px rgba(196,154,42,0.3);
+}
+
+.step-line {
+  width: 2px;
+  flex: 1;
+  min-height: 40px;
+  background: linear-gradient(to bottom, #C49A2A40, transparent);
+  margin-top: 6px;
+}
+
+.step:last-child .step-line { display: none; }
+
+.step-body {
+  background: white;
+  border: 1px solid #ede5d0;
+  border-radius: 16px;
+  padding: 22px 24px;
+  flex: 1;
+  margin-bottom: 8px;
+}
+
+.step-icon { font-size: 26px; margin-bottom: 8px; }
+
+.step-body h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1a1a2e;
+  margin-bottom: 8px;
+}
+
+.step-body p {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+
+.action-box {
+  background: #fdf8f0;
+  border-right: 3px solid #C49A2A;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #7a5a10;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.action-box::before {
+  content: '← מה עושים: ';
+  font-weight: 800;
+}
+
+/* CTA */
+.cta-section {
+  background: linear-gradient(135deg, #1a1a2e, #2d2d4e);
+  padding: 56px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,154,42,0.08) 0%, transparent 70%);
+}
+
+.cta-section h2 {
+  color: white;
+  font-size: 30px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.cta-section h2 span { color: #C49A2A; }
+
+.cta-section .cta-sub {
+  color: rgba(255,255,255,0.65);
+  font-size: 15px;
+  max-width: 500px;
+  margin: 0 auto 32px;
+  line-height: 1.75;
+  position: relative;
+}
+
+.cta-features {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+  position: relative;
+}
+
+.cta-feature {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(196,154,42,0.25);
+  border-radius: 12px;
+  padding: 14px 20px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.8);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cta-feature .fi { font-size: 18px; }
+
+.wa-btn {
+  display: inline-block;
+  background: #25D366;
+  color: white;
+  padding: 16px 44px;
+  border-radius: 50px;
+  font-size: 17px;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 8px 28px rgba(37,211,102,0.35);
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+
+.wa-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(37,211,102,0.45);
+}
+
+.free-tag {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.7);
+  font-size: 12px;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-top: 14px;
+  position: relative;
+}
+
+/* SHARE */
+.share-section {
+  background: #fdf8f0;
+  border-top: 1px solid #ede5d0;
+  padding: 32px 40px;
+  text-align: center;
+}
+
+.share-section p {
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 14px;
+}
+
+.share-btn {
+  display: inline-block;
+  background: white;
+  border: 1px solid #ede5d0;
+  color: #555;
+  padding: 10px 24px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+
+.share-btn:hover { background: #f5f0e8; }
+
+/* FOOTER */
+footer {
+  background: #1a1a2e;
+  padding: 24px 40px;
+  text-align: center;
+  color: rgba(255,255,255,0.3);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+footer span { color: #C49A2A; }
+
+@media (max-width: 600px) {
+  .hero, .intro, .steps-section, .cta-section, .share-section { padding-right: 24px; padding-left: 24px; }
+  .step { gap: 16px; }
+  .step-num { width: 42px; height: 42px; min-width: 42px; font-size: 16px; }
+  .cta-features { gap: 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="shana-tova">✦ שנה טובה ומתוקה</div>
+  <h1>7 דברים פיננסיים<br>לעשות ב<span>שנה החדשה</span></h1>
+  <p class="hero-sub">מדריך מעשי לשימוש עצמי — לא תיאוריה, לא הרצאה. צעדים קטנים שעושים הבדל אמיתי</p>
+</section>
+
+<!-- INTRO -->
+<section class="intro">
+  <p>שנה חדשה היא הזדמנות לעצור ולשאול: <strong>איפה אני עומדת כלכלית?</strong><br>
+  לא צריך להיות מומחית — צריך רק לדעת איפה להסתכל ומה לשאול. המדריך הזה עושה את זה בשבילך.</p>
+</section>
+
+<!-- STEPS -->
+<div class="steps-section">
+
+  <div class="step">
+    <div class="step-left">
+      <div class="step-num">1</div>
+      <div class="step-line"></div>
+    </div>
+    <div class="step-body">
+      <div class="step-icon">📄</div>
+      <h3>בדקי את הפנסיה שלך</h3>
+      <p>רוב הנשים לא יודעות כמה צברו, כמה דמי ניהול הן משלמות, ומה הקצבה שתקבלו בפרישה. הדוח השנתי מגיע — ונשאר בלי לקרוא.</p>
+      <div class="action-box">הורידי את הדוח השנתי מאתר חברת הפנסיה. חפשי: יתרה, דמי ניהול, קצבה משוערת. אם משהו לא ברור — שמרי את הדוח ושאלי</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-left">
+      <div class="step-num">2</div>
+      <div class="step-line"></div>
+    </div>
+    <div class="step-body">
+      <div class="step-icon">👤</div>
+      <h3>עדכני מוטבים</h3>
+      <p>בכל תוכנית פנסיונית — פנסיה, גמל, ביטוח — יש שדה "מוטבים": מי מקבל את הכסף במקרה של פטירה. אצל רוב הנשים זה לא מעודכן.</p>
+      <div class="action-box">כנסי לאתר של כל חברה שיש לך תוכנית בה. בדקי מי רשום כמוטב. אם הנתון ישן — עדכני עכשיו. 10 דקות שיכולות לשנות הכל</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-left">
+      <div class="step-num">3</div>
+      <div class="step-line"></div>
+    </div>
+    <div class="step-body">
+      <div class="step-icon">💸</div>
+      <h3>דעי לאן הכסף הולך</h3>
+      <p>לא צריך לבנות תקציב מפורט. רק לדעת: כמה נכנס, כמה יוצא, ולאן. נשים רבות מופתעות לגלות שהן יודעות פחות ממה שחשבו.</p>
+      <div class="action-box">כתבי את ההוצאות שלך לחודש אחד בלבד — על נייר, ב-Excel, בטלפון. לא לשפוט. רק לראות. זה הצעד הראשון</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-left">
+      <div class="step-num">4</div>
+      <div class="step-line"></div>
+    </div>
+    <div class="step-body">
+      <div class="step-icon">🏦</div>
+      <h3>בדקי את קרן ההשתלמות</h3>
+      <p>קרן השתלמות היא אחד הכלים הפיננסיים הטובים ביותר שיש — ורוב הנשים לא יודעות מה יש בה, האם היא נזילה, ואיך היא מושקעת.</p>
+      <div class="action-box">בדקי: מה היתרה? האם עברו 6 שנים (= נזילה)? באיזה מסלול השקעה את? דמי ניהול — האם סבירים?</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-left">
+      <div class="step-num">5</div>
+      <div class="step-line"></div>
+    </div>
+    <div class="step-body">
+      <div class="step-icon">🛡️</div>
+      <h3>קרן חירום — יש לך?</h3>
+      <p>קרן חירום היא 3–6 חודשי הוצאות שמורות בצד, נזילות, לא נוגעים בהן. זה הבסיס לביטחון כלכלי אמיתי — לפני כל השקעה אחרת.</p>
+      <div class="action-box">חישבי: כמה עולה לך חודש? הכפילי ב-3. האם יש לך את הסכום הזה בחשבון נפרד? אם לא — זה היעד הפיננסי לשנה הזו</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-left">
+      <div class="step-num">6</div>
+      <div class="step-line"></div>
+    </div>
+    <div class="step-body">
+      <div class="step-icon">🔍</div>
+      <h3>בדקי את הביטוחים שלך</h3>
+      <p>נשים רבות משלמות על ביטוחים כפולים, ביטוחים שפג תוקפם, או ביטוחים שלא מתאימים למצבן הנוכחי. כסף שיוצא כל חודש — בלי סיבה.</p>
+      <div class="action-box">אספי את כל דפי הביטוח שיש לך — בריאות, חיים, סיעוד, רכב, דירה. בדקי: האם הכיסויים חופפים? האם הסכומים עדכניים?</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-left">
+      <div class="step-num">7</div>
+      <div class="step-line"></div>
+    </div>
+    <div class="step-body">
+      <div class="step-icon">🎯</div>
+      <h3>הגדירי מטרה פיננסית אחת לשנה</h3>
+      <p>לא עשר. לא רשימה. מטרה אחת — ספציפית, מדידה, ריאלית. "לחסוך יותר" זה לא מטרה. "לחסוך 500 ₪ בחודש לקרן חירום" — זו מטרה.</p>
+      <div class="action-box">כתבי: "עד סוף 2026 אני רוצה _____". שמרי את זה במקום נגיש. חזרי אליו כל חודש לבדוק איך את מתקדמת</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>רוצה להמשיך את המסע<br>הפיננסי <span>יחד?</span></h2>
+  <p class="cta-sub">המעגל הפיננסי — קהילת נשים שמדברות על כסף בפתיחות, לומדות יחד, ותומכות אחת בשנייה</p>
+
+  <div class="cta-features">
+    <div class="cta-feature"><span class="fi">💬</span> שאלות ותשובות</div>
+    <div class="cta-feature"><span class="fi">📚</span> תכנים מקצועיים</div>
+    <div class="cta-feature"><span class="fi">🤝</span> קהילה תומכת</div>
+    <div class="cta-feature"><span class="fi">🧭</span> ליווי של שרון</div>
+  </div>
+
+  <a href="https://wa.me/972545629181" class="wa-btn">📱 הצטרפי למעגל בוואטסאפ</a>
+  <div class="free-tag">✦ ללא עלות</div>
+</section>
+
+<!-- SHARE -->
+<section class="share-section">
+  <p>יש לך חברה שגם היא צריכה את זה? שלחי לה 💛</p>
+  <button class="share-btn" onclick="shareGuide()">שתפי את המדריך</button>
+</section>
+
+<footer>
+  <p>© 2026 <span>נתיב פיננסי</span> — שרון חכמון | המידע מיועד להכוונה כללית בלבד</p>
+</footer>
+
+<script>
+function shareGuide() {
+  const url = window.location.href;
+  const text = '7 דברים פיננסיים לעשות בשנה החדשה — מדריך מעשי מנתיב פיננסי 💛';
+  if (navigator.share) {
+    navigator.share({ title: text, url });
+  } else {
+    navigator.clipboard.writeText(url).then(() => alert('הקישור הועתק — שלחי לחברות! 💛'));
+  }
+}
+</script>
+
+</body>
+</html>
